@@ -1,6 +1,6 @@
 export default function AppFooter() {
     return (
-        <div>
+        <div id="footer">
             footer
         </div>
     )

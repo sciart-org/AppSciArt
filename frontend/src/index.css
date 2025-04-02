@@ -25,7 +25,7 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  justify-content: space-between;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -65,4 +65,42 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+#navbar, #footer {
+  outline: solid;
+  outline-color: black;
+  outline-width: 1px;
+  width: 96vw;
+  padding-left: 2vw;
+  padding-right: 2vw;
+}
+
+#navbar {
+  height: 8vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#content {
+  flex: 1;
+  padding: 2vh;
+}
+
+#navbar > * {
+  flex: 1;
+}
+
+.left-button-container, .right-button-container {
+  display: flex;
+}
+
+.right-button-container {
+  justify-content: flex-end;
+}
+
+.left-button-container > *, .right-button-container > * {
+  margin-left: 1vw;
+  margin-right: 1vw;
 }
