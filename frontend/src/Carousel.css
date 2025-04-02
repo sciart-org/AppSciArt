@@ -15,11 +15,11 @@
     overflow: visible;
 }
 
-.carousel.animating.right {
+.carousel.animating.left {
     transform: translateX(40vw);
 }
 
-.carousel.animating.left {
+.carousel.animating.right {
     transform: translateX(-40vw);
 }
 
@@ -43,7 +43,7 @@
 .carousel-button {
     position: absolute;
     cursor: pointer;
-    transition: transform 0.3s ease-in-out; /* Adds smooth transition */
+    transition: transform 0.15s ease-in-out; /* Adds smooth transition */
 }
 
 .carousel-button.right {
@@ -59,6 +59,14 @@
     transform: scale(1.1, 1.1)
 }
 
+.carousel-button.right:active {
+    transform: scale(0.95, 0.95)
+}
+
 .carousel-button.left:hover {
     transform: scale(-1.1, 1.1)
+}
+
+.carousel-button.left:active {
+    transform: scale(-0.95, 0.95)
 }

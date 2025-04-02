@@ -54,19 +54,14 @@ export default function Carousel() {
 
   const currentEdition = mockObjects[centerImage];
 
-  const handleNext = () => {
-    setAnimating("left"); // Enable animation
-    setTimeout(() => {
-      setCenterImage((centerImage + 1) % mockObjects.length);
-      setAnimating(false); // Reset animation after transition
-    }, 500); // Adjust timeout to match CSS transition duration
-  };
-
-  const handlePrev = () => {
-    setAnimating("right");
+  const handleSlide = (direction) => {
+    if (animating) return;
+    setAnimating(direction);
+    const newImageIndexOffset = direction == "right" ? 1 : -1;
     setTimeout(() => {
       setCenterImage(
-        (centerImage - 1 + mockObjects.length) % mockObjects.length
+        (centerImage + mockObjects.length + newImageIndexOffset) %
+          mockObjects.length
       );
       setAnimating(false);
     }, 500);
@@ -88,13 +83,13 @@ export default function Carousel() {
           className="carousel-button left"
           size={"10vh"}
           color="white"
-          onClick={handlePrev}
+          onClick={() => handleSlide("left")}
         />
         <GrCaretNext
           className="carousel-button right"
           size={"10vh"}
           color="white"
-          onClick={handleNext}
+          onClick={() => handleSlide("right")}
         />
       </div>
       <h3>
