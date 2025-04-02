@@ -1,3 +1,8 @@
+.carousel-container {
+    display: flex;
+    align-items: center;
+}
+
 .carousel {
     display: flex;
     align-items: center;
@@ -6,13 +11,31 @@
     overflow: hidden;
     width: 100vw;
     position: relative;
+    transition: transform 0.5s ease-in-out; 
+    overflow: visible;
+}
 
+.carousel.animating.right {
+    transform: translateX(40vw);
+}
+
+.carousel.animating.left {
+    transform: translateX(-40vw);
+}
+
+.carousel:not(.animating) {
+    transition: none;
+    transform: translateX(0);
+}
+
+.image-container {
+    width: 40vw;
 }
 
 .carousel-image {
     object-fit: cover;
-    width: 50vw;
-    height: 35vh;
+    width: 40vw;
+    height: 40vh;
     user-select: none;
     cursor: pointer;
 }
