@@ -8,9 +8,7 @@ function App() {
   return (
     <>
       <AppNavbar id="navbar"/>
-      <div style={{ flex: 1 }}>
-        Hello!
-      </div>
+      <Home/>
       <AppFooter/>
     </>
   )

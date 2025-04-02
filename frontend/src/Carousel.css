@@ -1,0 +1,41 @@
+.carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 100vw;
+    position: relative;
+
+}
+
+.carousel-image {
+    object-fit: cover;
+    width: 50vw;
+    height: 35vh;
+    user-select: none;
+    cursor: pointer;
+}
+
+.carousel-button {
+    position: absolute;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out; /* Adds smooth transition */
+}
+
+.carousel-button.right {
+    right: 1vw;
+}
+
+.carousel-button.left {
+    left: 1vw;
+    transform: scale(-1, 1);
+}
+
+.carousel-button.right:hover {
+    transform: scale(1.1, 1.1)
+}
+
+.carousel-button.left:hover {
+    transform: scale(-1.1, 1.1)
+}
