@@ -1,6 +1,6 @@
 .aster-button {
   background-color:rgb(230, 230, 230);
-  display: block;
+  display: inline-block;
   width: 20vw;
   align-content: center;
   padding: 2vh;

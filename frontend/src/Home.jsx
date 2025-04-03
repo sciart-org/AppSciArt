@@ -55,7 +55,7 @@ function MoreInfoSection() {
 
 function QuickRegisterSection() {
   return (
-    <>
+    <div>
       <h2>
         Do you want to participate and create science-inspired art,
         collaborating with minds from diverse disciplines to bring innovative
@@ -71,16 +71,16 @@ function QuickRegisterSection() {
         </AsterButton>
       </div>
       <text>Check your inbox for the next steps</text>
-    </>
+    </div>
   );
 }
 
 function NextEvent() {
   return (
-    <>
-      <h2 style={{ textAlign: "start", marginLeft: "15vw" }}>Next event</h2>
+    <div style={{ justifyItems: "center", display: "inline-block" }}>
+      <h2 style={{ textAlign: "start" }}>Next event</h2>
       <HackathonCard />
-    </>
+    </div>
   );
 }
 
