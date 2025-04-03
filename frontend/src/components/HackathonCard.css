@@ -1,0 +1,43 @@
+.hackathon-card {
+    display: flex;
+    border: 1px solid black;
+    justify-self: center;
+    padding: 0;
+    width: 70vw;
+}
+
+.hackathon-card > :first-child {
+    flex: 1;
+}
+
+.hackathon-card > * {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+}
+
+.hackathon-card > :first-child {
+    justify-content: center;
+}
+
+.hackathon-card > :last-child {
+    justify-content: space-around;
+    align-items: center;
+}
+
+.hackathon-card img {
+    width: 20vw;
+    margin: 2vh;
+}
+
+.hackathon-card h3 {
+    margin-bottom: 0;
+}
+
+.hackathon-card .aster-button {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    text-align: center;
+    width: 15vw
+}

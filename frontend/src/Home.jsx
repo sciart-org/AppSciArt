@@ -7,6 +7,7 @@ import InspiringScientist from "./components/InspiringScientist.jsx";
 import Participant from "./components/Participant.jsx";
 import AsterButton from "./components/AsterButton.jsx";
 import "./Home.css";
+import HackathonCard from "./components/HackathonCard.jsx";
 
 function SciArtItems() {
   return (
@@ -74,6 +75,15 @@ function QuickRegisterSection() {
   );
 }
 
+function NextEvent() {
+  return (
+    <>
+      <h2 style={{ textAlign: "start", marginLeft: "15vw" }}>Next event</h2>
+      <HackathonCard />
+    </>
+  );
+}
+
 export default function Home() {
   return (
     <div className="home">
@@ -84,6 +94,7 @@ export default function Home() {
       <MoreInfoSection />
       <hr />
       <QuickRegisterSection />
+      <NextEvent />
     </div>
   );
 }
