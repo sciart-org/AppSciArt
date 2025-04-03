@@ -76,6 +76,34 @@ button:focus-visible {
   padding-right: 2vw;
 }
 
+#footer {
+  width: 100vw;
+  margin-top: 5vh;
+  height: 40vh;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  position: relative;
+}
+
+#footer p {
+  text-align: start;
+  margin: 0;
+  font-size: small;
+}
+
+.footer-text-container {
+  height: 100%;
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
+
+#footer .social-networks {
+  position: absolute;
+  right: 7vw;
+  bottom: 5vh;
+}
+
 #navbar {
   height: 8vh;
   display: flex;
@@ -103,4 +131,14 @@ button:focus-visible {
 .left-button-container > *, .right-button-container > * {
   margin-left: 1vw;
   margin-right: 1vw;
+}
+
+hr {
+  border: 0;
+  clear: both;
+  display: block;
+  width: 90vw;               
+  background-color: black;
+  height: 1px;
+  margin-top: 4vh;
 }

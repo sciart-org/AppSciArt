@@ -1,0 +1,11 @@
+.social-networks {
+    display: flex;
+}
+
+.social-networks > * {
+    cursor: pointer;
+    margin: 0.5vh;
+    height: 5vh;
+    width: 5vh;
+}
+  
