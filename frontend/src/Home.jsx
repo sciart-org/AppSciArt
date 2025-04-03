@@ -8,51 +8,53 @@ import Participant from "./components/Participant.jsx";
 import AsterButton from "./components/AsterButton.jsx";
 import "./Home.css";
 
-export default function Home() {
-  const SciArtItems = () => {
-    return (
-      <>
-        <div className="items-container">
-          <div>
-            <Seed />
-            <h3>"SciArt Seed"</h3>
-          </div>
-          <div>
-            <Flower />
-            <h3>"SciArt Flower"</h3>
-          </div>
-          <div>
-            <Fruit />
-            <h3>"SciArt Fruit"</h3>
-          </div>
-        </div>
-        <div className="roles-container">
-          <div>
-            <InspiringScientist />
-            <h3>Inspiring Scientists</h3>
-          </div>
-          <div>
-            <Participant />
-            <h3>Participants</h3>
-          </div>
-        </div>
-      </>
-    );
-  };
-
+function SciArtItems() {
   return (
-    <div className="home">
-      <Carousel />
-      <h1 style={{ marginTop: 0 }}>This is SciArt</h1>
-      <SciArtItems />
-      <hr />
+    <>
+      <div className="items-container">
+        <div>
+          <Seed />
+          <h3>"SciArt Seed"</h3>
+        </div>
+        <div>
+          <Flower />
+          <h3>"SciArt Flower"</h3>
+        </div>
+        <div>
+          <Fruit />
+          <h3>"SciArt Fruit"</h3>
+        </div>
+      </div>
+      <div className="roles-container">
+        <div>
+          <InspiringScientist />
+          <h3>Inspiring Scientists</h3>
+        </div>
+        <div>
+          <Participant />
+          <h3>Participants</h3>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function MoreInfoSection() {
+  return (
+    <>
       <h2>Want to dive deeper into the process?</h2>
       <div>
-        <AsterButton>
+        <AsterButton to={"/about"}>
           <text>Find all the details here</text>
         </AsterButton>
       </div>
-      <hr />
+    </>
+  );
+}
+
+function QuickRegisterSection() {
+  return (
+    <>
       <h2>
         Do you want to participate and create science-inspired art,
         collaborating with minds from diverse disciplines to bring innovative
@@ -68,6 +70,20 @@ export default function Home() {
         </AsterButton>
       </div>
       <text>Check your inbox for the next steps</text>
+    </>
+  );
+}
+
+export default function Home() {
+  return (
+    <div className="home">
+      <Carousel />
+      <h1 style={{ marginTop: 0 }}>This is SciArt</h1>
+      <SciArtItems />
+      <hr />
+      <MoreInfoSection />
+      <hr />
+      <QuickRegisterSection />
     </div>
   );
 }
