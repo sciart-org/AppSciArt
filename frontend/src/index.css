@@ -117,7 +117,7 @@ button:focus-visible {
 }
 
 #navbar > * {
-  flex: 1;
+  flex: 5;
 }
 
 .left-button-container, .right-button-container {
@@ -129,8 +129,8 @@ button:focus-visible {
 }
 
 .left-button-container > *, .right-button-container > * {
-  margin-left: 1vw;
-  margin-right: 1vw;
+  margin-left: 0.5vw;
+  margin-right: 0.5vw;
 }
 
 hr {
