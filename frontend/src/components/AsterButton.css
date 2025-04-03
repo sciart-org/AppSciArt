@@ -1,0 +1,20 @@
+.aster-button {
+  background-color:rgb(230, 230, 230);
+  display: block;
+  width: 20vw;
+  align-content: center;
+  padding: 2vh;
+  border: 1px solid black;
+  border-radius: 10px;
+  justify-self: center;
+  transition: transform 0.05s ease-in-out;
+}
+
+.aster-button:active {
+  transform: scale(1.01, 1.01);
+}
+
+.aster-button > * {
+  color: black;
+  font-size: larger;
+}

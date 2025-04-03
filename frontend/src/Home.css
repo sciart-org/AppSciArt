@@ -1,0 +1,16 @@
+.items-container, .roles-container {
+    display: flex;
+    margin-top: 2vh;
+}
+
+.items-container > *, .roles-container > * {
+    flex: 1;
+}
+
+.roles-container > :first-child {
+    margin-left: 15vw;
+}
+
+.roles-container > :last-child {
+    margin-right: 15vw;
+}
