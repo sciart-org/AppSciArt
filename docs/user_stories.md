@@ -93,3 +93,63 @@ This user story has several possible user workflows:
   2. The participant fills the joining form
   3. The participant is prompted to explore seed collections
 
+### US-4: Explore SciArt products collections
+
+As a user, I want to explore seed, flower, and fruit collections, in order to discover more about the SciArt process and products.
+
+This user story has several possible user workflows:
+
+1. From Navbar:
+
+     1. The user clicks the "Collections" button in the Navbar
+     2. The user selects the product he/she wans to explore (seeds, flowers or fruits)
+     3. The user is redirected to the collection screen of the selected product
+
+2. From the carousel of the Home screen (For not finished editions, to seed collections)
+
+    1. The user clicks the logo of the incoming/ongoing edition in the Home screen carousel
+    2. The user is redirected to the seed collection of that edition
+
+3. From the edition details screen (For finished editions)
+
+    1. The user accesses the details screen of some edition
+    2. The user clicks the product he/she wants to explore (seeds, flowers or fruits)
+    3. The user is redirected to the collection screen of the selected product
+
+4. From [Joining a hackathon](#us-3-joining-a-hackathon)
+
+    1. The user clicks the "Seed collection" button shown after joining a hackathon
+    2. The user is redirected to the seed collection of the edition of that hackathon
+
+5. From other collections: If the user is on some collection screen, he/she can navigate between seed, flower and fruit collection screens.
+
+By default, the collection of the most recent edition is shown. The user may change the collection by clicking the dropdown in the collection screen.
+
+### US-5: Explore SciArt products details
+
+As a user, I want to explore the details of seed, flower, and fruit collections, in order to discover more about a specific product or topic.
+
+This user story has several possible user workflows:
+
+1. From collections:
+
+    1. The user accesses some product collection
+    2. The user clicks the "See more" button of the specific product of which he/she wants to see the details
+    3. The user is redirected to the details screen of the selected product
+
+2. From fruit details (To associated seed and flower):
+
+    1. The user accesses the details screen of some fruit
+    2. The user clicks the button to see the associated seed or flower
+    3. The user is redirected to the details screen of the selected product
+
+3. From the edition details carousel (To fruit details):
+
+    1. The user accesses the details screen of some edition
+    2. The user clicks the "Know more" button in the fruits carousel
+    3. The user is redirected to the details screen of the selected fruit
+
+4. From [Joining a hackathon](#us-3-joining-a-hackathon) (To seed details)
+
+    1. The user clicks the "Know more" button in the seeds carousel
+    2. The user is redirected to the details screen of the selected seed
