@@ -10,6 +10,10 @@
   * **Designer**: Creators of a SciArt methodology (e.g. ASTER+S).
   * **Evaluator**: They evaluate different SciArt flowers.
 
+If the term "user" is used, all roles should be able to perform the user story.
+
+SciArt seeds, flowers and fruits will be referred as just seeds, flowers and fruits.
+
 ## User stories
 
 ### US-1: Log in
@@ -18,7 +22,7 @@ As a guest, I want to log into my already existing account in order to access al
 
 1. The guest clicks the "Log in" button in the Home screen
 2. The guest introduces his/her user credentials
-3. The user is redirected to the logged-in Home screen
+3. The user is redirected to the Home screen
 
 ### US-2: Registering
 
@@ -34,7 +38,7 @@ This user story has several entry points:
 
         ii. The guest checks the email received and clicks the "Complete registration" button
 
-     * Unregistered [Joining](#us-x-joining-a-hackathon):
+     * Unregistered [Joining](#us-3-joining-a-hackathon):
 
          i. The guest accesses the hackathon list screen
 
@@ -42,12 +46,12 @@ This user story has several entry points:
 
          iii. The guest fills a quick registration + joining form (minimal information asked)
 
-         iv. The guest is prompted to discover SciArt seed collections
+         iv. The guest is prompted to explore seed collections
 
          v. The guest checks the email received and clicks the "Complete registration" button
  
 2. The guest completes the registration form
-3. The participant is prompted to join a hackathon (if not already joined). See [Joining a hackathon](#us-x-joining-a-hackathon)
+3. The participant is prompted to join a hackathon (if not already joined). See [Joining a hackathon](#us-3-joining-a-hackathon)
 
 ### US-3: Joining a hackathon
 
@@ -62,7 +66,7 @@ This user story has several possible user workflows:
     
       i. The participant clicks the "Maybe later" button
 
-      ii. The participant is prompted to discover previous editions or get more information about the hackathon format
+      ii. The participant is prompted to explore previous editions or get more information about the hackathon format
 
   2. If the participant wants to join:
 
@@ -72,7 +76,7 @@ This user story has several possible user workflows:
 
       iii. The participant fills the joining form
 
-      iv. The participant is prompted to discover SciArt seed collections
+      iv. The participant is prompted to explore seed collections
 
 * From [Unregistered joining](#us-2-registering). 
 
@@ -81,12 +85,11 @@ This user story has several possible user workflows:
   1. The participant accesses the hackathon list screen
   2. The guest clicks the "Join hackathon" button of the hackathon he/she wants to join
   3. The participant fills the joining form
-  4. The participant is prompted to discover SciArt seed collections
+  4. The participant is prompted to explore seed collections
 
 * To closest hackathon, from home screen:
 
   1. The participant clicks the "Join hackathon" button in the Home screen
   2. The participant fills the joining form
-  3. The participant is prompted to discover SciArt seed collections
+  3. The participant is prompted to explore seed collections
 
-### US-4: 
