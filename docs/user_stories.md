@@ -10,7 +10,11 @@
   * **Designer**: Creators of a SciArt methodology (e.g. ASTER+S).
   * **Evaluator**: They evaluate different SciArt flowers.
 
-If the term "user" is used, all roles should be able to perform the user story.
+There exists two temporary roles during the hackathon process:
+  * **Group voice**: Inside an exploring group, the participant that will be responsible for uploading the conceptual map, and communicating with the facilitators (if necessary)
+  * **Speaker**: Inside a co-creation team, the participant that will be responsible for delivering the complete flower, and communicating with the facilitators (if necessary)
+
+If the term "user" is used, all users (authenticated or not) should be able to perform the user story.
 
 SciArt seeds, flowers and fruits will be referred as just seeds, flowers and fruits.
 
@@ -20,7 +24,11 @@ SciArt seeds, flowers and fruits will be referred as just seeds, flowers and fru
 
 As a guest, I want to log into my already existing account in order to access all the functionalities of AppSciArt.
 
-1. The guest clicks the "Log in" button in the Home screen
+1. Entry point. The guest could click the "Log in" button from:
+   * The Home screen
+   * Some product collection
+   * Some product details 
+   * The registration form in [Registering](#us-2-registering)
 2. The guest introduces his/her user credentials
 3. The user is redirected to the Home screen
 
@@ -61,7 +69,7 @@ This user story has several possible user workflows:
 
 * From [Registering](#us-2-registering):
 
-  0. The participant may get more information by clicking the "What is a hackathon?" button
+  0. The participant may get more information about the methodology format by clicking the "What is a hackathon?" button
   1. If the participant does not want to join:
     
       i. The participant clicks the "Maybe later" button
@@ -92,6 +100,13 @@ This user story has several possible user workflows:
   1. The participant clicks the "Join hackathon" button in the Home screen
   2. The participant fills the joining form
   3. The participant is prompted to explore seed collections
+
+* From its seed collection (if there is an incoming hackathon using that collection):
+
+  1. The participant accesses some seed collection
+  2. The participant clicks the "Join hackathon" button
+  3. The participant fills the joining form
+  4. The participant is prompted to explore seed collections
 
 ### US-4: Explore SciArt products collections
 
@@ -153,3 +168,52 @@ This user story has several possible user workflows:
 
     1. The user clicks the "Know more" button in the seeds carousel
     2. The user is redirected to the details screen of the selected seed
+
+### US-6: View detailed information about the methodology format
+
+As a user, I want to see the methodology format, in order to understand how it's structured.
+
+This user story has several possible entry points:
+
+1. Entry point:
+
+    * From the "Our format" button in the Navbar
+    * From the "Find all the details here" button in the Home screen
+    * From [Joining a hackathon - From Registering](#us-3-joining-a-hackathon)
+
+2. The user is redirected to the methodology format details screen after clicking the corresponding button.
+
+### US-7: View the list of incoming hackathons
+
+As a user, I want to see all the incoming hackathons, in order to decide if I will join one or not.
+
+This user story has several possible entry points:
+
+1. Entry point:
+   * From the Navbar
+   * From [Registering](#us-2-registering)
+   * From the [Methodology format](#us-6-view-detailed-information-about-the-methodology-format) screen
+2. The user is redirected to the hackathons screen. The list will appear in the "Next hackathons" section.
+
+### US-8: View the hackathons in which I am enrolled
+
+As a participant, I want to see the hackathons in which I am enrolled, in order to organise my schedule so that I can attend.
+
+This user stories has the same user workflow as [US-7](#us-7-view-the-list-of-incoming-hackathons), but the user must be authenticated.
+
+### US-9: View past hackathons in which I participated
+
+As a participant, I want to see past hackathons in which I participated, in order to remember my previous experiences in SciArt.
+
+This user stories has the same user workflow as [US-7](#us-7-view-the-list-of-incoming-hackathons), but the user must be authenticated.
+
+The list will appear in the "Your past hackathons" section.
+
+### US-10: View my creations in a hackathon in which I participated
+
+As a participant, I want to see my creations in a hackathon in which I participated, in order to remember the SciArt process I followed and its results.
+
+1. The participant accesses the "Hackathons" screen
+2. The participant clicks the "Your contributions" button in some past hackathon
+3. The participant is redirected to the creations screen
+
