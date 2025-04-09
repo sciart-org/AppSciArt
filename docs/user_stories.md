@@ -274,3 +274,53 @@ As a participant (group voice), I want to submit the conceptual map created by m
 3. The participant confirms the submission
 4. If there is still time left for other participants to finish their conceptual maps, participants of the group are redirected to a waiting screen
 5. If there is not, the participants are redirected to the conceptual maps presentation screen
+
+### US-18: Present the conceptual map created by my exploring group
+
+As a participant (usually, the group voice), I want to present the conceptual map created by my exploring group, in order to give other participants an initial understanding of our assigned seed.
+
+1. The participant enters the "Conceptual map" section in the conceptual maps presentation screen
+2. When the turn arrives, the conceptual map of the group will be shown in this section
+3. The participant shares his/her screen, if necessary
+4. The participant presents the conceptual map of his/her exploring group
+
+### US-19: Rate seeds
+
+As a participant, I want to rate each seed presented, in order to help facilitators creating co-creation teams.
+
+1. The participant enters the "Ratings" section in the conceptual maps presentation screen
+2. The participant clicks the rating he/she wants to assign to each seed
+3. After all the presentations are finished, the participant reviews and confirms his/her ratings
+4. The participant clicks the "Submit my ratings" button
+5. The participant is redirected to a waiting screen (until co-creation teams are created)
+
+### US-20: Enter my co-creation team
+
+As a participant, I want to enter my assigned co-creation team, in order to collaborate in creating a artistic proposal based on some seed that I liked.
+
+1. The participant clicks the "Enter co-creation team" button, shown after the Facilitators have created co-creation teams
+2. The participant is redirected to the Co-creation team screen
+
+### US-21: Access the information about the seed associated to my co-creation team
+
+As a participant, I want to have access to the information about my team's seed, in order to think about different possible artistic proposals.
+
+1. The participant [enters the co-creation team screen](#us-20-enter-my-co-creation-team)
+2. The seed PDF, conceptual map, and other resources are shown in the screen
+3. The participant navigates over the provided information
+
+### US-22: Collaboratively fill the flower template
+
+As a participant, I want to collaboratively fill the flower template, in order to formally redact the artistic proposal that the team has thought about.
+
+1. The participant [enters the co-creation team screen](#us-20-enter-my-co-creation-team)
+2. The editable flower template is shown in the screen
+3. The participant writes in it, together with other team members
+
+### US-23: Submit flower deliverables and template
+
+As a participant (speaker), I want to submit the completed flower template and other items, in order to deliver our proposal to the facilitators. 
+
+1. The participant [enters the co-creation team screen](#us-20-enter-my-co-creation-team)
+2. The participant clicks the "Deliver flower" button when it is finished and all items are attached
+3. The participant confirms the submission
