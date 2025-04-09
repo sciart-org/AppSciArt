@@ -217,3 +217,60 @@ As a participant, I want to see my creations in a hackathon in which I participa
 2. The participant clicks the "Your contributions" button in some past hackathon
 3. The participant is redirected to the creations screen
 
+### US-11: Enter a hackathon
+
+As a participant, I want to enter a hackathon in which I am enrolled, in order to participate in it.
+
+1. The participant enters AppSciArt manually, or from the confirmation email received
+2. The participant clicks the joining button in the Home screen
+3. A new tab is opened with the Hackathon screen
+
+### US-12: Enter my exploring group
+
+As a participant, I want to enter my assigned exploring group, in order to collaborate in creating a conceptual map of the seed of my group.
+
+1. The participant clicks the "Enter exploring groups" button, shown after the Facilitators have created exploring groups
+2. The participant is redirected to the Exploring group screen
+
+### US-13: Explore seed associated to my exploring group
+
+As a participant, I want to explore the seed assigned to my exploring group, in order to get more information and create a conceptual map of it.
+
+1. The participant [enters the exploring group screen](#us-12-enter-my-exploring-group)
+2. The seed PDF and links to its resources are shown in the screen
+3. The participant navigates over the provided information
+
+### US-14: Collaboratively create a conceptual map of the seed assigned to my exploring group
+
+As a participant, I want to collaboratively create a conceptual map of the seed assigned to my exploring group, so that other groups can get an initial understanding of all seeds.
+
+1. The participant [enters the exploring group screen](#us-12-enter-my-exploring-group)
+2. The collaborative conceptual map creator is shown in the screen
+3. The participant introduces shapes, text, or images
+
+### US-15: Ask an AI agent about the seed associated to my exploring group
+
+As a participant, I want to ask an AI agent about the seed associated to my exploring group or any other related topic, in order to get a clearer picture of it and get more information.
+
+1. The participant [enters the exploring group screen](#us-12-enter-my-exploring-group)
+2. The AI chat is shown in the screen
+3. The participant enters its propmt
+4. The AI chat responds to it
+
+### US-16: Ask for help to a facilitator
+
+As a participant (group voice), I want to ask for help to a facilitator, in order to solve doubts about the process or solve any issue that has emerged during it.
+
+1. The participant [enters the exploring group screen](#us-12-enter-my-exploring-group)
+2. The assistance chat is shown in the screen
+3. The participant chats with the facilitators
+
+### US-17: Submit the conceptual map created by my group
+
+As a participant (group voice), I want to submit the conceptual map created by my group, in order to deliver it to facilitators and present it to other participants.
+
+1. The participant [enters the exploring group screen](#us-12-enter-my-exploring-group)
+2. The participant clicks the "Send conceptual map" button when it is finished
+3. The participant confirms the submission
+4. If there is still time left for other participants to finish their conceptual maps, participants of the group are redirected to a waiting screen
+5. If there is not, the participants are redirected to the conceptual maps presentation screen
