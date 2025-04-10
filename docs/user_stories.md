@@ -36,30 +36,30 @@ As a guest, I want to log into my already existing account in order to access al
 
 As a guest, I want to create an account in order to access all the functionalities of AppSciArt.
 
-This user story has several entry points:
+This user story has several user workflows.
 
-1. Entry point:
-     * Direct registration: The guest clicks the "Register" button in the Home screen
-     * Quick registration:
+#### US-2A: Direct registration
 
-        i. The guest introduces his/her email address in the quick registration form in the Home screen
+1. The guest clicks the "Register" button in the Home screen
+2. The guest fills the registration form
+3. The guest clicks the "Register" button below the form
+4. The participant is prompted to join a hackathon. See [Joining a hackathon](#us-3-joining-a-hackathon)
 
-        ii. The guest checks the email received and clicks the "Complete registration" button
+#### US-2B: Quick registration
 
-     * Unregistered [Joining](#us-3-joining-a-hackathon):
+1. The guest introduces his/her email address in the quick registration form in the Home screen
+2. The guest clicks the "Join now" button
+3. An email is sent for the guest to [complete the registration](#us-2c-complete-registration)
 
-         i. The guest accesses the hackathon list screen
+#### US-2C: Complete registration
 
-         ii. The guest clicks the "Join hackathon" button of the hackathon he/she wants to join
-
-         iii. The guest fills a quick registration + joining form (minimal information asked)
-
-         iv. The guest is prompted to explore seed collections
-
-         v. The guest checks the email received and clicks the "Complete registration" button
- 
-2. The guest completes the registration form
-3. The participant is prompted to join a hackathon (if not already joined). See [Joining a hackathon](#us-3-joining-a-hackathon)
+1. The guest enters his/her email inbox
+2. The guest clicks the "Complete your registration" email sent by AppSciArt
+3. The guest clicks the "Complete my registration" button in the email
+4. The guest is redirected to the registration form
+5. The guest fills the missing values of the registration form
+6. The guest clicks the "Register" button
+7. The participant is prompted to join a hackathon. See [Joining a hackathon](#us-3-joining-a-hackathon)
 
 ### US-3: Joining a hackathon
 
@@ -67,16 +67,24 @@ As a participant, I want to be able to join a hackathon, in order to participate
 
 This user story has several possible user workflows:
 
-* From [Registering](#us-2-registering):
+#### US-3A: Unregistered join
 
-  0. The participant may get more information about the methodology format by clicking the "What is a hackathon?" button
-  1. If the participant does not want to join:
+1. The guest accesses the hackathon list screen
+2. The guest clicks the "Join hackathon" button of the hackathon he/she wants to join
+3. The guest fills a quick registration + joining form (minimal information)
+4. The guest is prompted to explore seed collections
+5. An email is sent for the guest to [complete the registration](#us-2c-complete-registration)
+
+#### US-3B: Join from [direct registration](#us-2a-direct-registration) or [complete registration](#us-2c-complete-registration)
+
+  1. The participant may get more information about the methodology format by clicking the "What is a hackathon?" button
+  2. If the participant does not want to join:
     
       i. The participant clicks the "Maybe later" button
 
       ii. The participant is prompted to explore previous editions or get more information about the hackathon format
 
-  2. If the participant wants to join:
+  3. If the participant wants to join:
 
       i. The participant clicks the hackathon he/she wants to join
 
@@ -84,29 +92,27 @@ This user story has several possible user workflows:
 
       iii. The participant fills the joining form
 
-      iv. The participant is prompted to explore seed collections
+      iv. The participant is prompted to [explore seed collections](#us-4-explore-sciart-products-collections)
 
-* From [Unregistered joining](#us-2-registering). 
-
-* From Registered joining:
+#### US-3C: Join from [hackathon list](#us-7-view-the-list-of-incoming-hackathons)
 
   1. The participant accesses the hackathon list screen
   2. The guest clicks the "Join hackathon" button of the hackathon he/she wants to join
   3. The participant fills the joining form
-  4. The participant is prompted to explore seed collections
+  4. The participant is prompted to [explore seed collections](#us-4-explore-sciart-products-collections)
 
-* To closest hackathon, from home screen:
+#### US-3D: Join to closest hackathon from home screen
 
   1. The participant clicks the "Join hackathon" button in the Home screen
   2. The participant fills the joining form
-  3. The participant is prompted to explore seed collections
+  3. The participant is prompted to [explore seed collections](#us-4-explore-sciart-products-collections)
 
-* From its seed collection (if there is an incoming hackathon using that collection):
+#### US-3E: Join to some hackathon from its seed collection
 
   1. The participant accesses some seed collection
-  2. The participant clicks the "Join hackathon" button
+  2. The participant clicks the "Join hackathon" button. Shown if there is an incoming hackathon using that collection
   3. The participant fills the joining form
-  4. The participant is prompted to explore seed collections
+  4. The participant is prompted to [explore seed collections](#us-4-explore-sciart-products-collections)
 
 ### US-4: Explore SciArt products collections
 
