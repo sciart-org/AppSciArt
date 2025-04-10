@@ -65,7 +65,7 @@ This user story has several user workflows.
 
 As a participant, I want to be able to join a hackathon, in order to participate in it.
 
-This user story has several possible user workflows:
+This user story has several possible user workflows.
 
 #### US-3A: Unregistered join
 
@@ -97,7 +97,7 @@ This user story has several possible user workflows:
 #### US-3C: Join from [hackathon list](#us-7-view-the-list-of-incoming-hackathons)
 
   1. The participant accesses the hackathon list screen
-  2. The guest clicks the "Join hackathon" button of the hackathon he/she wants to join
+  2. The participant clicks the "Join hackathon" button of the hackathon he/she wants to join
   3. The participant fills the joining form
   4. The participant is prompted to [explore seed collections](#us-4-explore-sciart-products-collections)
 
@@ -118,39 +118,47 @@ This user story has several possible user workflows:
 
 As a user, I want to explore seed, flower, and fruit collections, in order to discover more about the SciArt process and products.
 
-This user story has several possible user workflows:
-
-1. From Navbar:
-
-     1. The user clicks the "Collections" button in the Navbar
-     2. The user selects the product he/she wans to explore (seeds, flowers or fruits)
-     3. The user is redirected to the collection screen of the selected product
-
-2. From the carousel of the Home screen (For not finished editions, to seed collections)
-
-    1. The user clicks the logo of the incoming/ongoing edition in the Home screen carousel
-    2. The user is redirected to the seed collection of that edition
-
-3. From the edition details screen (For finished editions)
-
-    1. The user accesses the details screen of some edition
-    2. The user clicks the product he/she wants to explore (seeds, flowers or fruits)
-    3. The user is redirected to the collection screen of the selected product
-
-4. From [Joining a hackathon](#us-3-joining-a-hackathon)
-
-    1. The user clicks the "Seed collection" button shown after joining a hackathon
-    2. The user is redirected to the seed collection of the edition of that hackathon
-
-5. From other collections: If the user is on some collection screen, he/she can navigate between seed, flower and fruit collection screens.
+This user story has several possible user workflows.
 
 By default, the collection of the most recent edition is shown. The user may change the collection by clicking the dropdown in the collection screen.
 
+#### US-4A: Access product collections from Navbar
+
+1. The user clicks the "Collections" button in the Navbar
+2. The user selects the product he/she wants to explore (seeds, flowers or fruits)
+3. The user is redirected to the collection screen of the selected product
+
+#### US-4B: Access seed collections from the Home screen
+
+1. The user clicks the logo of the incoming/ongoing edition in the Home screen carousel
+2. The user is redirected to the seed collection of that edition
+
+#### US-4C: Access product collections from the edition details screen
+
+1. The user accesses the details screen of some edition
+2. The user clicks the product he/she wants to explore (seeds, flowers or fruits)
+3. The user is redirected to the collection screen of the selected product
+
+#### US-4D: Access product collections from [Joining a hackathon](#us-3-joining-a-hackathon)
+
+1. The user clicks the "Seed collection" button shown after joining a hackathon
+2. The user is redirected to the seed collection of the edition of that hackathon
+
+#### US-4E: Access product collections from other collections
+
+If the user is on some collection screen, he/she can navigate between seed, flower and fruit collection screens.
+
+#### US-4F: Access seed collections from [my liked seeds](#us-15-see-my-liked-seeds-of-some-collection)
+
+TODO
+
 ### US-5: Explore SciArt products details
+
+TODO: SEPARATE SUB-STORIES
 
 As a user, I want to explore the details of seed, flower, and fruit collections, in order to discover more about a specific product or topic.
 
-This user story has several possible user workflows:
+This user story has several possible user workflows.
 
 1. From collections:
 
@@ -205,13 +213,13 @@ This user story has several possible entry points:
 
 As a participant, I want to see the hackathons in which I am enrolled, in order to organise my schedule so that I can attend.
 
-This user stories has the same user workflow as [US-7](#us-7-view-the-list-of-incoming-hackathons), but the user must be authenticated.
+This user story has the same user workflow as [US-7](#us-7-view-the-list-of-incoming-hackathons), but the user must be authenticated.
 
 ### US-9: View past hackathons in which I participated
 
 As a participant, I want to see past hackathons in which I participated, in order to remember my previous experiences in SciArt.
 
-This user stories has the same user workflow as [US-7](#us-7-view-the-list-of-incoming-hackathons), but the user must be authenticated.
+This user story has the same user workflow as [US-7](#us-7-view-the-list-of-incoming-hackathons), but the user must be authenticated.
 
 The list will appear in the "Your past hackathons" section.
 
@@ -223,7 +231,23 @@ As a participant, I want to see my creations in a hackathon in which I participa
 2. The participant clicks the "Your contributions" button in some past hackathon
 3. The participant is redirected to the creations screen
 
-### US-11: Enter a hackathon
+### US-11: View the list of previous editions
+
+As a user, I want to see a list of previous SciArt methodologies editions, in order to check the different topics and a short description of what was covered in previous projects.
+
+1. The user clicks the "Editions" button in the Navbar
+2. The user is redirected to the editions screen
+3. The list of previous editions is shown
+
+### US-12: View the details of some previous edition
+
+As a user, I want to see the details of some previous edition, in order to get inspired by past projects and get more information about the SciArt process
+
+1. The user enters the [editions screen](#us-11-view-the-list-of-previous-editions)
+2. The user clicks the "Know more" button of some edition
+3. The user is shown a description of the edition, a link to the catalog, a fruit carousel and links to its collections
+
+### US-13: Access hackathon main screen
 
 As a participant, I want to enter a hackathon in which I am enrolled, in order to participate in it.
 
@@ -231,14 +255,57 @@ As a participant, I want to enter a hackathon in which I am enrolled, in order t
 2. The participant clicks the joining button in the Home screen
 3. A new tab is opened with the Hackathon screen
 
-### US-12: Enter my exploring group
+### US-14: Like a seed
+
+As a participant, I want to be able to like seeds, in order to have a separate collection of all my favourite seeds and review them later on.
+
+This user story has different user workflows.
+
+#### US-14A: From some [seed collection](#us-4-explore-sciart-products-collections)
+
+1. The participant enters some [seed collection screen](#us-4-explore-sciart-products-collections)
+2. The participant clicks the like button of the seed he/she likes
+
+#### US-14B: From [seed details](#us-5-explore-sciart-products-details)
+
+1. The participant enters the [seed details screen](#us-5-explore-sciart-products-details)
+2. The participant clicks the like button shown in the screen
+
+### US-15: See my liked seeds of some collection
+
+As a participant, I want to see my liked seeds, in order to see those seeds I liked the most again and get more information about them.
+
+1. The participant clicks the "My liked seeds" button in the Navbar
+2. The participant is redirected to the liked seeds screen
+3. The list of liked seeds of the most recent collection is shown by default.
+4. If there are no liked seeds, the participant is prompted to [explore seed collections](#us-4-explore-sciart-products-collections)
+
+If the participant wants to change the collection shown, he/she can click the dropdown show on the screen and select the preferred collection.
+
+### US-16: Unlike a seed
+
+TODO
+
+#### US-16A: From [seed collection](#us-4-explore-sciart-products-collections)
+
+TODO
+
+#### US-16B: From [seed details](#us-5-explore-sciart-products-details)
+
+TODO
+
+#### US-16C: From [my liked seeds](#us-14-like-a-seed)
+
+TODO
+
+### US-17: Enter my exploring group
 
 As a participant, I want to enter my assigned exploring group, in order to collaborate in creating a conceptual map of the seed of my group.
 
 1. The participant clicks the "Enter exploring groups" button, shown after the Facilitators have created exploring groups
 2. The participant is redirected to the Exploring group screen
 
-### US-13: Explore seed associated to my exploring group
+### US-18: Explore seed associated to my exploring group
 
 As a participant, I want to explore the seed assigned to my exploring group, in order to get more information and create a conceptual map of it.
 
@@ -246,7 +313,7 @@ As a participant, I want to explore the seed assigned to my exploring group, in 
 2. The seed PDF and links to its resources are shown in the screen
 3. The participant navigates over the provided information
 
-### US-14: Collaboratively create a conceptual map of the seed assigned to my exploring group
+### US-19: Collaboratively create a conceptual map of the seed assigned to my exploring group
 
 As a participant, I want to collaboratively create a conceptual map of the seed assigned to my exploring group, so that other groups can get an initial understanding of all seeds.
 
@@ -254,16 +321,16 @@ As a participant, I want to collaboratively create a conceptual map of the seed 
 2. The collaborative conceptual map creator is shown in the screen
 3. The participant introduces shapes, text, or images
 
-### US-15: Ask an AI agent about the seed associated to my exploring group
+### US-20: Ask an AI agent about the seed associated to my exploring group
 
 As a participant, I want to ask an AI agent about the seed associated to my exploring group or any other related topic, in order to get a clearer picture of it and get more information.
 
 1. The participant [enters the exploring group screen](#us-12-enter-my-exploring-group)
 2. The AI chat is shown in the screen
-3. The participant enters its propmt
+3. The participant enters a prompt
 4. The AI chat responds to it
 
-### US-16: Ask for help to a facilitator
+### US-21: Ask for help to a facilitator
 
 As a participant (group voice), I want to ask for help to a facilitator, in order to solve doubts about the process or solve any issue that has emerged during it.
 
@@ -271,17 +338,17 @@ As a participant (group voice), I want to ask for help to a facilitator, in orde
 2. The assistance chat is shown in the screen
 3. The participant chats with the facilitators
 
-### US-17: Submit the conceptual map created by my group
+### US-22: Submit the conceptual map created by my group
 
 As a participant (group voice), I want to submit the conceptual map created by my group, in order to deliver it to facilitators and present it to other participants.
 
 1. The participant [enters the exploring group screen](#us-12-enter-my-exploring-group)
 2. The participant clicks the "Send conceptual map" button when it is finished
 3. The participant confirms the submission
-4. If there is still time left for other participants to finish their conceptual maps, participants of the group are redirected to a waiting screen
+4. If there is still time left for other participants to finish their conceptual maps, participants of the group are redirected to a waiting screen while waiting for other groups to finish
 5. If there is not, the participants are redirected to the conceptual maps presentation screen
 
-### US-18: Present the conceptual map created by my exploring group
+### US-23: Present the conceptual map created by my exploring group
 
 As a participant (usually, the group voice), I want to present the conceptual map created by my exploring group, in order to give other participants an initial understanding of our assigned seed.
 
@@ -290,7 +357,7 @@ As a participant (usually, the group voice), I want to present the conceptual ma
 3. The participant shares his/her screen, if necessary
 4. The participant presents the conceptual map of his/her exploring group
 
-### US-19: Rate seeds
+### US-24: Rate seeds
 
 As a participant, I want to rate each seed presented, in order to help facilitators creating co-creation teams.
 
@@ -300,14 +367,14 @@ As a participant, I want to rate each seed presented, in order to help facilitat
 4. The participant clicks the "Submit my ratings" button
 5. The participant is redirected to a waiting screen (until co-creation teams are created)
 
-### US-20: Enter my co-creation team
+### US-25: Enter my co-creation team
 
-As a participant, I want to enter my assigned co-creation team, in order to collaborate in creating a artistic proposal based on some seed that I liked.
+As a participant, I want to enter my assigned co-creation team, in order to collaborate in creating an artistic proposal based on some seed that I liked.
 
 1. The participant clicks the "Enter co-creation team" button, shown after the Facilitators have created co-creation teams
 2. The participant is redirected to the Co-creation team screen
 
-### US-21: Access the information about the seed associated to my co-creation team
+### US-26: Access the information about the seed associated to my co-creation team
 
 As a participant, I want to have access to the information about my team's seed, in order to think about different possible artistic proposals.
 
@@ -315,7 +382,7 @@ As a participant, I want to have access to the information about my team's seed,
 2. The seed PDF, conceptual map, and other resources are shown in the screen
 3. The participant navigates over the provided information
 
-### US-22: Collaboratively fill the flower template
+### US-27: Collaboratively fill the flower template
 
 As a participant, I want to collaboratively fill the flower template, in order to formally redact the artistic proposal that the team has thought about.
 
@@ -323,10 +390,12 @@ As a participant, I want to collaboratively fill the flower template, in order t
 2. The editable flower template is shown in the screen
 3. The participant writes in it, together with other team members
 
-### US-23: Submit flower deliverables and template
+### US-28: Submit flower deliverables and template
 
 As a participant (speaker), I want to submit the completed flower template and other items, in order to deliver our proposal to the facilitators. 
 
 1. The participant [enters the co-creation team screen](#us-20-enter-my-co-creation-team)
 2. The participant clicks the "Deliver flower" button when it is finished and all items are attached
 3. The participant confirms the submission
+
+TODO: COVER NOTIFICATIONS/REMIDERS
