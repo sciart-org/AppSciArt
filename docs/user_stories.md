@@ -150,38 +150,38 @@ If the user is on some collection screen, he/she can navigate between seed, flow
 
 #### US-4F: Access seed collections from [my liked seeds](#us-15-see-my-liked-seeds-of-some-collection)
 
-TODO
+1. The participant accesses the liked seeds screen of some edition that has no liked seeds yet
+2. The participant clicks the "Seed collection" button
+3. The participant is redirected to the seed collection screen of that edition
 
 ### US-5: Explore SciArt products details
-
-TODO: SEPARATE SUB-STORIES
 
 As a user, I want to explore the details of seed, flower, and fruit collections, in order to discover more about a specific product or topic.
 
 This user story has several possible user workflows.
 
-1. From collections:
+#### US-5A: Access product details from other collections
 
-    1. The user accesses some product collection
-    2. The user clicks the "See more" button of the specific product of which he/she wants to see the details
-    3. The user is redirected to the details screen of the selected product
+ 1. The user accesses some product collection
+ 2. The user clicks the "See more" button of the specific product of which he/she wants to see the details
+ 3. The user is redirected to the details screen of the selected product
 
-2. From fruit details (To associated seed and flower):
+#### US-5B: Access associated seed or flower details of some fruit from its details
 
-    1. The user accesses the details screen of some fruit
-    2. The user clicks the button to see the associated seed or flower
-    3. The user is redirected to the details screen of the selected product
+ 1. The user accesses the details screen of some fruit
+ 2. The user clicks the button to see the associated seed or flower
+ 3. The user is redirected to the details screen of the selected product
 
-3. From the edition details carousel (To fruit details):
+#### US-5C: Access fruit details from the carousel in the [edition details](#us-12-view-the-details-of-some-previous-edition) screen
 
-    1. The user accesses the details screen of some edition
-    2. The user clicks the "Know more" button in the fruits carousel
-    3. The user is redirected to the details screen of the selected fruit
+ 1. The user accesses the details screen of some edition
+ 2. The user clicks the "Know more" button in the fruits carousel
+ 3. The user is redirected to the details screen of the selected fruit
 
-4. From [Joining a hackathon](#us-3-joining-a-hackathon) (To seed details)
+#### US-5D: Access seed details from the carousel shown after [joining a hackathon](#us-3-joining-a-hackathon)
 
-    1. The user clicks the "Know more" button in the seeds carousel
-    2. The user is redirected to the details screen of the selected seed
+ 1. The user clicks the "Know more" button in the seeds carousel
+ 2. The user is redirected to the details screen of the selected seed
 
 ### US-6: View detailed information about the methodology format
 
