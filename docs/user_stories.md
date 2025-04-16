@@ -24,6 +24,8 @@ SciArt seeds, flowers and fruits will be referred as just seeds, flowers and fru
 
 As a guest, I want to log into my already existing account in order to access all the functionalities of AppSciArt.
 
+This user story has several possible entry points:
+
 1. Entry point. The guest could click the "Log in" button from:
    * The Home screen
    * Some product collection
@@ -190,11 +192,9 @@ As a user, I want to see the methodology format, in order to understand how it's
 This user story has several possible entry points:
 
 1. Entry point:
-
     * From the "Our format" button in the Navbar
     * From the "Find all the details here" button in the Home screen
     * From [Joining a hackathon - From Registering](#us-3-joining-a-hackathon)
-
 2. The user is redirected to the methodology format details screen after clicking the corresponding button.
 
 ### US-7: View the list of incoming hackathons
@@ -284,19 +284,24 @@ If the participant wants to change the collection shown, he/she can click the dr
 
 ### US-16: Unlike a seed
 
-TODO
+As a participant, I want to be able to unlike seeds, in order keep my favourites list up to date and only include seeds I’m still interested in.
+
+This user story has different user workflows.
 
 #### US-16A: From [seed collection](#us-4-explore-sciart-products-collections)
 
-TODO
+1. The participant accesses the seed collection screen of some edition
+2. The participant clicks the unlike button of the seed he/she does not like anymore
 
 #### US-16B: From [seed details](#us-5-explore-sciart-products-details)
 
-TODO
+1. The participant accesses the details screen of some seed
+2. The participant clicks the unlike button
 
 #### US-16C: From [my liked seeds](#us-14-like-a-seed)
 
-TODO
+1. The participant accesses the liked seeds screen of some collection
+2. The participant clicks the unlike button of the seed he/she does not like anymore
 
 ### US-17: Enter my exploring group
 
