@@ -403,4 +403,51 @@ As a participant (speaker), I want to submit the completed flower template and o
 2. The participant clicks the "Deliver flower" button when it is finished and all items are attached
 3. The participant confirms the submission
 
+### US-29: See other participant's profile
+
+As a participant, I want to be able to view other participant's profile in order to get to know them better and discover their areas of expertise.
+
+This user story has several user workflows.
+
+#### US-29A: From the fruit carousel in the [edition details screen](#us-12-view-the-details-of-some-previous-edition)
+
+1. The user accesses the details screen of some edition
+2. The user clicks the name of an author of some fruit
+3. The user is redirected to the profile of that participant
+
+#### US-29B: From the seed carousel after [joining a hackathon](#us-3-joining-a-hackathon)
+
+1. The user clicks the name of an author of some seed, in the carousel shown after joining a hackathon
+2. The user is redirected to the profile of that participant
+
+#### US-29C: From [product collections](#us-4-explore-sciart-products-collections)
+
+1. The user accesses some product collection
+2. The user clicks the name of an author of some product
+3. The user is redirected to the profile of that participant
+
+#### US-29D: From [product details](#us-5-explore-sciart-products-details)
+
+1. The user accesses the details screen of some product
+2. The user clicks the name of an author
+3. The user is redirected to the profile of that participant
+
+#### US-29E: From the [liked seeds screen](#us-15-see-my-liked-seeds-of-some-collection)
+
+1. The participant accesses the liked seeds screen
+2. The participant clicks the name of an author of one of their liked seeds
+3. The participant is redirected to the profile of that participant
+
+#### US-29F: From the [hackathon screen](#us-13-access-hackathon-main-screen)
+
+1. The participant accesses the hackathon screen
+2. The participant clicks the name or icon of some member of their exploring group, or co-creation team.
+3. The participant is redirected to the profile of that participant
+
+#### US-29G: From the [exploring group](#us-17-enter-my-exploring-group) / [co-creation team](#us-25-enter-my-co-creation-team) screen
+
+1. The participant accesses the exploring group screen or the co-creation team screen
+2. The participant clicks the name or icon of some member of their exploring group, or co-creation team.
+3. The participant is redirected to the profile of that participant
+
 TODO: COVER NOTIFICATIONS/REMIDERS
