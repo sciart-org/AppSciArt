@@ -23,3 +23,8 @@ frontend/*.njsproj
 frontend/*.sln
 frontend/*.sw?
 .DS_Store
+
+backend/node_modules
+backend/.env
+
+node_modules
