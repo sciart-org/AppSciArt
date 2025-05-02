@@ -1,12 +1,12 @@
 import cors from 'cors'
 
 export function corsMiddleware () {
-  const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8080'
+  const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
 
   return cors({
     origin: (origin, callback) => {
       const ACCEPTED_ORIGINS = [
-        'http://localhost:8080',
+        'http://localhost:5173',
         FRONTEND_URL
       ]
       if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
