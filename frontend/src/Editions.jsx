@@ -32,14 +32,12 @@ export default function Editions() {
   const handleSubmit = (e) => {
     e.preventDefault();
     formData.year = Number(formData.year);
-    console.log(formData);
     fetch(`${API_URL}/editions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     })
       .then((response) => {
-        console.log(response);
         return response.json();
       })
       .then(() => {
