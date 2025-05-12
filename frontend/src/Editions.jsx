@@ -9,14 +9,28 @@ export default function Editions() {
     year: "",
     shortDescription: "",
     longDescription: "",
-    catalog: "",
+    catalogLink: "",
     isVisible: true,
   });
+  const [error, setError] = useState(null);
+  const jwt = "test"
 
   const fetchEditions = async () => {
-    await fetch(`${API_URL}/editions`)
+    await fetch(`${API_URL}/editions?visibility=all`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
     .then((response) => response.json())
-    .then((data) => setEditions(data))
+    .then((data) => {
+      if(!data.error) {
+        setError(null);
+        setEditions(data);
+      } else {
+        setError(data.error);
+      }
+    })
     .catch((error) => console.error("Error fetching editions:", error));
   }
 
@@ -34,7 +48,8 @@ export default function Editions() {
     formData.year = Number(formData.year);
     fetch(`${API_URL}/editions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", 
+                Authorization: `Bearer ${jwt}` },
       body: JSON.stringify(formData),
     })
       .then((response) => {
@@ -48,7 +63,7 @@ export default function Editions() {
           year: "",
           shortDescription: "",
           longDescription: "",
-          catalog: "",
+          catalogLink: "",
           isVisible: true,
         });
       })
@@ -58,11 +73,14 @@ export default function Editions() {
   return (
     <div style={{ flex: 1, height: "100%" }}>
       <h2>Editions</h2>
+      <div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+      </div>
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ flex: 1 }}>
           <h3>List of Editions</h3>
           <ul>
-            {editions.map((edition) => (
+            {Array.isArray(editions) && editions?.map((edition) => (
               <li key={edition.id}>
                 <strong>{edition.name}</strong> ({edition.year})
               </li>
@@ -112,9 +130,9 @@ export default function Editions() {
             />
             <input
               type="text"
-              name="catalog"
-              placeholder="Catalog URL"
-              value={formData.catalog}
+              name="catalogLink"
+              placeholder="catalog URL"
+              value={formData.catalogLink}
               onChange={handleInputChange}
               required
             />

@@ -9,7 +9,7 @@ const editionSchema = z.object({
   year: z.number().int().min(1900),
   shortDescription: z.string(),
   longDescription: z.string(),
-  catalog: z.string(),
+  catalogLink: z.string(),
   isVisible: z.boolean()
 })
 

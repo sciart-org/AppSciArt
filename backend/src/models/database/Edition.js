@@ -24,7 +24,7 @@ export const Edition = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false
     },
-    catalog: {
+    catalogLink: {
       type: DataTypes.STRING,
       allowNull: false
     },

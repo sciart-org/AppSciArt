@@ -1,8 +1,8 @@
 import { Router } from 'express'
 
-import { EditionController } from '../controllers/editions.js'
+import * as EditionController from '../controllers/editionsController.js'
 
 export const editionsRouter = Router()
 
-editionsRouter.get('/', EditionController.getAll)
-editionsRouter.post('/', EditionController.create)
+editionsRouter.get('/', EditionController.getEditions)
+editionsRouter.post('/', EditionController.createEdition)

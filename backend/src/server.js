@@ -1,30 +1,41 @@
 import 'dotenv/config'
+import http from 'http'
 import express, { json } from 'express'
 import { corsMiddleware } from './middlewares/cors.js'
-import { editionsRouter } from './routes/editions.js'
 import { sequelize } from './config/sequelize.js'
-
-import './models/database/Edition.js'
+import { initialize } from '@oas-tools/core'
 
 const app = express()
 
 const PORT = process.env.PORT || 3000
 
 app.disable('x-powered-by')
-app.use(json())
+app.use(json({ limit: '50mb' }))
 app.use(corsMiddleware())
 
-app.get('/', (req, res) => {
-  res.send('AppSciArt backend ')
-})
+const config = {
+  middleware: {
+    security: {
+      auth: {
+        bearerAuth: () => { /* no-op */ }
+      }
+    }
+  }
+}
 
-app.use('/editions', editionsRouter)
-
-sequelize.authenticate().then(() => {
-  app.listen(PORT, () => console.log(`Database connected successfully and app listening on port ${PORT}`))
-})
-  .catch((error) => {
-    console.log(error.message)
+initialize(app, config).then(() => {
+  sequelize.authenticate().then(() => {
+    sequelize.sync({ force: true })
+    http.createServer(app).listen(PORT, () => {
+      console.log('\nApp running at http://localhost:' + PORT)
+      console.log('________________________________________________________________')
+      if (!config?.middleware?.swagger?.disable) {
+        console.log('API docs (Swagger UI) available on http://localhost:' + PORT + '/docs')
+        console.log('________________________________________________________________')
+      }
+    })
   })
-
-sequelize.sync({ force: true })
+    .catch((error) => {
+      console.log(error.message)
+    })
+})
