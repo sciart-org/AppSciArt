@@ -792,10 +792,12 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/SignUpRequest'
       responses:
         '201':
           description: User registered
+        default:
+          description: Unexpected error
 
   /users:
     x-router-controller: usersController
@@ -1713,3 +1715,26 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/TeamDetails'
+
+    SignUpRequest:
+      type: object
+      required: [email, name, surname, password, gender, birthDate]
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+          maxLength: 50
+        surname:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          format: password
+        gender:
+          type: string
+          enum: [male, female, other, prefer_not_to_say]
+        birthDate:
+          type: string
+          format: date
