@@ -1,9 +1,18 @@
+import { signInEmail } from '../auth/signin.js'
 import { signUpEmail } from '../auth/signup.js'
 
-export function login (req, res) {
-  res.send({
-    message: 'This is the mockup controller for login'
-  })
+export async function login (req, res) {
+  const { email, password } = req.body
+  const { data, error } = await signInEmail(email, password)
+  if (error?.status) {
+    res.status(error.status).send({ error: error.message })
+  } else {
+    res.status(201).send({
+      jwt: data.session.access_token,
+      name: data.user.user_metadata.name,
+      surname: data.user.user_metadata.surname
+    })
+  }
 }
 
 export async function register (req, res) {
@@ -31,7 +40,9 @@ const completeRegister = async (req, res) => {
     res.status(error.status).send({ error: error.message })
   } else {
     res.status(201).send({
-      jwt: data.session.access_token
+      jwt: data.session.access_token,
+      name: data.user.user_metadata.name,
+      surname: data.user.user_metadata.surname
     })
   }
 }

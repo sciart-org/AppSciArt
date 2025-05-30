@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Carousel from "./components/Carousel.jsx";
-import Flower from "./components/Flower.jsx";
-import Seed from "./components/Seed.jsx";
-import Fruit from "./components/Fruit.jsx";
+import Flower from "../../components/sciartProducts/Flower.jsx";
+import Seed from "../../components/sciartProducts/Seed.jsx";
+import Fruit from "../../components/sciartProducts/Fruit.jsx";
 import InspiringScientist from "./components/InspiringScientist.jsx";
 import Participant from "./components/Participant.jsx";
-import AsterButton from "./components/AsterButton.jsx";
-import "./Home.css";
-import HackathonCard from "./components/HackathonCard.jsx";
+import AsterButton from "../../components/AsterButton.jsx";
+import HackathonCard from "../../components/HackathonCard.jsx";
+import "./css/Home.css";
 
 function SciArtItems() {
   return (

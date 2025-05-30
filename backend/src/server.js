@@ -4,10 +4,13 @@ import express, { json } from 'express'
 import { corsMiddleware } from './middlewares/cors.js'
 import { sequelize } from './config/sequelize.js'
 import { initialize } from '@oas-tools/core'
+import { bearerJwt } from '@oas-tools/auth/handlers'
 
 const app = express()
 
 const PORT = process.env.PORT || 3000
+const JWT_SECRET = process.env.JWT_SECRET
+const JWT_ISSUER = process.env.JWT_ISSUER
 
 app.disable('x-powered-by')
 app.use(json({ limit: '50mb' }))
@@ -17,7 +20,7 @@ const config = {
   middleware: {
     security: {
       auth: {
-        bearerAuth: () => { /* no-op */ }
+        bearerAuth: bearerJwt({ issuer: JWT_ISSUER, secret: JWT_SECRET })
       }
     }
   }

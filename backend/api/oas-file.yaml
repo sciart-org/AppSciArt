@@ -754,6 +754,7 @@ paths:
   /login:
     x-router-controller: authController
     post:
+      security: [{}]
       tags: [Auth]
       summary: Login
       operationId: login
@@ -762,21 +763,17 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/SignInRequest'
       responses:
         '200':
-          description: Auth token
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
+          description: Login successful
+        default:
+          description: Unexpected error
 
   /register:
     x-router-controller: authController
     post:
+      security: [{}]
       tags: [Auth]
       summary: Register a new user
       operationId: register
@@ -1738,3 +1735,14 @@ components:
         birthDate:
           type: string
           format: date
+
+    SignInRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
