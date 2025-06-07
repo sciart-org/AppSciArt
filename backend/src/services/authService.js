@@ -1,5 +1,5 @@
 import { signInEmail } from '../auth/signin.js'
-import { signUpEmail } from '../auth/signup.js'
+import { signUpEmail, signUpGoogle } from '../auth/signup.js'
 
 export async function login (req, res) {
   const { email, password } = req.body
@@ -25,7 +25,18 @@ export async function register (req, res) {
     })
   } else {
     res.status(500).send({
-      message: 'Invalid registration method'
+      message: 'Invalid method'
+    })
+  }
+}
+
+export async function registerProvider (req, res) {
+  const { provider } = req.query
+  if (provider === 'google') {
+    await googleRegister(req, res)
+  } else {
+    res.status(500).send({
+      message: 'Invalid provider'
     })
   }
 }
@@ -43,6 +54,17 @@ const completeRegister = async (req, res) => {
       jwt: data.session.access_token,
       name: data.user.user_metadata.name,
       surname: data.user.user_metadata.surname
+    })
+  }
+}
+
+const googleRegister = async (req, res) => {
+  const { data, error } = await signUpGoogle()
+  if (error?.status) {
+    res.status(error.status).send({ error: error.message })
+  } else {
+    res.status(201).send({
+      url: data.url
     })
   }
 }

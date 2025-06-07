@@ -45,12 +45,12 @@ paths:
             enum: [all, published]
           description: Filter editions by visibility status
       responses:
-        '200':
+        "200":
           description: A list of editions
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditionList'
+                $ref: "#/components/schemas/EditionList"
     post:
       tags: [Editions]
       summary: Create an edition
@@ -60,14 +60,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EditionDetails'
+              $ref: "#/components/schemas/EditionDetails"
       responses:
-        '201':
+        "201":
           description: Edition created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditionDetails'
+                $ref: "#/components/schemas/EditionDetails"
 
   /editions/{editionId}:
     x-router-controller: editionsController
@@ -82,12 +82,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Edition details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditionDetails'
+                $ref: "#/components/schemas/EditionDetails"
     put:
       tags: [Editions]
       summary: Update an edition
@@ -103,14 +103,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EditionDetails'
+              $ref: "#/components/schemas/EditionDetails"
       responses:
-        '200':
+        "200":
           description: Edition updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditionDetails'
+                $ref: "#/components/schemas/EditionDetails"
     delete:
       tags: [Editions]
       summary: Delete an edition
@@ -122,7 +122,7 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        "204":
           description: Edition deleted
 
   /editions/{editionId}/publish:
@@ -138,12 +138,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Edition published
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditionDetails'
+                $ref: "#/components/schemas/EditionDetails"
 
   /editions/{editionId}/methodology:
     x-router-controller: editionsController
@@ -158,12 +158,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Edition methodology
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Methodology'
+                $ref: "#/components/schemas/Methodology"
 
   /hackathons:
     x-router-controller: hackathonsController
@@ -179,14 +179,14 @@ paths:
             type: string
             enum: [closest, incoming, previous, all]
       responses:
-        '200':
+        "200":
           description: List of hackathons
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/HackathonList'
+                  $ref: "#/components/schemas/HackathonList"
     post:
       tags: [Hackathons]
       summary: Create a new hackathon
@@ -196,14 +196,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Hackathon'
+              $ref: "#/components/schemas/Hackathon"
       responses:
-        '201':
+        "201":
           description: Hackathon created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Hackathon'
+                $ref: "#/components/schemas/Hackathon"
 
   /hackathons/{hackathonId}:
     x-router-controller: hackathonsController
@@ -218,12 +218,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Hackathon details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Hackathon'
+                $ref: "#/components/schemas/Hackathon"
     put:
       tags: [Hackathons]
       summary: Update a hackathon
@@ -239,14 +239,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Hackathon'
+              $ref: "#/components/schemas/Hackathon"
       responses:
-        '200':
+        "200":
           description: Hackathon updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Hackathon'
+                $ref: "#/components/schemas/Hackathon"
     delete:
       tags: [Hackathons]
       summary: Delete a hackathon
@@ -258,7 +258,7 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        "204":
           description: Hackathon deleted
 
   /hackathons/{hackathonId}/publish:
@@ -274,12 +274,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Hackathon published
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Hackathon'
+                $ref: "#/components/schemas/Hackathon"
 
   /hackathons/{hackathonId}/users:
     x-router-controller: hackathonsController
@@ -294,14 +294,14 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: List of users
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UserList'
+                  $ref: "#/components/schemas/UserList"
 
   /hackathons/{hackathonId}/clusters:
     x-router-controller: clustersController
@@ -316,14 +316,14 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: List of clusters
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ClusterList'
+                  $ref: "#/components/schemas/ClusterList"
     post:
       tags: [Clusters]
       summary: Create a new cluster
@@ -335,12 +335,12 @@ paths:
           schema:
             type: integer
       responses:
-        '201':
+        "201":
           description: Cluster created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cluster'
+                $ref: "#/components/schemas/Cluster"
 
   /hackathons/{hackathonId}/clusters/{clusterId}:
     x-router-controller: clustersController
@@ -360,12 +360,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Cluster details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cluster'
+                $ref: "#/components/schemas/Cluster"
     delete:
       tags: [Clusters]
       summary: Delete a cluster
@@ -382,7 +382,7 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        "204":
           description: Cluster deleted
 
   /hackathons/{hackathonId}/clusters/{clusterId}/exploring-groups:
@@ -403,14 +403,14 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: List of exploring groups
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GroupList'
+                  $ref: "#/components/schemas/GroupList"
     post:
       tags: [Groups & Teams]
       summary: Create a new exploring group
@@ -427,12 +427,12 @@ paths:
           schema:
             type: integer
       responses:
-        '201':
+        "201":
           description: Exploring group created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupDetails'
+                $ref: "#/components/schemas/GroupDetails"
 
   /hackathons/{hackathonId}/clusters/{clusterId}/exploring-groups/{groupId}:
     x-router-controller: groupsAndTeamsController
@@ -457,12 +457,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Exploring group details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupDetails'
+                $ref: "#/components/schemas/GroupDetails"
     delete:
       tags: [Groups & Teams]
       summary: Delete an exploring group
@@ -484,7 +484,7 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        "204":
           description: Exploring group deleted
     put:
       tags: [Groups & Teams]
@@ -511,14 +511,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GroupDetails'
+              $ref: "#/components/schemas/GroupDetails"
       responses:
-        '200':
+        "200":
           description: Exploring group updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupDetails'
+                $ref: "#/components/schemas/GroupDetails"
 
   /hackathons/{hackathonId}/clusters/{clusterId}/co-creation-teams:
     x-router-controller: groupsAndTeamsController
@@ -538,14 +538,14 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: List of co-creation teams
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TeamList'
+                  $ref: "#/components/schemas/TeamList"
     post:
       tags: [Groups & Teams]
       summary: Create a new co-creation team
@@ -562,12 +562,12 @@ paths:
           schema:
             type: integer
       responses:
-        '201':
+        "201":
           description: Co-creation team created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TeamDetails'
+                $ref: "#/components/schemas/TeamDetails"
 
   /hackathons/{hackathonId}/clusters/{clusterId}/co-creation-teams/{teamId}:
     x-router-controller: groupsAndTeamsController
@@ -592,12 +592,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Co-creation team details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TeamDetails'
+                $ref: "#/components/schemas/TeamDetails"
     delete:
       tags: [Groups & Teams]
       summary: Delete a co-creation team
@@ -619,7 +619,7 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        "204":
           description: Co-creation team deleted
     put:
       tags: [Groups & Teams]
@@ -646,14 +646,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TeamDetails'
+              $ref: "#/components/schemas/TeamDetails"
       responses:
-        '200':
+        "200":
           description: Co-creation team updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TeamDetails'
+                $ref: "#/components/schemas/TeamDetails"
 
   /users/{userId}/hackathons:
     x-router-controller: userHackathonsController
@@ -668,14 +668,14 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: List of hackathons
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/HackathonList'
+                  $ref: "#/components/schemas/HackathonList"
 
   /users/{userId}/hackathons/{hackathonId}:
     x-router-controller: userHackathonsController
@@ -695,7 +695,7 @@ paths:
           schema:
             type: integer
       responses:
-        '201':
+        "201":
           description: Enrollment created
 
   /users/{userId}/hackathons/{hackathonId}/contributions:
@@ -716,14 +716,14 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: User's contributions
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Contribution'
+                  $ref: "#/components/schemas/Contribution"
 
   /users/{userId}/hackathons/{hackathonId}/clusters/{clusterId}:
     x-router-controller: userHackathonsController
@@ -748,7 +748,7 @@ paths:
           schema:
             type: integer
       responses:
-        '201':
+        "201":
           description: Cluster enrollment created
 
   /login:
@@ -763,15 +763,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignInRequest'
+              $ref: "#/components/schemas/SignInRequest"
       responses:
-        '200':
+        "200":
           description: Login successful
         default:
           description: Unexpected error
 
   /register:
     x-router-controller: authController
+    get:
+      security: [{}]
+      tags: [Auth]
+      summary: Register a new user (using provider)
+      operationId: registerProvider
+      parameters:
+        - name: provider
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [google]
+      responses:
+        "201":
+          description: User registered
+        default:
+          description: Unexpected error
     post:
       security: [{}]
       tags: [Auth]
@@ -789,9 +806,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignUpRequest'
+              oneOf:
+                - $ref: "#/components/schemas/SignUpRequest"
+                - $ref: "#/components/schemas/QuickSignUpRequest"
       responses:
-        '201':
+        "201":
           description: User registered
         default:
           description: Unexpected error
@@ -803,14 +822,14 @@ paths:
       summary: Get list of users
       operationId: getUsers
       responses:
-        '200':
+        "200":
           description: List of users
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UserList'
+                  $ref: "#/components/schemas/UserList"
     post:
       tags: [User Profile]
       summary: Create a new user
@@ -823,21 +842,29 @@ paths:
             type: array
             items:
               type: string
-              enum: [participant, designer, facilitator, inspiring-scientist, evaluator, admin]
+              enum:
+                [
+                  participant,
+                  designer,
+                  facilitator,
+                  inspiring-scientist,
+                  evaluator,
+                  admin,
+                ]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDetails'
+              $ref: "#/components/schemas/UserDetails"
       responses:
-        '201':
+        "201":
           description: User created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserDetails'
-                
+                $ref: "#/components/schemas/UserDetails"
+
   /users/{userId}:
     x-router-controller: usersController
     get:
@@ -851,12 +878,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Public info
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserDetails'
+                $ref: "#/components/schemas/UserDetails"
     put:
       tags: [User Profile]
       summary: Edit user profile
@@ -872,14 +899,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDetails'
+              $ref: "#/components/schemas/UserDetails"
       responses:
-        '200':
+        "200":
           description: Profile updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserDetails'
+                $ref: "#/components/schemas/UserDetails"
 
   /users/{userId}/liked-seeds:
     x-router-controller: userPreferencesController
@@ -899,12 +926,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: List of liked seeds
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SeedList'
+                $ref: "#/components/schemas/SeedList"
 
     post:
       tags: [User Preferences]
@@ -925,7 +952,7 @@ paths:
                 seedId:
                   type: integer
       responses:
-        '201':
+        "201":
           description: Seed liked
 
   /users/{userId}/liked-seeds/{seedId}:
@@ -946,14 +973,28 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Seed unliked
+
+  /me:
+    x-router-controller: usersController
+    get:
+      tags: [User Profile]
+      summary: Get authenticated user
+      operationId: getCurrentUser
+      responses:
+        "200":
+          description: My user details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
 
   /seeds:
     x-router-controller: seedsController
     get:
       tags: [SciArt seeds]
-      summary: Get seeds 
+      summary: Get seeds
       operationId: getSeedsByEdition
       parameters:
         - name: edition
@@ -962,12 +1003,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: List of seeds
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SeedList'
+                $ref: "#/components/schemas/SeedList"
     post:
       tags: [SciArt seeds]
       summary: Create a new seed
@@ -977,20 +1018,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SeedDetails'
+              $ref: "#/components/schemas/SeedDetails"
       responses:
-        '201':
+        "201":
           description: Seed created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SeedDetails'
+                $ref: "#/components/schemas/SeedDetails"
 
   /flowers:
     x-router-controller: flowersController
     get:
       tags: [SciArt flowers]
-      summary: Get flowers 
+      summary: Get flowers
       operationId: getFlowersByEdition
       parameters:
         - name: edition
@@ -999,12 +1040,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: List of flowers
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FlowerList'
+                $ref: "#/components/schemas/FlowerList"
     post:
       tags: [SciArt flowers]
       summary: Create a new flower
@@ -1014,20 +1055,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FlowerDetails'
+              $ref: "#/components/schemas/FlowerDetails"
       responses:
-        '201':
+        "201":
           description: Flower created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FlowerDetails'
+                $ref: "#/components/schemas/FlowerDetails"
 
   /fruits:
     x-router-controller: fruitsController
     get:
       tags: [SciArt fruits]
-      summary: Get fruits 
+      summary: Get fruits
       operationId: getFruitsByEdition
       parameters:
         - name: edition
@@ -1036,12 +1077,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: List of fruits
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FruitList'
+                $ref: "#/components/schemas/FruitList"
     post:
       tags: [SciArt fruits]
       summary: Create a new fruit
@@ -1051,14 +1092,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FruitDetails'
+              $ref: "#/components/schemas/FruitDetails"
       responses:
-        '201':
+        "201":
           description: Fruit created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FruitDetails'
+                $ref: "#/components/schemas/FruitDetails"
 
   /seeds/{seedId}:
     x-router-controller: seedsController
@@ -1073,12 +1114,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Seed details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SeedDetails'
+                $ref: "#/components/schemas/SeedDetails"
     put:
       tags: [SciArt seeds]
       summary: Update a seed
@@ -1094,14 +1135,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SeedDetails'
+              $ref: "#/components/schemas/SeedDetails"
       responses:
-        '200':
+        "200":
           description: Seed updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SeedDetails'
+                $ref: "#/components/schemas/SeedDetails"
     delete:
       tags: [SciArt seeds]
       summary: Delete a seed
@@ -1113,7 +1154,7 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        "204":
           description: Seed deleted
 
   /flowers/{flowerId}:
@@ -1129,12 +1170,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Flower details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FlowerDetails'
+                $ref: "#/components/schemas/FlowerDetails"
     put:
       tags: [SciArt flowers]
       summary: Update a flower
@@ -1150,14 +1191,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FlowerDetails'
+              $ref: "#/components/schemas/FlowerDetails"
       responses:
-        '200':
+        "200":
           description: Flower updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FlowerDetails'
+                $ref: "#/components/schemas/FlowerDetails"
     delete:
       tags: [SciArt flowers]
       summary: Delete a flower
@@ -1169,7 +1210,7 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        "204":
           description: Flower deleted
 
   /flowers/{flowerId}/publish:
@@ -1185,12 +1226,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Flower published
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FlowerDetails'
+                $ref: "#/components/schemas/FlowerDetails"
 
   /seeds/{seedId}/publish:
     x-router-controller: seedsController
@@ -1205,12 +1246,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Seed published
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SeedDetails'
+                $ref: "#/components/schemas/SeedDetails"
 
   /fruits/{fruitId}:
     x-router-controller: fruitsController
@@ -1225,12 +1266,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Fruit details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FruitDetails'
+                $ref: "#/components/schemas/FruitDetails"
     put:
       tags: [SciArt fruits]
       summary: Update a fruit
@@ -1246,14 +1287,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FruitDetails'
+              $ref: "#/components/schemas/FruitDetails"
       responses:
-        '200':
+        "200":
           description: Fruit updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FruitDetails'
+                $ref: "#/components/schemas/FruitDetails"
     delete:
       tags: [SciArt fruits]
       summary: Delete a fruit
@@ -1265,7 +1306,7 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        "204":
           description: Fruit deleted
 
   /fruits/{fruitId}/publish:
@@ -1281,12 +1322,12 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Fruit published
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FruitDetails'
+                $ref: "#/components/schemas/FruitDetails"
 
   /areas-of-interest:
     x-router-controller: domainController
@@ -1295,12 +1336,12 @@ paths:
       summary: Get set of areas of interest
       operationId: getAreasOfInterest
       responses:
-        '200':
+        "200":
           description: A list of areas of interest
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DomainItemList'
+                $ref: "#/components/schemas/DomainItemList"
 
   /affiliations:
     x-router-controller: domainController
@@ -1309,12 +1350,12 @@ paths:
       summary: Get set of possible affiliations
       operationId: getAffiliations
       responses:
-        '200':
+        "200":
           description: A list of possible affiliations
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DomainItemList'
+                $ref: "#/components/schemas/DomainItemList"
 
   /hackathon-roles:
     x-router-controller: domainController
@@ -1323,12 +1364,12 @@ paths:
       summary: Get set of hackathon roles
       operationId: getHackathonRoles
       responses:
-        '200':
+        "200":
           description: A list of hackathon roles
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DomainItemList'
+                $ref: "#/components/schemas/DomainItemList"
 
 components:
   securitySchemes:
@@ -1384,11 +1425,11 @@ components:
           type: integer
           minimum: 1900
           maximum: 2200
-    
+
     EditionList:
       type: array
       items:
-        $ref: '#/components/schemas/EditionSummary'
+        $ref: "#/components/schemas/EditionSummary"
 
     Methodology:
       type: object
@@ -1455,7 +1496,7 @@ components:
         authors:
           type: array
           items:
-            $ref: '#/components/schemas/UserDetails'
+            $ref: "#/components/schemas/UserDetails"
         editionId:
           type: integer
           minimum: 1
@@ -1490,7 +1531,7 @@ components:
         authors:
           type: array
           items:
-            $ref: '#/components/schemas/UserDetails'
+            $ref: "#/components/schemas/UserDetails"
         hackathonId:
           type: integer
           minimum: 1
@@ -1522,7 +1563,7 @@ components:
         authors:
           type: array
           items:
-            $ref: '#/components/schemas/UserDetails'
+            $ref: "#/components/schemas/UserDetails"
         hackathonId:
           type: integer
           minimum: 1
@@ -1555,22 +1596,22 @@ components:
     UserList:
       type: array
       items:
-        $ref: '#/components/schemas/UserDetails'
+        $ref: "#/components/schemas/UserDetails"
 
     SeedList:
       type: array
       items:
-        $ref: '#/components/schemas/SeedDetails'
+        $ref: "#/components/schemas/SeedDetails"
 
     FlowerList:
       type: array
       items:
-        $ref: '#/components/schemas/FlowerDetails'
+        $ref: "#/components/schemas/FlowerDetails"
 
     FruitList:
       type: array
       items:
-        $ref: '#/components/schemas/FruitDetails'
+        $ref: "#/components/schemas/FruitDetails"
 
     Hackathon:
       type: object
@@ -1614,8 +1655,8 @@ components:
     HackathonList:
       type: array
       items:
-        $ref: '#/components/schemas/Hackathon'
-        
+        $ref: "#/components/schemas/Hackathon"
+
     Contribution:
       type: object
       properties:
@@ -1626,10 +1667,10 @@ components:
           type: integer
           minimum: 1
         flower:
-          $ref: '#/components/schemas/FlowerDetails'
+          $ref: "#/components/schemas/FlowerDetails"
         fruit:
-          $ref: '#/components/schemas/FruitDetails'
-    
+          $ref: "#/components/schemas/FruitDetails"
+
     ConceptualMap:
       type: object
       properties:
@@ -1645,8 +1686,8 @@ components:
         authors:
           type: array
           items:
-            $ref: '#/components/schemas/UserDetails'
-    
+            $ref: "#/components/schemas/UserDetails"
+
     DomainItem:
       type: object
       properties:
@@ -1660,7 +1701,7 @@ components:
     DomainItemList:
       type: array
       items:
-        $ref: '#/components/schemas/DomainItem'
+        $ref: "#/components/schemas/DomainItem"
 
     Cluster:
       type: object
@@ -1672,7 +1713,7 @@ components:
     ClusterList:
       type: array
       items:
-        $ref: '#/components/schemas/Cluster'
+        $ref: "#/components/schemas/Cluster"
 
     GroupDetails:
       type: object
@@ -1689,12 +1730,12 @@ components:
         conceptualMapId:
           type: integer
           minimum: 1
-    
+
     GroupList:
       type: array
       items:
-        $ref: '#/components/schemas/GroupDetails'
-    
+        $ref: "#/components/schemas/GroupDetails"
+
     TeamDetails:
       type: object
       properties:
@@ -1711,7 +1752,7 @@ components:
     TeamList:
       type: array
       items:
-        $ref: '#/components/schemas/TeamDetails'
+        $ref: "#/components/schemas/TeamDetails"
 
     SignUpRequest:
       type: object
@@ -1735,6 +1776,22 @@ components:
         birthDate:
           type: string
           format: date
+
+    QuickSignUpRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+
+    ProviderSignUpRequest:
+      type: object
+      required: [provider]
+      properties:
+        provider:
+          type: string
+          enum: [google]
 
     SignInRequest:
       type: object

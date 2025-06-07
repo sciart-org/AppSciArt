@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import tokenService from "../../utils/token.service";
+import AsterButton from "../../components/AsterButton";
 
 export default function Register() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -15,15 +16,31 @@ export default function Register() {
     birthDate: "",
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch(`${API_URL}/register?method=complete`, {
+  const signUpProvider = ({ provider }) => {
+    fetch(`${API_URL}/register?provider=${provider}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      }
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        window.location.href = data.url;
+      })
+      .catch((error) => console.error("Error creating user:", error));
+  }
+
+  const signUp = ({ method }) => {
+    fetch(`${API_URL}/register?method=${method}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${jwt}`,
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(formData)
     })
       .then((response) => {
         return response.json();
@@ -47,6 +64,11 @@ export default function Register() {
         }
       })
       .catch((error) => console.error("Error creating user:", error));
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    signUp({ method: "complete" });
   };
 
   const handleInputChange = (e) => {
@@ -111,6 +133,11 @@ export default function Register() {
           />
           <button type="submit">Register!</button>
         </form>
+        <AsterButton onClick={() => {
+          signUpProvider({ provider: "google" });
+        }}>
+          Sign up with Google
+        </AsterButton>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import tokenService from "../../utils/token.service";
-import './core.css'
+import "./core.css";
 
 export default function AppNavbar() {
   const [username, setUsername] = useState("");
@@ -9,8 +9,9 @@ export default function AppNavbar() {
 
   useEffect(() => {
     if (user) {
-      console.log(user);
-      setUsername(user.name + " " + user.surname);
+      const name = user.name || "";
+      const surname = user.surname || "";
+      setUsername(name + " " + surname);
     }
   }, [user]);
 
