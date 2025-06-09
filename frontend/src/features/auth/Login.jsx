@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import tokenService from "../../utils/token.service";
+import Providers from "./components/Providers";
+import FormInput from "./components/FormInput";
+import AsterButton from "../../components/AsterButton";
 
 export default function Login() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [error, setError] = useState(null);
-  const jwt = "test";
 
   const [formData, setFormData] = useState({
     email: "",
@@ -17,7 +19,6 @@ export default function Login() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
       },
       body: JSON.stringify(formData),
     })
@@ -38,7 +39,7 @@ export default function Login() {
           setError(data.error);
         }
       })
-      .catch((error) => console.error("Error logging in:", error));
+      .catch((error) => setError(error));
   };
 
   const handleInputChange = (e) => {
@@ -50,28 +51,29 @@ export default function Login() {
     <div style={{ flex: 1, height: "100%" }}>
       <h1>Log in now</h1>
       <div>{error && <p style={{ color: "red" }}>{error}</p>}</div>
-      <div style={{ flex: 1, padding: "10vh" }}>
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column" }}
-        >
-          <textarea
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleInputChange}
-            required
-          />
-          <button type="submit">Log in!</button>
+      <div style={{ flex: 1 }}>
+        <form onSubmit={handleSubmit} className="register-form">
+          <div className="input-box-container">
+            <FormInput
+              name={"Email"}
+              type={"text"}
+              value={formData.email}
+              onChange={handleInputChange}
+              required={true}
+            />
+            <FormInput
+              name={"Password"}
+              type={"password"}
+              value={formData.password}
+              onChange={handleInputChange}
+              required={true}
+            />
+          </div>
+          <AsterButton type="submit" style={{ width: "10vw" }}>
+            <text>Log in</text>
+          </AsterButton>
         </form>
+        <Providers />
       </div>
     </div>
   );

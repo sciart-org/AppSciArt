@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import tokenService from "../../utils/token.service";
 import AsterButton from "../../components/AsterButton";
-import { FaGoogle } from "react-icons/fa";
 import "./auth.css";
 import FormInput from "./components/FormInput";
 import FormSelect from "./components/FormSelect";
+import Providers from "./components/Providers";
 
 export default function Register() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -20,22 +20,6 @@ export default function Register() {
     affiliations: null,
     areasOfInterest: null,
   });
-
-  const signUpProvider = ({ provider }) => {
-    fetch(`${API_URL}/register?provider=${provider}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        window.location.href = data.url;
-      })
-      .catch((error) => console.error("Error creating user:", error));
-  };
 
   const signUp = ({ method }) => {
     fetch(`${API_URL}/register?method=${method}`, {
@@ -66,7 +50,7 @@ export default function Register() {
           setError(data.error);
         }
       })
-      .catch((error) => console.error("Error creating user:", error));
+      .catch((error) => setError(error));
   };
 
   const handleSubmit = (e) => {
@@ -125,20 +109,28 @@ export default function Register() {
                 "Company",
                 "Association",
                 "Freelance",
-                "None",
                 "Other",
               ]}
               value={formData.affiliations}
-              onChange={handleInputChange}
+              setValue={(v) => {
+                setFormData({ ...formData, affiliations: v });
+              }}
               required={false}
               multiple={true}
             />
-            {JSON.stringify(formData.affiliations)}
             <FormSelect
               name={"Areas of Interest"}
-              options={[]}
+              options={[
+                "Art",
+                "Pure sciences",
+                "Science applications",
+                "IT",
+                "Others",
+              ]}
               value={formData.areasOfInterest}
-              onChange={handleInputChange}
+              setValue={(v) => {
+                setFormData({ ...formData, areasOfInterest: v });
+              }}
               required={false}
               multiple={true}
             />
@@ -148,7 +140,9 @@ export default function Register() {
               name={"Gender"}
               options={["Male", "Female", "Other", "Prefer not to say"]}
               value={formData.gender}
-              onChange={handleInputChange}
+              setValue={(v) => {
+                setFormData({ ...formData, gender: v });
+              }}
               required={false}
               multiple={false}
             />
@@ -164,23 +158,18 @@ export default function Register() {
                 "65 or more",
               ]}
               value={formData.ageRange}
-              onChange={handleInputChange}
+              setValue={(v) => {
+                setFormData({ ...formData, ageRange: v });
+              }}
               required={false}
               multiple={false}
             />
           </div>
-          <AsterButton type="submit">
+          <AsterButton type="submit" style={{ width: "10vw" }}>
             <text>Register</text>
           </AsterButton>
         </form>
-        <p>or</p>
-        <FaGoogle
-          className="sign-up-icon"
-          style={{ borderColor: "#DB4437", color: "#DB4437" }}
-          onClick={() => {
-            signUpProvider({ provider: "google" });
-          }}
-        />
+        <Providers />
       </div>
     </div>
   );

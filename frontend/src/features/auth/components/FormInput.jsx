@@ -15,7 +15,7 @@ export default function FormInput({
     >
       <div style={{ display: "flex" }}>
         <text>{name}</text>
-        {required && <text style={{ color: "red" }}> *</text>}
+        {required && <span style={{ color: "red", marginLeft: "3px" }}>*</span>}
       </div>
       <input
         type={type}
