@@ -46,3 +46,18 @@
 #navbar>* {
     flex: 5;
 }
+
+.left-button-container,
+.right-button-container {
+  display: flex;
+}
+
+.right-button-container {
+  justify-content: flex-end;
+}
+
+.left-button-container>*,
+.right-button-container>* {
+  margin-left: 0.5vw;
+  margin-right: 0.5vw;
+}

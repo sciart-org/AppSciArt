@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -75,21 +77,6 @@ button:focus-visible {
 #content {
   flex: 1;
   padding: 2vh;
-}
-
-.left-button-container,
-.right-button-container {
-  display: flex;
-}
-
-.right-button-container {
-  justify-content: flex-end;
-}
-
-.left-button-container>*,
-.right-button-container>* {
-  margin-left: 0.5vw;
-  margin-right: 0.5vw;
 }
 
 hr {
