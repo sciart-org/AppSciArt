@@ -1,4 +1,4 @@
-import mockHackathonLogo from "../assets/mockHackathonLogo.png";
+import mockHackathonLogo from "../assets/mockHackathonLogo.jpg";
 import AsterButton from "./AsterButton";
 import "./HackathonCard.css";
 

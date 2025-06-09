@@ -1,0 +1,45 @@
+.input-box-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50vw;
+}
+
+.input-box-container input, .input-box-container select, .multiple-select {
+    width: 20vw;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+    appearance: none;
+    font-family: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+ .multiple-select {
+    border: none;
+    margin: 0.5rem;
+    padding: 0;
+    text-align: start;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.register-form > .aster-button {
+    margin-top: 5vh;
+}
+
+.sign-up-icon {
+    cursor: pointer;
+    border: 0.2em solid;
+    border-radius: 50%;
+    width: 3em;
+    height: 3em;
+    padding: 0.5em;
+}

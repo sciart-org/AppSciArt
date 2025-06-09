@@ -15,3 +15,7 @@ export function getUserInfo (req, res) {
 export function editUser (req, res) {
   service.editUser(req, res)
 }
+
+export function getCurrentUser (req, res) {
+  service.getCurrentUser(req, res)
+}

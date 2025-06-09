@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import tokenService from "../../utils/token.service";
 
 export default function Editions() {
   const API_URL = import.meta.env.VITE_API_URL
@@ -13,7 +14,7 @@ export default function Editions() {
     isVisible: true,
   });
   const [error, setError] = useState(null);
-  const jwt = "test"
+  const jwt = tokenService.getLocalAccessToken();
 
   const fetchEditions = async () => {
     await fetch(`${API_URL}/editions?visibility=all`, {
@@ -22,16 +23,16 @@ export default function Editions() {
         Authorization: `Bearer ${jwt}`,
       },
     })
-    .then((response) => response.json())
-    .then((data) => {
-      if(!data.error) {
-        setError(null);
-        setEditions(data);
-      } else {
-        setError(data.error);
-      }
-    })
-    .catch((error) => console.error("Error fetching editions:", error));
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.error) {
+          setError(null);
+          setEditions(data);
+        } else {
+          setError(data.error);
+        }
+      })
+      .catch((error) => console.error("Error fetching editions:", error));
   }
 
   useEffect(() => {
@@ -48,8 +49,10 @@ export default function Editions() {
     formData.year = Number(formData.year);
     fetch(`${API_URL}/editions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", 
-                Authorization: `Bearer ${jwt}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`
+      },
       body: JSON.stringify(formData),
     })
       .then((response) => {

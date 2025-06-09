@@ -1,4 +1,4 @@
-import logoFruitBlack from "../assets/logoFruitBlack.png";
+import logoFruitBlack from "../../assets/logoFruitBlack.png";
 
 export default function Flower() {
   return (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Carousel.css";
+import "../css/Carousel.css";
 import { GrCaretNext } from "react-icons/gr";
 
 export default function Carousel() {
@@ -61,7 +61,7 @@ export default function Carousel() {
     setTimeout(() => {
       setCenterImage(
         (centerImage + mockObjects.length + newImageIndexOffset) %
-          mockObjects.length
+        mockObjects.length
       );
       setAnimating(false);
     }, 500);

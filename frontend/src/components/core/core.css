@@ -1,0 +1,63 @@
+#navbar,
+#footer {
+    outline: solid;
+    outline-color: black;
+    outline-width: 1px;
+    width: 96vw;
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+
+#footer {
+    width: 100vw;
+    margin-top: 5vh;
+    height: 40vh;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    position: relative;
+}
+
+#footer p {
+    text-align: start;
+    margin: 0;
+    font-size: small;
+}
+
+.footer-text-container {
+    height: 100%;
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+
+#footer .social-networks {
+    position: absolute;
+    right: 7vw;
+    bottom: 5vh;
+}
+
+#navbar {
+    height: 8vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#navbar>* {
+    flex: 5;
+}
+
+.left-button-container,
+.right-button-container {
+  display: flex;
+}
+
+.right-button-container {
+  justify-content: flex-end;
+}
+
+.left-button-container>*,
+.right-button-container>* {
+  margin-left: 0.5vw;
+  margin-right: 0.5vw;
+}

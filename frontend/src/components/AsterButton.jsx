@@ -1,10 +1,24 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import "./AsterButton.css";
+import { useEffect } from "react";
 
 export default function AsterButton(props) {
+  const navigate = useNavigate();
+
   return (
-    <Link className="aster-button" style={{ ...props.style }} to={props.to} onClick={props.onClick}>
+    <button
+      className="aster-button"
+      style={{ ...props.style }}
+      type={props.type}
+      onClick={() => {
+        if (props.onClick) {
+          props.onClick();
+        } else if (props.to) {
+          navigate(props.to);
+        }
+      }}
+    >
       {props.children}
-    </Link>
+    </button>
   );
 }
