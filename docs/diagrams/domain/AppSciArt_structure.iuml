@@ -2,19 +2,20 @@
 
 hide empty members
 
-note "Seed collections are a \nselection of seeds that\nwill be used during a \nspecific hackathon" as n1
-n1 .. SeedCollection
+note "A seed can be used in a \nhackathon if it is included \nin the set of seeds of that \nedition" as n1
+n1 .. Seed
 
 Methodology "1" <-- "0..*" Edition
 
 Edition "1" <-- "0..*" Hackathon
 
-Hackathon "0..*" --> "1" SeedCollection
-SeedCollection "1" <-- "0..*" SeedInCollection
-SeedInCollection "0..*" --> "1" Seed
+Seed "1" <-up-- "1..*" SeedEditions
+Edition "1" <-left-- "0..*" SeedEditions
+Seed "1" <-down- "0..*" HackathonSeeds
+Hackathon "1" <-down- "0..*" HackathonSeeds
 
 Seed "1" <-- "0..*" SeedLikes
-User "1" <-- "0..*" SeedLikes
+User "1" <-up- "0..*" SeedLikes
 
 class Hackathon {
   logo: String
