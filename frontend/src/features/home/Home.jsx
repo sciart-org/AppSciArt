@@ -8,6 +8,21 @@ import Participant from "./components/Participant.jsx";
 import AsterButton from "../../components/AsterButton.jsx";
 import HackathonCard from "../../components/HackathonCard.jsx";
 import "./css/Home.css";
+import hackathonLogo from "../../assets/mockHackathonLogo.jpg";
+
+const mockHackathon = {
+  editionName: "GreenTech Berlin 2025",
+  logo: hackathonLogo,
+  startDate: new Date("2025-08-01"),
+  endDate: new Date("2025-08-03"),
+  type: "ON_SITE",
+  location:
+    "University of Arts Linz, Hauptplatz 8, Lecture Theater, 4th Floor (Altenberger Str. 69, 4040 Linz, Austria)",
+  description:
+    "Explore the boundaries of art and science around the brain and cognition, developing new ways to understand the human mind",
+  isVisible: true,
+  meetLink: null,
+};
 
 function SciArtItems() {
   return (
@@ -79,7 +94,7 @@ function NextEvent() {
   return (
     <div style={{ justifyItems: "center", display: "inline-block" }}>
       <h2 style={{ textAlign: "start" }}>Next event</h2>
-      <HackathonCard />
+      <HackathonCard hackathon={mockHackathon} />
     </div>
   );
 }

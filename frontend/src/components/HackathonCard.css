@@ -8,6 +8,7 @@
 
 .hackathon-card > :first-child {
     flex: 1;
+    justify-content: center;    
 }
 
 .hackathon-card > * {
@@ -17,12 +18,8 @@
     text-align: start;
 }
 
-.hackathon-card > :first-child {
-    justify-content: center;
-}
-
 .hackathon-card > :last-child {
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -40,4 +37,8 @@
     margin-bottom: 2vh;
     text-align: center;
     width: 15vw
+}
+
+.hackathon-card div {
+    width: 100%;
 }

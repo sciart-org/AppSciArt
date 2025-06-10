@@ -1,4 +1,3 @@
-import mockHackathonLogo from "../assets/mockHackathonLogo.jpg";
 import AsterButton from "./AsterButton";
 import "./HackathonCard.css";
 
@@ -9,30 +8,42 @@ export default function HackathonCard(props) {
     month: "long",
     day: "numeric",
   };
-  const mockHackathon = {
-    id: 1,
-    date: new Date(),
-    logo: mockHackathonLogo,
-    isOnline: false,
-    shortDescription:
-      "Explore the boundaries of art and science around the brain and cognition, developing new ways to understand the human mind",
-    location:
-      "Escuela Técnica Superior de Ingeniería Informática de la Universidad de Sevilla (Av. Reina Mercedes s/n, 41012 Sevilla, Spain)",
+
+  const hackathon = props.hackathon;
+
+  const parseType = (type) => {
+    return type.charAt(0) + type.slice(1).toLowerCase().replace("_", " ");
   };
+
   return (
-    <div className="hackathon-card">
+    <div className="hackathon-card" style={{ ...props.style }}>
       <div>
-        <img src={mockHackathon.logo} />
+        <img src={hackathon?.logo} />
       </div>
       <div>
-        <div>
+        <div style={{ width: "100%" }}>
           <h3>When?</h3>
-          <text>{mockHackathon.date.toLocaleDateString("en-US", options)}</text>
+          <text>
+            {hackathon?.startDate.toLocaleDateString("en-US", options)}
+            {" - "}
+            {hackathon?.endDate.toLocaleDateString("en-US", options)}
+          </text>
           <h3>Where?</h3>
-          <text>{mockHackathon.location}</text>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <text>{parseType(hackathon?.type)}</text>
+            <text>{hackathon?.location}</text>
+          </div>
+          <div style={{ marginTop: "3vh" }}>
+            <text>{hackathon?.description}</text>
+          </div>
         </div>
-        <div>
-          <AsterButton>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <AsterButton style={{ width: "45%" }}>
             <text>Join this hackathon!</text>
           </AsterButton>
         </div>

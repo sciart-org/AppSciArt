@@ -12,6 +12,7 @@ import tokenService from "./utils/token.service";
 import { useEffect } from "react";
 import Profile from "./features/auth/Profile";
 import AuthCallback from "./features/auth/AuthCallback";
+import Hackathons from "./features/hackathons/Hackathons";
 
 function App() {
   useEffect(() => {
@@ -25,6 +26,7 @@ function App() {
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
       <Route path="/editions" element={<Editions />} />
+      <Route path="/hackathons" element={<Hackathons />} />
     </>
   );
 
