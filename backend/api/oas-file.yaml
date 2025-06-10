@@ -806,7 +806,7 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
+              anyOf:
                 - $ref: "#/components/schemas/SignUpRequest"
                 - $ref: "#/components/schemas/QuickSignUpRequest"
       responses:
@@ -1772,12 +1772,19 @@ components:
           format: password
         gender:
           type: string
-          enum: [male, female, other, prefer not to say]
+          nullable: true
         ageRange:
           type: string
-          enum: [17 or less, 18-24, 25-34, 35-44, 45-54, 55-64, 65 or more]
+          nullable: true
         affiliations:
           type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+        areasOfInterest:
+          type: array
+          nullable: true
           items:
             type: string
             maxLength: 50
@@ -1789,6 +1796,33 @@ components:
         email:
           type: string
           format: email
+        name:
+          type: string
+          maxLength: 50
+        surname:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          format: password
+        gender:
+          type: string
+          nullable: true
+        ageRange:
+          type: string
+          nullable: true
+        affiliations:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+        areasOfInterest:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
 
     ProviderSignUpRequest:
       type: object

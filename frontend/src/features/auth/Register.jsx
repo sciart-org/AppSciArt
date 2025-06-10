@@ -21,13 +21,22 @@ export default function Register() {
     areasOfInterest: null,
   });
 
+  const itemsToLowerCase = (list) => {
+    if (list === null) return null
+    return list.map(v => v.toLowerCase())
+  }
+
   const signUp = ({ method }) => {
     fetch(`${API_URL}/register?method=${method}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        ...formData,
+        affiliations: itemsToLowerCase(formData.affiliations),
+        areasOfInterest: itemsToLowerCase(formData.areasOfInterest)
+      }),
     })
       .then((response) => {
         return response.json();
