@@ -1,0 +1,69 @@
+@startuml
+
+hide empty members
+hide circle
+
+note "Do we want to show flowers\nthat did not flourish?" as n1
+note "Could a SEED by reused in different\nEDITIONS? (ex: similar topics)" as n2
+note "Hackathon type could be\non-site, remote, or both" as n3
+
+n1 .. Flower
+n2 .left. Seed
+n2 .. Edition
+n3 .. Hackathon
+
+
+Hackathon "0..*" -- "0..*" UX_Facilitators: Will help in
+Hackathon "0..*" -- "1..*" UX_Designer: Has organised
+Hackathon "0..*" -- "0..*" UX_Participants: Are enrolled in
+
+Hackathon "1" -up- "1" SeedCollection: Used during
+Hackathon "1" -up- "0..*" Fruit: Blossomed in
+Hackathon "1" -up- "0..*" Flower: Flourished in
+
+Edition "1" -up- "0..*" Seed: Planted in
+
+Edition "1" --left- "0..*" Hackathon 
+
+UX_Participants .. Enrollment
+Hackathon .. Enrollment
+
+class Enrollment {
+  roles
+  interests
+}
+
+class Edition {
+  name
+  logo
+  year
+  shortDescription
+  longDescription
+  catalogPDF
+  isVisible
+}
+
+class Hackathon {
+  logo
+  startDate
+  endDate
+  type
+  location
+  description
+  isVisible
+  meetLink
+}
+
+class SeedCollection {
+}
+
+class Seed {
+}
+
+class Fruit {
+}
+
+class Flower {
+}
+
+@enduml

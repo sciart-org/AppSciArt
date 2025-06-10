@@ -1,0 +1,45 @@
+@startuml
+
+hide empty members
+
+User "1" <-- "1" UserInfo
+
+class User {
+  email: String
+  password: String
+}
+
+class UserInfo {
+  name: String
+  surname: String
+  gender: String
+  birthDate: String
+  affiliations: String[]
+  areasOfInterest: String[]
+  about: String
+  tags: String[]
+  socialNetworks: String[]
+  sites: String[]
+}
+
+Role <|-- UX_Designer
+Role <|-- UX_Administrator
+
+Role <|-- UX_Facilitator
+Role <|-- InspiringScientist
+Role <|-- UX_Evaluator
+
+UX_Facilitator "0..*" --> "1" Methodology
+InspiringScientist "0..*" --> "1" Methodology
+UX_Evaluator "0..*" --> "1" Methodology
+
+UX_Designer "1" <-- "0..*" Methodology
+
+class UX_Facilitator {
+  isCoordinator: Boolean
+}
+
+User "1" <-right- "0..*" UserRoles
+Role "1" <-left- "0..*" UserRoles
+
+@enduml

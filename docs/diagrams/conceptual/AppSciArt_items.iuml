@@ -1,0 +1,59 @@
+@startuml
+
+hide empty members
+hide circle
+
+note "Seed collections are a selection of seeds that\nwill be used during a specific hackathon" as n1
+
+n1 .. SeedCollection
+
+SeedCollection "0..*" o--- "0..*" Seed
+
+Seed "0..*" -down- "1..*" InspiringScientist: Is planted by
+Seed "1" --right- "0..*" Flower: Flourishes into
+Flower "1" --right- "0..1" Fruit: Blossoms into
+
+Flower "0..*" -- "1..*" UX_Participant: Developed by
+Fruit "0..*" -- "1..*" UX_Participant: Developed by
+
+UX_Participant .. SeedInteraction
+Seed .. SeedInteraction
+
+class SeedInteraction {
+  isLiked
+  notes
+}
+
+class SeedCollection {
+}
+
+class Seed {
+  title
+  templatePDF
+  mainImage
+  state
+  branchesOfKnowledge
+  videoLink
+  presentationLink
+  podcastLink
+  driveLink
+}
+
+class Fruit {
+  title
+  state
+  authorVision
+  curatorVision
+  driveLink
+}
+
+class Flower {
+ title
+ templateDoc
+ conceptualMap
+ state
+ concept
+ driveLink
+}
+
+@enduml

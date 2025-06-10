@@ -1,0 +1,62 @@
+@startuml
+
+hide empty members
+
+note "Participation defines enrollments, \nclusters, groups and teams" as n2
+note "A product will be in BLANK state until \nthey have some associated author" as n3
+
+n2 .. Participation
+n3 .. State
+
+Seed "1" <--down- "0..*" Flower
+Flower "1" <--down- "0..1" Fruit
+
+Flower "0..1" <-right-- "1..*" Participation
+Fruit "0..1" <-up- "1..*" Participation
+User "1" <-- "0..*" Participation
+Hackathon "1" <-- "0..*" Participation
+
+Seed "1" <-left- "1..*" SeedScientists
+InspiringScientist "1" <-- "0..*" SeedScientists
+
+enum State {
+  IN_BLANK
+  IN_PROGRESS
+  IN_REVIEW
+  PUBLISHED
+}
+
+class Participation {
+  clusterNumber: Integer
+}
+
+class Seed {
+  title: String
+  template: String
+  mainImage: String
+  state: State
+  branchesOfKnowledge: String[]
+  seedPDF: String
+  videoLink: String
+  presentationLink: String
+  podcastLink: String
+  driveLink: String
+}
+
+class Fruit {
+  title: String
+  state: State
+  authorVision: String
+  curatorVision: String
+  driveLink: String
+}
+
+class Flower {
+  title: String
+  template: String
+  conceptualMap: String
+  state: State
+  driveLink: String
+}
+
+@enduml

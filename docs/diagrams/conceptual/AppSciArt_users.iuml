@@ -1,0 +1,52 @@
+@startuml
+
+skinparam groupInheritance 2
+
+hide empty members
+hide circle
+
+note "Usual combinations of roles:\n- Scientist + Participant\n- Facilitator + Participant\n- Facilitator + Assessor\n- Facilitator + Evaluator" as n1
+
+User <|-- UX_Facilitators 
+User <|-- InspiringScientists : {complete, overlapping}
+User <|-- UX_Participant
+User <|-- UX_Designer
+User <|-- UX_Assessor
+UX_Facilitators <|-- UX_Coordinator : {complete, disjoint}
+UX_Facilitators <|-- UX_Assistant
+
+class User {
+  email
+  name
+  surname
+  password
+  gender
+  birthDate
+}
+
+class UX_Participant {
+  affiliations
+  areasOfInterest
+  about
+  tags
+  socialNetworks
+  sites
+  /ageRange
+}
+
+class InspiringScientists {
+}
+
+class UX_Facilitators {
+}
+
+class UX_Designer {
+}
+
+class UX_Coordinator {
+}
+
+class UX_Assistant {
+}
+
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+
+hide empty members
+
+note "Seed collections are a \nselection of seeds that\nwill be used during a \nspecific hackathon" as n1
+n1 .. SeedCollection
+
+Methodology "1" <-- "0..*" Edition
+
+Edition "1" <-- "0..*" Hackathon
+
+Hackathon "0..*" --> "1" SeedCollection
+SeedCollection "1" <-- "0..*" SeedInCollection
+SeedInCollection "0..*" --> "1" Seed
+
+Seed "1" <-- "0..*" SeedLikes
+User "1" <-- "0..*" SeedLikes
+
+class Hackathon {
+  logo: String
+  startDate: Date
+  endDate: Date
+  type: HackathonType
+  location: String
+  description: String
+  isVisible: Boolean
+  meetLink: String
+}
+
+class Edition {
+  name: String
+  logo: String
+  year: Integer
+  shortDescription: String
+  longDescription: String: String
+  catalogPDF: String
+  isVisible: Boolean
+}
+
+enum HackathonType {
+  ON_SITE
+  ONLINE
+  HYBRID
+}
+
+@enduml
