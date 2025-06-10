@@ -5,6 +5,7 @@ import { corsMiddleware } from './middlewares/cors.js'
 import { sequelize } from './config/sequelize.js'
 import { initialize } from '@oas-tools/core'
 import { bearerJwt } from '@oas-tools/auth/handlers'
+import './models/relations.js'
 
 const app = express()
 
@@ -28,7 +29,6 @@ const config = {
 
 initialize(app, config).then(() => {
   sequelize.authenticate().then(() => {
-    sequelize.sync({ force: true })
     http.createServer(app).listen(PORT, () => {
       console.log('\nApp running at http://localhost:' + PORT)
       console.log('________________________________________________________________')

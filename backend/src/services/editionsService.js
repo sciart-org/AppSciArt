@@ -1,9 +1,9 @@
-import { EditionModel } from '../models/editions.js'
+import { Edition } from '../models/Edition.js'
 import { validateEdition } from '../schemas/edition.js'
 
 export async function getEditions (req, res) {
   try {
-    const editions = await EditionModel.getAll()
+    const editions = await Edition.findAll()
     res.status(200).send(editions)
   } catch (error) {
     console.error('Error getting editions:', error)
@@ -16,7 +16,7 @@ export async function createEdition (req, res) {
   if (!result.success) {
     return res.status(400).json({ error: JSON.parse(result.error.message) })
   }
-  const newEdition = await EditionModel.create({ body: result.data })
+  const newEdition = await Edition.create({ body: result.data })
   res.status(201).send(newEdition)
 }
 

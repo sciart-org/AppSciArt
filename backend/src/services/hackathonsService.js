@@ -1,3 +1,5 @@
+import { Hackathon } from '../models/Hackathon.js'
+
 export function getHackathons (req, res) {
   res.send({
     message: 'This is the mockup controller for getHackathons'

@@ -1,0 +1,26 @@
+import { DataTypes } from 'sequelize'
+import { sequelize } from '../config/sequelize.js'
+
+export const Flower = sequelize.define(
+  'flowers',
+  {
+    title: {
+      type: DataTypes.STRING
+    },
+    template: {
+      type: DataTypes.STRING
+    },
+    conceptualMap: {
+      type: DataTypes.STRING
+    },
+    state: {
+      type: DataTypes.ENUM('IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED')
+    },
+    driveLink: {
+      type: DataTypes.STRING
+    }
+  },
+  {
+    // Other model options go here
+  }
+)

@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize'
-import { sequelize } from '../../config/sequelize.js'
+import { sequelize } from '../config/sequelize.js'
 
 export const Edition = sequelize.define(
   'editions',
@@ -9,28 +9,25 @@ export const Edition = sequelize.define(
       allowNull: false
     },
     logo: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     year: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
     shortDescription: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     longDescription: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     catalogLink: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     isVisible: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: false,
+      defaultValue: false
     }
   },
   {
