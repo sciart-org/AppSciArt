@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import tokenService from "../../utils/token.service";
 
 export default function Editions() {
-  const API_URL = import.meta.env.VITE_API_URL
+  const API_URL = import.meta.env.VITE_API_URL;
   const [editions, setEditions] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -33,10 +33,10 @@ export default function Editions() {
         }
       })
       .catch((error) => console.error("Error fetching editions:", error));
-  }
+  };
 
   useEffect(() => {
-    fetchEditions()
+    fetchEditions();
   }, []);
 
   const handleInputChange = (e) => {
@@ -51,7 +51,7 @@ export default function Editions() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`
+        Authorization: `Bearer ${jwt}`,
       },
       body: JSON.stringify(formData),
     })
@@ -59,7 +59,7 @@ export default function Editions() {
         return response.json();
       })
       .then(() => {
-        fetchEditions()
+        fetchEditions();
         setFormData({
           name: "",
           logo: "",
@@ -74,25 +74,27 @@ export default function Editions() {
   };
 
   return (
-    <div style={{ flex: 1, height: "100%" }}>
+    <div>
       <h2>Editions</h2>
-      <div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </div>
+      <div>{error && <p style={{ color: "red" }}>{error}</p>}</div>
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ flex: 1 }}>
           <h3>List of Editions</h3>
           <ul>
-            {Array.isArray(editions) && editions?.map((edition) => (
-              <li key={edition.id}>
-                <strong>{edition.name}</strong> ({edition.year})
-              </li>
-            ))}
+            {Array.isArray(editions) &&
+              editions?.map((edition) => (
+                <li key={edition.id}>
+                  <strong>{edition.name}</strong> ({edition.year})
+                </li>
+              ))}
           </ul>
         </div>
-        <div style={{ flex: 1, paddingRight: '10vh' }}>
+        <div style={{ flex: 1, paddingRight: "10vh" }}>
           <h3>Create a New Edition</h3>
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: "flex", flexDirection: "column" }}
+          >
             <input
               type="text"
               name="name"

@@ -83,7 +83,7 @@ export default function Hackathons() {
   }, []);
 
   return (
-    <div style={{ flex: 1, height: "100%" }}>
+    <div>
       <h1>Next hackathons</h1>
       {Object.entries(hackathonsByEdition).map(([editionName, hackathons]) => (
         <>

@@ -101,7 +101,7 @@ function NextEvent() {
 
 export default function Home() {
   return (
-    <div className="home">
+    <div>
       <Carousel />
       <h1 style={{ marginTop: 0 }}>This is SciArt</h1>
       <SciArtItems />

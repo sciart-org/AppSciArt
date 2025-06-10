@@ -48,7 +48,7 @@ export default function Login() {
   };
 
   return (
-    <div style={{ flex: 1, height: "100%" }}>
+    <div>
       <h1>Log in now</h1>
       <div>{error && <p style={{ color: "red" }}>{error}</p>}</div>
       <div style={{ flex: 1 }}>

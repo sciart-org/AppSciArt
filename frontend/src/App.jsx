@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import Profile from "./features/auth/Profile";
 import AuthCallback from "./features/auth/AuthCallback";
 import Hackathons from "./features/hackathons/Hackathons";
+import Format from "./features/hackathons/Format";
 
 function App() {
   useEffect(() => {
@@ -27,6 +28,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/editions" element={<Editions />} />
       <Route path="/hackathons" element={<Hackathons />} />
+      <Route path="/about-the-hackathon" element={<Format />} />
     </>
   );
 
@@ -47,10 +49,12 @@ function App() {
   return (
     <>
       <AppNavbar id="navbar" />
-      <Routes>
-        {publicRoutes}
-        {user ? authorizedRoutes : unauthorizedRoutes}
-      </Routes>
+      <div style={{ flex: 1, height: "100%" }}>
+        <Routes>
+          {publicRoutes}
+          {user ? authorizedRoutes : unauthorizedRoutes}
+        </Routes>
+      </div>
       <AppFooter />
     </>
   );

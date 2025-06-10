@@ -64,7 +64,7 @@ export default function Register() {
   };
 
   return (
-    <div style={{ flex: 1, height: "100%" }}>
+    <div>
       <h1>Register now</h1>
       <div>{error && <p style={{ color: "red" }}>{error}</p>}</div>
       <div style={{ flex: 1 }}>
