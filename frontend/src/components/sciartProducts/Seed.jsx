@@ -1,6 +1,6 @@
 import logoSeedBlack from "../../assets/logoSeedBlack.png";
 
-export default function Flower() {
+export default function Seed() {
   return (
     <div>
       <img src={logoSeedBlack} style={{ width: "10vw" }} />

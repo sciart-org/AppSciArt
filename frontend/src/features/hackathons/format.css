@@ -1,0 +1,25 @@
+.text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.text-container > text {
+    margin-bottom: 2vh;
+    font-size:large;
+    text-align: start;
+}
+
+.format-container {
+    padding-right: 5vw;
+    padding-left: 5vw
+}
+
+.format-container > h2, .format-container > h3 {
+    text-align: start;
+}
+
+.text-image-container {
+    display: flex;
+    align-items: center;
+}

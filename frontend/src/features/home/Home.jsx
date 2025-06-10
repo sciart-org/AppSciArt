@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
 import Carousel from "./components/Carousel.jsx";
-import Flower from "../../components/sciartProducts/Flower.jsx";
-import Seed from "../../components/sciartProducts/Seed.jsx";
-import Fruit from "../../components/sciartProducts/Fruit.jsx";
-import InspiringScientist from "./components/InspiringScientist.jsx";
-import Participant from "./components/Participant.jsx";
 import AsterButton from "../../components/AsterButton.jsx";
 import HackathonCard from "../../components/HackathonCard.jsx";
+import InspiringScientist from "./components/InspiringScientist.jsx";
+import Participant from "./components/Participant.jsx";
+import SciArtProducts from "../../components/sciartProducts/SciArtProducts.jsx";
 import "./css/Home.css";
 import hackathonLogo from "../../assets/mockHackathonLogo.jpg";
 
@@ -24,34 +21,18 @@ const mockHackathon = {
   meetLink: null,
 };
 
-function SciArtItems() {
+function Roles() {
   return (
-    <>
-      <div className="items-container">
-        <div>
-          <Seed />
-          <h3>"SciArt Seed"</h3>
-        </div>
-        <div>
-          <Flower />
-          <h3>"SciArt Flower"</h3>
-        </div>
-        <div>
-          <Fruit />
-          <h3>"SciArt Fruit"</h3>
-        </div>
+    <div className="roles-container">
+      <div>
+        <InspiringScientist />
+        <h3>Inspiring Scientists</h3>
       </div>
-      <div className="roles-container">
-        <div>
-          <InspiringScientist />
-          <h3>Inspiring Scientists</h3>
-        </div>
-        <div>
-          <Participant />
-          <h3>Participants</h3>
-        </div>
+      <div>
+        <Participant />
+        <h3>Participants</h3>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -104,7 +85,8 @@ export default function Home() {
     <div>
       <Carousel />
       <h1 style={{ marginTop: 0 }}>This is SciArt</h1>
-      <SciArtItems />
+      <SciArtProducts />
+      <Roles />
       <hr />
       <MoreInfoSection />
       <hr />
