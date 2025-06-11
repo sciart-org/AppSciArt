@@ -9,7 +9,7 @@ import Register from "./features/auth/Register";
 import Login from "./features/auth/Login";
 import Home from "./features/home/Home";
 import tokenService from "./utils/token.service";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Profile from "./features/auth/Profile";
 import AuthCallback from "./features/auth/AuthCallback";
 import Hackathons from "./features/hackathons/Hackathons";
@@ -20,7 +20,14 @@ function App() {
     tokenService.checkToken();
   }, []);
 
-  const user = tokenService.getUser();
+  const [user, setUser] = useState(tokenService.getUser());
+  const [justRegistered, setJustRegistered] = useState(false);
+
+  const refreshSession = () => {
+    const foundUser = tokenService.getUser();
+    setUser(foundUser);
+    setJustRegistered(true);
+  };
 
   const publicRoutes = (
     <>
@@ -34,15 +41,28 @@ function App() {
 
   const unauthorizedRoutes = (
     <>
-      <Route path="/signin" element={<Login />} />{" "}
-      <Route path="/signup" element={<Register />} />
-      <Route path="/auth/callback" element={<AuthCallback />} />
+      {!user && (
+        <>
+          <Route path="/signin" element={<Login />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+        </>
+      )}
+      {(!user || justRegistered) && (
+        <Route
+          path="/signup"
+          element={<Register refreshSession={refreshSession} />}
+        />
+      )}
     </>
   );
 
   const authorizedRoutes = (
     <>
-      <Route path="/profile" element={<Profile />} />
+      {user && (
+        <>
+          <Route path="/profile" element={<Profile />} />
+        </>
+      )}
     </>
   );
 
@@ -52,7 +72,8 @@ function App() {
       <div style={{ flex: 1, height: "100%" }}>
         <Routes>
           {publicRoutes}
-          {user ? authorizedRoutes : unauthorizedRoutes}
+          {unauthorizedRoutes}
+          {authorizedRoutes}
         </Routes>
       </div>
       <AppFooter />

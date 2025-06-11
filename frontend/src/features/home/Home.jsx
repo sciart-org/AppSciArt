@@ -41,7 +41,7 @@ function MoreInfoSection() {
     <>
       <h2>Want to dive deeper into the process?</h2>
       <div>
-        <AsterButton to={"/about"}>
+        <AsterButton to={"/about-the-hackathon"}>
           <text>Find all the details here</text>
         </AsterButton>
       </div>

@@ -74,6 +74,10 @@ button:focus-visible {
   }
 }
 
+.clickable-text {
+  cursor: pointer;
+}
+
 #content {
   flex: 1;
   padding: 2vh;
