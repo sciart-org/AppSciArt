@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "sync-db": "node scripts/sync-db.js"
+    "sync-db": "node scripts/sync-db.js",
+    "populate-db": "node scripts/populate-db.js"
   },
   "repository": {
     "type": "git",

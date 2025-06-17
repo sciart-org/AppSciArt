@@ -184,9 +184,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/HackathonList"
+                $ref: "#/components/schemas/HackathonList"
     post:
       tags: [Hackathons]
       summary: Create a new hackathon
