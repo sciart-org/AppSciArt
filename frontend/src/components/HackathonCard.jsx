@@ -24,9 +24,9 @@ export default function HackathonCard(props) {
         <div style={{ width: "100%" }}>
           <h3>When?</h3>
           <text>
-            {hackathon?.startDate.toLocaleDateString("en-US", options)}
+            {new Date(hackathon?.startDate).toLocaleDateString("en-US", options)}
             {" - "}
-            {hackathon?.endDate.toLocaleDateString("en-US", options)}
+            {new Date(hackathon?.endDate).toLocaleDateString("en-US", options)}
           </text>
           <h3>Where?</h3>
           <div style={{ display: "flex", flexDirection: "column" }}>
