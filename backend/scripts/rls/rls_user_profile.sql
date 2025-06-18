@@ -8,6 +8,12 @@ as $$
 begin
     insert into public.user_profile (id)
     values (new.id);
+
+    if (new.raw_app_meta_data ->> 'provider') is distinct from 'email' then
+        insert into public.early_signups (email, "createdAt")
+        values (new.email, now());
+    end if;
+
     return new;
 end;
 $$;

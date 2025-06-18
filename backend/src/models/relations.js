@@ -6,6 +6,7 @@ import { Flower } from './Flower.js'
 import { Fruit } from './Fruit.js'
 import { DataTypes } from 'sequelize'
 import { UserProfile } from './UserProfile.js'
+import { EarlySignup } from './EarlySignup.js'
 
 //  STRUCTURE
 
