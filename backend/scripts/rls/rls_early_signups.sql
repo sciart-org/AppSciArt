@@ -1,0 +1,1 @@
+ALTER TABLE public.early_signups ENABLE ROW LEVEL SECURITY;

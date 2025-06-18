@@ -1,0 +1,1 @@
+ALTER TABLE public.hackathons ENABLE ROW LEVEL SECURITY;

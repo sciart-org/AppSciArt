@@ -1,0 +1,1 @@
+ALTER TABLE public.editions ENABLE ROW LEVEL SECURITY;
