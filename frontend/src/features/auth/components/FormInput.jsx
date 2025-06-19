@@ -5,6 +5,7 @@ export default function FormInput({
   value,
   onChange,
   required,
+  disabled,
 }) {
   return (
     <div
@@ -24,6 +25,7 @@ export default function FormInput({
         value={value}
         onChange={onChange}
         required={required}
+        disabled={disabled}
       />
     </div>
   );

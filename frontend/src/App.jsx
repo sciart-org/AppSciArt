@@ -14,6 +14,7 @@ import Profile from "./features/auth/Profile";
 import AuthCallback from "./features/auth/AuthCallback";
 import Hackathons from "./features/hackathons/Hackathons";
 import Format from "./features/hackathons/Format";
+import CompleteRegistration from "./features/auth/CompleteRegistration";
 
 function App() {
   useEffect(() => {
@@ -39,12 +40,13 @@ function App() {
     </>
   );
 
-  const unauthorizedRoutes = (
+  const unauthenticatedRoutes = (
     <>
       {!user && (
         <>
           <Route path="/signin" element={<Login />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/signup/complete" element={<CompleteRegistration />} />
         </>
       )}
       {(!user || justRegistered) && (
@@ -56,7 +58,7 @@ function App() {
     </>
   );
 
-  const authorizedRoutes = (
+  const authenticatedRoutes = (
     <>
       {user && (
         <>
@@ -72,8 +74,8 @@ function App() {
       <div style={{ flex: 1, height: "100%" }}>
         <Routes>
           {publicRoutes}
-          {unauthorizedRoutes}
-          {authorizedRoutes}
+          {unauthenticatedRoutes}
+          {authenticatedRoutes}
         </Routes>
       </div>
       <AppFooter />
