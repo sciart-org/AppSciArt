@@ -17,6 +17,10 @@ export const UserProfile = sequelize.define(
       },
       onDelete: 'CASCADE'
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     name: {
       type: DataTypes.STRING
     },

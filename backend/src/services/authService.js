@@ -1,6 +1,7 @@
 import { signInEmail } from '../auth/signin.js'
 import { signUpEmail, signUpGoogle } from '../auth/signup.js'
 import { UserProfile } from '../models/UserProfile.js'
+import { EarlySignup } from '../models/EarlySignup.js'
 
 export async function login (req, res) {
   const { email, password } = req.body
@@ -16,33 +17,7 @@ export async function login (req, res) {
   }
 }
 
-export async function register (req, res) {
-  const { method } = req.query
-  if (method === 'complete') {
-    await completeRegister(req, res)
-  } else if (method === 'quick') {
-    res.status(500).send({
-      message: 'Quick registration not yet implemented'
-    })
-  } else {
-    res.status(500).send({
-      message: 'Invalid method'
-    })
-  }
-}
-
-export async function registerProvider (req, res) {
-  const { provider } = req.query
-  if (provider === 'google') {
-    await googleRegister(req, res)
-  } else {
-    res.status(500).send({
-      message: 'Invalid provider'
-    })
-  }
-}
-
-const completeRegister = async (req, res) => {
+export async function directRegister (req, res) {
   const { email, password, name, surname, gender, birthDate, affiliations, areasOfInterest } = req.body
 
   if (gender !== null) validateGender(gender, res)
@@ -60,6 +35,29 @@ const completeRegister = async (req, res) => {
       name: data.user.user_metadata.name,
       surname: data.user.user_metadata.surname
     })
+  }
+}
+
+export async function googleRegister (req, res) {
+  const { data, error } = await signUpGoogle()
+  if (error?.status) {
+    res.status(error.status).send({ error: error.message })
+  } else {
+    res.status(201).send({
+      url: data.url
+    })
+  }
+}
+
+export async function quickRegister (req, res) {
+  const { email } = req.body
+  const existingUser = await UserProfile.findOne({ where: { email } })
+  const existingEarlySignup = await EarlySignup.findOne({ where: { email } })
+  if (existingUser !== null || existingEarlySignup !== null) {
+    res.status(400).send({ error: 'Account with that email already registered.' })
+  } else {
+    await EarlySignup.create({ email })
+    res.status(201).send({ message: 'Pre-registered successfully' })
   }
 }
 
@@ -98,15 +96,4 @@ const createUserProfile = async (body) => {
     await createdUserProfile.save()
   }
   return createdUserProfile
-}
-
-const googleRegister = async (req, res) => {
-  const { data, error } = await signUpGoogle()
-  if (error?.status) {
-    res.status(error.status).send({ error: error.message })
-  } else {
-    res.status(201).send({
-      url: data.url
-    })
-  }
 }

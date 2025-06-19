@@ -6,8 +6,8 @@ language plpgsql
 security definer set search_path = ''
 as $$
 begin
-    insert into public.user_profile (id)
-    values (new.id);
+    insert into public.user_profile (id, email)
+    values (new.id, new.email);
 
     if (new.raw_app_meta_data ->> 'provider') is distinct from 'email' then
         insert into public.early_signups (email, "createdAt")
