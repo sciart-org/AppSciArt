@@ -17,6 +17,10 @@
     font-family: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
+.input-box-container input:disabled {
+    background-color:rgb(230, 230, 230);
+}
+
  .multiple-select {
     border: none;
     margin: 0.5rem;

@@ -10,8 +10,8 @@ begin
     values (new.id, new.email);
 
     if (new.raw_app_meta_data ->> 'provider') is distinct from 'email' then
-        insert into public.early_signups (email, "createdAt")
-        values (new.email, now());
+        insert into public.early_signups (email, "createdAt", "isProvider")
+        values (new.email, now(), TRUE);
     end if;
 
     return new;

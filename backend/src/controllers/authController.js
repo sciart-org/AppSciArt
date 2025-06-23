@@ -6,7 +6,7 @@ export function login (req, res) {
 
 export function register (req, res) {
   const { method } = req.query
-  if (method === 'complete') {
+  if (method === 'direct') {
     service.directRegister(req, res)
   } else if (method === 'quick') {
     service.quickRegister(req, res)
@@ -26,4 +26,8 @@ export function registerProvider (req, res) {
       message: 'Invalid provider'
     })
   }
+}
+
+export function completeRegistration (req, res) {
+  service.completeRegistration(req, res)
 }

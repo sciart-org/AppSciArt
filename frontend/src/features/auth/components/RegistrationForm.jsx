@@ -1,24 +1,17 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import FormInput from "./FormInput";
 import FormSelect from "./FormSelect";
 import AsterButton from "../../../components/AsterButton";
 
 export default function RegistrationForm(props) {
-  const email = props.email || null;
-  const [formData, setFormData] = useState({
-    email: email ? email : null,
-    password: null,
-    name: null,
-    surname: null,
-    gender: null,
-    ageRange: null,
-    affiliations: null,
-    areasOfInterest: null,
-  });
+  const { formData, setFormData, onSubmit } = props;
+  const initialFormDataRef = useRef(structuredClone(formData));
+  const initialFormData = initialFormDataRef.current;
+  const hasEmail = initialFormData?.email != null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signUp({ method: "complete" });
+    onSubmit();
   };
 
   const handleInputChange = (e) => {
@@ -28,6 +21,23 @@ export default function RegistrationForm(props) {
 
   return (
     <form onSubmit={handleSubmit} className="register-form">
+      <div className="input-box-container">
+        <FormInput
+          name={"Email"}
+          type={"text"}
+          value={formData.email}
+          onChange={hasEmail ? () => {} : handleInputChange}
+          required={true}
+          disabled={hasEmail}
+        />
+        <FormInput
+          name={"Password"}
+          type={"password"}
+          value={formData.password}
+          onChange={handleInputChange}
+          required={true}
+        />
+      </div>
       <div className="input-box-container">
         <FormInput
           name={"Name"}
@@ -40,23 +50,6 @@ export default function RegistrationForm(props) {
           name={"Surname"}
           type={"text"}
           value={formData.surname}
-          onChange={handleInputChange}
-          required={true}
-        />
-      </div>
-      <div className="input-box-container">
-        <FormInput
-          name={"Email"}
-          type={"text"}
-          value={formData.email}
-          onChange={handleInputChange}
-          required={true}
-          disabled={email !== null}
-        />
-        <FormInput
-          name={"Password"}
-          type={"password"}
-          value={formData.password}
           onChange={handleInputChange}
           required={true}
         />

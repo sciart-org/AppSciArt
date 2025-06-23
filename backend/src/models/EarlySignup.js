@@ -7,6 +7,11 @@ export const EarlySignup = sequelize.define(
     email: {
       type: DataTypes.STRING
     },
+    isProvider: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

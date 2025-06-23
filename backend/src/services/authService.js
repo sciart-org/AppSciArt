@@ -2,6 +2,7 @@ import { signInEmail } from '../auth/signin.js'
 import { signUpEmail, signUpGoogle } from '../auth/signup.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { EarlySignup } from '../models/EarlySignup.js'
+import { authBodyValidator } from '../validators/authValidators.js'
 
 export async function login (req, res) {
   const { email, password } = req.body
@@ -20,11 +21,9 @@ export async function login (req, res) {
 export async function directRegister (req, res) {
   const { email, password, name, surname, gender, birthDate, affiliations, areasOfInterest } = req.body
 
-  if (gender !== null) validateGender(gender, res)
-  if (affiliations !== null) validateAffiliations(affiliations, res)
-  if (areasOfInterest !== null) validateAreasOfInterest(areasOfInterest, res)
-
+  authBodyValidator(req, res)
   const { data, error } = await signUpEmail(email, password, { name, surname })
+
   if (error?.status) {
     res.status(error.status).send({ error: error.message })
   } else {
@@ -61,32 +60,40 @@ export async function quickRegister (req, res) {
   }
 }
 
-const validateEnumValues = (toValidate, possibleValues, property, res) => {
-  if (!possibleValues.includes(toValidate)) {
-    res.status(400).send({ error: 'Invalid value for property ' + property })
+export async function removeQuickRegister (req, res) {
+  const { email } = req.body
+  const deletedEarlySignup = await EarlySignup.destroy({ where: { email } })
+  return deletedEarlySignup !== 0
+}
+
+export async function getQuickRegister (email) {
+  const quickRegister = await EarlySignup.findOne({ where: { email } })
+  return quickRegister
+}
+
+export async function completeRegistration (req, res) {
+  const quickRegiser = await getQuickRegister(req.body.email)
+  if (!quickRegiser) {
+    res.status(400).send({
+      error: 'The email provided is not pre-registered.'
+    })
+  }
+  await removeQuickRegister(req, res)
+  if (!quickRegiser.isProvider) {
+    await directRegister(req, res)
+  } else {
+    await completeProviderRegistration(req, res)
   }
 }
 
-const validateEnumList = (toValidate, possibleValues, property, res) => {
-  for (let v = 0; v < toValidate.length; v = v + 1) {
-    validateEnumValues(toValidate[v], possibleValues, property, res)
-    possibleValues.pop(toValidate[v])
-  }
-}
-
-const validateGender = (gender, res) => {
-  const acceptedGenders = ['male', 'female', 'other', 'prefer not to say']
-  validateEnumValues(gender, acceptedGenders, 'gender', res)
-}
-
-const validateAffiliations = (affiliations, res) => {
-  const acceptedAffiliations = ['university', 'company', 'association', 'freelance', 'other']
-  validateEnumList(affiliations, acceptedAffiliations, 'affiliations', res)
-}
-
-const validateAreasOfInterest = (areasOfInterest, res) => {
-  const acceptedAreas = ['art', 'pure sciences', 'science applications', 'it', 'Others']
-  validateEnumList(areasOfInterest, acceptedAreas, 'areasOfInterest', res)
+const completeProviderRegistration = async (req, res) => {
+  const { email } = req.body
+  authBodyValidator(req, res)
+  const existingUser = await UserProfile.findOne({ where: { email } })
+  const existingUserId = existingUser.id
+  const { name, surname, gender, birthDate, affiliations, areasOfInterest } = req.body
+  await createUserProfile({ existingUserId, name, surname, gender, birthDate, affiliations, areasOfInterest })
+  await googleRegister(req, res)
 }
 
 const createUserProfile = async (body) => {

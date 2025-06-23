@@ -5,7 +5,6 @@ import AppFooter from "./components/core/AppFooter";
 import AppNavbar from "./components/core/AppNavbar";
 import NotFound from "./NotFound";
 import Editions from "./features/editions/Editions";
-import Register from "./features/auth/Register";
 import Login from "./features/auth/Login";
 import Home from "./features/home/Home";
 import tokenService from "./utils/token.service";
@@ -14,7 +13,7 @@ import Profile from "./features/auth/Profile";
 import AuthCallback from "./features/auth/AuthCallback";
 import Hackathons from "./features/hackathons/Hackathons";
 import Format from "./features/hackathons/Format";
-import CompleteRegistration from "./features/auth/CompleteRegistration";
+import RegistrationEntry from "./features/auth/RegistrationEntry";
 
 function App() {
   useEffect(() => {
@@ -46,13 +45,30 @@ function App() {
         <>
           <Route path="/signin" element={<Login />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/signup/complete" element={<CompleteRegistration />} />
+          <Route
+            path="/signup/complete"
+            element={
+              <RegistrationEntry
+                isCompleting={true}
+                refreshSession={refreshSession}
+                justRegistered={justRegistered}
+                setJustRegistered={setJustRegistered}
+              />
+            }
+          />
         </>
       )}
       {(!user || justRegistered) && (
         <Route
           path="/signup"
-          element={<Register refreshSession={refreshSession} />}
+          element={
+            <RegistrationEntry
+              isCompleting={false}
+              refreshSession={refreshSession}
+              justRegistered={justRegistered}
+              setJustRegistered={setJustRegistered}
+            />
+          }
         />
       )}
     </>

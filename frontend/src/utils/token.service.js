@@ -7,6 +7,10 @@ class TokenService {
   }
 
   getLocalAccessToken() {
+    const rawJwt = localStorage.getItem("jwt");
+    if (!rawJwt || rawJwt === "undefined") {
+      return null
+    }
     const jwt = JSON.parse(localStorage.getItem("jwt"));
     return jwt ? jwt : null;
   }
