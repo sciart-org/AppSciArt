@@ -34,6 +34,7 @@ export default function Register() {
       },
       body: JSON.stringify({
         ...formData,
+        gender: formData.gender.toLowerCase(),
         affiliations: itemsToLowerCase(formData.affiliations),
         areasOfInterest: itemsToLowerCase(formData.areasOfInterest),
       }),
