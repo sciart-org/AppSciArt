@@ -23,7 +23,7 @@ VALUES
     'A fully online summer hackathon.',
     true,
     'https://meet.example.com/hack1',
-    100,
+    '9a1b5c10-1c11-4a4f-a25e-aaa111000100',
     NOW(),
     NOW()
   ),
@@ -36,7 +36,7 @@ VALUES
     'An on-site hackathon focused on fintech innovation.',
     true,
     NULL,
-    101,
+    '9a1b5c10-1c11-4a4f-a25e-aaa111000101',
     NOW(),
     NOW()
   ),
@@ -49,7 +49,7 @@ VALUES
     'A hybrid hackathon exploring sustainability solutions.',
     false,
     'https://meet.example.com/hack3',
-    102,
+    '9a1b5c10-1c11-4a4f-a25e-aaa111000102',
     NOW(),
     NOW()
   ),
@@ -62,7 +62,7 @@ VALUES
     'Hack4Climate: Past hackathon focused on green tech.',
     true,
     NULL,
-    103,
+    '9a1b5c10-1c11-4a4f-a25e-aaa111000103',
     NOW(),
     NOW()
   ),
@@ -75,7 +75,7 @@ VALUES
     'Code from Home 2024: A past remote-only event.',
     false,
     'https://meet.example.com/hack5',
-    103,
+    '9a1b5c10-1c11-4a4f-a25e-aaa111000103',
     NOW(),
     NOW()
   ),
@@ -88,7 +88,7 @@ VALUES
     'FusionHack 2024: Hybrid hackathon around AI + Robotics.',
     true,
     'https://meet.example.com/hack6',
-    104,
+    '9a1b5c10-1c11-4a4f-a25e-aaa111000104',
     NOW(),
     NOW()
   );

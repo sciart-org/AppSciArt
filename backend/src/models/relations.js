@@ -4,9 +4,9 @@ import { Hackathon } from './Hackathon.js'
 import { Seed } from './Seed.js'
 import { Flower } from './Flower.js'
 import { Fruit } from './Fruit.js'
-import { DataTypes } from 'sequelize'
 import { UserProfile } from './UserProfile.js'
 import { EarlySignup } from './EarlySignup.js'
+import { Participation } from './Participation.js'
 
 //  STRUCTURE
 
@@ -38,12 +38,6 @@ Seed.hasMany(Flower)
 
 Fruit.belongsTo(Flower)
 Flower.hasMany(Fruit)
-
-const Participation = sequelize.define('participations', {
-  clusterNumber: {
-    type: DataTypes.INTEGER
-  }
-})
 
 Participation.belongsTo(Flower)
 Participation.belongsTo(Fruit)

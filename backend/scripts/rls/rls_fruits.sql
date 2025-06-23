@@ -1,1 +1,6 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 ALTER TABLE public.fruits ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE public.fruits
+ALTER COLUMN id SET DEFAULT uuid_generate_v4();
