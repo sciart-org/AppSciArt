@@ -2,68 +2,61 @@ import { signInEmail } from '../auth/signin.js'
 import { signUpEmail, signUpGoogle } from '../auth/signup.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { EarlySignup } from '../models/EarlySignup.js'
-import { authBodyValidator } from '../validators/authValidators.js'
 
-export async function login (req, res) {
-  const { email, password } = req.body
+export async function login ({ email, password }) {
   const { data, error } = await signInEmail(email, password)
-  if (error?.status) {
-    res.status(error.status).send({ error: error.message })
-  } else {
-    res.status(201).send({
-      jwt: data.session.access_token,
-      name: data.user.user_metadata.name,
-      surname: data.user.user_metadata.surname
-    })
+
+  errorThrower(error?.status, error?.message, error?.status)
+
+  return {
+    jwt: data.session.access_token,
+    name: data.user.user_metadata.name,
+    surname: data.user.user_metadata.surname
   }
 }
 
-export async function directRegister (req, res) {
-  const { email, password, name, surname, gender, birthDate, affiliations, areasOfInterest } = req.body
+export async function directRegister (body) {
+  const { data, error } = await signUpEmail(body.email, body.password, { name: body.name, surname: body.surname })
 
-  authBodyValidator(req, res)
-  const { data, error } = await signUpEmail(email, password, { name, surname })
+  errorThrower(error?.status, error?.message, error?.status)
 
-  if (error?.status) {
-    res.status(error.status).send({ error: error.message })
-  } else {
-    const createdUserId = data.user.id
-    await createUserProfile({ createdUserId, name, surname, gender, birthDate, affiliations, areasOfInterest })
-    res.status(201).send({
-      jwt: data.session.access_token,
-      name: data.user.user_metadata.name,
-      surname: data.user.user_metadata.surname
-    })
+  const id = data.user.id
+  await createUserProfile({ id, ...body })
+
+  return {
+    jwt: data.session.access_token,
+    name: data.user.user_metadata.name,
+    surname: data.user.user_metadata.surname
   }
 }
 
-export async function googleRegister (req, res) {
+const errorThrower = (condition, message, status) => {
+  if (condition) {
+    const err = new Error(message)
+    err.status = status
+    throw err
+  }
+}
+
+export async function googleRegister () {
   const { data, error } = await signUpGoogle()
-  if (error?.status) {
-    res.status(error.status).send({ error: error.message })
-  } else {
-    res.status(201).send({
-      url: data.url
-    })
+
+  errorThrower(error?.status, error?.message, error?.status)
+
+  return {
+    url: data.url
   }
 }
 
-export async function quickRegister (req, res) {
-  const { email } = req.body
+export async function quickRegister (email) {
   const existingUser = await UserProfile.findOne({ where: { email } })
   const existingEarlySignup = await EarlySignup.findOne({ where: { email } })
-  if (existingUser !== null || existingEarlySignup !== null) {
-    res.status(400).send({ error: 'Account with that email already registered.' })
-  } else {
-    await EarlySignup.create({ email })
-    res.status(201).send({ message: 'Pre-registered successfully' })
-  }
-}
 
-export async function removeQuickRegister (req, res) {
-  const { email } = req.body
-  const deletedEarlySignup = await EarlySignup.destroy({ where: { email } })
-  return deletedEarlySignup !== 0
+  const alreadyRegistered = existingUser !== null || existingEarlySignup !== null
+  errorThrower(alreadyRegistered, 'Account with that email already registered.', 400)
+
+  await EarlySignup.create({ email })
+  return { message: 'Pre-registered successfully' }
 }
 
 export async function getQuickRegister (email) {
@@ -71,33 +64,30 @@ export async function getQuickRegister (email) {
   return quickRegister
 }
 
-export async function completeRegistration (req, res) {
-  const quickRegiser = await getQuickRegister(req.body.email)
-  if (!quickRegiser) {
-    res.status(400).send({
-      error: 'The email provided is not pre-registered.'
-    })
-  }
-  await removeQuickRegister(req, res)
+export async function completeRegistration (body) {
+  const email = body.email
+  const quickRegiser = await getQuickRegister(email)
+  errorThrower(!quickRegiser, 'The email provided is not pre-registered.', 400)
+
+  await EarlySignup.destroy({ where: { email } })
+
   if (!quickRegiser.isProvider) {
-    await directRegister(req, res)
-  } else {
-    await completeProviderRegistration(req, res)
+    return await directRegister(body)
   }
+
+  return await completeProviderRegistration(body)
 }
 
-const completeProviderRegistration = async (req, res) => {
-  const { email } = req.body
-  authBodyValidator(req, res)
+const completeProviderRegistration = async (body) => {
+  const { email } = body
   const existingUser = await UserProfile.findOne({ where: { email } })
-  const existingUserId = existingUser.id
-  const { name, surname, gender, birthDate, affiliations, areasOfInterest } = req.body
-  await createUserProfile({ existingUserId, name, surname, gender, birthDate, affiliations, areasOfInterest })
-  await googleRegister(req, res)
+  await createUserProfile({ ...body, id: existingUser.id, password: null })
+
+  return await googleRegister()
 }
 
 const createUserProfile = async (body) => {
-  const createdUserProfile = await UserProfile.findByPk(body.createdUserId)
+  const createdUserProfile = await UserProfile.findByPk(body.id)
   if (createdUserProfile) {
     createdUserProfile.set(body)
     await createdUserProfile.save()

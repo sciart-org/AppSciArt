@@ -1,33 +1,63 @@
 import * as service from '../services/authService.js'
+import { authBodyValidator } from '../validators/authValidators.js'
+import { withErrorHandler } from './errorHandling.js'
 
-export function login (req, res) {
-  service.login(req, res)
-}
+export const login = withErrorHandler(async (req, res) => {
+  const { email, password } = req.body
+  const result = await service.login({ email, password })
+  return res.status(201).send(result)
+})
 
-export function register (req, res) {
+export const register = withErrorHandler(async (req, res) => {
   const { method } = req.query
+
   if (method === 'direct') {
-    service.directRegister(req, res)
-  } else if (method === 'quick') {
-    service.quickRegister(req, res)
-  } else {
-    res.status(500).send({
-      message: 'Invalid method'
-    })
+    const validationError = authBodyValidator(req.body)
+    if (validationError) {
+      return res.status(400).send({ error: validationError })
+    }
+
+    const result = await service.directRegister(getBodyAttributes(req))
+    return res.status(201).send(result)
   }
+
+  if (method === 'quick') {
+    const result = service.quickRegister(req.body.email)
+    return res.status(201).send(result)
+  }
+
+  return res.status(400).send({
+    message: 'Invalid method or method not yet implemented'
+  })
+})
+
+const getBodyAttributes = (req) => {
+  const { email, password, name, surname, gender, birthDate, affiliations, areasOfInterest } = req.body
+  return { email, password, name, surname, gender, birthDate, affiliations, areasOfInterest }
 }
 
-export function registerProvider (req, res) {
+export const registerProvider = withErrorHandler(async (req, res) => {
   const { provider } = req.query
-  if (provider === 'google') {
-    service.googleRegister(req, res)
-  } else {
-    res.status(500).send({
-      message: 'Invalid provider'
-    })
-  }
-}
 
-export function completeRegistration (req, res) {
-  service.completeRegistration(req, res)
+  if (provider === 'google') {
+    const result = await service.googleRegister()
+    return res.status(201).send(result)
+  }
+
+  return res.status(400).send({
+    message: 'Invalid provider or provider not yet implemented'
+  })
+})
+
+export const completeRegistration = withErrorHandler(async (req, res) => {
+  const validationError = authBodyValidator(req.body)
+  if (validationError) {
+    return res.status(400).send({ error: validationError })
+  }
+  const result = await service.completeRegistration(getBodyAttributes(req))
+  return res.status(201).send(result)
+})
+
+export function getEarlySignup (req, res) {
+  service.getEarlySignup(req, res)
 }

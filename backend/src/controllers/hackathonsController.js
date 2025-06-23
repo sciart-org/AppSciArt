@@ -1,8 +1,24 @@
 import * as service from '../services/hackathonsService.js'
+import { withErrorHandler } from './errorHandling.js'
 
-export function getHackathons (req, res) {
-  service.getHackathons(req, res)
-}
+export const getHackathons = withErrorHandler(async (req, res) => {
+  const { filter } = req.query
+
+  if (filter === 'closest') {
+    return res.status(501).json({
+      message: 'Fetch closest hackathon not yet implemented'
+    })
+  }
+
+  if (filter === 'incoming') {
+    const hackathons = await service.getIncomingHackathons()
+    return res.status(200).send(hackathons)
+  }
+
+  return res.status(400).json({
+    message: 'Invalid filter or filtering not yet implemented'
+  })
+})
 
 export function createHackathon (req, res) {
   service.createHackathon(req, res)
