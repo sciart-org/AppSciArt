@@ -1,18 +1,21 @@
 import React, { useContext, useState } from "react";
 import RegistrationForm from "./components/RegistrationForm.jsx";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
+import { useEffect } from "react";
 
 export default function CompleteRegistration(props) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const emailToRegister = searchParams.get("email");
-  const navigate = useNavigate()
+  const params = useParams();
+  const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_API_URL;
 
   const { refreshSession, setJustRegistered } = useContext(RegistrationContext);
 
+  const [loading, setLoading] = useState(true);
+  const [emailToRegister, setEmailToRegister] = useState(null);
+  const [isProvider, setIsProvider] = useState(false);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     email: emailToRegister,
@@ -24,6 +27,28 @@ export default function CompleteRegistration(props) {
     affiliations: null,
     areasOfInterest: null,
   });
+
+  useEffect(() => {
+    fetch(`${API_URL}/early-signups/${params.uuid}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setEmailToRegister(data.email);
+        setIsProvider(data.isProvider);
+      })
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    setFormData({ ...formData, email: emailToRegister });
+  }, [emailToRegister]);
 
   function valid(email) {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -65,13 +90,20 @@ export default function CompleteRegistration(props) {
           tokenService.setUser(data);
           refreshSession();
           setJustRegistered(true);
-          navigate("/signup")
+          navigate("/signup");
         } else {
           setError(data.error);
         }
       })
       .catch((error) => setError(error));
   };
+
+  if (loading)
+    return (
+      <div style={{ height: "100%", alignContent: "center" }}>
+        <p>Loading...</p>
+      </div>
+    );
 
   if (emailToRegister === null || !valid(emailToRegister)) {
     return (
@@ -90,6 +122,8 @@ export default function CompleteRegistration(props) {
         formData={formData}
         setFormData={setFormData}
         onSubmit={signUp}
+        hasEmail={emailToRegister !== null}
+        isProvider={isProvider}
       />
     </div>
   );

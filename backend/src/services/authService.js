@@ -3,6 +3,14 @@ import { signUpEmail, signUpGoogle } from '../auth/signup.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { EarlySignup } from '../models/EarlySignup.js'
 
+const errorThrower = (condition, message, status) => {
+  if (condition) {
+    const err = new Error(message)
+    err.status = status
+    throw err
+  }
+}
+
 export async function login ({ email, password }) {
   const { data, error } = await signInEmail(email, password)
 
@@ -30,14 +38,6 @@ export async function directRegister (body) {
   }
 }
 
-const errorThrower = (condition, message, status) => {
-  if (condition) {
-    const err = new Error(message)
-    err.status = status
-    throw err
-  }
-}
-
 export async function googleRegister () {
   const { data, error } = await signUpGoogle()
 
@@ -59,26 +59,34 @@ export async function quickRegister (email) {
   return { message: 'Pre-registered successfully' }
 }
 
-export async function getQuickRegister (email) {
-  const quickRegister = await EarlySignup.findOne({ where: { email } })
-  return quickRegister
-}
-
 export async function completeRegistration (body) {
   const email = body.email
-  const quickRegiser = await getQuickRegister(email)
+  const quickRegiser = await getEarlySignupByEmail(email)
   errorThrower(!quickRegiser, 'The email provided is not pre-registered.', 400)
 
-  await EarlySignup.destroy({ where: { email } })
-
   if (!quickRegiser.isProvider) {
+    errorThrower(body.password === null, 'You must provide a password.', 400)
     return await directRegister(body)
   }
 
   return await completeProviderRegistration(body)
 }
 
-const completeProviderRegistration = async (body) => {
+export async function getEarlySignup (id) {
+  const earlySignup = await EarlySignup.findByPk(id)
+  return earlySignup
+}
+
+export async function removeEarlySignupByEmail (email) {
+  await EarlySignup.destroy({ where: { email } })
+}
+
+async function getEarlySignupByEmail (email) {
+  const earlySignup = await EarlySignup.findOne({ where: { email } })
+  return earlySignup
+}
+
+async function completeProviderRegistration (body) {
   const { email } = body
   const existingUser = await UserProfile.findOne({ where: { email } })
   await createUserProfile({ ...body, id: existingUser.id, password: null })
@@ -86,7 +94,7 @@ const completeProviderRegistration = async (body) => {
   return await googleRegister()
 }
 
-const createUserProfile = async (body) => {
+async function createUserProfile (body) {
   const createdUserProfile = await UserProfile.findByPk(body.id)
   if (createdUserProfile) {
     createdUserProfile.set(body)

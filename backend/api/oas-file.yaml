@@ -185,6 +185,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HackathonList"
+        default:
+          description: Unexpected error
+
     post:
       tags: [Hackathons]
       summary: Create a new hackathon
@@ -825,10 +828,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SignUpRequest"
+              $ref: "#/components/schemas/CompleteSignUpRequest"
       responses:
         "201":
           description: Registration completed successfully
+        default:
+          description: Unexpected error
+
+  /early-signups/{earlySignupId}:
+    x-router-controller: authController
+    get:
+      security: [{}]
+      tags: [Auth]
+      summary: Get pre-registration details
+      operationId: getEarlySignup
+      responses:
+        "200":
+          description: Pre-registration details
         default:
           description: Unexpected error
 
@@ -1787,6 +1803,42 @@ components:
         password:
           type: string
           format: password
+        gender:
+          type: string
+          nullable: true
+        ageRange:
+          type: string
+          nullable: true
+        affiliations:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+        areasOfInterest:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+
+    CompleteSignUpRequest:
+      type: object
+      required: [email, name, surname]
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+          maxLength: 50
+        surname:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          format: password
+          nullable: true
         gender:
           type: string
           nullable: true

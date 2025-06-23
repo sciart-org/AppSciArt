@@ -55,9 +55,11 @@ export const completeRegistration = withErrorHandler(async (req, res) => {
     return res.status(400).send({ error: validationError })
   }
   const result = await service.completeRegistration(getBodyAttributes(req))
+  await service.removeEarlySignupByEmail(req.body.email)
   return res.status(201).send(result)
 })
 
-export function getEarlySignup (req, res) {
-  service.getEarlySignup(req, res)
-}
+export const getEarlySignup = withErrorHandler(async (req, res) => {
+  const result = await service.getEarlySignup(req.params.earlySignupId)
+  return res.status(200).send(result)
+})

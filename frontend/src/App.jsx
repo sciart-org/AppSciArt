@@ -46,7 +46,7 @@ function App() {
           <Route path="/signin" element={<Login />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route
-            path="/signup/complete"
+            path="/signup/complete/:uuid"
             element={
               <RegistrationEntry
                 isCompleting={true}

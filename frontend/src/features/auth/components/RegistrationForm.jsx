@@ -4,10 +4,7 @@ import FormSelect from "./FormSelect";
 import AsterButton from "../../../components/AsterButton";
 
 export default function RegistrationForm(props) {
-  const { formData, setFormData, onSubmit } = props;
-  const initialFormDataRef = useRef(structuredClone(formData));
-  const initialFormData = initialFormDataRef.current;
-  const hasEmail = initialFormData?.email != null;
+  const { formData, setFormData, onSubmit, hasEmail, isProvider } = props;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,8 +31,9 @@ export default function RegistrationForm(props) {
           name={"Password"}
           type={"password"}
           value={formData.password}
-          onChange={handleInputChange}
-          required={true}
+          onChange={isProvider ? () => {} : handleInputChange}
+          required={!isProvider}
+          disabled={isProvider}
         />
       </div>
       <div className="input-box-container">
