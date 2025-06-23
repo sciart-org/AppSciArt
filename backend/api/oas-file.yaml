@@ -80,7 +80,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Edition details
@@ -97,7 +98,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -120,7 +122,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: Edition deleted
@@ -136,7 +139,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Edition published
@@ -156,7 +160,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Edition methodology
@@ -217,7 +222,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Hackathon details
@@ -234,7 +240,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -257,7 +264,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: Hackathon deleted
@@ -273,7 +281,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Hackathon published
@@ -293,7 +302,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: List of users
@@ -315,7 +325,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: List of clusters
@@ -334,7 +345,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "201":
           description: Cluster created
@@ -354,12 +366,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Cluster details
@@ -376,12 +390,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: Cluster deleted
@@ -397,12 +413,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: List of exploring groups
@@ -421,12 +439,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "201":
           description: Exploring group created
@@ -446,17 +466,20 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: groupId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Exploring group details
@@ -473,17 +496,20 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: groupId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: Exploring group deleted
@@ -496,17 +522,20 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: groupId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -532,12 +561,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: List of co-creation teams
@@ -556,12 +587,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "201":
           description: Co-creation team created
@@ -581,17 +614,20 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: teamId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Co-creation team details
@@ -608,17 +644,20 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: teamId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: Co-creation team deleted
@@ -631,17 +670,20 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: teamId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -667,7 +709,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: List of hackathons
@@ -689,12 +732,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: hackathonId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "201":
           description: Enrollment created
@@ -710,12 +755,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: hackathonId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: User's contributions
@@ -737,17 +784,20 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: hackathonId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: clusterId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "201":
           description: Cluster enrollment created
@@ -909,7 +959,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Public info
@@ -926,7 +977,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -952,7 +1004,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: edition
           in: query
           required: true
@@ -975,7 +1028,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -999,12 +1053,14 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
         - name: seedId
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Seed unliked
@@ -1145,7 +1201,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Seed details
@@ -1162,7 +1219,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -1185,7 +1243,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: Seed deleted
@@ -1201,7 +1260,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Flower details
@@ -1218,7 +1278,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -1241,7 +1302,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: Flower deleted
@@ -1257,7 +1319,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Flower published
@@ -1277,7 +1340,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Seed published
@@ -1297,7 +1361,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Fruit details
@@ -1314,7 +1379,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -1337,7 +1403,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: Fruit deleted
@@ -1353,7 +1420,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Fruit published
@@ -1415,7 +1483,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         name:
           type: string
@@ -1443,7 +1512,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         name:
           type: string
@@ -1495,7 +1565,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         name:
           type: string
@@ -1531,7 +1602,8 @@ components:
           items:
             $ref: "#/components/schemas/UserDetails"
         editionId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         likeCount:
           type: integer
@@ -1541,7 +1613,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         name:
           type: string
@@ -1559,21 +1632,24 @@ components:
           type: string
           format: uri
         seedId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         authors:
           type: array
           items:
             $ref: "#/components/schemas/UserDetails"
         hackathonId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
 
     FruitDetails:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         name:
           type: string
@@ -1591,21 +1667,24 @@ components:
           type: string
           format: uri
         seedId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         authors:
           type: array
           items:
             $ref: "#/components/schemas/UserDetails"
         hackathonId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
 
     UserDetails:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         email:
           type: string
@@ -1650,7 +1729,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         name:
           type: string
@@ -1674,7 +1754,8 @@ components:
           type: string
           maxLength: 500
         editionId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         isVisible:
           type: boolean
@@ -1682,7 +1763,8 @@ components:
           type: string
           format: uri
         designerId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
 
     HackathonList:
@@ -1694,10 +1776,12 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         conceptualMapId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         flower:
           $ref: "#/components/schemas/FlowerDetails"
@@ -1708,13 +1792,15 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         link:
           type: string
           format: uri
         seedId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         authors:
           type: array
@@ -1725,7 +1811,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         name:
           type: string
@@ -1740,7 +1827,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
 
     ClusterList:
@@ -1752,16 +1840,20 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         clusterId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         seedId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         conceptualMapId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
 
     GroupList:
@@ -1773,13 +1865,16 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         clusterId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
         seedId:
-          type: integer
+          type: string
+          format: uuid
           minimum: 1
 
     TeamList:

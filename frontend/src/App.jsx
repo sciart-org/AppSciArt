@@ -14,6 +14,7 @@ import AuthCallback from "./features/auth/AuthCallback";
 import Hackathons from "./features/hackathons/Hackathons";
 import Format from "./features/hackathons/Format";
 import RegistrationEntry from "./features/auth/RegistrationEntry";
+import JoinHackathon from "./features/hackathons/JoinHackathon";
 
 function App() {
   useEffect(() => {
@@ -36,6 +37,7 @@ function App() {
       <Route path="/editions" element={<Editions />} />
       <Route path="/hackathons" element={<Hackathons />} />
       <Route path="/about-the-hackathon" element={<Format />} />
+      <Route path="/hackathons/:hackathonId/join" element={<JoinHackathon />} />
     </>
   );
 
@@ -46,7 +48,7 @@ function App() {
           <Route path="/signin" element={<Login />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route
-            path="/signup/complete/:uuid"
+            path="/signup/complete/:earlySignupId"
             element={
               <RegistrationEntry
                 isCompleting={true}

@@ -29,7 +29,7 @@ export default function CompleteRegistration(props) {
   });
 
   useEffect(() => {
-    fetch(`${API_URL}/early-signups/${params.uuid}`, {
+    fetch(`${API_URL}/early-signups/${params.earlySignupId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

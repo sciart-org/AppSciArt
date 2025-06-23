@@ -10,6 +10,7 @@ export default function HackathonCard(props) {
   };
 
   const hackathon = props.hackathon;
+  const hideButton = props.hideButton;
 
   const parseType = (type) => {
     return type.charAt(0) + type.slice(1).toLowerCase().replace("_", " ");
@@ -24,7 +25,10 @@ export default function HackathonCard(props) {
         <div style={{ width: "100%" }}>
           <h3>When?</h3>
           <text>
-            {new Date(hackathon?.startDate).toLocaleDateString("en-US", options)}
+            {new Date(hackathon?.startDate).toLocaleDateString(
+              "en-US",
+              options
+            )}
             {" - "}
             {new Date(hackathon?.endDate).toLocaleDateString("en-US", options)}
           </text>
@@ -43,9 +47,14 @@ export default function HackathonCard(props) {
             justifyContent: "center",
           }}
         >
-          <AsterButton style={{ width: "45%" }}>
-            <text>Join this hackathon!</text>
-          </AsterButton>
+          {!hideButton && (
+            <AsterButton
+              style={{ width: "45%" }}
+              to={`/hackathons/${hackathon.id}/join`}
+            >
+              <text>Join this hackathon!</text>
+            </AsterButton>
+          )}
         </div>
       </div>
     </div>
