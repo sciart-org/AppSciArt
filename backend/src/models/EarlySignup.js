@@ -4,6 +4,11 @@ import { sequelize } from '../config/sequelize.js'
 export const EarlySignup = sequelize.define(
   'early_signups',
   {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     email: {
       type: DataTypes.STRING
     },

@@ -1,4 +1,4 @@
-import { FaGoogle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import "../auth.css";
 
 export default function Providers() {
@@ -23,9 +23,8 @@ export default function Providers() {
   return (
     <>
       <p>or</p>
-      <FaGoogle
+      <FcGoogle
         className="sign-up-icon"
-        style={{ borderColor: "#DB4437", color: "#DB4437" }}
         onClick={() => {
           signUpProvider({ provider: "google" });
         }}

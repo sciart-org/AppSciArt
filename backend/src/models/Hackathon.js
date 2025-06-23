@@ -4,6 +4,11 @@ import { sequelize } from '../config/sequelize.js'
 export const Hackathon = sequelize.define(
   'hackathons',
   {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     logo: {
       type: DataTypes.STRING
     },

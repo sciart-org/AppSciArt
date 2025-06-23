@@ -4,6 +4,11 @@ import { sequelize } from '../config/sequelize.js'
 export const Seed = sequelize.define(
   'seeds',
   {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     title: {
       type: DataTypes.STRING
     },
