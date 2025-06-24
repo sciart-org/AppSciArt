@@ -3,6 +3,20 @@ import { Hackathon } from '../models/Hackathon.js'
 import { Edition } from '../models/Edition.js'
 import { sequelize } from '../config/sequelize.js'
 
+const includeEditionName = {
+  attributes: {
+    include: [
+      [sequelize.col('edition.name'), 'editionName']
+    ]
+  },
+  include: [
+    {
+      model: Edition,
+      attributes: []
+    }
+  ]
+}
+
 export async function getIncomingHackathons () {
   return await Hackathon.findAll({
     where: {
@@ -10,17 +24,7 @@ export async function getIncomingHackathons () {
         [Op.gte]: new Date()
       }
     },
-    attributes: {
-      include: [
-        [sequelize.col('edition.name'), 'editionName']
-      ]
-    },
-    include: [
-      {
-        model: Edition,
-        attributes: []
-      }
-    ]
+    ...includeEditionName
   })
 }
 
@@ -30,10 +34,8 @@ export function createHackathon (req, res) {
   })
 }
 
-export function getHackathonDetails (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getHackathonDetails'
-  })
+export async function getHackathonDetails (hackathonId) {
+  return await Hackathon.findByPk(hackathonId, includeEditionName)
 }
 
 export function updateHackathon (req, res) {

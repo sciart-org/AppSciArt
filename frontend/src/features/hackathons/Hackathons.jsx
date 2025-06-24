@@ -7,26 +7,29 @@ export default function Hackathons() {
   const user = tokenService.getUser();
   const jwt = tokenService.getLocalAccessToken();
   const [hackathons, setHackathons] = useState([]);
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
 
   const fetchHackathons = async () => {
     const isAdmin = false;
 
-    await fetch(`${API_URL}/hackathons?filter=${isAdmin ? "all" : "incoming"}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-    })
+    await fetch(
+      `${API_URL}/hackathons?filter=${isAdmin ? "all" : "incoming"}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
+    )
       .then((response) => {
         return response.json();
       })
       .then((data) => {
         if (!data.error) {
           setError(null);
-          setHackathons(data)
-          console.log(data)
+          setHackathons(data);
+          console.log(data);
         } else {
           setError(data.error);
         }

@@ -24,9 +24,11 @@ export function createHackathon (req, res) {
   service.createHackathon(req, res)
 }
 
-export function getHackathonDetails (req, res) {
-  service.getHackathonDetails(req, res)
-}
+export const getHackathonDetails = withErrorHandler(async (req, res) => {
+  const hackathonId = req.params.hackathonId
+  const result = await service.getHackathonDetails(hackathonId)
+  res.status(200).send(result)
+})
 
 export function updateHackathon (req, res) {
   service.updateHackathon(req, res)

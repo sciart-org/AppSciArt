@@ -29,7 +29,7 @@ export default function CompleteRegistration(props) {
   });
 
   useEffect(() => {
-    fetch(`${API_URL}/early-signups/${params.uuid}`, {
+    fetch(`${API_URL}/early-signups/${params.earlySignupId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -68,6 +68,7 @@ export default function CompleteRegistration(props) {
       },
       body: JSON.stringify({
         ...formData,
+        gender: formData.gender.toLowerCase(),
         affiliations: itemsToLowerCase(formData.affiliations),
         areasOfInterest: itemsToLowerCase(formData.areasOfInterest),
       }),
