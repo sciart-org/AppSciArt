@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import tokenService from "../../utils/token.service";
 import Providers from "./components/Providers";
-import FormInput from "./components/FormInput";
 import AsterButton from "../../components/AsterButton";
+import FormInput from "../../components/form/FormInput";
 
 export default function Login() {
   const API_URL = import.meta.env.VITE_API_URL;

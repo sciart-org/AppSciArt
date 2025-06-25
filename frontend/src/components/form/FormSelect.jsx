@@ -1,4 +1,5 @@
 import Select from "react-select";
+import "./form.css";
 
 export default function FormSelect({
   name,
@@ -7,6 +8,8 @@ export default function FormSelect({
   options,
   required,
   multiple,
+  style,
+  placeholder,
 }) {
   const newOptions = options.map((o) => {
     return {
@@ -36,12 +39,10 @@ export default function FormSelect({
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: "flex", flexDirection: "column", ...style }}>
       <div style={{ display: "flex" }}>
         <span>{name}</span>
-        {required && (
-          <span style={{ color: "red", marginLeft: "10px" }}>*</span>
-        )}
+        {required && <span style={{ color: "red", marginLeft: "3px" }}>*</span>}
       </div>
       <Select
         className="multiple-select"
@@ -51,6 +52,8 @@ export default function FormSelect({
         isMulti={multiple}
         isClearable
         clearValue={() => setValue(null)}
+        required={required}
+        placeholder={placeholder || "Select " + name.toLowerCase() + "..."}
       />
     </div>
   );

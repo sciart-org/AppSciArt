@@ -2,9 +2,9 @@ import Flower from "./Flower";
 import Fruit from "./Fruit";
 import Seed from "./Seed";
 
-export default function SciArtProducts() {
+export default function SciArtProducts(props) {
   return (
-    <div className="items-container">
+    <div className="items-container" style={{ ...props.style }}>
       <div>
         <Seed />
         <h3>"SciArt Seed"</h3>

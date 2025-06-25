@@ -1,0 +1,36 @@
+.multiple-select {
+    border: none;
+    margin: 0.5rem;
+    padding: 0;
+    text-align: start;
+    width: 20vw;
+    font-size: 1em;
+    box-sizing: border-box;
+    appearance: none;
+    font-family: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+input, select, textarea {
+    width: 20vw;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+    appearance: none;
+    font-family: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    resize: none;
+    align-items: start;
+}
+
+input:disabled, textarea:disabled {
+    background-color:rgb(230, 230, 230);
+}
+
+.input-box-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50vw;
+}

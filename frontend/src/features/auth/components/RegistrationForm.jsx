@@ -1,7 +1,7 @@
-import React, { useRef } from "react";
-import FormInput from "./FormInput";
-import FormSelect from "./FormSelect";
-import AsterButton from "../../../components/AsterButton";
+import React from "react";
+import AsterButton from "../../../components/AsterButton.jsx";
+import FormInput from "../../../components/form/FormInput.jsx";
+import FormSelect from "../../../components/form/FormSelect.jsx";
 
 export default function RegistrationForm(props) {
   const { formData, setFormData, onSubmit, hasEmail, isProvider } = props;

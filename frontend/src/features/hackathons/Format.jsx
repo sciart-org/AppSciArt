@@ -1,6 +1,5 @@
 import SciArtProducts from "../../components/sciartProducts/SciArtProducts";
-import "./format.css";
-import hackathonLogo from "../../assets/mockHackathonLogo.jpg";
+import "./css/format.css";
 import AsterButton from "../../components/AsterButton";
 
 export default function Format() {
