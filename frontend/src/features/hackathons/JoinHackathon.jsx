@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import tokenService from "../../utils/token.service";
 import HackathonCard from "../../components/HackathonCard.jsx";
+import JoinForm from "./components/JoinForm.jsx";
+import HackathonDescription from "./components/HackathonDescription.jsx";
 
 export default function JoinHackathon() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -45,6 +47,9 @@ export default function JoinHackathon() {
         style={{ border: "none" }}
         hideButton={true}
       />
+      <HackathonDescription hackathon={hackathon} />
+      <h2>Join now!</h2>
+      <JoinForm />
     </div>
   );
 }
