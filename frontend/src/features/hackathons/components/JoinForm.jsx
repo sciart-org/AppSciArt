@@ -5,22 +5,12 @@ import FormSelect from "../../../components/form/FormSelect.jsx";
 import AsterButton from "../../../components/AsterButton.jsx";
 
 export default function JoinForm(props) {
-  const { onSubmit } = props;
+  const { onSubmit, formData, setFormData, showButton } = props;
   const jwt = tokenService.getLocalAccessToken();
-
-  const [formData, setFormData] = useState({
-    roles: null,
-    interests: null,
-  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit();
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
   };
 
   return (
@@ -41,16 +31,20 @@ export default function JoinForm(props) {
         <FormInput
           name={"Why are you interested in this hackathon?"}
           type={"text"}
-          value={formData.password}
-          onChange={handleInputChange}
+          value={formData.interests || ""}
+          onChange={(e) =>
+            setFormData({ ...formData, interests: e.target.value })
+          }
           placeholder={"Interests..."}
           multiline={true}
           style={{ alignItems: "center", flex: 1 }}
         />
       </div>
-      <AsterButton type="submit" style={{ width: "10vw" }}>
-        <text>Join</text>
-      </AsterButton>
+      {showButton && (
+        <AsterButton type="submit" style={{ width: "10vw" }}>
+          <text>Join</text>
+        </AsterButton>
+      )}
     </form>
   );
 }

@@ -231,6 +231,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Hackathon"
+        default:
+          description: Unexpected error
     put:
       tags: [Hackathons]
       summary: Update a hackathon
@@ -721,11 +723,38 @@ paths:
                 items:
                   $ref: "#/components/schemas/HackathonList"
 
-  /users/{userId}/hackathons/{hackathonId}:
+  /hackathons/{hackathonId}/participants/me:
     x-router-controller: userHackathonsController
     post:
       tags: [User Hackathons]
-      summary: Join a hackathon
+      summary: Join the current user to a hackathon
+      operationId: joinMeHackathon
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HackathonJoinRequest"
+      responses:
+        "201":
+          description: Enrollment created
+        "404":
+          description: Resource not found
+        default:
+          description: Unexpected error
+
+  /hackathons/{hackathonId}/participants/{userId}:
+    x-router-controller: userHackathonsController
+    post:
+      tags: [User Hackathons]
+      summary: Join a user to a hackathon
       operationId: joinHackathon
       parameters:
         - name: userId
@@ -740,6 +769,12 @@ paths:
           schema:
             type: string
             format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HackathonJoinRequest"
       responses:
         "201":
           description: Enrollment created
@@ -1998,3 +2033,16 @@ components:
         password:
           type: string
           format: password
+
+    HackathonJoinRequest:
+      type: object
+      required: [roles]
+      properties:
+        roles:
+          type: array
+          items:
+            type: string
+            enum: ["artist", "technologist", "scientist", "others"]
+        interests:
+          type: string
+          nullable: true

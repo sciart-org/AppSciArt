@@ -13,7 +13,7 @@ export default function HackathonCard(props) {
   const hideButton = props.hideButton;
 
   const parseType = (type) => {
-    return type.charAt(0) + type.slice(1).toLowerCase().replace("_", " ");
+    return type?.charAt(0) + type?.slice(1).toLowerCase().replace("_", " ");
   };
 
   return (

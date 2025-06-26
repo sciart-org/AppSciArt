@@ -2,14 +2,7 @@ import { signInEmail } from '../auth/signin.js'
 import { signUpEmail, signUpGoogle } from '../auth/signup.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { EarlySignup } from '../models/EarlySignup.js'
-
-const errorThrower = (condition, message, status) => {
-  if (condition) {
-    const err = new Error(message)
-    err.status = status
-    throw err
-  }
-}
+import { errorThrower } from './errorThrower.js'
 
 export async function login ({ email, password }) {
   const { data, error } = await signInEmail(email, password)
