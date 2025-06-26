@@ -79,7 +79,7 @@ function QuickRegisterSection() {
       })
       .then((data) => {
         if (!data.error) {
-          setEmail('');
+          setEmail("");
           setError(null);
           setSuccessfullySent(true);
         } else {
@@ -101,12 +101,12 @@ function QuickRegisterSection() {
         <input
           placeholder="Enter your email here..."
           type={"text"}
-          style={{ width: "30vw", padding: "5px" }}
+          style={{ width: "30rem", padding: "0.5rem" }}
           value={email}
           onChange={handleInputChange}
         />
         <AsterButton
-          style={{ marginLeft: "1vw", width: "10vw" }}
+          style={{ marginLeft: "1rem", width: "9rem" }}
           onClick={handleSubmit}
         >
           <text>Join now!</text>
@@ -144,7 +144,7 @@ export default function Home() {
     <div>
       <Carousel />
       <h1 style={{ marginTop: 0 }}>This is SciArt</h1>
-      <SciArtProducts />
+      <SciArtProducts fixed={true} />
       <Roles />
       <hr />
       <MoreInfoSection />

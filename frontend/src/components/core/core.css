@@ -11,7 +11,7 @@
 #footer {
     width: 100vw;
     margin-top: 5vh;
-    height: 40vh;
+    height: 20rem;
     display: flex;
     overflow: hidden;
     align-items: center;
@@ -37,7 +37,7 @@
 }
 
 #navbar {
-    height: 8vh;
+    height: 4rem;
     display: flex;
     align-items: center;
     justify-content: space-between;

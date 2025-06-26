@@ -1,4 +1,4 @@
-import scientistIcon from "../../../assets/scientistIcon.svg"
+import scientistIcon from "../../../assets/scientistIcon.svg";
 
 export default function InspiringScientist() {
   return (

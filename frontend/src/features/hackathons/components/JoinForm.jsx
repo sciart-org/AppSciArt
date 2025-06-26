@@ -41,7 +41,7 @@ export default function JoinForm(props) {
         />
       </div>
       {showButton && (
-        <AsterButton type="submit" style={{ width: "10vw" }}>
+        <AsterButton type="submit" style={{ width: "10rem" }}>
           <text>Join</text>
         </AsterButton>
       )}

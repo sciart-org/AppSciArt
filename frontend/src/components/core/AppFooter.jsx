@@ -1,15 +1,17 @@
 import logoAstersBlack from "../../assets/logoAstersBlack.png";
 import SocialNetworks from "../SocialNetworks";
-import './core.css'
+import "./core.css";
 
 export default function AppFooter() {
   return (
     <div id="footer">
       <div>
-        <img src={logoAstersBlack} style={{ height: "30vh" }} />
+        <img src={logoAstersBlack} style={{ height: "15rem" }} />
       </div>
       <div className="footer-text-container">
-        <h2 style={{ marginBottom: 0, textAlign: 'start' }}>The ASTER+S Project</h2>
+        <h2 style={{ marginBottom: 0, textAlign: "start" }}>
+          The ASTER+S Project
+        </h2>
         <p>
           This project is led by a dedicated team from Art the Science, a group
           of SciArt researchers and creators in Seville, Spain. As our

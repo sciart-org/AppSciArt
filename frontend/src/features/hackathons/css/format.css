@@ -5,8 +5,8 @@
 }
 
 .text-container > text {
-    margin-bottom: 2vh;
-    font-size:large;
+    margin-bottom: 1rem;
+    font-size: large;
     text-align: start;
 }
 

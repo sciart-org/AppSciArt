@@ -77,7 +77,7 @@ export default function Format() {
           and bridging the gap between science and society.
         </text>
       </div>
-      <div style={{ padding: "5vh" }}>
+      <div style={{ padding: "2.5rem" }}>
         <h2>Are you interested in participating?</h2>
         <AsterButton to={"/hackathons"}>
           <text>Check incoming hackathons</text>

@@ -15,7 +15,7 @@ INSERT INTO public.hackathons (
 )
 VALUES
   (
-    'https://example.com/logos/hack1.png',
+    'https://i.imgur.com/QCm4N6t.png',
     '2025-07-01',
     '2025-07-03',
     'ONLINE',
@@ -28,7 +28,7 @@ VALUES
     NOW()
   ),
   (
-    'https://example.com/logos/hack2.png',
+    'https://i.imgur.com/QCm4N6t.png',
     '2025-08-15',
     '2025-08-17',
     'ON_SITE',
@@ -41,7 +41,7 @@ VALUES
     NOW()
   ),
   (
-    'https://example.com/logos/hack3.png',
+    'https://i.imgur.com/QCm4N6t.png',
     '2025-09-10',
     '2025-09-12',
     'HYBRID',
@@ -54,7 +54,7 @@ VALUES
     NOW()
   ),
   (
-    'https://example.com/logos/hack4.png',
+    'https://i.imgur.com/QCm4N6t.png',
     '2024-10-05',
     '2024-10-07',
     'ON_SITE',
@@ -67,7 +67,7 @@ VALUES
     NOW()
   ),
   (
-    'https://example.com/logos/hack5.png',
+    'https://i.imgur.com/QCm4N6t.png',
     '2024-05-10',
     '2024-05-12',
     'ONLINE',
@@ -80,7 +80,7 @@ VALUES
     NOW()
   ),
   (
-    'https://example.com/logos/hack6.png',
+    'https://i.imgur.com/QCm4N6t.png',
     '2024-11-20',
     '2024-11-22',
     'HYBRID',

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import tokenService from "../../utils/token.service";
 
 export default function Editions() {
+  return <h1>To be re-implemented</h1>;
+
   const API_URL = import.meta.env.VITE_API_URL;
   const [editions, setEditions] = useState([]);
   const [formData, setFormData] = useState({

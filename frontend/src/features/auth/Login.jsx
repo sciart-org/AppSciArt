@@ -69,7 +69,7 @@ export default function Login() {
               required={true}
             />
           </div>
-          <AsterButton type="submit" style={{ width: "10vw" }}>
+          <AsterButton type="submit" style={{ width: "10rem" }}>
             <text>Log in</text>
           </AsterButton>
         </form>

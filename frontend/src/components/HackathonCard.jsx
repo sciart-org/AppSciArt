@@ -48,10 +48,7 @@ export default function HackathonCard(props) {
           }}
         >
           {!hideButton && (
-            <AsterButton
-              style={{ width: "45%" }}
-              to={`/hackathons/${hackathon.id}/join`}
-            >
+            <AsterButton to={`/hackathons/${hackathon.id}/join`}>
               <text>Join this hackathon!</text>
             </AsterButton>
           )}

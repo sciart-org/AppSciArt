@@ -1,5 +1,8 @@
 .items-container, .roles-container {
     display: flex;
+}
+
+.roles-container {
     margin-top: 2vh;
 }
 

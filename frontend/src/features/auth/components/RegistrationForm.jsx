@@ -116,7 +116,7 @@ export default function RegistrationForm(props) {
           multiple={false}
         />
       </div>
-      <AsterButton type="submit" style={{ width: "10vw" }}>
+      <AsterButton type="submit" style={{ width: "10rem" }}>
         <text>Register</text>
       </AsterButton>
     </form>
