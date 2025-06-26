@@ -10,5 +10,19 @@ export const Participation = sequelize.define(
     },
     clusterNumber: {
       type: DataTypes.INTEGER
+    },
+    roles: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false
+    },
+    interests: {
+      type: DataTypes.TEXT
     }
+  }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['userProfileId', 'hackathonId']
+      }
+    ]
   })

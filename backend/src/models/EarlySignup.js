@@ -25,5 +25,12 @@ export const EarlySignup = sequelize.define(
   },
   {
     timestamps: false
+  }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['email']
+      }
+    ]
   }
 )

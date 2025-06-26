@@ -24,8 +24,12 @@ export const Flower = sequelize.define(
     driveLink: {
       type: DataTypes.STRING
     }
-  },
-  {
-    // Other model options go here
+  }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['title']
+      }
+    ]
   }
 )

@@ -56,5 +56,13 @@ export const UserProfile = sequelize.define(
     tableName: 'user_profile',
     schema: 'public',
     timestamps: false
+  },
+  {
+    indexes: [
+      {
+        unique: true,
+        fields: ['email']
+      }
+    ]
   }
 )
