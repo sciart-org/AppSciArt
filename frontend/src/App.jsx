@@ -38,6 +38,17 @@ function App() {
       <Route path="/hackathons" element={<Hackathons />} />
       <Route path="/about-the-hackathon" element={<Format />} />
       <Route path="/hackathons/:hackathonId/join" element={<JoinHackathon />} />
+      <Route
+        path="/signup/complete/:earlySignupId"
+        element={
+          <RegistrationEntry
+            isCompleting={true}
+            refreshSession={refreshSession}
+            justRegistered={justRegistered}
+            setJustRegistered={setJustRegistered}
+          />
+        }
+      />
     </>
   );
 
@@ -47,17 +58,6 @@ function App() {
         <>
           <Route path="/signin" element={<Login />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route
-            path="/signup/complete/:earlySignupId"
-            element={
-              <RegistrationEntry
-                isCompleting={true}
-                refreshSession={refreshSession}
-                justRegistered={justRegistered}
-                setJustRegistered={setJustRegistered}
-              />
-            }
-          />
         </>
       )}
       {(!user || justRegistered) && (

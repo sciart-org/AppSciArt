@@ -4,12 +4,14 @@ import { useNavigate, useParams, useSearchParams } from "react-router";
 import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
 import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 export default function CompleteRegistration(props) {
   const params = useParams();
   const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_API_URL;
+  const jwt = tokenService.getLocalAccessToken();
 
   const { refreshSession, setJustRegistered } = useContext(RegistrationContext);
 
@@ -87,8 +89,10 @@ export default function CompleteRegistration(props) {
             birthDate: null,
           });
           setError(null);
-          tokenService.updateLocalAccessToken(data.jwt);
-          tokenService.setUser(data);
+          if (!isProvider) {
+            tokenService.updateLocalAccessToken(data.jwt);
+            tokenService.setUser(data);
+          }
           refreshSession();
           setJustRegistered(true);
           navigate("/signup");
@@ -111,6 +115,14 @@ export default function CompleteRegistration(props) {
       <div style={{ height: "100%", alignContent: "center" }}>
         <p>No email found to complete your registration.</p>
         <p>Please, check your inbox to finish setting up your profile.</p>
+      </div>
+    );
+  }
+
+  if (jwt && emailToRegister !== jwtDecode(jwt).email) {
+    return (
+      <div style={{ height: "100%", alignContent: "center" }}>
+        <p>This is not your email. Sign out to continue.</p>
       </div>
     );
   }
