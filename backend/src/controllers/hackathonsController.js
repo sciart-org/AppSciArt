@@ -1,8 +1,10 @@
 import * as service from '../services/hackathonsService.js'
 import { withErrorHandler } from './errorHandling.js'
+import * as UsersService from '../services/usersService.js'
 
 export const getHackathons = withErrorHandler(async (req, res) => {
   const { filter } = req.query
+  const currentUser = await UsersService.getCurrentUserProfile(req)
 
   if (filter === 'closest') {
     return res.status(501).json({
@@ -11,7 +13,7 @@ export const getHackathons = withErrorHandler(async (req, res) => {
   }
 
   if (filter === 'incoming') {
-    const hackathons = await service.getIncomingHackathons()
+    const hackathons = await service.getIncomingHackathons(currentUser?.id)
     return res.status(200).send(hackathons)
   }
 
@@ -26,8 +28,9 @@ export function createHackathon (req, res) {
 
 export const getHackathonDetails = withErrorHandler(async (req, res) => {
   const hackathonId = req.params.hackathonId
-  const result = await service.getHackathonDetails(hackathonId)
-  res.status(200).send(result)
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  const result = await service.getHackathonDetails(hackathonId, currentUser?.id)
+  return res.status(200).send(result)
 })
 
 export function updateHackathon (req, res) {

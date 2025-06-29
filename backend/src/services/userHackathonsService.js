@@ -16,13 +16,12 @@ export async function joinHackathon (userId, hackathonId, roles, interests) {
   const hackathon = await Hackathon.findByPk(hackathonId)
   errorThrower(!checkExists(hackathon), 'Hackathon not found.', 404)
 
-  const enrollment = Participation.create({
+  return await Participation.create({
     userProfileId: userId,
     hackathonId,
     roles,
     interests
   })
-  return enrollment
 }
 
 export function getUserHackathonContributions (req, res) {

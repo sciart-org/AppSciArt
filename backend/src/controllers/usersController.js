@@ -1,4 +1,5 @@
 import * as service from '../services/usersService.js'
+import { withErrorHandler } from './errorHandling.js'
 
 export function getUsers (req, res) {
   service.getUsers(req, res)
@@ -16,6 +17,11 @@ export function editUser (req, res) {
   service.editUser(req, res)
 }
 
-export function getCurrentUser (req, res) {
-  service.getCurrentUser(req, res)
-}
+export const getCurrentUser = withErrorHandler(async (req, res) => {
+  const result = await service.getCurrentUser(req)
+  return res.status(200).send({
+    jwt: result.jwt,
+    name: result.user.user_metadata.name,
+    surname: result.user.user_metadata.surname
+  })
+})

@@ -2,6 +2,7 @@ import { jwtDecode } from 'jwt-decode'
 import { getUserFromJwt } from '../auth/signin.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { errorThrower } from './errorThrower.js'
+import { getJwt } from './authService.js'
 
 export function getUsers (req, res) {
   res.send({
@@ -27,32 +28,22 @@ export function editUser (req, res) {
   })
 }
 
-export async function getCurrentUser (req, res) {
-  const jwt = req.headers.authorization.split(' ')[1]
-  const { data, error } = await getUserFromJwt(jwt)
-  if (error?.status) {
-    res.status(error.status).send({ error: error.message })
-  } else {
-    res.status(200).send({
-      jwt,
-      name: data.user.user_metadata.name,
-      surname: data.user.user_metadata.surname
-    })
-  }
-}
-
-export async function getCurrentUserFromJwt (jwt) {
-  const { data, error } = await getUserFromJwt(jwt)
-  errorThrower(error?.status, error.message, error.status)
-  return data
-}
-
-export async function getCurrentUserProfileFromJwt (jwt) {
+export async function getCurrentUserProfile (req) {
+  const jwt = getJwt(req)
+  if (!jwt) return null
   const userEmail = jwtDecode(jwt).email
   const user = await UserProfile.findOne({
     where: {
       email: userEmail
     }
   })
+  errorThrower(!user, 'User not found', 404)
   return user
+}
+
+export async function getCurrentUser (req) {
+  const jwt = getJwt(req)
+  const { data, error } = await getUserFromJwt(jwt)
+  errorThrower(error?.status, error?.message, error?.status)
+  return { ...data, jwt }
 }

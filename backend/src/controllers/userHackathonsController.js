@@ -10,20 +10,16 @@ export const joinHackathon = withErrorHandler(async (req, res) => {
   const { roles, interests } = req.body
   const { hackathonId, userId } = req.params
   const result = await service.joinHackathon(userId, hackathonId, roles, interests)
-  res.status(201).send(result)
+  return res.status(201).send(result)
 })
 
 export const joinMeHackathon = withErrorHandler(async (req, res) => {
   const { roles, interests } = req.body
   const { hackathonId } = req.params
-  const user = await UsersService.getCurrentUserProfileFromJwt(getJwt(req))
+  const user = await UsersService.getCurrentUserProfile(req)
   const result = await service.joinHackathon(user?.id, hackathonId, roles, interests)
-  res.status(201).send(result)
+  return res.status(201).send(result)
 })
-
-const getJwt = (req) => {
-  return req.headers.authorization.replace('Bearer ', '')
-}
 
 export function getUserHackathonContributions (req, res) {
   service.getUserHackathonContributions(req, res)
