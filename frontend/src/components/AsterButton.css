@@ -10,6 +10,13 @@
   transition: transform 0.05s ease-in-out;
 }
 
+.aster-button:disabled {
+  background-color: rgb(200, 200, 200);
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 .aster-button:active {
   transform: scale(1.01, 1.01);
 }

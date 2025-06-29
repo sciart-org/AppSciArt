@@ -8,6 +8,7 @@ export default function AsterButton(props) {
     <button
       className="aster-button"
       style={{ ...props.style }}
+      disabled={props.disabled}
       type={props.type}
       onClick={() => {
         if (props.onClick) {

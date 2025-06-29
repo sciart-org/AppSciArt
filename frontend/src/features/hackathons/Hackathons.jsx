@@ -29,7 +29,6 @@ export default function Hackathons() {
         if (!data.error) {
           setError(null);
           setHackathons(data);
-          console.log(data);
         } else {
           setError(data.error);
         }

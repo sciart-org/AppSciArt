@@ -1,7 +1,10 @@
+import tokenService from "../utils/token.service";
 import AsterButton from "./AsterButton";
 import "./HackathonCard.css";
 
 export default function HackathonCard(props) {
+  const jwt = tokenService.getLocalAccessToken();
+
   var options = {
     weekday: "long",
     year: "numeric",
@@ -47,8 +50,13 @@ export default function HackathonCard(props) {
             justifyContent: "center",
           }}
         >
-          {!hideButton && (
-            <AsterButton to={`/hackathons/${hackathon.id}/join`}>
+          {!hideButton && hackathon.isEnrolled ? (
+            <p>You are already enrolled to this hackathon!</p>
+          ) : (
+            <AsterButton
+              to={jwt ? `/hackathons/${hackathon.id}/join` : undefined}
+              disabled={!jwt}
+            >
               <text>Join this hackathon!</text>
             </AsterButton>
           )}

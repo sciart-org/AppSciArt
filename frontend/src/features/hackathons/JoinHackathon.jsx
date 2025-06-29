@@ -4,6 +4,7 @@ import tokenService from "../../utils/token.service";
 import HackathonCard from "../../components/HackathonCard.jsx";
 import JoinForm from "./components/JoinForm.jsx";
 import HackathonDescription from "./components/HackathonDescription.jsx";
+import AsterButton from "../../components/AsterButton.jsx";
 
 export default function JoinHackathon() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -83,6 +84,15 @@ export default function JoinHackathon() {
     return (
       <div style={{ height: "100%", alignContent: "center" }}>
         <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (hackathon.isEnrolled) {
+    return (
+      <div style={{ height: "100%", alignContent: "center" }}>
+        <p>You are already enrolled to this hackathon</p>
+        <AsterButton to={"/hackathons"}>Go back</AsterButton>
       </div>
     );
   }
