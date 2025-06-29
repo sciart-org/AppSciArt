@@ -173,6 +173,7 @@ paths:
   /hackathons:
     x-router-controller: hackathonsController
     get:
+      security: [{}]
       tags: [Hackathons]
       summary: Get hackathons
       operationId: getHackathons
