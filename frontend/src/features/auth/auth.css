@@ -17,12 +17,3 @@
     height: 3.5em;
     padding: 0.5em;
 }
-
-.redirect-buttons-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 2vh;
-    cursor: pointer;
-}

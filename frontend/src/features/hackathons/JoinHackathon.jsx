@@ -6,6 +6,7 @@ import JoinForm from "./components/JoinForm.jsx";
 import HackathonDescription from "./components/HackathonDescription.jsx";
 import AsterButton from "../../components/AsterButton.jsx";
 import ErrorMessage from "../../components/messages/ErrorMessage.jsx";
+import JoinSuccess from "./components/JoinSuccess.jsx";
 
 export default function JoinHackathon() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -89,7 +90,7 @@ export default function JoinHackathon() {
     );
   }
 
-  if (hackathon.isEnrolled) {
+  if (hackathon?.isEnrolled) {
     return (
       <div style={{ height: "100%", alignContent: "center" }}>
         <p>You are already enrolled to this hackathon</p>
@@ -104,6 +105,10 @@ export default function JoinHackathon() {
         <p>Could not find the specified hackathon</p>
       </div>
     );
+  }
+
+  if (joined) {
+    return <JoinSuccess />;
   }
 
   return (

@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import tokenService from "../utils/token.service";
 import AsterButton from "./AsterButton";
 import "./HackathonCard.css";
@@ -17,6 +18,42 @@ export default function HackathonCard(props) {
 
   const parseType = (type) => {
     return type?.charAt(0) + type?.slice(1).toLowerCase().replace("_", " ");
+  };
+
+  const JoinButton = () => {
+    if (hackathon?.isEnrolled) {
+      return <p>You are already enrolled to this hackathon!</p>;
+    }
+
+    if (hideButton) {
+      return <></>;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        <AsterButton
+          to={jwt ? `/hackathons/${hackathon.id}/join` : undefined}
+          disabled={!jwt}
+        >
+          <text>Join this hackathon!</text>
+        </AsterButton>
+        {!jwt && (
+          <Link
+            to={"/signin"}
+            style={{ marginTop: "-1vh", marginBottom: "1vh" }}
+          >
+            Sign in
+          </Link>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -44,25 +81,7 @@ export default function HackathonCard(props) {
             <text>{hackathon?.description}</text>
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          {!hideButton && hackathon.isEnrolled ? (
-            <p>You are already enrolled to this hackathon!</p>
-          ) : (
-            !hideButton && (
-              <AsterButton
-                to={jwt ? `/hackathons/${hackathon.id}/join` : undefined}
-                disabled={!jwt}
-              >
-                <text>Join this hackathon!</text>
-              </AsterButton>
-            )
-          )}
-        </div>
+        <JoinButton />
       </div>
     </div>
   );

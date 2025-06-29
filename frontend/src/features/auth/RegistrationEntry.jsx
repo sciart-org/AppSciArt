@@ -8,6 +8,7 @@ import CompleteRegistration from "./CompleteRegistration";
 import Register from "./Register";
 import { RegistrationContext } from "./context/RegistrationContext";
 import "./auth.css";
+import ClickableText from "../../components/ClickableText";
 
 const mockHackathon = {
   editionName: "GreenTech Berlin 2025",
@@ -53,19 +54,13 @@ export default function RegistrationEntry(props) {
             </AsterButton>
           </div>
         </div>
-        <div
-          className="redirect-buttons-container"
-          onClick={() => setMaybeLater(false)}
-        >
+        <ClickableText onClick={() => setMaybeLater(false)}>
           <IoChevronBack size={"3.25vh"} />
           <text style={{ fontSize: "larger" }}>Join a hackathon</text>
-        </div>
-        <div
-          className="redirect-buttons-container"
-          onClick={() => (window.location.href = "/")}
-        >
-          <text>Home</text>
-        </div>
+        </ClickableText>
+        <ClickableText onClick={() => (window.location.href = "/")}>
+          Home
+        </ClickableText>
       </div>
     );
   }
