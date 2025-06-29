@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import HackathonCard from "../../components/HackathonCard";
 import tokenService from "../../utils/token.service";
+import ErrorMessage from "../../components/messages/ErrorMessage";
 
 export default function Hackathons() {
   const API_URL = import.meta.env.VITE_API_URL;
-  const user = tokenService.getUser();
   const jwt = tokenService.getLocalAccessToken();
   const [hackathons, setHackathons] = useState([]);
   const [error, setError] = useState(null);
@@ -53,6 +53,7 @@ export default function Hackathons() {
 
   return (
     <div>
+      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
       <h1>Next hackathons</h1>
       {Object.entries(hackathonsByEdition).map(([editionName, hackathons]) => (
         <>

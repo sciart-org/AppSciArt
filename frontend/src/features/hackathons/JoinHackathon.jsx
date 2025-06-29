@@ -5,6 +5,7 @@ import HackathonCard from "../../components/HackathonCard.jsx";
 import JoinForm from "./components/JoinForm.jsx";
 import HackathonDescription from "./components/HackathonDescription.jsx";
 import AsterButton from "../../components/AsterButton.jsx";
+import ErrorMessage from "../../components/messages/ErrorMessage.jsx";
 
 export default function JoinHackathon() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -123,7 +124,7 @@ export default function JoinHackathon() {
         showButton={!joined}
       />
       <div>{joined && <p>You joined successfully!</p>}</div>
-      <div>{error && <p style={{ color: "red" }}>{error}</p>}</div>
+      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
     </div>
   );
 }

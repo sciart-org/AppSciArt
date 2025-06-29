@@ -1,8 +1,11 @@
 import { FcGoogle } from "react-icons/fc";
 import "../auth.css";
+import { useState } from "react";
+import ErrorMessage from "../../../components/messages/ErrorMessage";
 
 export default function Providers() {
   const API_URL = import.meta.env.VITE_API_URL;
+  const [error, setError] = useState(null);
 
   const signUpProvider = ({ provider }) => {
     fetch(`${API_URL}/register?provider=${provider}`, {
@@ -22,6 +25,7 @@ export default function Providers() {
 
   return (
     <>
+      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
       <p>or</p>
       <FcGoogle
         className="sign-up-icon"

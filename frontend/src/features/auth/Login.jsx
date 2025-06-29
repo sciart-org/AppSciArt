@@ -3,6 +3,7 @@ import tokenService from "../../utils/token.service";
 import Providers from "./components/Providers";
 import AsterButton from "../../components/AsterButton";
 import FormInput from "../../components/form/FormInput";
+import ErrorMessage from "../../components/messages/ErrorMessage";
 
 export default function Login() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -50,7 +51,7 @@ export default function Login() {
   return (
     <div>
       <h1>Log in now</h1>
-      <div>{error && <p style={{ color: "red" }}>{error}</p>}</div>
+      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
       <div style={{ flex: 1 }}>
         <form onSubmit={handleSubmit} className="register-form">
           <div className="input-box-container">

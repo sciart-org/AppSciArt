@@ -5,6 +5,7 @@ import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
 import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import ErrorMessage from "../../components/messages/ErrorMessage.jsx";
 
 export default function CompleteRegistration(props) {
   const params = useParams();
@@ -70,7 +71,7 @@ export default function CompleteRegistration(props) {
       },
       body: JSON.stringify({
         ...formData,
-        gender: formData.gender.toLowerCase(),
+        gender: formData.gender?.toLowerCase(),
         affiliations: itemsToLowerCase(formData.affiliations),
         areasOfInterest: itemsToLowerCase(formData.areasOfInterest),
       }),
@@ -130,7 +131,7 @@ export default function CompleteRegistration(props) {
   return (
     <div>
       <h1>Complete your profile</h1>
-      <div>{error && <p style={{ color: "red" }}>{error}</p>}</div>
+      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
       <RegistrationForm
         formData={formData}
         setFormData={setFormData}

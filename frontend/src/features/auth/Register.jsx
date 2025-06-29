@@ -3,6 +3,7 @@ import Providers from "./components/Providers";
 import RegistrationForm from "./components/RegistrationForm.jsx";
 import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
+import ErrorMessage from "../../components/messages/ErrorMessage.jsx";
 
 export default function Register() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -34,7 +35,7 @@ export default function Register() {
       },
       body: JSON.stringify({
         ...formData,
-        gender: formData.gender.toLowerCase(),
+        gender: formData.gender?.toLowerCase(),
         affiliations: itemsToLowerCase(formData.affiliations),
         areasOfInterest: itemsToLowerCase(formData.areasOfInterest),
       }),
@@ -67,7 +68,7 @@ export default function Register() {
   return (
     <div>
       <h1>Register now</h1>
-      <div>{error && <p style={{ color: "red" }}>{error}</p>}</div>
+      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
       <div style={{ flex: 1 }}>
         <RegistrationForm
           formData={formData}

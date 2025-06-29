@@ -53,12 +53,14 @@ export default function HackathonCard(props) {
           {!hideButton && hackathon.isEnrolled ? (
             <p>You are already enrolled to this hackathon!</p>
           ) : (
-            <AsterButton
-              to={jwt ? `/hackathons/${hackathon.id}/join` : undefined}
-              disabled={!jwt}
-            >
-              <text>Join this hackathon!</text>
-            </AsterButton>
+            !hideButton && (
+              <AsterButton
+                to={jwt ? `/hackathons/${hackathon.id}/join` : undefined}
+                disabled={!jwt}
+              >
+                <text>Join this hackathon!</text>
+              </AsterButton>
+            )
           )}
         </div>
       </div>
