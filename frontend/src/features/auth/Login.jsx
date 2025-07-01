@@ -3,12 +3,12 @@ import tokenService from "../../utils/token.service";
 import Providers from "./components/Providers";
 import AsterButton from "../../components/AsterButton";
 import FormInput from "../../components/form/FormInput";
-import ErrorMessage from "../../components/messages/ErrorMessage";
+import useFetcher from "../../utils/useFetcher";
 
 export default function Login() {
-  const API_URL = import.meta.env.VITE_API_URL;
   const [error, setError] = useState(null);
 
+  const { fetcher } = useFetcher(error, setError);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,31 +16,20 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`${API_URL}/login`, {
+    fetcher({
+      url: "login",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+      body: formData,
+      onSuccess: (data) => {
+        setFormData({
+          email: "",
+          password: "",
+        });
+        tokenService.updateLocalAccessToken(data.jwt);
+        tokenService.setUser(data);
+        window.location.href = "/";
       },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (!data.error) {
-          setFormData({
-            email: "",
-            password: "",
-          });
-          setError(null);
-          tokenService.updateLocalAccessToken(data.jwt);
-          tokenService.setUser(data);
-          window.location.href = "/";
-        } else {
-          setError(data.error);
-        }
-      })
-      .catch((error) => setError(error));
+    });
   };
 
   const handleInputChange = (e) => {
@@ -51,7 +40,6 @@ export default function Login() {
   return (
     <div>
       <h1>Log in now</h1>
-      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
       <div style={{ flex: 1 }}>
         <form onSubmit={handleSubmit} className="register-form">
           <div className="input-box-container">

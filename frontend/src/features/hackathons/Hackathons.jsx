@@ -1,39 +1,21 @@
 import { useEffect, useState } from "react";
 import HackathonCard from "../../components/HackathonCard";
-import tokenService from "../../utils/token.service";
-import ErrorMessage from "../../components/messages/ErrorMessage";
+import useFetcher from "../../utils/useFetcher";
 
 export default function Hackathons() {
-  const API_URL = import.meta.env.VITE_API_URL;
-  const jwt = tokenService.getLocalAccessToken();
   const [hackathons, setHackathons] = useState([]);
   const [error, setError] = useState(null);
+  const { fetcher } = useFetcher(error, setError);
 
   const fetchHackathons = async () => {
     const isAdmin = false;
 
-    await fetch(
-      `${API_URL}/hackathons?filter=${isAdmin ? "all" : "incoming"}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (!data.error) {
-          setError(null);
-          setHackathons(data);
-        } else {
-          setError(data.error);
-        }
-      })
-      .catch((error) => setError(error));
+    await fetcher({
+      url: `hackathons?filter=${isAdmin ? "all" : "incoming"}`,
+      onSuccess: (data) => {
+        setHackathons(data);
+      },
+    });
   };
 
   useEffect(() => {
@@ -53,7 +35,6 @@ export default function Hackathons() {
 
   return (
     <div>
-      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
       <h1>Next hackathons</h1>
       {Object.entries(hackathonsByEdition).map(([editionName, hackathons]) => (
         <>

@@ -1,26 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import RegistrationForm from "./components/RegistrationForm.jsx";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
-import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import ErrorMessage from "../../components/messages/ErrorMessage.jsx";
+import useFetcher from "../../utils/useFetcher.js";
 
-export default function CompleteRegistration(props) {
-  const params = useParams();
-  const navigate = useNavigate();
-
-  const API_URL = import.meta.env.VITE_API_URL;
-  const jwt = tokenService.getLocalAccessToken();
-
-  const { refreshSession, setJustRegistered } = useContext(RegistrationContext);
-
+export default function CompleteRegistration() {
   const [loading, setLoading] = useState(true);
   const [emailToRegister, setEmailToRegister] = useState(null);
   const [isProvider, setIsProvider] = useState(false);
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     email: emailToRegister,
     password: null,
     name: null,
@@ -29,24 +20,23 @@ export default function CompleteRegistration(props) {
     ageRange: null,
     affiliations: null,
     areasOfInterest: null,
-  });
+  };
+  const [formData, setFormData] = useState(initialFormData);
+
+  const params = useParams();
+  const navigate = useNavigate();
+  const { refreshSession, setJustRegistered } = useContext(RegistrationContext);
+  const { fetcher } = useFetcher(error, setError);
+  const jwt = tokenService.getLocalAccessToken();
 
   useEffect(() => {
-    fetch(`${API_URL}/early-signups/${params.earlySignupId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
+    fetcher({
+      url: `early-signups/${params.earlySignupId}`,
+      onSuccess: (data) => {
         setEmailToRegister(data.email);
         setIsProvider(data.isProvider);
-      })
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      },
+    }).finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -64,44 +54,26 @@ export default function CompleteRegistration(props) {
   };
 
   const signUp = () => {
-    fetch(`${API_URL}/register/complete`, {
+    fetcher({
+      url: "register/complete",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+      body: {
         ...formData,
         gender: formData.gender?.toLowerCase(),
         affiliations: itemsToLowerCase(formData.affiliations),
         areasOfInterest: itemsToLowerCase(formData.areasOfInterest),
-      }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (!data.error) {
-          setFormData({
-            email: emailToRegister,
-            password: null,
-            name: null,
-            surname: null,
-            gender: null,
-            birthDate: null,
-          });
-          setError(null);
-          if (!isProvider) {
-            tokenService.updateLocalAccessToken(data.jwt);
-            tokenService.setUser(data);
-          }
-          refreshSession();
-          setJustRegistered(true);
-          navigate("/signup");
-        } else {
-          setError(data.error);
+      },
+      onSuccess: (data) => {
+        setFormData(initialFormData);
+        if (!isProvider) {
+          tokenService.updateLocalAccessToken(data.jwt);
+          tokenService.setUser(data);
         }
-      })
-      .catch((error) => setError(error));
+        refreshSession();
+        setJustRegistered(true);
+        navigate("/signup");
+      },
+    });
   };
 
   if (loading)
@@ -131,7 +103,6 @@ export default function CompleteRegistration(props) {
   return (
     <div>
       <h1>Complete your profile</h1>
-      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
       <RegistrationForm
         formData={formData}
         setFormData={setFormData}

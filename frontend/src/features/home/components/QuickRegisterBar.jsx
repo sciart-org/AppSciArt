@@ -1,12 +1,12 @@
 import { useState } from "react";
 import AsterButton from "../../../components/AsterButton";
-import ErrorMessage from "../../../components/messages/ErrorMessage";
+import useFetcher from "../../../utils/useFetcher";
 
 export default function QuickRegisterBar() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
   const [successfullySent, setSuccessfullySent] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const { fetcher } = useFetcher(error, setError);
 
   const handleInputChange = (e) => {
     setEmail(e.target.value);
@@ -17,29 +17,19 @@ export default function QuickRegisterBar() {
       setError("Please, provide an email address");
       return;
     }
-    fetch(`${API_URL}/register?method=quick`, {
+
+    fetcher({
+      url: "register?method=quick",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+      body: { email },
+      onSuccess: () => {
+        setEmail("");
+        setSuccessfullySent(true);
       },
-      body: JSON.stringify({
-        email,
-      }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (!data.error) {
-          setEmail("");
-          setError(null);
-          setSuccessfullySent(true);
-        } else {
-          setSuccessfullySent(false);
-          setError(data.error);
-        }
-      })
-      .catch((error) => setError(error));
+      onError: () => {
+        setSuccessfullySent(false);
+      },
+    });
   };
 
   return (
@@ -65,7 +55,7 @@ export default function QuickRegisterBar() {
         </AsterButton>
       </div>
       <div>
-        {error === null && successfullySent ? (
+        {error === null && successfullySent && (
           <>
             <p style={{ marginBlockEnd: "0.5em" }}>
               Pre-registered successfully!
@@ -74,8 +64,6 @@ export default function QuickRegisterBar() {
               Check your inbox for the next steps
             </p>
           </>
-        ) : (
-          <ErrorMessage errorMessage={error} setErrorMessage={setError} />
         )}
       </div>
     </div>

@@ -15,12 +15,7 @@ import Hackathons from "./features/hackathons/Hackathons";
 import Format from "./features/hackathons/Format";
 import RegistrationEntry from "./features/auth/RegistrationEntry";
 import JoinHackathon from "./features/hackathons/JoinHackathon";
-import {
-  Message,
-  showErrorMessage,
-  showSuccessMessage,
-} from "./components/messages/Message";
-import { MessageContext } from "./context/MessageContext";
+import { Message } from "./components/messages/Message";
 
 function App() {
   useEffect(() => {
@@ -92,7 +87,7 @@ function App() {
   );
 
   return (
-    <MessageContext value={{ showErrorMessage, showSuccessMessage }}>
+    <>
       <Message />
       <AppNavbar id="navbar" />
       <div style={{ flex: 1, height: "100%" }}>
@@ -103,7 +98,7 @@ function App() {
         </Routes>
       </div>
       <AppFooter />
-    </MessageContext>
+    </>
   );
 }
 

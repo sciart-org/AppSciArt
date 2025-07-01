@@ -3,15 +3,11 @@ import Providers from "./components/Providers";
 import RegistrationForm from "./components/RegistrationForm.jsx";
 import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
-import ErrorMessage from "../../components/messages/ErrorMessage.jsx";
+import useFetcher from "../../utils/useFetcher.js";
 
 export default function Register() {
-  const API_URL = import.meta.env.VITE_API_URL;
-
-  const { refreshSession, setJustRegistered } = useContext(RegistrationContext);
-
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     email: null,
     password: null,
     name: null,
@@ -20,7 +16,11 @@ export default function Register() {
     ageRange: null,
     affiliations: null,
     areasOfInterest: null,
-  });
+  };
+  const [formData, setFormData] = useState(initialFormData);
+
+  const { fetcher } = useFetcher(error, setError);
+  const { refreshSession, setJustRegistered } = useContext(RegistrationContext);
 
   const itemsToLowerCase = (list) => {
     if (list === null) return null;
@@ -28,47 +28,28 @@ export default function Register() {
   };
 
   const signUp = () => {
-    fetch(`${API_URL}/register?method=direct`, {
+    fetcher({
+      url: "register?method=direct",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+      body: {
         ...formData,
         gender: formData.gender?.toLowerCase(),
         affiliations: itemsToLowerCase(formData.affiliations),
         areasOfInterest: itemsToLowerCase(formData.areasOfInterest),
-      }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (!data.error) {
-          setFormData({
-            email: null,
-            password: null,
-            name: null,
-            surname: null,
-            gender: null,
-            birthDate: null,
-          });
-          setError(null);
-          tokenService.updateLocalAccessToken(data.jwt);
-          tokenService.setUser(data);
-          refreshSession();
-          setJustRegistered(true);
-        } else {
-          setError(data.error);
-        }
-      })
-      .catch((error) => setError(error));
+      },
+      onSuccess: (data) => {
+        setFormData(initialFormData);
+        tokenService.updateLocalAccessToken(data.jwt);
+        tokenService.setUser(data);
+        refreshSession();
+        setJustRegistered(true);
+      },
+    });
   };
 
   return (
     <div>
       <h1>Register now</h1>
-      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
       <div style={{ flex: 1 }}>
         <RegistrationForm
           formData={formData}

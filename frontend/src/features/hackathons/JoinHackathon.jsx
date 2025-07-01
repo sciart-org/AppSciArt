@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import tokenService from "../../utils/token.service";
 import HackathonCard from "../../components/HackathonCard.jsx";
 import JoinForm from "./components/JoinForm.jsx";
 import HackathonDescription from "./components/HackathonDescription.jsx";
 import AsterButton from "../../components/AsterButton.jsx";
-import ErrorMessage from "../../components/messages/ErrorMessage.jsx";
 import JoinSuccess from "./components/JoinSuccess.jsx";
+import useFetcher from "../../utils/useFetcher.js";
 
 export default function JoinHackathon() {
-  const API_URL = import.meta.env.VITE_API_URL;
-  const params = useParams();
-
   const [loading, setLoading] = useState(true);
   const [hackathon, setHackathon] = useState(null);
   const [error, setError] = useState(null);
@@ -21,29 +17,16 @@ export default function JoinHackathon() {
     interests: null,
   });
 
-  const jwt = tokenService.getLocalAccessToken();
+  const { fetcher } = useFetcher(error, setError);
+  const params = useParams();
 
   useEffect(() => {
-    fetch(`${API_URL}/hackathons/${params.hackathonId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
+    fetcher({
+      url: `hackathons/${params.hackathonId}`,
+      onSuccess: (data) => {
+        setHackathon(data);
       },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (!data.error) {
-          setHackathon(data);
-          setError(null);
-        } else {
-          setError(data.error);
-        }
-      })
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+    }).finally(() => setLoading(false));
   }, []);
 
   const itemsToLowerCase = (list) => {
@@ -52,34 +35,21 @@ export default function JoinHackathon() {
   };
 
   const joinHackathon = () => {
-    console.log(formData);
-    fetch(`${API_URL}/hackathons/${params.hackathonId}/participants/me`, {
+    fetcher({
+      url: `hackathons/${params.hackathonId}/participants/me`,
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`,
-      },
-      body: JSON.stringify({
+      body: {
         ...formData,
         roles: itemsToLowerCase(formData.roles),
-      }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (!data.error) {
-          setJoined(true);
-          setFormData({
-            roles: null,
-            interests: null,
-          });
-          setError(null);
-        } else {
-          setError(data.error);
-        }
-      })
-      .catch((error) => setError(error));
+      },
+      onSuccess: () => {
+        setJoined(true);
+        setFormData({
+          roles: null,
+          interests: null,
+        });
+      },
+    });
   };
 
   if (loading) {
@@ -129,7 +99,6 @@ export default function JoinHackathon() {
         showButton={!joined}
       />
       <div>{joined && <p>You joined successfully!</p>}</div>
-      <ErrorMessage errorMessage={error} setErrorMessage={setError} />
     </div>
   );
 }

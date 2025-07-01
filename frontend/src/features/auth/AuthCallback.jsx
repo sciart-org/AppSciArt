@@ -1,32 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import tokenService from "../../utils/token.service";
+import useFetcher from "../../utils/useFetcher";
 
 export default function AuthCallback() {
-  const API_URL = import.meta.env.VITE_API_URL;
+  const [error, setError] = useState(null);
+  const { fetcher, refreshToken } = useFetcher(error, setError);
 
   useEffect(() => {
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
     const accessToken = params.get("access_token");
     tokenService.updateLocalAccessToken(accessToken);
-    fetch(`${API_URL}/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+    refreshToken();
+
+    fetcher({
+      url: "me",
+      onSuccess: (data) => {
+        tokenService.setUser(data);
+        window.location.href = "/";
       },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (!data.error) {
-          tokenService.setUser(data);
-          window.location.href = "/";
-        } else {
-          window.location.href = "/signup";
-        }
-      });
+      onError: () => {
+        window.location.href = "/signup";
+      },
+    });
   }, []);
 
   return (
