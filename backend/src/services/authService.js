@@ -97,7 +97,7 @@ async function createUserProfile (body) {
 }
 
 export function getJwt (req) {
-  const jwt = req.headers.authorization.replace('Bearer ', '')
+  const jwt = req?.headers?.authorization?.replace('Bearer ', '')
   if (!jwt || jwt === 'null') {
     return null
   }
