@@ -85,12 +85,20 @@ export default function JoinHackathon() {
     <div>
       <h2>You are joining:</h2>
       <h1>{hackathon.editionName}</h1>
-      <HackathonCard
-        hackathon={hackathon}
-        style={{ border: "none" }}
-        hideButton={true}
-      />
-      <HackathonDescription hackathon={hackathon} />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <HackathonCard
+          hackathon={hackathon}
+          style={{ border: "none" }}
+          hideButton={true}
+        />
+        <HackathonDescription hackathon={hackathon} />
+      </div>
       <h2>Join now!</h2>
       <JoinForm
         formData={formData}

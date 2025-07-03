@@ -22,14 +22,14 @@ A selection of this exhibition may be showcased during the Ars Electronica Festi
   };
 
   return (
-    <div style={{ width: "70vw", justifySelf: "center" }}>
-      <h2 style={{ justifySelf: "start" }}>What will we do?</h2>
+    <div style={{ width: "70vw" }}>
+      <h2 style={{ textAlign: "start" }}>What will we do?</h2>
       <div style={{ display: "flex" }}>
-        <div style={{ justifyItems: "start", flex: 1 }}>
+        <div>
           {Object.entries(mockedHackathon?.descriptionParagraphs).map(
             ([key, value]) => (
               <>
-                <h3>
+                <h3 style={{ textAlign: "start" }}>
                   {key.charAt(0).toUpperCase() +
                     key.slice(1).replaceAll("_", " ")}
                 </h3>
