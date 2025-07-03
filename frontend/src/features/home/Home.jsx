@@ -5,23 +5,9 @@ import InspiringScientist from "./components/InspiringScientist.jsx";
 import Participant from "./components/Participant.jsx";
 import SciArtProducts from "../../components/sciartProducts/SciArtProducts.jsx";
 import QuickRegisterBar from "./components/QuickRegisterBar.jsx";
+import { useEffect, useState } from "react";
+import useFetcher from "../../utils/useFetcher.js";
 import "./css/Home.css";
-
-import hackathonLogo from "../../assets/mockHackathonLogo.jpg";
-
-const mockHackathon = {
-  editionName: "GreenTech Berlin 2025",
-  logo: hackathonLogo,
-  startDate: new Date("2025-08-01"),
-  endDate: new Date("2025-08-03"),
-  type: "ON_SITE",
-  location:
-    "University of Arts Linz, Hauptplatz 8, Lecture Theater, 4th Floor (Altenberger Str. 69, 4040 Linz, Austria)",
-  description:
-    "Explore the boundaries of art and science around the brain and cognition, developing new ways to understand the human mind",
-  isVisible: true,
-  meetLink: null,
-};
 
 function Roles() {
   return (
@@ -52,10 +38,23 @@ function MoreInfoSection() {
 }
 
 function NextEvent() {
+  const [error, setError] = useState(null)
+  const { fetcher } = useFetcher(error, setError)
+  const [hackathon, setHackathon] = useState({})
+
+  useEffect(() => {
+    fetcher({
+      url: "hackathons?filter=closest",
+      onSuccess: (data) => {
+        setHackathon(data)
+      }
+    })
+  }, [])
+
   return (
     <div style={{ justifyItems: "center", display: "inline-block" }}>
       <h2 style={{ textAlign: "start" }}>Next event</h2>
-      <HackathonCard hackathon={mockHackathon} />
+      <HackathonCard hackathon={hackathon} />
     </div>
   );
 }

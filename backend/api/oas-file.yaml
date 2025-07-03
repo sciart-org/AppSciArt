@@ -190,7 +190,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HackathonList"
+                anyOf:
+                  - $ref: "#/components/schemas/HackathonList"
+                  - $ref: "#/components/schemas/Hackathon"
         default:
           description: Unexpected error
 
@@ -1775,14 +1777,12 @@ components:
           type: string
           format: uri
         startDate:
-          type: string
-          format: date-time
+          type: object
         endDate:
-          type: string
-          format: date-time
+          type: object
         type:
           type: string
-          enum: [online, hybrid, in-person]
+          enum: [ON_SITE, ONLINE, HYBRID]
         location:
           type: string
           maxLength: 255

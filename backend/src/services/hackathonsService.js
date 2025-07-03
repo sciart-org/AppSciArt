@@ -51,6 +51,18 @@ const combineIncludes = (includesList) => {
   }
 }
 
+export async function getClosestHackathon (userId) {
+  return await Hackathon.findOne({
+    where: {
+      startDate: {
+        [Op.gte]: new Date()
+      }
+    },
+    order: [['startDate', 'ASC']],
+    ...combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
+  })
+}
+
 export async function getIncomingHackathons (userId) {
   return await Hackathon.findAll({
     where: {

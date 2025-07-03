@@ -7,9 +7,8 @@ export const getHackathons = withErrorHandler(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
 
   if (filter === 'closest') {
-    return res.status(501).json({
-      message: 'Fetch closest hackathon not yet implemented'
-    })
+    const hackathon = await service.getClosestHackathon(currentUser?.id)
+    return res.status(200).send(hackathon)
   }
 
   if (filter === 'incoming') {
