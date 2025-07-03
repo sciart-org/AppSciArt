@@ -22,7 +22,7 @@ export const register = withErrorHandler(async (req, res) => {
   }
 
   if (method === 'quick') {
-    const result = service.quickRegister(req.body.email)
+    const result = await service.quickRegister(req.body.email)
     return res.status(201).send(result)
   }
 

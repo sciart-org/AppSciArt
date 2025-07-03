@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import tokenService from "../../../utils/token.service";
+import React from "react";
 import FormInput from "../../../components/form/FormInput.jsx";
 import FormSelect from "../../../components/form/FormSelect.jsx";
 import AsterButton from "../../../components/AsterButton.jsx";
 
 export default function JoinForm(props) {
   const { onSubmit, formData, setFormData, showButton } = props;
-  const jwt = tokenService.getLocalAccessToken();
 
   const handleSubmit = (e) => {
     e.preventDefault();

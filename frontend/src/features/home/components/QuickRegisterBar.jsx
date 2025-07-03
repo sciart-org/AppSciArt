@@ -1,11 +1,11 @@
 import { useState } from "react";
 import AsterButton from "../../../components/AsterButton";
 import useFetcher from "../../../utils/useFetcher";
+import { showSuccessMessage } from "../../../components/messages/Message";
 
 export default function QuickRegisterBar() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
-  const [successfullySent, setSuccessfullySent] = useState(false);
   const { fetcher } = useFetcher(error, setError);
 
   const handleInputChange = (e) => {
@@ -24,10 +24,10 @@ export default function QuickRegisterBar() {
       body: { email },
       onSuccess: () => {
         setEmail("");
-        setSuccessfullySent(true);
-      },
-      onError: () => {
-        setSuccessfullySent(false);
+        showSuccessMessage(
+          "Thank you for registering! Check your inbox for the next steps.",
+          () => {}
+        );
       },
     });
   };
@@ -53,18 +53,6 @@ export default function QuickRegisterBar() {
         >
           <text>Join now!</text>
         </AsterButton>
-      </div>
-      <div>
-        {error === null && successfullySent && (
-          <>
-            <p style={{ marginBlockEnd: "0.5em" }}>
-              Pre-registered successfully!
-            </p>
-            <p style={{ marginBlock: 0 }}>
-              Check your inbox for the next steps
-            </p>
-          </>
-        )}
       </div>
     </div>
   );

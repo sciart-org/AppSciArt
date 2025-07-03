@@ -8,6 +8,7 @@ import QuickRegisterBar from "./components/QuickRegisterBar.jsx";
 import { useEffect, useState } from "react";
 import useFetcher from "../../utils/useFetcher.js";
 import "./css/Home.css";
+import tokenService from "../../utils/token.service.js";
 
 function Roles() {
   return (
@@ -38,18 +39,18 @@ function MoreInfoSection() {
 }
 
 function NextEvent() {
-  const [error, setError] = useState(null)
-  const { fetcher } = useFetcher(error, setError)
-  const [hackathon, setHackathon] = useState({})
+  const [error, setError] = useState(null);
+  const { fetcher } = useFetcher(error, setError);
+  const [hackathon, setHackathon] = useState({});
 
   useEffect(() => {
     fetcher({
       url: "hackathons?filter=closest",
       onSuccess: (data) => {
-        setHackathon(data)
-      }
-    })
-  }, [])
+        setHackathon(data);
+      },
+    });
+  }, []);
 
   return (
     <div style={{ justifyItems: "center", display: "inline-block" }}>
@@ -60,6 +61,7 @@ function NextEvent() {
 }
 
 export default function Home() {
+  const jwt = tokenService.getLocalAccessToken();
   return (
     <div>
       <Carousel />
@@ -68,8 +70,12 @@ export default function Home() {
       <Roles />
       <hr />
       <MoreInfoSection />
-      <hr />
-      <QuickRegisterBar />
+      {!jwt && (
+        <>
+          <hr />
+          <QuickRegisterBar />
+        </>
+      )}
       <NextEvent />
     </div>
   );
