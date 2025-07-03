@@ -13,9 +13,38 @@ const PORT = process.env.PORT || 3000
 const JWT_SECRET = process.env.JWT_SECRET
 const JWT_ISSUER = process.env.JWT_ISSUER
 
+function customErrorHandler (req, res, next) {
+  const oldSend = res.send
+
+  res.send = function (data) {
+    res.send = oldSend
+
+    if (!(data.error && typeof data.error === 'string' && data.error.includes('RequestValidationError'))) {
+      return res.send(data)
+    }
+
+    const lines = data.error?.split('\n')
+    let userMessage = ''
+
+    for (const line of lines) {
+      const match = line.match(/#\/properties\/([^\/\s]+)\/?[^ ]* > (.+)/)
+      if (match) {
+        const [_, field, message] = match
+        const friendlyField = field.charAt(0).toUpperCase() + field.slice(1)
+        userMessage += `${friendlyField} ${message}. `
+      }
+    }
+    return res.send({
+      error: userMessage
+    })
+  }
+  next()
+}
+
 app.disable('x-powered-by')
 app.use(json({ limit: '50mb' }))
 app.use(corsMiddleware())
+app.use(customErrorHandler)
 
 const config = {
   middleware: {
