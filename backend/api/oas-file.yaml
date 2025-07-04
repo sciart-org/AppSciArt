@@ -1120,15 +1120,17 @@ paths:
   /seeds:
     x-router-controller: seedsController
     get:
+      security: [{}]
       tags: [SciArt seeds]
       summary: Get seeds
       operationId: getSeedsByEdition
       parameters:
-        - name: edition
+        - name: editionId
           in: query
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: List of seeds

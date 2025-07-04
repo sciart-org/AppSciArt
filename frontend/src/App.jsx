@@ -16,6 +16,7 @@ import Format from "./features/hackathons/Format";
 import RegistrationEntry from "./features/auth/RegistrationEntry";
 import JoinHackathon from "./features/hackathons/JoinHackathon";
 import { Message } from "./components/messages/Message";
+import SeedCollection from "./features/collections/SeedCollection";
 
 function App() {
   useEffect(() => {
@@ -49,6 +50,7 @@ function App() {
           />
         }
       />
+      <Route path="/collections/seeds" element={<SeedCollection />} />
     </>
   );
 

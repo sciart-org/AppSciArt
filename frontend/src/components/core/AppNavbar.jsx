@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import tokenService from "../../utils/token.service";
+import { IoChevronDown } from "react-icons/io5";
 import "./core.css";
 
 export default function AppNavbar() {
@@ -17,12 +18,27 @@ export default function AppNavbar() {
 
   const [showCollections, setShowCollections] = useState(false);
 
+  const CollectionsDropdown = () => {
+    return (
+      <div className="collections-dropdown">
+        <Link to={"/collections/seeds"}>Seeds</Link>
+        <Link to={"/collections/flowers"}>Flowers</Link>
+        <Link to={"/collections/fruits"}>Fruits</Link>
+      </div>
+    );
+  };
+
   return (
     <div id="navbar">
       <div className="left-button-container">
         <Link to={"/"}>Home</Link>
-        <Link onClick={() => setShowCollections(!showCollections)}>
-          Collections
+        <Link
+          onClick={() => setShowCollections(!showCollections)}
+          className="collections-container"
+        >
+          <text>Collections</text>
+          <IoChevronDown size={"1.25rem"} style={{ marginLeft: "0.2rem" }} />
+          {showCollections && <CollectionsDropdown />}
         </Link>
         <Link to={"/about-the-hackathon"}>Our format</Link>
         <Link to={"/hackathons"}>Hackathons</Link>

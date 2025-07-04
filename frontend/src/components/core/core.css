@@ -61,3 +61,32 @@
   margin-left: 0.5vw;
   margin-right: 0.5vw;
 }
+
+.collections-container {
+    display: flex;
+    justify-items: center;
+    position: relative;
+}
+
+.collections-dropdown {
+    position: absolute;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    top: 1.75rem;
+    left: -0.25rem;
+    border: 0.1rem solid rgb(100, 100, 100);
+    border-radius: 0.5rem;
+    width: 7rem;
+}
+
+.collections-dropdown > * {
+    padding: 0.5rem;
+    text-align: start;
+    border-bottom: 0.1rem solid rgb(100, 100, 100);
+}
+
+.collections-dropdown > *:last-child {
+    border-bottom: none;
+}
