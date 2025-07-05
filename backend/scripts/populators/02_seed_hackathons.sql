@@ -16,14 +16,16 @@ INSERT INTO public.hackathons (
 VALUES
   (
     'https://i.imgur.com/QCm4N6t.png',
-    '2025-07-01',
-    '2025-07-03',
-    'ONLINE',
-    NULL,
-    'A fully online summer hackathon.',
+    '2026-01-29',
+    '2026-01-31',
+    'ON_SITE',
+    'Escuela Técnica Superior de Ingeniería Informática de la Universidad de Sevilla
+(Av. Reina Mercedes s/n, 41012 Sevilla, Spain)',
+    'Explore the boundaries of art and science around the brain and cognition,
+developing new ways to understand the human mind',
     true,
     'https://meet.example.com/hack1',
-    '9a1b5c10-1c11-4a4f-a25e-aaa111000100',
+    '9a1b5c10-1c11-4a4f-a25e-aaa111000101',
     NOW(),
     NOW()
   ),
@@ -36,7 +38,7 @@ VALUES
     'An on-site hackathon focused on fintech innovation.',
     true,
     NULL,
-    '9a1b5c10-1c11-4a4f-a25e-aaa111000101',
+    '9a1b5c10-1c11-4a4f-a25e-aaa111000102',
     NOW(),
     NOW()
   ),
