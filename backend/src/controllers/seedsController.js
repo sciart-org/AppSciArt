@@ -2,9 +2,9 @@ import * as service from '../services/seedsService.js'
 import { withErrorHandler } from './errorHandling.js'
 
 export const getSeedsByEdition = withErrorHandler(async (req, res) => {
-  const query = req.query
-  console.log(query)
-  return res.status(200)
+  const editionId = req.query.editionId
+  const seeds = await service.getSeedsByEdition(editionId)
+  return res.status(200).send(seeds)
 })
 
 export function createSeed (req, res) {

@@ -1,8 +1,23 @@
 import * as service from '../services/editionsService.js'
+import { withErrorHandler } from './errorHandling.js'
 
-export function getEditions (req, res) {
-  service.getEditions(req, res)
-}
+export const getEditions = withErrorHandler(async (req, res) => {
+  const { visibility } = req.query
+
+  if (visibility === 'published') {
+    const editions = await service.getPublishedEditions()
+    return res.status(200).send(editions)
+  }
+
+  if (visibility === 'all') {
+    const editions = await service.getAllEditions()
+    return res.status(200).send(editions)
+  }
+
+  return res.status(400).json({
+    message: 'Invalid visibility, or not yet implemented'
+  })
+})
 
 export function createEdition (req, res) {
   service.createEdition(req, res)

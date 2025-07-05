@@ -1,14 +1,17 @@
 import { Edition } from '../models/Edition.js'
 import { validateEdition } from '../schemas/edition.js'
 
-export async function getEditions (req, res) {
-  try {
-    const editions = await Edition.findAll()
-    res.status(200).send(editions)
-  } catch (error) {
-    console.error('Error getting editions:', error)
-    res.status(500).json({ error: 'Server error' })
-  }
+export async function getAllEditions () {
+  return await Edition.findAll({
+    order: [['year', 'DESC']]
+  })
+}
+
+export async function getPublishedEditions () {
+  return await Edition.findAll({
+    where: { isVisible: true },
+    order: [['year', 'DESC']]
+  })
 }
 
 export async function createEdition (req, res) {

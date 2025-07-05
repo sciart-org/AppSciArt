@@ -24,7 +24,7 @@ export const Edition = sequelize.define(
       type: DataTypes.STRING
     },
     longDescription: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING(500)
     },
     catalogLink: {
       type: DataTypes.STRING

@@ -1,6 +1,14 @@
-export function getSeedsByEdition (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getSeedsByEdition'
+import { Edition } from '../models/Edition.js'
+import { Seed } from '../models/Seed.js'
+
+export async function getSeedsByEdition (editionId) {
+  return await Seed.findAll({
+    include: {
+      model: Edition,
+      where: { id: editionId },
+      attributes: [],
+      through: { attributes: [] }
+    }
   })
 }
 

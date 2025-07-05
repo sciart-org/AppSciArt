@@ -33,6 +33,7 @@ paths:
   /editions:
     x-router-controller: editionsController
     get:
+      security: [{}]
       tags: [Editions]
       summary: Get editions
       operationId: getEditions
