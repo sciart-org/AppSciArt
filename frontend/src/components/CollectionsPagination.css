@@ -1,0 +1,14 @@
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-controls > * {
+    border-radius: 0;
+    outline: 1px solid black;
+    width: 3vw;
+}
+
+.selected-page {
+    background-color: rgb(200, 200, 200);
+}
