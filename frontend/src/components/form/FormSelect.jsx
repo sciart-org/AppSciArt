@@ -10,6 +10,8 @@ export default function FormSelect({
   multiple,
   style,
   placeholder,
+  clearable = true,
+  className,
 }) {
   const newOptions = options.map((o) => {
     return {
@@ -45,12 +47,12 @@ export default function FormSelect({
         {required && <span style={{ color: "red", marginLeft: "3px" }}>*</span>}
       </div>
       <Select
-        className="multiple-select"
+        className={"multiple-select " + className}
         value={newValues}
         onChange={handleSelectChange}
         options={newOptions}
         isMulti={multiple}
-        isClearable
+        isClearable={clearable}
         clearValue={() => setValue(null)}
         required={required}
         placeholder={placeholder || "Select " + name.toLowerCase() + "..."}

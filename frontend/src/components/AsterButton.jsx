@@ -6,7 +6,7 @@ export default function AsterButton(props) {
 
   return (
     <button
-      className="aster-button"
+      className={"aster-button " + (props.className || "")}
       style={{ ...props.style }}
       disabled={props.disabled}
       type={props.type}
