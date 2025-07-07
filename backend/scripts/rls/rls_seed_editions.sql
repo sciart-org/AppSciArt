@@ -1,1 +1,0 @@
-ALTER TABLE public.seed_editions ENABLE ROW LEVEL SECURITY;

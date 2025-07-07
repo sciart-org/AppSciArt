@@ -1,1 +1,0 @@
-ALTER TABLE public.seed_likes ENABLE ROW LEVEL SECURITY;

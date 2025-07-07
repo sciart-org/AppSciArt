@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 
 export const UserProfile = sequelize.define(
-  'user_profile',
+  'user_profiles',
   {
     id: {
       type: DataTypes.UUID,
@@ -53,8 +53,7 @@ export const UserProfile = sequelize.define(
     }
   },
   {
-    tableName: 'user_profile',
-    schema: 'public',
+    schema: 'profiles',
     timestamps: false
   },
   {

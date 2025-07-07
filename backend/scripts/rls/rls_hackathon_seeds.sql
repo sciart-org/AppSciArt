@@ -1,1 +1,0 @@
-ALTER TABLE public.hackathon_seeds ENABLE ROW LEVEL SECURITY;

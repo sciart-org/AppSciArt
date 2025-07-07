@@ -50,20 +50,14 @@ DELETE FROM public.seed_editions;
 
 INSERT INTO public.seed_editions (
   "seedId",
-  "editionId",
-  "createdAt",
-  "updatedAt"
+  "editionId"
 )
 VALUES 
 (
   '11111111-1111-1111-1111-111111111111',
-  '9a1b5c10-1c11-4a4f-a25e-aaa111000101',
-  NOW(),
-  NOW()
+  '9a1b5c10-1c11-4a4f-a25e-aaa111000101'
 ),
 (
   '11111111-1111-1111-1111-111111111112',
-  '9a1b5c10-1c11-4a4f-a25e-aaa111000101',
-  NOW(),
-  NOW()
+  '9a1b5c10-1c11-4a4f-a25e-aaa111000101'
 );
