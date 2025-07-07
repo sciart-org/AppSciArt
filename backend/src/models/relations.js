@@ -1,4 +1,3 @@
-import { sequelize } from '../config/sequelize.js'
 import { Edition } from './Edition.js'
 import { Hackathon } from './Hackathon.js'
 import { Seed } from './Seed.js'
@@ -7,6 +6,21 @@ import { Fruit } from './Fruit.js'
 import { UserProfile } from './UserProfile.js'
 import { EarlySignup } from './EarlySignup.js'
 import { Participation } from './Participation.js'
+import { SeedEditions } from './intermediate/SeedEditions.js'
+import { HackathonSeeds } from './intermediate/HackathonSeeds.js'
+import { SeedLikes } from './intermediate/SeedLikes.js'
+import { SeedScientists } from './intermediate/SeedScientists.js'
+import { InspiringScientist } from './roles/InspiringScientist.js'
+import { Administrator } from './roles/Administrator.js'
+import { Designer } from './roles/Designer.js'
+import { Evaluator } from './roles/Evaluator.js'
+import { Facilitator } from './roles/Facilitator.js'
+
+const unique = {
+  foreignKey: {
+    allowNull: false
+  }
+}
 
 //  STRUCTURE
 
@@ -14,19 +28,13 @@ import { Participation } from './Participation.js'
 //  Methodology.hasMany(Edition)
 
 Hackathon.belongsTo(Edition)
-Edition.hasMany(Hackathon)
-
-const SeedEditions = sequelize.define('seed_editions', {})
+Edition.hasMany(Hackathon, unique)
 
 Seed.belongsToMany(Edition, { through: SeedEditions })
 Edition.belongsToMany(Seed, { through: SeedEditions })
 
-const HackathonSeeds = sequelize.define('hackathon_seeds', {})
-
 Hackathon.belongsToMany(Seed, { through: HackathonSeeds })
 Seed.belongsToMany(Hackathon, { through: HackathonSeeds })
-
-const SeedLikes = sequelize.define('seed_likes', {})
 
 Seed.belongsToMany(UserProfile, { through: SeedLikes })
 UserProfile.belongsToMany(Seed, { through: SeedLikes })
@@ -34,10 +42,10 @@ UserProfile.belongsToMany(Seed, { through: SeedLikes })
 //  ITEMS
 
 Flower.belongsTo(Seed)
-Seed.hasMany(Flower)
+Seed.hasMany(Flower, unique)
 
 Fruit.belongsTo(Flower)
-Flower.hasMany(Fruit)
+Flower.hasMany(Fruit, unique)
 
 Participation.belongsTo(Flower)
 Participation.belongsTo(Fruit)
@@ -45,12 +53,33 @@ Participation.belongsTo(UserProfile)
 Participation.belongsTo(Hackathon)
 Flower.hasMany(Participation)
 Fruit.hasMany(Participation)
-UserProfile.hasMany(Participation)
-Hackathon.hasMany(Participation)
+UserProfile.hasMany(Participation, unique)
+Hackathon.hasMany(Participation, unique)
 
-//  const SeedScientists = sequelize.define('seed_scientists', {})
-
-//  Seed.belongsToMany(InspiringScientist, { through: SeedScientists })
-//  InspiringScientist.belongsToMany(Seed, { through: SeedScientists })
+Seed.belongsToMany(InspiringScientist, { through: SeedScientists })
+InspiringScientist.belongsToMany(Seed, { through: SeedScientists })
 
 //  ROLES BELOW
+
+UserProfile.hasOne(Administrator, unique)
+Administrator.belongsTo(UserProfile)
+
+UserProfile.hasOne(Facilitator, unique)
+Facilitator.belongsTo(UserProfile)
+// Facilitator.belongsTo(Methodology)
+// Methodology.hasMany(Facilitator)
+
+UserProfile.hasOne(InspiringScientist, unique)
+InspiringScientist.belongsTo(UserProfile)
+// InspiringScientist.belongsTo(Methodology)
+// Methodology.hasMany(InspiringScientist)
+
+UserProfile.hasOne(Evaluator, unique)
+Evaluator.belongsTo(UserProfile)
+// Evaluator.belongsTo(Methodology)
+// Methodology.hasMany(Evaluator)
+
+UserProfile.hasOne(Designer, unique)
+Designer.belongsTo(UserProfile)
+// Designer.belongsTo(Methodology)
+// Methodology.hasMany(Designer)
