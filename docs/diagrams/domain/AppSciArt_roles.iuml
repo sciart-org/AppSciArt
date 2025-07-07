@@ -12,6 +12,7 @@ class User {
 class UserInfo {
   name: String
   surname: String
+  email: String
   gender: String
   birthDate: String
   affiliations: String[]

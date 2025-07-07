@@ -15,6 +15,9 @@ export const Flower = sequelize.define(
     template: {
       type: DataTypes.STRING
     },
+    mainImage: {
+      type: DataTypes.STRING
+    },
     conceptualMap: {
       type: DataTypes.STRING
     },
