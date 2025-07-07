@@ -16,7 +16,7 @@ import Format from "./features/hackathons/Format";
 import RegistrationEntry from "./features/auth/RegistrationEntry";
 import JoinHackathon from "./features/hackathons/JoinHackathon";
 import { Message } from "./components/messages/Message";
-import SeedCollection from "./features/collections/SeedCollection";
+import Collection from "./features/collections/Collection";
 
 function App() {
   useEffect(() => {
@@ -50,7 +50,18 @@ function App() {
           />
         }
       />
-      <Route path="/collections/seeds" element={<SeedCollection />} />
+      <Route
+        path="/collections/seeds"
+        element={<Collection itemName="seed" />}
+      />
+      <Route
+        path="/collections/flowers"
+        element={<Collection itemName="flower" />}
+      />
+      <Route
+        path="/collections/fruits"
+        element={<Collection itemName="fruit" />}
+      />
     </>
   );
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AsterButton from "./AsterButton";
 import "./CollectionsPagination.css";
 

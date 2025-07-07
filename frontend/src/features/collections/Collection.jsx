@@ -6,15 +6,26 @@ import CollectionsPagination from "../../components/CollectionsPagination";
 import tokenService from "../../utils/token.service";
 import AsterButton from "../../components/AsterButton";
 import EditionPicker from "./components/EditionPicker";
+import FlowerCard from "./components/FlowerCard";
+import FruitCard from "./components/FruitCard";
 import "./css/collections.css";
 
-export default function SeedCollection() {
+export default function Collection({ itemName: itemNameRaw }) {
   const jwt = tokenService.getLocalAccessToken();
   const [error, setError] = useState(null);
-  const [seeds, setSeeds] = useState([]);
+  const [items, setItems] = useState([]);
   const [allEditions, setAllEditions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedEdition, setSelectedEdition] = useState(null);
+
+  const itemName = itemNameRaw.toLowerCase();
+
+  const ItemCard =
+    itemName === "seed"
+      ? SeedCard
+      : itemName === "flower"
+      ? FlowerCard
+      : FruitCard;
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -36,16 +47,20 @@ export default function SeedCollection() {
   useEffect(() => {
     setLoading(true);
     if (!selectedEdition) {
-      setSeeds([]);
+      setItems([]);
       return;
     }
     fetcher({
-      url: `seeds?editionId=${selectedEdition?.id}`,
+      url: `${itemName}s?editionId=${selectedEdition?.id}`,
       onSuccess: (data) => {
-        setSeeds(data);
+        setItems(data);
+        console.log(data)
+      },
+      onError: () => {
+        setItems([]);
       },
     }).finally(() => setLoading(false));
-  }, [selectedEdition]);
+  }, [selectedEdition, itemName]);
 
   const Header = () => {
     return (
@@ -58,7 +73,9 @@ export default function SeedCollection() {
             alignItems: "center",
           }}
         >
-          <h1>Seed Collection:</h1>
+          <h1>
+            {itemName.charAt(0).toUpperCase() + itemName.slice(1)} Collection:
+          </h1>
           <EditionPicker
             selectedEdition={selectedEdition}
             setSelectedEdition={setSelectedEdition}
@@ -89,16 +106,18 @@ export default function SeedCollection() {
   return (
     <div>
       <Header />
-      {seeds.length === 0 ? (
-        <h2 style={{ fontWeight: "normal" }}>No seeds for this edition yet</h2>
+      {items.length === 0 ? (
+        <h2 style={{ fontWeight: "normal" }}>
+          No {itemName}s for this edition yet
+        </h2>
       ) : (
         <CollectionsPagination
-          items={seeds || []}
+          items={items || []}
           itemsNumber={6}
           containerComponent={({ children }) => (
             <div className="collection-grid">{children}</div>
           )}
-          itemComponent={SeedCard}
+          itemComponent={ItemCard}
         />
       )}
     </div>
