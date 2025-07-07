@@ -1,6 +1,25 @@
-export function getFruitsByEdition (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getFruitsByEdition'
+import { Edition } from '../models/Edition.js'
+import { Seed } from '../models/Seed.js'
+import { Flower } from '../models/Flower.js'
+import { Fruit } from '../models/Fruit.js'
+
+export async function getFruitsByEdition (editionId) {
+  return await Fruit.findAll({
+    include: {
+      model: Flower,
+      required: true,
+      include: {
+        model: Seed,
+        required: true,
+        include: {
+          model: Edition,
+          where: { id: editionId },
+          attributes: []
+        },
+        attributes: []
+      },
+      attributes: []
+    }
   })
 }
 

@@ -1,8 +1,11 @@
 import * as service from '../services/flowersService.js'
+import { withErrorHandler } from './errorHandling.js'
 
-export function getFlowersByEdition (req, res) {
-  service.getFlowersByEdition(req, res)
-}
+export const getFlowersByEdition = withErrorHandler(async (req, res) => {
+  const editionId = req.query.editionId
+  const flowers = await service.getFlowersByEdition(editionId)
+  return res.status(200).send(flowers)
+})
 
 export function createFlower (req, res) {
   service.createFlower(req, res)

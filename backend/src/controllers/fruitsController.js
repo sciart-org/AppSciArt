@@ -1,8 +1,11 @@
 import * as service from '../services/fruitsService.js'
+import { withErrorHandler } from './errorHandling.js'
 
-export function getFruitsByEdition (req, res) {
-  service.getFruitsByEdition(req, res)
-}
+export const getFruitsByEdition = withErrorHandler(async (req, res) => {
+  const editionId = req.query.editionId
+  const fruits = await service.getFruitsByEdition(editionId)
+  return res.status(200).send(fruits)
+})
 
 export function createFruit (req, res) {
   service.createFruit(req, res)
