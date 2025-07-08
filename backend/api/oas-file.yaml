@@ -1619,33 +1619,41 @@ components:
         templateLink:
           type: string
           format: uri
+          nullable: true
         imageLink:
           type: string
           format: uri
+          nullable: true
         state:
           type: string
-          enum: [draft, published]
+          enum: [IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED]
         branchesOfKnowledge:
           type: array
           items:
             type: string
             maxLength: 50
+          nullable: true
         videoLink:
           type: string
           format: uri
+          nullable: true
         presentationLink:
           type: string
           format: uri
+          nullable: true
         podcastLink:
           type: string
           format: uri
+          nullable: true
         resourcesLink:
           type: string
           format: uri
+          nullable: true
         authors:
           type: array
           items:
             $ref: "#/components/schemas/UserDetails"
+          nullable: true
         editionId:
           type: string
           format: uuid
@@ -1653,6 +1661,7 @@ components:
         likeCount:
           type: integer
           minimum: 0
+          nullable: true
 
     FlowerDetails:
       type: object
@@ -1669,7 +1678,7 @@ components:
           format: uri
         state:
           type: string
-          enum: [draft, published]
+          enum: [IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED]
         concept:
           type: string
           maxLength: 1500
@@ -1701,7 +1710,7 @@ components:
           maxLength: 255
         state:
           type: string
-          enum: [draft, published]
+          enum: [IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED]
         authorVision:
           type: string
           maxLength: 1500

@@ -2,25 +2,50 @@ import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
 import { Flower } from '../models/Flower.js'
 import { Fruit } from '../models/Fruit.js'
+import { Participation } from '../models/Participation.js'
+import { UserProfile } from '../models/UserProfile.js'
+
+const includeAuthors = {
+  model: Participation,
+  attributes: ['id'],
+  include: [
+    {
+      model: UserProfile,
+      attributes: ['name', 'surname']
+    }
+  ]
+}
 
 export async function getFruitsByEdition (editionId) {
-  return await Fruit.findAll({
-    include: {
-      model: Flower,
-      required: true,
-      include: {
-        model: Seed,
+  const rawResponse = await Fruit.findAll({
+    include: [
+      {
+        model: Flower,
         required: true,
         include: {
-          model: Edition,
-          where: { id: editionId },
+          model: Seed,
+          required: true,
+          include: {
+            model: Edition,
+            where: { id: editionId },
+            attributes: []
+          },
           attributes: []
         },
         attributes: []
       },
-      attributes: []
+      includeAuthors
+    ]
+  })
+  const response = rawResponse.map(s => {
+    const seed = s.toJSON()
+    return {
+      ...seed,
+      authors: seed.participations.map(is => is.user_profile),
+      participations: undefined
     }
   })
+  return response
 }
 
 export function createFruit (req, res) {
