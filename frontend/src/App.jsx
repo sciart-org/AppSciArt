@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router";
+import { Route, Routes, useLocation } from "react-router";
 import "./App.css";
 
 import AppFooter from "./components/core/AppFooter";
@@ -8,7 +8,7 @@ import Editions from "./features/editions/Editions";
 import Login from "./features/auth/Login";
 import Home from "./features/home/Home";
 import tokenService from "./utils/token.service";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Profile from "./features/auth/Profile";
 import AuthCallback from "./features/auth/AuthCallback";
 import Hackathons from "./features/hackathons/Hackathons";
@@ -29,6 +29,16 @@ function App() {
     const foundUser = tokenService.getUser();
     setUser(foundUser);
     setJustRegistered(true);
+  };
+
+  const ScrollToTopWrapper = ({ children }) => {
+    const location = useLocation();
+
+    useLayoutEffect(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }, [location.pathname]);
+
+    return children;
   };
 
   const publicRoutes = (
@@ -100,7 +110,7 @@ function App() {
   );
 
   return (
-    <>
+    <ScrollToTopWrapper>
       <Message />
       <AppNavbar id="navbar" />
       <div style={{ flex: 1, height: "100%" }}>
@@ -111,7 +121,7 @@ function App() {
         </Routes>
       </div>
       <AppFooter />
-    </>
+    </ScrollToTopWrapper>
   );
 }
 

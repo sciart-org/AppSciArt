@@ -30,6 +30,7 @@ export default function RegistrationEntry(props) {
   const [maybeLater, setMaybeLater] = useState(false);
 
   if (justRegistered && maybeLater) {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     return (
       <div>
         <h1>You registered successfully</h1>
