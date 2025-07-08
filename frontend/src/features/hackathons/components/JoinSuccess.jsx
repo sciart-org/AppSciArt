@@ -10,7 +10,7 @@ export default function JoinSuccess() {
       </div>
       <div style={{ marginTop: "10vh" }}>
         <h3>Curious to see what you will be working on?</h3>
-        <AsterButton>Seed collection</AsterButton>
+        <AsterButton to="/collections/seeds">Seed collection</AsterButton>
       </div>
       <div>
         <p>See an example here</p>
