@@ -9,7 +9,13 @@ export default function SeedCard({ item: seed }) {
       </div>
       <div className="collection-item-details">
         <h4>Inspiring Scientists</h4>
-        <p>authors</p>
+        <p>
+          {seed?.authors
+            ?.map((a) => {
+              return a?.name + " " + a?.surname;
+            })
+            .join(", ")}
+        </p>
         <h4>Branches of knowledge</h4>
         <p>{seed?.branchesOfKnowledge?.join(", ")}</p>
       </div>
