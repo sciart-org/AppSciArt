@@ -2,7 +2,7 @@ import { runSQLFiles } from './read-sql.js'
 import { sequelize } from '../src/config/sequelize.js'
 import '../src/models/relations.js'
 
-const run = async () => {
+const syncDatabase = async () => {
   try {
     await sequelize.authenticate()
     console.log('✅ Connected to database.')
@@ -20,4 +20,4 @@ const run = async () => {
   }
 }
 
-run()
+await syncDatabase()

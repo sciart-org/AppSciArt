@@ -9,6 +9,7 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "sync-db": "node scripts/sync-db.js",
+    "delete-db": "node scripts/delete-db.js",
     "populate-db": "node scripts/populate-db.js"
   },
   "repository": {

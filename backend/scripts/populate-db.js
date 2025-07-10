@@ -1,12 +1,15 @@
-import { runSQLFiles } from './read-sql.js'
+import 'dotenv/config'
 import { sequelize } from '../src/config/sequelize.js'
+import { deleteDatabase } from './delete-db.js'
+import { seedUserProfiles } from './seeders/seedUserProfiles.js'
 
-const run = async () => {
+const populateDatabase = async () => {
   try {
     await sequelize.authenticate()
     console.log('✅ Connected to database.')
 
-    await runSQLFiles('populators', sequelize)
+    await deleteDatabase()
+    await seedUserProfiles()
 
     console.log('🎉 All SQL populators executed.')
     process.exit(0)
@@ -16,4 +19,4 @@ const run = async () => {
   }
 }
 
-run()
+await populateDatabase()
