@@ -1786,38 +1786,37 @@ components:
           type: string
           format: uuid
           minimum: 1
-        name:
-          type: string
-          maxLength: 50
         logo:
           type: string
           format: uri
+          nullable: true
         startDate:
           type: object
+          nullable: true
         endDate:
           type: object
+          nullable: true
         type:
           type: string
           enum: [ON_SITE, ONLINE, HYBRID]
         location:
           type: string
           maxLength: 255
+          nullable: true
         description:
           type: string
           maxLength: 500
+          nullable: true
         editionId:
           type: string
           format: uuid
           minimum: 1
         isVisible:
           type: boolean
-        meetingLink:
+        meetLink:
           type: string
           format: uri
-        designerId:
-          type: string
-          format: uuid
-          minimum: 1
+          nullable: true
 
     HackathonList:
       type: array

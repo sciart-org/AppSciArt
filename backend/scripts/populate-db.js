@@ -2,6 +2,11 @@ import 'dotenv/config'
 import { sequelize } from '../src/config/sequelize.js'
 import { deleteDatabase } from './delete-db.js'
 import { seedUserProfiles } from './seeders/seedUserProfiles.js'
+import { seedEditions } from './seeders/seedEditions.js'
+import { seedEarlySignups } from './seeders/seedEarlySignups.js'
+import { seedSeeds } from './seeders/seedSeeds.js'
+import { seedHackathons } from './seeders/seedHackathons.js'
+import { seedFlowers } from './seeders/seedFlowers.js'
 
 const populateDatabase = async () => {
   try {
@@ -10,6 +15,11 @@ const populateDatabase = async () => {
 
     await deleteDatabase()
     await seedUserProfiles()
+    await seedEditions()
+    await seedEarlySignups()
+    await seedSeeds()
+    await seedHackathons()
+    await seedFlowers()
 
     console.log('🎉 All SQL populators executed.')
     process.exit(0)
