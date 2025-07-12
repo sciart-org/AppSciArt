@@ -1,3 +1,5 @@
+import { SeedEditions } from '../../src/models/intermediate/SeedEditions.js'
+import { SeedLikes } from '../../src/models/intermediate/SeedLikes.js'
 import { Seed } from '../../src/models/Seed.js'
 
 const baseSeed = {
@@ -85,6 +87,45 @@ export async function seedSeeds () {
       mainImage: 'https://i.imgur.com/06X8MwI.jpeg',
       state: 'PUBLISHED',
       branchesOfKnowledge: ['Physics', 'Optics']
+    }
+  ])
+
+  await SeedEditions.bulkCreate([
+    {
+      seedId: '00000000-0000-0005-0000-000000000000',
+      editionId: '00000000-0000-0003-0000-000000000002'
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000001',
+      editionId: '00000000-0000-0003-0000-000000000002'
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000002',
+      editionId: '00000000-0000-0003-0000-000000000002'
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000003',
+      editionId: '00000000-0000-0003-0000-000000000002'
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000004',
+      editionId: '00000000-0000-0003-0000-000000000002'
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000005',
+      editionId: '00000000-0000-0003-0000-000000000002'
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000006',
+      editionId: '00000000-0000-0003-0000-000000000002'
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000007',
+      editionId: '00000000-0000-0003-0000-000000000001'
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000008',
+      editionId: '00000000-0000-0003-0000-000000000000'
     }
   ])
 }
