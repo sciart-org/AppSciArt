@@ -29,9 +29,9 @@ export default function JoinHackathon() {
     }).finally(() => setLoading(false));
   }, []);
 
-  const itemsToLowerCase = (list) => {
+  const itemsToUpperCase = (list) => {
     if (list === null) return null;
-    return list.map((v) => v.toLowerCase());
+    return list.map((v) => v.toUpperCase());
   };
 
   const joinHackathon = () => {
@@ -40,7 +40,7 @@ export default function JoinHackathon() {
       method: "POST",
       body: {
         ...formData,
-        roles: itemsToLowerCase(formData.roles),
+        roles: itemsToUpperCase(formData.roles),
       },
       onSuccess: () => {
         setJoined(true);

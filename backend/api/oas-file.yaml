@@ -2057,7 +2057,7 @@ components:
           type: array
           items:
             type: string
-            enum: ["artist", "technologist", "scientist", "others"]
+            enum: ["ARTIST", "TECHNOLOGIST", "SCIENTIST", "OTHERS"]
         interests:
           type: string
           nullable: true
