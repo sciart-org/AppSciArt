@@ -1,5 +1,9 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
+import { UserProfile } from './UserProfile.js'
+import { Hackathon } from './Hackathon.js'
+import { Fruit } from './Fruit.js'
+import { Flower } from './Flower.js'
 
 export const Participation = sequelize.define(
   'participations', {
@@ -17,6 +21,36 @@ export const Participation = sequelize.define(
     },
     interests: {
       type: DataTypes.TEXT
+    },
+    flowerId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Flower,
+        key: 'id'
+      }
+    },
+    fruitId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Fruit,
+        key: 'id'
+      }
+    },
+    userProfileId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: UserProfile,
+        key: 'id'
+      }
+    },
+    hackathonId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: Hackathon,
+        key: 'id'
+      }
     }
   }, {
     indexes: [

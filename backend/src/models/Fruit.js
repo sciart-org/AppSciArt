@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
+import { Flower } from './Flower.js'
 
 export const Fruit = sequelize.define(
   'fruits',
@@ -26,6 +27,14 @@ export const Fruit = sequelize.define(
     },
     driveLink: {
       type: DataTypes.STRING
+    },
+    flowerId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: Flower,
+        key: 'id'
+      }
     }
   }, {
     indexes: [

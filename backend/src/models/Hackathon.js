@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
+import { Edition } from './Edition.js'
 
 export const Hackathon = sequelize.define(
   'hackathons',
@@ -35,6 +36,14 @@ export const Hackathon = sequelize.define(
     },
     meetLink: {
       type: DataTypes.STRING
+    },
+    editionId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: Edition,
+        key: 'id'
+      }
     }
   },
   {

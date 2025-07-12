@@ -16,9 +16,12 @@ import { Designer } from './roles/Designer.js'
 import { Evaluator } from './roles/Evaluator.js'
 import { Facilitator } from './roles/Facilitator.js'
 
-const unique = {
-  foreignKey: {
-    allowNull: false
+const notNull = (attributeName) => {
+  return {
+    foreignKey: {
+      allowNull: false,
+      name: attributeName
+    }
   }
 }
 
@@ -28,7 +31,7 @@ const unique = {
 //  Methodology.hasMany(Edition)
 
 Hackathon.belongsTo(Edition)
-Edition.hasMany(Hackathon, unique)
+Edition.hasMany(Hackathon, notNull('editionId'))
 
 Seed.belongsToMany(Edition, { through: SeedEditions })
 Edition.belongsToMany(Seed, { through: SeedEditions })
@@ -42,44 +45,44 @@ UserProfile.belongsToMany(Seed, { through: SeedLikes })
 //  ITEMS
 
 Flower.belongsTo(Seed)
-Seed.hasMany(Flower, unique)
+Seed.hasMany(Flower, notNull('seedId'))
 
 Fruit.belongsTo(Flower)
-Flower.hasMany(Fruit, unique)
+Flower.hasMany(Fruit, notNull('flowerId'))
 
 Participation.belongsTo(Flower)
 Participation.belongsTo(Fruit)
 Participation.belongsTo(UserProfile)
 Participation.belongsTo(Hackathon)
-Flower.hasMany(Participation)
-Fruit.hasMany(Participation)
-UserProfile.hasMany(Participation, unique)
-Hackathon.hasMany(Participation, unique)
+Flower.hasMany(Participation, { foreignKey: 'flowerId' })
+Fruit.hasMany(Participation, { foreignKey: 'fruitId' })
+UserProfile.hasMany(Participation, notNull('userProfileId'))
+Hackathon.hasMany(Participation, notNull('hackathonId'))
 
 Seed.belongsToMany(InspiringScientist, { through: SeedScientists })
 InspiringScientist.belongsToMany(Seed, { through: SeedScientists })
 
 //  ROLES BELOW
 
-UserProfile.hasOne(Administrator, unique)
+UserProfile.hasOne(Administrator, notNull('userProfileId'))
 Administrator.belongsTo(UserProfile)
 
-UserProfile.hasOne(Facilitator, unique)
+UserProfile.hasOne(Facilitator, notNull('userProfileId'))
 Facilitator.belongsTo(UserProfile)
 // Facilitator.belongsTo(Methodology)
 // Methodology.hasMany(Facilitator)
 
-UserProfile.hasOne(InspiringScientist, unique)
+UserProfile.hasOne(InspiringScientist, notNull('userProfileId'))
 InspiringScientist.belongsTo(UserProfile)
 // InspiringScientist.belongsTo(Methodology)
 // Methodology.hasMany(InspiringScientist)
 
-UserProfile.hasOne(Evaluator, unique)
+UserProfile.hasOne(Evaluator, notNull('userProfileId'))
 Evaluator.belongsTo(UserProfile)
 // Evaluator.belongsTo(Methodology)
 // Methodology.hasMany(Evaluator)
 
-UserProfile.hasOne(Designer, unique)
+UserProfile.hasOne(Designer, notNull('userProfileId'))
 Designer.belongsTo(UserProfile)
 // Designer.belongsTo(Methodology)
 // Methodology.hasMany(Designer)
