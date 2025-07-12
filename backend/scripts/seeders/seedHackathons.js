@@ -1,4 +1,5 @@
 import { Hackathon } from '../../src/models/Hackathon.js'
+import { HackathonSeeds } from '../../src/models/intermediate/HackathonSeeds.js'
 
 export async function seedHackathons () {
   await Hackathon.bulkCreate([
@@ -37,6 +38,29 @@ export async function seedHackathons () {
       isVisible: true,
       meetLink: null,
       editionId: '00000000-0000-0003-0000-000000000000'
+    }
+  ])
+
+  await HackathonSeeds.bulkCreate([
+    {
+      hackathonId: '00000000-0000-0006-0000-000000000000',
+      seedId: '00000000-0000-0005-0000-000000000000'
+    },
+    {
+      hackathonId: '00000000-0000-0006-0000-000000000001',
+      seedId: '00000000-0000-0005-0000-000000000000'
+    },
+    {
+      hackathonId: '00000000-0000-0006-0000-000000000000',
+      seedId: '00000000-0000-0005-0000-000000000001'
+    },
+    {
+      hackathonId: '00000000-0000-0006-0000-000000000001',
+      seedId: '00000000-0000-0005-0000-000000000001'
+    },
+    {
+      hackathonId: '00000000-0000-0006-0000-000000000002',
+      seedId: '00000000-0000-0005-0000-000000000008'
     }
   ])
 }
