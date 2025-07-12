@@ -1,12 +1,13 @@
 import { SeedEditions } from '../../src/models/intermediate/SeedEditions.js'
 import { SeedLikes } from '../../src/models/intermediate/SeedLikes.js'
 import { Seed } from '../../src/models/Seed.js'
+import { UserProfile } from '../../src/models/UserProfile.js'
 
 const baseSeed = {
   id: null,
   title: null,
   template: null,
-  mainImage: null,
+  mainImage: 'https://i.imgur.com/rEFpydA.png',
   state: 'IN_BLANK',
   branchesOfKnowledge: null,
   seedPDF: null,
@@ -126,6 +127,37 @@ export async function seedSeeds () {
     {
       seedId: '00000000-0000-0005-0000-000000000008',
       editionId: '00000000-0000-0003-0000-000000000000'
+    }
+  ])
+
+  const user1 = await UserProfile.findOne({
+    where: {
+      email: 'participant1@gmail.com'
+    }
+  })
+
+  const user2 = await UserProfile.findOne({
+    where: {
+      email: 'participant2@gmail.com'
+    }
+  })
+
+  await SeedLikes.bulkCreate([
+    {
+      seedId: '00000000-0000-0005-0000-000000000000',
+      userProfileId: user1?.id
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000001',
+      userProfileId: user1?.id
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000001',
+      userProfileId: user2?.id
+    },
+    {
+      seedId: '00000000-0000-0005-0000-000000000008',
+      userProfileId: user2?.id
     }
   ])
 }

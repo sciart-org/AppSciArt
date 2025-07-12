@@ -1705,33 +1705,32 @@ components:
           type: string
           format: uuid
           minimum: 1
-        name:
+        title:
           type: string
           maxLength: 255
+        mainImage:
+          type: string
+          format: uri
+          nullable: true
         state:
           type: string
           enum: [IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED]
         authorVision:
           type: string
           maxLength: 1500
+          nullable: true
         curatorVision:
           type: string
           maxLength: 1500
-        resourcesLink:
+          nullable: true
+        driveLink:
           type: string
           format: uri
-        seedId:
+          nullable: true
+        flowerId:
           type: string
           format: uuid
-          minimum: 1
-        authors:
-          type: array
-          items:
-            $ref: "#/components/schemas/UserDetails"
-        hackathonId:
-          type: string
-          format: uuid
-          minimum: 1
+          nullable: true
 
     UserDetails:
       type: object
