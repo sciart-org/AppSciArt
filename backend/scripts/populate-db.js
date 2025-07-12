@@ -8,6 +8,7 @@ import { seedSeeds } from './seeders/seedSeeds.js'
 import { seedHackathons } from './seeders/seedHackathons.js'
 import { seedFlowers } from './seeders/seedFlowers.js'
 import { seedFruits } from './seeders/seedFruits.js'
+import { seedParticipations } from './seeders/seedParticipations.js'
 
 const populateDatabase = async () => {
   try {
@@ -22,8 +23,9 @@ const populateDatabase = async () => {
     await seedHackathons()
     await seedFlowers()
     await seedFruits()
+    await seedParticipations()
 
-    console.log('🎉 All SQL populators executed.')
+    console.log('🎉 All populators executed.')
     process.exit(0)
   } catch (err) {
     console.error('❌ Error populating DB:', err)
