@@ -40,7 +40,7 @@ Find it in this edition`,
       id: '00000000-0000-0003-0000-000000000002',
       name: 'ASTER+S > ART ^ NEUROSCIENCE',
       logo: 'https://i.imgur.com/WifKQ6t.png',
-      year: 2026,
+      year: 2025,
       shortDescription: `In collaboration with the Institute of Marine Sciences (CSIC, Barcelona)
 
 How can citizens contribute to better understanding and caring for our marine ecosystems affected by the Anthropocene?
