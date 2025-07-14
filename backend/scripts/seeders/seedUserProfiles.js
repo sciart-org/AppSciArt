@@ -1,3 +1,9 @@
+import { Administrator } from '../../src/models/roles/Administrator.js'
+import { Designer } from '../../src/models/roles/Designer.js'
+import { Evaluator } from '../../src/models/roles/Evaluator.js'
+import { Facilitator } from '../../src/models/roles/Facilitator.js'
+import { InspiringScientist } from '../../src/models/roles/InspiringScientist.js'
+import { UserProfile } from '../../src/models/UserProfile.js'
 import { directRegister } from '../../src/services/authService.js'
 
 const baseUser = {
@@ -30,6 +36,34 @@ export async function seedUserProfiles () {
       password: 'participant',
       name: 'participant',
       surname: '2'
+    },
+    {
+      ...baseUser,
+      email: 'participant3@gmail.com',
+      password: 'participant',
+      name: 'participant',
+      surname: '3'
+    },
+    {
+      ...baseUser,
+      email: 'participant4@gmail.com',
+      password: 'participant',
+      name: 'participant',
+      surname: '4'
+    },
+    {
+      ...baseUser,
+      email: 'participant5@gmail.com',
+      password: 'participant',
+      name: 'participant',
+      surname: '5'
+    },
+    {
+      ...baseUser,
+      email: 'participant6@gmail.com',
+      password: 'participant',
+      name: 'participant',
+      surname: '6'
     },
     {
       ...baseUser,
@@ -100,12 +134,47 @@ export async function seedUserProfiles () {
       password: 'scientist',
       name: 'scientist',
       surname: '2'
+    },
+    {
+      ...baseUser,
+      email: 'scientist3@gmail.com',
+      password: 'scientist',
+      name: 'scientist',
+      surname: '3'
+    },
+    {
+      ...baseUser,
+      email: 'scientist4@gmail.com',
+      password: 'scientist',
+      name: 'scientist',
+      surname: '4'
     }
   ]
 
   for (const u of users) {
     try {
       await directRegister(u)
+      const user = await UserProfile.findOne({
+        where: {
+          email: u.email
+        }
+      })
+      const body = { userProfileId: user.id }
+      if (u.name.includes('administrator')) {
+        await Administrator.create(body)
+      }
+      if (u.name.includes('designer')) {
+        await Designer.create(body)
+      }
+      if (u.name.includes('evaluator')) {
+        await Evaluator.create(body)
+      }
+      if (u.name.includes('facilitator')) {
+        await Facilitator.create(body)
+      }
+      if (u.name.includes('scientist')) {
+        await InspiringScientist.create(body)
+      }
     } catch (err) {
       console.error(err)
     }
