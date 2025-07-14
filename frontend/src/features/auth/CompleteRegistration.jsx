@@ -5,6 +5,7 @@ import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
 import { jwtDecode } from "jwt-decode";
 import useFetcher from "../../utils/useFetcher.js";
+import { itemsToUpperCase, validateEmail } from "../../utils/commonUtils.js";
 
 export default function CompleteRegistration() {
   const [loading, setLoading] = useState(true);
@@ -43,25 +44,15 @@ export default function CompleteRegistration() {
     setFormData({ ...formData, email: emailToRegister });
   }, [emailToRegister]);
 
-  function valid(email) {
-    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return pattern.test(email);
-  }
-
-  const itemsToLowerCase = (list) => {
-    if (list === null) return null;
-    return list.map((v) => v.toLowerCase());
-  };
-
   const signUp = () => {
     fetcher({
       url: "register/complete",
       method: "POST",
       body: {
         ...formData,
-        gender: formData.gender?.toLowerCase(),
-        affiliations: itemsToLowerCase(formData.affiliations),
-        areasOfInterest: itemsToLowerCase(formData.areasOfInterest),
+        gender: formData.gender?.toUpperCase(),
+        affiliations: itemsToUpperCase(formData.affiliations),
+        areasOfInterest: itemsToUpperCase(formData.areasOfInterest),
       },
       onSuccess: (data) => {
         setFormData(initialFormData);
@@ -83,7 +74,7 @@ export default function CompleteRegistration() {
       </div>
     );
 
-  if (emailToRegister === null || !valid(emailToRegister)) {
+  if (emailToRegister === null || !validateEmail(emailToRegister)) {
     return (
       <div style={{ height: "100%", alignContent: "center" }}>
         <p>No email found to complete your registration.</p>

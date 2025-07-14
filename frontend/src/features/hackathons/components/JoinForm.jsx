@@ -16,7 +16,7 @@ export default function JoinForm(props) {
       <div className="input-box-container" style={{ width: "70vw" }}>
         <FormSelect
           name={"What roles could you take on during the hackathon?"}
-          options={["Artist", "Technologist", "Scientist", "Others"]}
+          options={["Artist", "Technologist", "Scientist", "Other"]}
           value={formData.roles}
           setValue={(v) => {
             setFormData({ ...formData, roles: v });

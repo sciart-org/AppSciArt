@@ -28,7 +28,7 @@ export const UserProfile = sequelize.define(
       type: DataTypes.STRING
     },
     gender: {
-      type: DataTypes.ENUM('male', 'female', 'other', 'prefer_not_to_say')
+      type: DataTypes.ENUM('MALE', 'FEMALE', 'OTHER')
     },
     birthDate: {
       type: DataTypes.DATEONLY

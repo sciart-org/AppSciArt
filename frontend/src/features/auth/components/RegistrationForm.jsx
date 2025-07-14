@@ -76,7 +76,7 @@ export default function RegistrationForm(props) {
             "Pure sciences",
             "Science applications",
             "IT",
-            "Others",
+            "Other",
           ]}
           value={formData.areasOfInterest}
           setValue={(v) => {
@@ -89,7 +89,7 @@ export default function RegistrationForm(props) {
       <div className="input-box-container">
         <FormSelect
           name={"Gender"}
-          options={["Male", "Female", "Other", "Prefer not to say"]}
+          options={["Male", "Female", "Other"]}
           value={formData.gender}
           setValue={(v) => {
             setFormData({ ...formData, gender: v });

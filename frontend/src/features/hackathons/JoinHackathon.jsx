@@ -6,6 +6,7 @@ import HackathonDescription from "./components/HackathonDescription.jsx";
 import AsterButton from "../../components/AsterButton.jsx";
 import JoinSuccess from "./components/JoinSuccess.jsx";
 import useFetcher from "../../utils/useFetcher.js";
+import { itemsToUpperCase } from "../../utils/parsers.js";
 
 export default function JoinHackathon() {
   const [loading, setLoading] = useState(true);
@@ -28,11 +29,6 @@ export default function JoinHackathon() {
       },
     }).finally(() => setLoading(false));
   }, []);
-
-  const itemsToUpperCase = (list) => {
-    if (list === null) return null;
-    return list.map((v) => v.toUpperCase());
-  };
 
   const joinHackathon = () => {
     fetcher({

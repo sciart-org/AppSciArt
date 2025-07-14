@@ -1753,7 +1753,7 @@ components:
           format: password
         gender:
           type: string
-          enum: [male, female, other, prefer_not_to_say]
+          enum: [MALE, FEMALE, OTHER]
         birthDate:
           type: string
           format: date
@@ -2057,7 +2057,7 @@ components:
           type: array
           items:
             type: string
-            enum: ["ARTIST", "TECHNOLOGIST", "SCIENTIST", "OTHERS"]
+            enum: ["ARTIST", "TECHNOLOGIST", "SCIENTIST", "OTHER"]
         interests:
           type: string
           nullable: true

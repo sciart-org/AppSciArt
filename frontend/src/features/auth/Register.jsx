@@ -4,6 +4,7 @@ import RegistrationForm from "./components/RegistrationForm.jsx";
 import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
 import useFetcher from "../../utils/useFetcher.js";
+import { itemsToUpperCase } from "../../utils/parsers.js";
 
 export default function Register() {
   const [error, setError] = useState(null);
@@ -22,20 +23,15 @@ export default function Register() {
   const { fetcher } = useFetcher(error, setError);
   const { refreshSession, setJustRegistered } = useContext(RegistrationContext);
 
-  const itemsToLowerCase = (list) => {
-    if (list === null) return null;
-    return list.map((v) => v.toLowerCase());
-  };
-
   const signUp = () => {
     fetcher({
       url: "register?method=direct",
       method: "POST",
       body: {
         ...formData,
-        gender: formData.gender?.toLowerCase(),
-        affiliations: itemsToLowerCase(formData.affiliations),
-        areasOfInterest: itemsToLowerCase(formData.areasOfInterest),
+        gender: formData.gender?.toUpperCase(),
+        affiliations: itemsToUpperCase(formData.affiliations),
+        areasOfInterest: itemsToUpperCase(formData.areasOfInterest),
       },
       onSuccess: (data) => {
         setFormData(initialFormData);
