@@ -44,9 +44,11 @@ export function createSeed (req, res) {
   })
 }
 
-export function getSeedDetails (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getSeedDetails'
+export async function getSeedDetails (seedId) {
+  return await Seed.findOne({
+    where: {
+      id: seedId
+    }
   })
 }
 

@@ -7,6 +7,7 @@ import AsterButton from "../../components/AsterButton.jsx";
 import JoinSuccess from "./components/JoinSuccess.jsx";
 import useFetcher from "../../utils/useFetcher.js";
 import { itemsToUpperCase } from "../../utils/commonUtils.js";
+import Loading from "../../components/messages/Loading.jsx";
 
 export default function JoinHackathon() {
   const [loading, setLoading] = useState(true);
@@ -49,11 +50,7 @@ export default function JoinHackathon() {
   };
 
   if (loading) {
-    return (
-      <div style={{ height: "100%", alignContent: "center" }}>
-        <p>Loading...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (hackathon?.isEnrolled) {

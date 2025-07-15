@@ -1,4 +1,4 @@
-import AsterButton from "../../../components/AsterButton";
+import AsterButton from "../../../../components/AsterButton";
 
 export default function FlowerCard({ item: flower }) {
   return (

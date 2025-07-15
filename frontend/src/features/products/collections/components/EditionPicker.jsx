@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import FormSelect from "../../../components/form/FormSelect";
-import useFetcher from "../../../utils/useFetcher";
+import FormSelect from "../../../../components/form/FormSelect";
 
 export default function EditionPicker({
   selectedEdition,

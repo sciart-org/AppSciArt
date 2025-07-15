@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import HackathonCard from "../../components/HackathonCard";
 import useFetcher from "../../utils/useFetcher";
+import Loading from "../../components/messages/Loading";
 
 export default function Hackathons() {
   const [hackathons, setHackathons] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const { fetcher } = useFetcher(error, setError);
 
   const fetchHackathons = async () => {
@@ -15,6 +18,8 @@ export default function Hackathons() {
       onSuccess: (data) => {
         setHackathons(data);
       },
+    }).finally(() => {
+      setLoading(false);
     });
   };
 
@@ -33,9 +38,29 @@ export default function Hackathons() {
     {}
   );
 
+  const Header = () => <h1>Next hackathons</h1>;
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <Loading />
+      </>
+    );
+  }
+
+  if (hackathons.length === 0) {
+    return (
+      <>
+        <Header />
+        <h2 style={{ fontWeight: "normal" }}>No incoming hackthons</h2>
+      </>
+    );
+  }
+
   return (
     <div>
-      <h1>Next hackathons</h1>
+      <Header />
       <div
         style={{
           display: "flex",

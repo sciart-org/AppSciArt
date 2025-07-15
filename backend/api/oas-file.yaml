@@ -1238,6 +1238,7 @@ paths:
   /seeds/{seedId}:
     x-router-controller: seedsController
     get:
+      security: [{}]
       tags: [SciArt seeds]
       summary: Get seed details
       operationId: getSeedDetails

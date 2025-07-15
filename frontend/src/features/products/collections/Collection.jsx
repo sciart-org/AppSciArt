@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import useFetcher from "../../utils/useFetcher";
-import SeedCard from "./components/SeedCard";
-import CollectionsPagination from "../../components/CollectionsPagination";
-import tokenService from "../../utils/token.service";
-import AsterButton from "../../components/AsterButton";
-import EditionPicker from "./components/EditionPicker";
-import FlowerCard from "./components/FlowerCard";
-import FruitCard from "./components/FruitCard";
+import CollectionsPagination from "../../../components/CollectionsPagination";
+import tokenService from "../../../utils/token.service";
 import "./css/collections.css";
+import useFetcher from "../../../utils/useFetcher";
+import AsterButton from "../../../components/AsterButton";
+import FruitCard from "./components/FruitCard";
+import FlowerCard from "./components/FlowerCard";
+import SeedCard from "./components/SeedCard";
+import EditionPicker from "./components/EditionPicker";
+import Loading from "../../../components/messages/Loading";
 
 export default function Collection({ itemName: itemNameRaw }) {
   const jwt = tokenService.getLocalAccessToken();
@@ -54,7 +55,7 @@ export default function Collection({ itemName: itemNameRaw }) {
       url: `${itemName}s?editionId=${selectedEdition?.id}`,
       onSuccess: (data) => {
         setItems(data);
-        console.log(data)
+        console.log(data);
       },
       onError: () => {
         setItems([]);
@@ -98,7 +99,18 @@ export default function Collection({ itemName: itemNameRaw }) {
     return (
       <>
         <Header />
-        <p>Loading...</p>
+        <Loading />
+      </>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <>
+        <Header />
+        <h2 style={{ fontWeight: "normal" }}>
+          No {itemName}s for this edition yet
+        </h2>
       </>
     );
   }
@@ -106,20 +118,14 @@ export default function Collection({ itemName: itemNameRaw }) {
   return (
     <div>
       <Header />
-      {items.length === 0 ? (
-        <h2 style={{ fontWeight: "normal" }}>
-          No {itemName}s for this edition yet
-        </h2>
-      ) : (
-        <CollectionsPagination
-          items={items || []}
-          itemsNumber={6}
-          containerComponent={({ children }) => (
-            <div className="collection-grid">{children}</div>
-          )}
-          itemComponent={ItemCard}
-        />
-      )}
+      <CollectionsPagination
+        items={items || []}
+        itemsNumber={6}
+        containerComponent={({ children }) => (
+          <div className="collection-grid">{children}</div>
+        )}
+        itemComponent={ItemCard}
+      />
     </div>
   );
 }

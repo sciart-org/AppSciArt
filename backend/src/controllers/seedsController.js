@@ -11,9 +11,11 @@ export function createSeed (req, res) {
   service.createSeed(req, res)
 }
 
-export function getSeedDetails (req, res) {
-  service.getSeedDetails(req, res)
-}
+export const getSeedDetails = withErrorHandler(async (req, res) => {
+  const seedId = req.params.seedId
+  const seed = await service.getSeedDetails(seedId)
+  return res.status(200).send(seed)
+})
 
 export function updateSeed (req, res) {
   service.updateSeed(req, res)
