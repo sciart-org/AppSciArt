@@ -6,7 +6,7 @@ import HackathonDescription from "./components/HackathonDescription.jsx";
 import AsterButton from "../../components/AsterButton.jsx";
 import JoinSuccess from "./components/JoinSuccess.jsx";
 import useFetcher from "../../utils/useFetcher.js";
-import { itemsToUpperCase } from "../../utils/parsers.js";
+import { itemsToUpperCase } from "../../utils/commonUtils.js";
 
 export default function JoinHackathon() {
   const [loading, setLoading] = useState(true);
