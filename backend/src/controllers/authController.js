@@ -32,8 +32,8 @@ export const register = withErrorHandler(async (req, res) => {
 })
 
 const getBodyAttributes = (req) => {
-  const { email, password, name, surname, gender, birthDate, affiliations, areasOfInterest } = req.body
-  return { email, password, name, surname, gender, birthDate, affiliations, areasOfInterest }
+  const { email, password, name, surname, gender, ageRange, affiliations, areasOfInterest } = req.body
+  return { email, password, name, surname, gender, ageRange, affiliations, areasOfInterest }
 }
 
 export const registerProvider = withErrorHandler(async (req, res) => {

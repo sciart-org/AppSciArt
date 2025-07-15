@@ -3,6 +3,7 @@ import { signUpEmail, signUpGoogle } from '../auth/signup.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { EarlySignup } from '../models/EarlySignup.js'
 import { errorThrower } from './errorThrower.js'
+import { checkExists } from '../validators/generalValidators.js'
 
 export async function login ({ email, password }) {
   const { data, error } = await signInEmail(email, password)
@@ -89,8 +90,11 @@ async function completeProviderRegistration (body) {
 
 async function createUserProfile (body) {
   const createdUserProfile = await UserProfile.findByPk(body.id)
-  if (createdUserProfile) {
+  if (checkExists(createdUserProfile)) {
     createdUserProfile.set(body)
+    if (checkExists(createUserProfile.ageRange)) {
+      createdUserProfile.rangeSetAt = Date.now()
+    }
     await createdUserProfile.save()
   }
   return createdUserProfile

@@ -50,7 +50,7 @@ export default function CompleteRegistration() {
       method: "POST",
       body: {
         ...formData,
-        gender: formData.gender?.toUpperCase(),
+        gender: toEnumValue(formData.gender),
         affiliations: itemsToUpperCase(formData.affiliations),
         areasOfInterest: itemsToUpperCase(formData.areasOfInterest),
       },

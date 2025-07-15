@@ -1753,7 +1753,7 @@ components:
           format: password
         gender:
           type: string
-          enum: [MALE, FEMALE, OTHER]
+          nullable: true
         birthDate:
           type: string
           format: date

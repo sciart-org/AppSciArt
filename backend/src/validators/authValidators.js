@@ -23,6 +23,12 @@ const validateGender = (gender) => {
   return validateEnumValues(gender, acceptedGenders, 'gender')
 }
 
+const validateAgeRange = (ageRange) => {
+  console.log('test', ageRange)
+  const acceptedAgeRanges = ['17_OR_LESS', '18-24', '25-34', '35-44', '45-54', '55-64', '65_OR_MORE']
+  return validateEnumValues(ageRange, acceptedAgeRanges, 'age range')
+}
+
 const validateAffiliations = (affiliations) => {
   const acceptedAffiliations = ['UNIVERSITY', 'COMPANY', 'ASSOCIATION', 'FREELANCE', 'OTHER']
   return validateEnumList(affiliations, acceptedAffiliations, 'affiliations')
@@ -34,7 +40,7 @@ const validateAreasOfInterest = (areasOfInterest) => {
 }
 
 const authBodyValidator = (body) => {
-  const { gender, affiliations, areasOfInterest } = body
+  const { gender, affiliations, areasOfInterest, ageRange } = body
   let errorMessage = null
 
   if (checkExists(gender)) {
@@ -45,6 +51,9 @@ const authBodyValidator = (body) => {
   }
   if (!checkExists(errorMessage) && checkExists(areasOfInterest)) {
     errorMessage = validateAreasOfInterest(areasOfInterest)
+  }
+  if (!checkExists(errorMessage) && checkExists(ageRange)) {
+    errorMessage = validateAgeRange(ageRange)
   }
 
   return errorMessage
