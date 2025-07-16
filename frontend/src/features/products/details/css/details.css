@@ -1,0 +1,52 @@
+.details-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.details-container > * {
+    flex: 2;
+}
+
+.details-container > *:last-child {
+    flex: 3;
+}
+
+.details-container .resources-container > * {
+    width: 30vw;
+    padding-left: 5vw;
+    margin: auto;
+}
+
+.details-container img {
+    height: auto;
+    width: 25vw;
+    object-fit: contain;
+}
+
+.details-container iframe {
+    height: auto;
+    width: 50vw;
+    height: 75vh;
+}
+
+.details-container .image-text {
+    display: flex;
+    font-size: 1.5rem;
+    align-items: center;
+    margin: auto;
+    cursor: pointer;
+}
+
+.details-container .resources-container p {
+    text-align: start;
+}
+
+.details-container .image-text p {
+    margin-left: 1rem;
+}
+
+.details-container .image-text > *:first-child {
+    width: 2rem;
+    height: 2rem;
+}
