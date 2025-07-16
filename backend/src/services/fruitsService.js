@@ -16,6 +16,20 @@ const includeAuthors = {
   ]
 }
 
+const mapToFruitSummary = (rawFruit) => {
+  const fruit = rawFruit.toJSON()
+  return {
+    id: fruit.id,
+    title: fruit.title,
+    mainImage: fruit.mainImage,
+    authors: fruit.participations.map(is => is.user_profile),
+    seed: {
+      id: fruit.flower.seed.id,
+      title: fruit.flower.seed.title
+    }
+  }
+}
+
 export async function getFruitsByEdition (editionId) {
   const rawResponse = await Fruit.findAll({
     include: [
@@ -30,22 +44,14 @@ export async function getFruitsByEdition (editionId) {
             where: { id: editionId },
             attributes: []
           },
-          attributes: []
+          attributes: ['id', 'title']
         },
-        attributes: []
+        attributes: ['id']
       },
       includeAuthors
     ]
   })
-  const response = rawResponse.map(s => {
-    const seed = s.toJSON()
-    return {
-      ...seed,
-      authors: seed.participations.map(is => is.user_profile),
-      participations: undefined
-    }
-  })
-  return response
+  return rawResponse.map(f => mapToFruitSummary(f))
 }
 
 export function createFruit (req, res) {

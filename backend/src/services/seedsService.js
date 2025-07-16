@@ -15,6 +15,17 @@ const includeAuthors = {
   ]
 }
 
+const mapToSeedSummary = (rawSeed) => {
+  const seed = rawSeed.toJSON()
+  return {
+    id: seed.id,
+    title: seed.title,
+    mainImage: seed.mainImage,
+    authors: seed.inspiring_scientists.map(is => is.user_profile),
+    branchesOfKnowledge: seed.branchesOfKnowledge
+  }
+}
+
 export async function getSeedsByEdition (editionId) {
   const rawResponse = await Seed.findAll({
     include: [
@@ -27,15 +38,7 @@ export async function getSeedsByEdition (editionId) {
       includeAuthors
     ]
   })
-  const response = rawResponse.map(s => {
-    const seed = s.toJSON()
-    return {
-      ...seed,
-      authors: seed.inspiring_scientists.map(is => is.user_profile),
-      inspiring_scientists: undefined
-    }
-  })
-  return response
+  return rawResponse.map(s => mapToSeedSummary(s))
 }
 
 export function createSeed (req, res) {

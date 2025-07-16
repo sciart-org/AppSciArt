@@ -17,7 +17,7 @@ export default function FruitCard({ item: fruit }) {
             .join(", ")}
         </p>
         <h4>Original seed</h4>
-        <p>{fruit?.seedName}</p>
+        <p>{fruit?.seed?.title}</p>
       </div>
       <AsterButton to={`/fruits/${fruit?.id}`}>See more</AsterButton>
     </div>

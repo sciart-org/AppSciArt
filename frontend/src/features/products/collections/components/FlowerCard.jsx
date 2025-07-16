@@ -17,7 +17,7 @@ export default function FlowerCard({ item: flower }) {
             .join(", ")}
         </p>
         <h4>Original seed</h4>
-        <p>{flower?.seedName}</p>
+        <p>{flower?.seed?.title}</p>
       </div>
       <AsterButton to={`/flowers/${flower?.id}`}>See more</AsterButton>
     </div>

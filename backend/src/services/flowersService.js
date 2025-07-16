@@ -15,6 +15,20 @@ const includeAuthors = {
   ]
 }
 
+const mapToFlowerSummary = (rawFlower) => {
+  const flower = rawFlower.toJSON()
+  return {
+    id: flower.id,
+    title: flower.title,
+    mainImage: flower.mainImage,
+    authors: flower.participations.map(is => is.user_profile),
+    seed: {
+      id: flower.seedId,
+      title: flower.seed.title
+    }
+  }
+}
+
 export async function getFlowersByEdition (editionId) {
   const rawResponse = await Flower.findAll({
     include: [
@@ -26,21 +40,13 @@ export async function getFlowersByEdition (editionId) {
           where: { id: editionId },
           attributes: []
         },
-        attributes: []
+        attributes: ['title']
       },
       includeAuthors
     ]
   }
   )
-  const response = rawResponse.map(s => {
-    const seed = s.toJSON()
-    return {
-      ...seed,
-      authors: seed.participations.map(is => is.user_profile),
-      participations: undefined
-    }
-  })
-  return response
+  return rawResponse.map(f => mapToFlowerSummary(f))
 }
 
 export function createFlower (req, res) {
