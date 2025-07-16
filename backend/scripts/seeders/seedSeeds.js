@@ -27,7 +27,9 @@ export async function seedSeeds () {
       title: 'Crossing the veil',
       mainImage: 'https://i.imgur.com/FCYpbTO.png',
       state: 'PUBLISHED',
-      branchesOfKnowledge: ['Neuroscience', 'Neurosurgery', 'Intensive care', 'Neurocritical']
+      branchesOfKnowledge: ['Neuroscience', 'Neurosurgery', 'Intensive care', 'Neurocritical'],
+      seedPDF: 'https://drive.google.com/file/d/1xru7HNFyR311XO4RrOQFFcL-YELspapU/preview',
+      videoLink: 'https://www.youtube.com/watch?v=MiWCkslG5Y0'
     },
     {
       ...baseSeed,
@@ -35,7 +37,9 @@ export async function seedSeeds () {
       title: 'The thread of your fragments',
       mainImage: 'https://i.imgur.com/KSTWzAY.png',
       state: 'PUBLISHED',
-      branchesOfKnowledge: ['Neurology', 'Memory', 'Dementia']
+      branchesOfKnowledge: ['Neurology', 'Memory', 'Dementia'],
+      seedPDF: 'https://drive.google.com/file/d/1XOJx5gviajpPCH66mqZmUqNocXcXiTp6/preview',
+      videoLink: 'https://www.youtube.com/watch?v=KyQUBukwwO8'
     },
     {
       ...baseSeed,
@@ -43,7 +47,8 @@ export async function seedSeeds () {
       title: 'Dancing in the Night',
       mainImage: 'https://i.imgur.com/kOy9hjY.png',
       state: 'IN_REVIEW',
-      branchesOfKnowledge: ['Medicine', 'Clinical neurophysiology']
+      branchesOfKnowledge: ['Medicine', 'Clinical neurophysiology'],
+      seedPDF: 'https://drive.google.com/file/d/1J6J0weEukUfVtCvqZNGhieq17RQvJllP/preview'
     },
     {
       ...baseSeed,
@@ -51,7 +56,9 @@ export async function seedSeeds () {
       title: 'Night Terrors',
       mainImage: 'https://i.imgur.com/60uyAkU.png',
       state: 'IN_REVIEW',
-      branchesOfKnowledge: ['Medicine', 'Clinical neurophysiology']
+      branchesOfKnowledge: ['Medicine', 'Clinical neurophysiology'],
+      seedPDF: 'https://drive.google.com/file/d/10OALZmdY_SP3U_tltS7o6AXFhrFZOdJD/preview',
+      videoLink: 'https://www.youtube.com/watch?v=YFMqF26UTy4'
     },
     {
       ...baseSeed,
@@ -59,7 +66,9 @@ export async function seedSeeds () {
       title: 'The essence of being',
       mainImage: 'https://i.imgur.com/QO3BRWX.png',
       state: 'IN_PROGRESS',
-      branchesOfKnowledge: ['Neuroscience', 'Neurobehaviour']
+      branchesOfKnowledge: ['Neuroscience', 'Neurobehaviour'],
+      seedPDF: 'https://drive.google.com/file/d/1xw4pi74QBE4L7zcluhSgr2BQGT_OH9np/preview',
+      videoLink: 'https://www.youtube.com/watch?v=7szAAF36cMo'
     },
     {
       ...baseSeed,
@@ -67,14 +76,17 @@ export async function seedSeeds () {
       title: 'A Prisoner Brain',
       mainImage: 'https://i.imgur.com/9K7mXxa.png',
       state: 'IN_PROGRESS',
-      branchesOfKnowledge: ['Neuroscience', 'Neurosurgery', 'Hydrocephalus', 'Cranial expansion']
+      branchesOfKnowledge: ['Neuroscience', 'Neurosurgery', 'Hydrocephalus', 'Cranial expansion'],
+      seedPDF: 'https://drive.google.com/file/d/1hdqQWI1kCNJv9LMq0NegAQJAi21jZoMC/preview',
+      videoLink: 'https://www.youtube.com/watch?v=ZSV1LauJlYk'
     },
     {
       ...baseSeed,
       id: '00000000-0000-0005-0000-000000000006',
       title: 'Meta-ASTER',
       mainImage: 'https://i.imgur.com/L76NDu9.png',
-      branchesOfKnowledge: ['Neuroscience', 'Neuroart', 'Neuroaesthetics']
+      branchesOfKnowledge: ['Neuroscience', 'Neuroart', 'Neuroaesthetics'],
+      seedPDF: 'https://drive.google.com/file/d/1-IrowQLctUi4UGx6JA8fgzpcQJlKAPv0/preview'
     },
     {
       ...baseSeed,
@@ -89,7 +101,9 @@ export async function seedSeeds () {
       title: 'Boya Kduino',
       mainImage: 'https://i.imgur.com/06X8MwI.jpeg',
       state: 'PUBLISHED',
-      branchesOfKnowledge: ['Physics', 'Optics']
+      branchesOfKnowledge: ['Physics', 'Optics'],
+      seedPDF: 'https://drive.google.com/file/d/1I_cUc7BXz4QzzwJsDGSKnAWbgtwGSJ4m/preview',
+      videoLink: 'https://www.youtube.com/watch?app=desktop&v=_CJqDcOT068'
     }
   ])
 
