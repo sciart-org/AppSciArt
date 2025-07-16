@@ -11,9 +11,11 @@ export function createFruit (req, res) {
   service.createFruit(req, res)
 }
 
-export function getFruitDetails (req, res) {
-  service.getFruitDetails(req, res)
-}
+export const getFruitDetails = withErrorHandler(async (req, res) => {
+  const fruitId = req.params.fruitId
+  const fruit = await service.getFruitDetails(fruitId)
+  return res.status(200).send(fruit)
+})
 
 export function updateFruit (req, res) {
   service.updateFruit(req, res)

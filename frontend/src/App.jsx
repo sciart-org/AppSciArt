@@ -18,6 +18,7 @@ import JoinHackathon from "./features/hackathons/JoinHackathon";
 import { Message } from "./components/messages/Message";
 import Collection from "./features/products/collections/Collection";
 import SeedDetails from "./features/products/details/SeedDetails";
+import FruitDetails from "./features/products/details/FruitDetail";
 
 function App() {
   useEffect(() => {
@@ -74,6 +75,7 @@ function App() {
         element={<Collection itemName="fruit" />}
       />
       <Route path="/seeds/:seedId" element={<SeedDetails />} />
+      <Route path="/fruits/:fruitId" element={<FruitDetails />} />
     </>
   );
 

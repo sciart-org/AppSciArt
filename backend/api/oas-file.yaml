@@ -1399,6 +1399,7 @@ paths:
   /fruits/{fruitId}:
     x-router-controller: fruitsController
     get:
+      security: [{}]
       tags: [SciArt fruits]
       summary: Get fruit details
       operationId: getFruitDetails

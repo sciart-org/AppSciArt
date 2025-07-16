@@ -60,9 +60,11 @@ export function createFruit (req, res) {
   })
 }
 
-export function getFruitDetails (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getFruitDetails'
+export async function getFruitDetails (fruitId) {
+  return await Fruit.findOne({
+    where: {
+      id: fruitId
+    }
   })
 }
 
