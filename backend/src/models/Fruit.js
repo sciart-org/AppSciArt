@@ -20,10 +20,13 @@ export const Fruit = sequelize.define(
       type: DataTypes.ENUM('IN_BLANK', 'IN_PROGRESS', 'IN_REVIEW', 'PUBLISHED')
     },
     authorVision: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     curatorVision: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
+    },
+    seedDescription: {
+      type: DataTypes.TEXT
     },
     driveLink: {
       type: DataTypes.STRING

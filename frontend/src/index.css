@@ -83,6 +83,10 @@ button:focus-visible {
   cursor: pointer;
 }
 
+.long-text {
+  white-space: pre-line;
+}
+
 #content {
   flex: 1;
   padding: 2vh;

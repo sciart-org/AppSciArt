@@ -112,10 +112,10 @@ export default function SeedDetails() {
   return (
     <div>
       <h1>{seed?.title}</h1>
-      <div className="details-container">
+      <div className="seed-details-container">
         <div>
           <img src={seed?.mainImage} />
-          <div className="resources-container">
+          <div className="seed-resources-container">
             <LikeComponent />
             <p>Resources provided by the Inspiring Scientist(s):</p>
             <VideoComponent />

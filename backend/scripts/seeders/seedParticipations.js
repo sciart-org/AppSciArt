@@ -22,8 +22,6 @@ export async function seedParticipations () {
     }
   })
 
-  console.log('test', participants.length)
-
   await Participation.bulkCreate([
     {
       ...baseParticipation,
