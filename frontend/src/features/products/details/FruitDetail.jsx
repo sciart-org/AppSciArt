@@ -77,7 +77,10 @@ export default function FruitDetails() {
         <AsterButton to={`/seeds/${fruit?.seed?.id}`}>
           <div className="button-container">
             <Seed className="seed" />
-            <p>See seed</p>
+            <div>
+              <p>See seed</p>
+              <p>"{fruit?.seed?.title}"</p>
+            </div>
           </div>
         </AsterButton>
         <AsterButton to={`/flowers/${fruit?.flower?.id}`}>
