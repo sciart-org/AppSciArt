@@ -38,8 +38,8 @@ export default function FruitDetails() {
   return (
     <div>
       <h1>{fruit?.title}</h1>
-      <img src={fruit?.mainImage} />
       <div className="fruit-details-container">
+        <img src={fruit?.mainImage} />
         <h3>Authors</h3>
         <ul>
           {fruit?.authors?.map((a) => {

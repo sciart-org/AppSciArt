@@ -18,7 +18,7 @@
     margin: auto;
 }
 
-.seed-details-container img {
+.seed-details-container img, .flower-details-container img, .fruit-details-container img {
     height: auto;
     width: 25vw;
     object-fit: contain;

@@ -1298,6 +1298,7 @@ paths:
   /flowers/{flowerId}:
     x-router-controller: flowersController
     get:
+      security: [{}]
       tags: [SciArt flowers]
       summary: Get flower details
       operationId: getFlowerDetails

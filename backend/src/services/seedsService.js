@@ -1,30 +1,6 @@
 import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
-import { InspiringScientist } from '../models/roles/InspiringScientist.js'
-import { UserProfile } from '../models/UserProfile.js'
-
-const includeAuthors = {
-  model: InspiringScientist,
-  attributes: ['id'],
-  through: { attributes: [] },
-  include: [
-    {
-      model: UserProfile,
-      attributes: ['name', 'surname']
-    }
-  ]
-}
-
-const mapToSeedSummary = (rawSeed) => {
-  const seed = rawSeed.toJSON()
-  return {
-    id: seed.id,
-    title: seed.title,
-    mainImage: seed.mainImage,
-    authors: seed.inspiring_scientists.map(is => is.user_profile),
-    branchesOfKnowledge: seed.branchesOfKnowledge
-  }
-}
+import { includeSeedAuthors, mapToSeedSummary } from './productUtils.js'
 
 export async function getSeedsByEdition (editionId) {
   const rawResponse = await Seed.findAll({
@@ -35,7 +11,7 @@ export async function getSeedsByEdition (editionId) {
         attributes: [],
         through: { attributes: [] }
       },
-      includeAuthors
+      includeSeedAuthors
     ]
   })
   return rawResponse.map(s => mapToSeedSummary(s))

@@ -10,10 +10,11 @@ export const getFlowersByEdition = withErrorHandler(async (req, res) => {
 export function createFlower (req, res) {
   service.createFlower(req, res)
 }
-
-export function getFlowerDetails (req, res) {
-  service.getFlowerDetails(req, res)
-}
+export const getFlowerDetails = withErrorHandler(async (req, res) => {
+  const flowerId = req.params.flowerId
+  const flower = await service.getFlowerDetails(flowerId)
+  return res.status(200).send(flower)
+})
 
 export function updateFlower (req, res) {
   service.updateFlower(req, res)

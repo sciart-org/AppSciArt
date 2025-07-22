@@ -2,68 +2,7 @@ import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
 import { Flower } from '../models/Flower.js'
 import { Fruit } from '../models/Fruit.js'
-import { Participation } from '../models/Participation.js'
-import { UserProfile } from '../models/UserProfile.js'
-import { InspiringScientist } from '../models/roles/InspiringScientist.js'
-
-const includeAuthors = {
-  model: Participation,
-  attributes: ['id'],
-  include: [
-    {
-      model: UserProfile,
-      attributes: ['name', 'surname']
-    }
-  ]
-}
-
-const includeSeedAuthors = {
-  model: InspiringScientist,
-  attributes: ['id'],
-  through: { attributes: [] },
-  include: [
-    {
-      model: UserProfile,
-      attributes: ['name', 'surname']
-    }
-  ]
-}
-
-const mapToFruitSummary = (rawFruit) => {
-  const fruit = rawFruit.toJSON()
-  return {
-    id: fruit.id,
-    title: fruit.title,
-    mainImage: fruit.mainImage,
-    authors: fruit.participations.map(is => is.user_profile),
-    seed: {
-      id: fruit.flower.seed.id,
-      title: fruit.flower.seed.title
-    }
-  }
-}
-
-const mapToFruitPublicDetail = (rawFruit) => {
-  const fruit = rawFruit.toJSON()
-  return {
-    id: fruit.id,
-    title: fruit.title,
-    mainImage: fruit.mainImage,
-    authors: fruit.participations.map(is => is.user_profile),
-    authorVision: fruit.authorVision,
-    curatorVision: fruit.curatorVision,
-    flower: {
-      id: fruit.flowerId,
-      title: fruit.flower.title
-    },
-    seed: {
-      id: fruit.flower.seed.id,
-      title: fruit.flower.seed.title,
-      authors: fruit.flower.seed.inspiring_scientists.map(is => is.user_profile),
-      description: fruit.seedDescription
-    }
-  }
-}
+import { includeFruitAuthors, includeSeedAuthors, mapToFruitPublicDetail, mapToFruitSummary } from './productUtils.js'
 
 export async function getFruitsByEdition (editionId) {
   const rawResponse = await Fruit.findAll({
@@ -83,7 +22,7 @@ export async function getFruitsByEdition (editionId) {
         },
         attributes: ['id']
       },
-      includeAuthors
+      includeFruitAuthors
     ]
   })
   return rawResponse.map(f => mapToFruitSummary(f))
@@ -114,7 +53,7 @@ export async function getFruitDetails (fruitId) {
           ]
         }
       },
-      includeAuthors
+      includeFruitAuthors
     ]
   })
   return mapToFruitPublicDetail(rawResponse)

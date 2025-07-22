@@ -1,33 +1,7 @@
 import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
 import { Flower } from '../models/Flower.js'
-import { Participation } from '../models/Participation.js'
-import { UserProfile } from '../models/UserProfile.js'
-
-const includeAuthors = {
-  model: Participation,
-  attributes: ['id'],
-  include: [
-    {
-      model: UserProfile,
-      attributes: ['name', 'surname']
-    }
-  ]
-}
-
-const mapToFlowerSummary = (rawFlower) => {
-  const flower = rawFlower.toJSON()
-  return {
-    id: flower.id,
-    title: flower.title,
-    mainImage: flower.mainImage,
-    authors: flower.participations.map(is => is.user_profile),
-    seed: {
-      id: flower.seedId,
-      title: flower.seed.title
-    }
-  }
-}
+import { includeFlowerAuthors, includeSeedAuthors, mapToFlowerPublicDetail, mapToFlowerSummary } from './productUtils.js'
 
 export async function getFlowersByEdition (editionId) {
   const rawResponse = await Flower.findAll({
@@ -42,7 +16,7 @@ export async function getFlowersByEdition (editionId) {
         },
         attributes: ['title']
       },
-      includeAuthors
+      includeFlowerAuthors
     ]
   }
   )
@@ -55,10 +29,24 @@ export function createFlower (req, res) {
   })
 }
 
-export function getFlowerDetails (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getFlowerDetails'
+export async function getFlowerDetails (flowerId) {
+  const rawResponse = await Flower.findOne({
+    where: {
+      id: flowerId
+    },
+    include: [
+      {
+        model: Seed,
+        required: true,
+        attributes: ['id', 'title'],
+        include: [
+          includeSeedAuthors
+        ]
+      },
+      includeFlowerAuthors
+    ]
   })
+  return mapToFlowerPublicDetail(rawResponse)
 }
 
 export function updateFlower (req, res) {
