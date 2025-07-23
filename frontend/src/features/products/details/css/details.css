@@ -51,12 +51,12 @@
     height: 2rem;
 }
 
-.fruit-details-container {
+.fruit-details-container, .flower-details-container {
     width: 60vw;
     margin: auto;
 }
 
-.fruit-details-container * {
+.fruit-details-container *, .flower-details-container * {
     text-align: start;
 }
 

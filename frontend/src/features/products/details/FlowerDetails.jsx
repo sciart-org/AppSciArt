@@ -40,6 +40,30 @@ export default function FlowerDetails() {
       <h1>{flower?.title}</h1>
       <div className="flower-details-container">
         <img src={flower?.mainImage} />
+        <h3>Authors</h3>
+        <ul>
+          {flower?.authors?.map((a) => {
+            return <li>{a?.name + " " + a?.surname}</li>;
+          })}
+        </ul>
+        <h3>Inspiring Scientists</h3>
+        <ul>
+          {flower?.seed?.authors?.map((a) => {
+            return <li>{a?.name + " " + a?.surname}</li>;
+          })}
+        </ul>
+        {flower?.conceptualMap && (
+          <>
+            <h2>Conceptual map</h2>
+            <img src={flower?.conceptualMap} />
+          </>
+        )}
+        {flower?.concept && (
+          <>
+            <h2>Flower concept</h2>
+            <p className="long-text">{flower?.concept}</p>
+          </>
+        )}
       </div>
       <hr style={{ width: "70vw" }} />
       <h2>More about this flower</h2>
