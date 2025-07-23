@@ -49,7 +49,7 @@ export default function HackathonCard(props) {
             to={"/signin"}
             style={{ marginTop: "-1vh", marginBottom: "1vh" }}
           >
-            Sign in
+            Log in
           </Link>
         )}
       </div>

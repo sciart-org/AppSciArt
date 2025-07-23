@@ -15,6 +15,17 @@
     flex-direction: column;
 }
 
+.collection-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.collection-header-container h2 {
+    margin: 0;
+}
+
 .collection-grid img {
     height: 20vw;
     width: 20vw;

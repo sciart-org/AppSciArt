@@ -5,6 +5,7 @@ import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
 import useFetcher from "../../utils/useFetcher.js";
 import { itemsToUpperCase, toEnumValue } from "../../utils/commonUtils.js";
+import { Link } from "react-router";
 
 export default function Register() {
   const [error, setError] = useState(null);
@@ -47,6 +48,12 @@ export default function Register() {
   return (
     <div>
       <h1>Register now</h1>
+      <div style={{ margin: "2rem" }}>
+        <h3 style={{ margin: 0 }}>Already a member of AppSciArt?</h3>
+        <Link to={"/signin"} style={{ margin: 0 }}>
+          Log in
+        </Link>
+      </div>
       <div style={{ flex: 1 }}>
         <RegistrationForm
           formData={formData}

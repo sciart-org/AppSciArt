@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
 import { FaRegHeart } from "react-icons/fa";
@@ -17,6 +17,8 @@ export default function SeedDetails() {
   const [error, setError] = useState(null);
   const [seed, setSeed] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -45,8 +47,14 @@ export default function SeedDetails() {
 
   const LikeComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
-    const style = jwt ? {} : { cursor: "default", color: "rgb(200, 200, 200)" };
-    const onClick = jwt ? (seed?.isLiked ? unlikeSeed : likeSeed) : () => {};
+    const style = jwt ? {} : { color: "rgb(200, 200, 200)" };
+    const onClick = jwt
+      ? seed?.isLiked
+        ? unlikeSeed
+        : likeSeed
+      : () => {
+          navigate("/signin");
+        };
 
     if (seed?.isLiked) {
       return (

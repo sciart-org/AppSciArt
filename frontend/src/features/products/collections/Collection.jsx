@@ -65,15 +65,8 @@ export default function Collection({ itemName: itemNameRaw }) {
 
   const Header = () => {
     return (
-      <>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+      <div className="collection-header-container">
+        <div className="collection-header">
           <h1>
             {itemName.charAt(0).toUpperCase() + itemName.slice(1)} Collection:
           </h1>
@@ -86,12 +79,15 @@ export default function Collection({ itemName: itemNameRaw }) {
         {!jwt && (
           <>
             <h2>You are not logged in! Want to get the full experience?</h2>
-            <AsterButton to={"/signin"} style={{ marginBottom: "2rem" }}>
+            <AsterButton
+              to={"/signin"}
+              style={{ margin: "2rem", marginTop: "1rem" }}
+            >
               Log in
             </AsterButton>
           </>
         )}
-      </>
+      </div>
     );
   };
 
