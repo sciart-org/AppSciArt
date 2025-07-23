@@ -1685,6 +1685,7 @@ components:
         concept:
           type: string
           maxLength: 1500
+          nullable: true
         resourcesLink:
           type: string
           format: uri

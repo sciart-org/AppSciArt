@@ -44,7 +44,18 @@ export async function seedFlowers () {
       id: '00000000-0000-0007-0000-000000000004',
       title: 'Boya Kduino flower 1',
       state: 'PUBLISHED',
-      seedId: '00000000-0000-0005-0000-000000000008'
+      seedId: '00000000-0000-0005-0000-000000000008',
+      concept: `From data comes knowledge, and from knowledge, a new way to view nature. However, to reach this new perspective, one must embark on a journey. The metaphorical journey we propose involves movement through space, walking, integrating—transforming noise, disorder, and the digital into new discoveries about reality.
+
+Participants are invited to embark on a metaphorical journey starting with chaotic digital images, sounds, and technical word clouds—all sourced from the Minka platform. Using motion sensors to detect progress, this movement restructures the chaos. Disjointed images organize themselves, discordant sounds harmonize into music, and step by step, participants reveal a concrete, intimate, and artistic vision of nature. It unveils the hidden shapes of data, traveling metaphorically to the other side: knowledge and, ultimately, reality.
+
+The project features four distinct journeys:
+  · Air-inspired world of birds
+  · Subaquatic realms
+  · The microscopic universe of small amphibians or insects
+  · The kingdom of plants
+
+These fantastical creations will be beautiful, recognizable, and otherworldly.`
     },
     {
       ...baseFlower,

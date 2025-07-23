@@ -67,6 +67,7 @@ export const mapToFlowerPublicDetail = (rawFlower) => {
     id: flower.id,
     title: flower.title,
     mainImage: flower.mainImage,
+    concept: flower.concept,
     authors: flower.participations.map(is => is.user_profile),
     seed: {
       id: flower.seed.id,
