@@ -1126,11 +1126,17 @@ paths:
       security: [{}]
       tags: [SciArt seeds]
       summary: Get seeds
-      operationId: getSeedsByEdition
+      operationId: getSeeds
       parameters:
         - name: editionId
           in: query
-          required: true
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: hackathonId
+          in: query
+          required: false
           schema:
             type: string
             format: uuid

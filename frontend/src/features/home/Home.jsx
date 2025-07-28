@@ -64,7 +64,7 @@ export default function Home() {
   const jwt = tokenService.getLocalAccessToken();
   return (
     <div>
-      <Carousel />
+      <Carousel mocked={true} />
       <h1 style={{ marginTop: 0 }}>This is SciArt</h1>
       <SciArtProducts fixed={true} />
       <Roles />

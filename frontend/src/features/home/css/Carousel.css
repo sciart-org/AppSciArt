@@ -1,6 +1,14 @@
 .carousel-container {
     display: flex;
     align-items: center;
+    border: 2px solid black; 
+}
+
+.carousel-container.small {
+    width: 50vw;
+    margin: auto;
+    overflow: hidden;
+    border-radius: 8px;
 }
 
 .carousel {
@@ -8,19 +16,30 @@
     align-items: center;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
     width: 100vw;
     position: relative;
     transition: transform 0.5s ease-in-out; 
     overflow: visible;
 }
 
+.carousel.small {
+    width: 50vw;
+}
+
 .carousel.animating.left {
     transform: translateX(40vw);
 }
 
+.carousel.animating.left.small {
+    transform: translateX(25vw);
+}
+
 .carousel.animating.right {
     transform: translateX(-40vw);
+}
+
+.carousel.animating.right.small {
+    transform: translateX(-25vw);
 }
 
 .carousel:not(.animating) {
@@ -29,12 +48,16 @@
 }
 
 .image-container {
-    width: 40vw;
+    min-width: 40vw;
+    height: 40vh;
+}
+
+.image-container.small {
+    min-width: 25vw;
 }
 
 .carousel-image {
     object-fit: cover;
-    width: 40vw;
     height: 40vh;
     user-select: none;
     cursor: pointer;
@@ -43,15 +66,24 @@
 .carousel-button {
     position: absolute;
     cursor: pointer;
-    transition: transform 0.15s ease-in-out; /* Adds smooth transition */
+    transition: transform 0.15s ease-in-out;
 }
 
 .carousel-button.right {
     right: 1vw;
 }
 
+.carousel-button.right.small {
+    right: 26vw;
+}
+
 .carousel-button.left {
     left: 1vw;
+    transform: scale(-1, 1);
+}
+
+.carousel-button.left.small {
+    left: 26vw;
     transform: scale(-1, 1);
 }
 

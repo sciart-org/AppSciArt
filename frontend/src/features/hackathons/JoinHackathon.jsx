@@ -72,7 +72,7 @@ export default function JoinHackathon() {
 
   if (joined) {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    return <JoinSuccess />;
+    return <JoinSuccess hackathonId={params.hackathonId} />;
   }
 
   return (

@@ -1,12 +1,23 @@
+import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/seedsService.js'
+import { checkExists } from '../validators/generalValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { withErrorHandler } from './errorHandling.js'
 
-export const getSeedsByEdition = withErrorHandler(async (req, res) => {
-  const showUnpublished = await checkIsStaff(req)
+export const getSeeds = withErrorHandler(async (req, res) => {
   const editionId = req.query.editionId
-  const seeds = await service.getSeedsByEdition(editionId, showUnpublished)
+  const hackathonId = req.query.hackathonId
+  errorThrower(!checkExists(editionId) && !checkExists(hackathonId), 'Either an edition or hackathon must be provided')
+  let seeds = []
+  const showUnpublished = await checkIsStaff(req)
+
+  if (checkExists(editionId)) {
+    seeds = await service.getSeedsByEdition(editionId, showUnpublished)
+  } else if (checkExists(hackathonId)) {
+    seeds = await service.getSeedsByHackathon(hackathonId, showUnpublished)
+  }
+
   return res.status(200).send(seeds)
 })
 

@@ -1,7 +1,36 @@
+import { useEffect, useState } from "react";
 import AsterButton from "../../../components/AsterButton";
 import ClickableText from "../../../components/ClickableText";
+import useFetcher from "../../../utils/useFetcher";
+import Carousel from "../../home/components/Carousel";
+import Loading from "../../../components/messages/Loading";
+import { useNavigate } from "react-router";
 
-export default function JoinSuccess() {
+export default function JoinSuccess({ hackathonId }) {
+  const [error, setError] = useState(null);
+  const [hackathonSeeds, setHackathonSeeds] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const { fetcher } = useFetcher(error, setError);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setLoading(true);
+    fetcher({
+      url: `seeds?hackathonId=${hackathonId}`,
+      onSuccess: (data) => {
+        setHackathonSeeds(data);
+      },
+      onError: () => {
+        setHackathonSeeds([]);
+      },
+    }).finally(() => setLoading(false));
+  }, [hackathonId]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <div>
       <div>
@@ -14,6 +43,13 @@ export default function JoinSuccess() {
       </div>
       <div>
         <p>See an example here</p>
+        <Carousel
+          small={true}
+          allItems={hackathonSeeds.map((s) => {
+            return { id: s.id, image: s.mainImage, text: s.title };
+          })}
+          onClickIem={(o) => navigate(`/seeds/${o.id}`)}
+        />
       </div>
       <ClickableText
         onClick={() => (window.location.href = "/")}

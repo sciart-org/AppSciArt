@@ -1,4 +1,5 @@
 import { Edition } from '../models/Edition.js'
+import { Hackathon } from '../models/Hackathon.js'
 import { Seed } from '../models/Seed.js'
 import { filterPublished, includeSeedAuthors, mapToSeedSummary } from './productUtils.js'
 
@@ -9,6 +10,22 @@ export async function getSeedsByEdition (editionId, showUnpublished) {
       {
         model: Edition,
         where: { id: editionId },
+        attributes: [],
+        through: { attributes: [] }
+      },
+      includeSeedAuthors
+    ]
+  })
+  return rawResponse.map(s => mapToSeedSummary(s))
+}
+
+export async function getSeedsByHackathon (hackathonId, showUnpublished) {
+  const rawResponse = await Seed.findAll({
+    where: showUnpublished ? {} : filterPublished,
+    include: [
+      {
+        model: Hackathon,
+        where: { id: hackathonId },
         attributes: [],
         through: { attributes: [] }
       },
