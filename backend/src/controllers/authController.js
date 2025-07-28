@@ -1,5 +1,7 @@
 import * as service from '../services/authService.js'
+import { errorThrower } from '../services/errorThrower.js'
 import { authBodyValidator } from '../validators/authValidators.js'
+import { checkExists } from '../validators/generalValidators.js'
 import { withErrorHandler } from './errorHandling.js'
 
 export const login = withErrorHandler(async (req, res) => {
@@ -13,9 +15,7 @@ export const register = withErrorHandler(async (req, res) => {
 
   if (method === 'direct') {
     const validationError = authBodyValidator(req.body)
-    if (validationError) {
-      return res.status(400).send({ error: validationError })
-    }
+    errorThrower(checkExists(validationError), validationError, 400)
 
     const result = await service.directRegister(getBodyAttributes(req))
     return res.status(201).send(result)
@@ -51,9 +51,8 @@ export const registerProvider = withErrorHandler(async (req, res) => {
 
 export const completeRegistration = withErrorHandler(async (req, res) => {
   const validationError = authBodyValidator(req.body)
-  if (validationError) {
-    return res.status(400).send({ error: validationError })
-  }
+  errorThrower(checkExists(validationError), validationError, 400)
+
   const result = await service.completeRegistration(getBodyAttributes(req))
   await service.removeEarlySignupByEmail(req.body.email)
   return res.status(201).send(result)

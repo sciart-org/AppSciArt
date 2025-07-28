@@ -24,7 +24,6 @@ const validateGender = (gender) => {
 }
 
 const validateAgeRange = (ageRange) => {
-  console.log('test', ageRange)
   const acceptedAgeRanges = ['17_OR_LESS', '18-24', '25-34', '35-44', '45-54', '55-64', '65_OR_MORE']
   return validateEnumValues(ageRange, acceptedAgeRanges, 'age range')
 }
