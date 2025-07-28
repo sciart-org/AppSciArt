@@ -20,8 +20,13 @@
 
 .seed-details-container img, .flower-details-container img, .fruit-details-container img {
     height: auto;
-    width: 25vw;
+    max-width: 50vw;
+    max-height: 50vh;
     object-fit: contain;
+}
+
+.seed-details-container img {
+    width: 25vw;
 }
 
 .seed-details-container iframe {

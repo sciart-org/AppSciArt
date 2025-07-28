@@ -22,8 +22,8 @@ export async function seedFlowers () {
     {
       ...baseFlower,
       id: '00000000-0000-0007-0000-000000000001',
-      title: 'Crossing the veil flower 2',
-      state: 'IN_PROGRESS',
+      title: 'Crossing the veil',
+      state: 'PUBLISHED',
       seedId: '00000000-0000-0005-0000-000000000000'
     },
     {
