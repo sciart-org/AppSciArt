@@ -1,10 +1,11 @@
 import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
 import { Flower } from '../models/Flower.js'
-import { includeFlowerAuthors, includeSeedAuthors, mapToFlowerPublicDetail, mapToFlowerSummary } from './productUtils.js'
+import { filterPublished, includeFlowerAuthors, includeSeedAuthors, mapToFlowerPublicDetail, mapToFlowerSummary } from './productUtils.js'
 
-export async function getFlowersByEdition (editionId) {
+export async function getFlowersByEdition (editionId, showUnpublished) {
   const rawResponse = await Flower.findAll({
+    where: showUnpublished ? {} : filterPublished,
     include: [
       {
         model: Seed,

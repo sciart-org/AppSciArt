@@ -2,6 +2,10 @@ import { Participation } from '../models/Participation.js'
 import { InspiringScientist } from '../models/roles/InspiringScientist.js'
 import { UserProfile } from '../models/UserProfile.js'
 
+export const filterPublished = {
+  state: 'PUBLISHED'
+}
+
 export const includeSeedAuthors = {
   model: InspiringScientist,
   attributes: ['id'],
@@ -43,7 +47,8 @@ export const mapToSeedSummary = (rawSeed) => {
     title: seed.title,
     mainImage: seed.mainImage,
     authors: seed.inspiring_scientists.map(is => is.user_profile),
-    branchesOfKnowledge: seed.branchesOfKnowledge
+    branchesOfKnowledge: seed.branchesOfKnowledge,
+    state: seed.state
   }
 }
 
@@ -57,7 +62,8 @@ export const mapToFlowerSummary = (rawFlower) => {
     seed: {
       id: flower.seedId,
       title: flower.seed.title
-    }
+    },
+    state: flower.state
   }
 }
 
@@ -73,7 +79,8 @@ export const mapToFlowerPublicDetail = (rawFlower) => {
       id: flower.seed.id,
       title: flower.seed.title,
       authors: flower.seed.inspiring_scientists.map(is => is.user_profile)
-    }
+    },
+    state: flower.state
   }
 }
 
@@ -87,7 +94,8 @@ export const mapToFruitSummary = (rawFruit) => {
     seed: {
       id: fruit.flower.seed.id,
       title: fruit.flower.seed.title
-    }
+    },
+    state: fruit.state
   }
 }
 
@@ -109,6 +117,7 @@ export const mapToFruitPublicDetail = (rawFruit) => {
       title: fruit.flower.seed.title,
       authors: fruit.flower.seed.inspiring_scientists.map(is => is.user_profile),
       description: fruit.seedDescription
-    }
+    },
+    state: fruit.state
   }
 }

@@ -4,16 +4,20 @@ import { UserProfile } from '../models/UserProfile.js'
 import { EarlySignup } from '../models/EarlySignup.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
+import { getUserRoles } from './usersService.js'
 
 export async function login ({ email, password }) {
   const { data, error } = await signInEmail(email, password)
 
   errorThrower(error?.status, error?.message, error?.status)
 
+  const roles = await getUserRoles(data.user.id)
+
   return {
     jwt: data.session.access_token,
     name: data.user.user_metadata.name,
-    surname: data.user.user_metadata.surname
+    surname: data.user.user_metadata.surname,
+    roles
   }
 }
 
@@ -24,11 +28,13 @@ export async function directRegister (body) {
 
   const id = data.user.id
   await createUserProfile({ id, ...body })
+  const roles = await getUserRoles(data.user.id)
 
   return {
     jwt: data.session.access_token,
     name: data.user.user_metadata.name,
-    surname: data.user.user_metadata.surname
+    surname: data.user.user_metadata.surname,
+    roles
   }
 }
 

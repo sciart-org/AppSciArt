@@ -235,8 +235,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Hackathon"
+        "401":
+          $ref: '#/components/responses/UnauthorisedError'
         default:
-          description: Unexpected error
+          $ref: '#/components/responses/UnexpectedError'
     put:
       tags: [Hackathons]
       summary: Update a hackathon
@@ -1139,6 +1141,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SeedList"
+        default:
+          $ref: '#/components/responses/UnexpectedError'
     post:
       tags: [SciArt seeds]
       summary: Create a new seed
@@ -1178,6 +1182,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FlowerList"
+        default:
+          $ref: '#/components/responses/UnexpectedError'
     post:
       tags: [SciArt flowers]
       summary: Create a new flower
@@ -1217,6 +1223,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FruitList"
+        default:
+          $ref: '#/components/responses/UnexpectedError'
     post:
       tags: [SciArt fruits]
       summary: Create a new fruit
@@ -1256,6 +1264,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SeedDetails"
+        "401":
+          $ref: '#/components/responses/UnauthorisedError'
+        default:
+          $ref: '#/components/responses/UnexpectedError'
     put:
       tags: [SciArt seeds]
       summary: Update a seed
@@ -1316,6 +1328,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FlowerDetails"
+        "401":
+          $ref: '#/components/responses/UnauthorisedError'
+        default:
+          $ref: '#/components/responses/UnexpectedError'
     put:
       tags: [SciArt flowers]
       summary: Update a flower
@@ -1418,6 +1434,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FruitDetails"
+        "401":
+          $ref: '#/components/responses/UnauthorisedError'
+        default:
+          $ref: '#/components/responses/UnexpectedError'
     put:
       tags: [SciArt fruits]
       summary: Update a fruit
@@ -1526,6 +1546,19 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  responses:
+    UnexpectedError:
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnauthorisedError:
+      description: Unauthorised
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     EditionDetails:
       type: object
@@ -2065,3 +2098,10 @@ components:
         interests:
           type: string
           nullable: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Internal Server Error

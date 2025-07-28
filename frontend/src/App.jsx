@@ -20,6 +20,7 @@ import Collection from "./features/products/collections/Collection";
 import SeedDetails from "./features/products/details/SeedDetails";
 import FruitDetails from "./features/products/details/FruitDetails";
 import FlowerDetails from "./features/products/details/FlowerDetails";
+import Unauthorized from "./features/auth/Unauthorized";
 
 function App() {
   useEffect(() => {
@@ -48,6 +49,7 @@ function App() {
     <>
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/editions" element={<Editions />} />
       <Route path="/hackathons" element={<Hackathons />} />
       <Route path="/about-the-hackathon" element={<Format />} />

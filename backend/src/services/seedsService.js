@@ -1,9 +1,10 @@
 import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
-import { includeSeedAuthors, mapToSeedSummary } from './productUtils.js'
+import { filterPublished, includeSeedAuthors, mapToSeedSummary } from './productUtils.js'
 
-export async function getSeedsByEdition (editionId) {
+export async function getSeedsByEdition (editionId, showUnpublished) {
   const rawResponse = await Seed.findAll({
+    where: showUnpublished ? {} : filterPublished,
     include: [
       {
         model: Edition,

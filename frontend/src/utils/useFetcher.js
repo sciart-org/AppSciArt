@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { showErrorMessage } from "../components/messages/Message";
 import tokenService from "./token.service";
+import { useNavigate } from "react-router";
 
 export default function useFetcher(error, setError) {
     const API_URL = import.meta.env.VITE_API_URL;
     let jwt = tokenService.getLocalAccessToken()
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (error) {
@@ -38,6 +40,9 @@ export default function useFetcher(error, setError) {
             ...requestBody,
         })
             .then((response) => {
+                if (response.status === 401) {
+                    navigate("/unauthorized")
+                }
                 return response.json();
             })
             .then((data) => {
