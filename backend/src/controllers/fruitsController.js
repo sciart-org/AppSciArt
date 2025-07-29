@@ -1,11 +1,14 @@
 import * as service from '../services/fruitsService.js'
+import { validateEditionById } from '../validators/hackathonAndEditionValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { withErrorHandler } from './errorHandling.js'
 
 export const getFruitsByEdition = withErrorHandler(async (req, res) => {
-  const showUnpublished = await checkIsStaff(req)
   const editionId = req.query.editionId
+  await validateEditionById(req, editionId)
+
+  const showUnpublished = await checkIsStaff(req)
   const fruits = await service.getFruitsByEdition(editionId, showUnpublished)
   return res.status(200).send(fruits)
 })

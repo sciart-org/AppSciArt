@@ -1,6 +1,7 @@
 import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/seedsService.js'
 import { checkExists } from '../validators/generalValidators.js'
+import { validateEditionById, validateHackathonById } from '../validators/hackathonAndEditionValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { withErrorHandler } from './errorHandling.js'
@@ -13,8 +14,10 @@ export const getSeeds = withErrorHandler(async (req, res) => {
   const showUnpublished = await checkIsStaff(req)
 
   if (checkExists(editionId)) {
+    await validateEditionById(req, editionId)
     seeds = await service.getSeedsByEdition(editionId, showUnpublished)
   } else if (checkExists(hackathonId)) {
+    await validateHackathonById(req, hackathonId)
     seeds = await service.getSeedsByHackathon(hackathonId, showUnpublished)
   }
 

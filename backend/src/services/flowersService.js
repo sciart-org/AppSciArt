@@ -2,6 +2,8 @@ import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
 import { Flower } from '../models/Flower.js'
 import { filterPublished, includeFlowerAuthors, includeSeedAuthors, mapToFlowerPublicDetail, mapToFlowerSummary } from './productUtils.js'
+import { errorThrower } from './errorThrower.js'
+import { checkExists } from '../validators/generalValidators.js'
 
 export async function getFlowersByEdition (editionId, showUnpublished) {
   const rawResponse = await Flower.findAll({
@@ -47,6 +49,7 @@ export async function getFlowerDetails (flowerId) {
       includeFlowerAuthors
     ]
   })
+  errorThrower(!checkExists(rawResponse), 'Flower not found', 404)
   return mapToFlowerPublicDetail(rawResponse)
 }
 

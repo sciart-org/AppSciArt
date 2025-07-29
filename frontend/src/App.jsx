@@ -49,6 +49,7 @@ function App() {
     <>
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
+      <Route path="/not-found" element={<NotFound resource={true} />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/editions" element={<Editions />} />
       <Route path="/hackathons" element={<Hackathons />} />

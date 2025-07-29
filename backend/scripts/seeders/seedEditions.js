@@ -8,7 +8,7 @@ const baseEdition = {
   shortDescription: null,
   longDescription: null,
   catalogLink: null,
-  isVisible: false
+  isVisible: true
 }
 
 export async function seedEditions () {
@@ -18,8 +18,7 @@ export async function seedEditions () {
       id: '00000000-0000-0003-0000-000000000000',
       name: 'ASTER+S > ART ^ ENVIRONMENT & AI',
       logo: 'https://drive.google.com/thumbnail?id=1nntzSuxqmzgW6-DCsHyp1FgqWpZH_MHX&sz=s4000',
-      year: 2023,
-      isVisible: true
+      year: 2023
     },
     {
       ...baseEdition,
@@ -56,8 +55,7 @@ Yet beyond sensory wonder, this exhibition advances a critical poetics. In an ag
 
 Science alone cannot imagine more habitable worlds; art alone cannot transform the material conditions of existence. But when they intertwine, as they do here, a form of knowledge arises that refuses to separate reason from emotion, data from metaphor. What emerges is a tactile, sonorous, embodied thought that seeks not only to understand the world, but to feel it differently.
 
-The ASTER+S experience, and the works it gathers, stand as testimony to that pursuit. They are not mere documentary records; they are invitations to cross thresholds: from left to right hemisphere, from data to gesture, from standardized cognition to disruptive, transformative imagination... and back again. May participatory experiences and exhibitions like this awaken our curiosity, care, and respect for art and science as complementary languages with which to inhabit a more conscious present and a more humane future.`,
-      isVisible: true
+The ASTER+S experience, and the works it gathers, stand as testimony to that pursuit. They are not mere documentary records; they are invitations to cross thresholds: from left to right hemisphere, from data to gesture, from standardized cognition to disruptive, transformative imagination... and back again. May participatory experiences and exhibitions like this awaken our curiosity, care, and respect for art and science as complementary languages with which to inhabit a more conscious present and a more humane future.`
     }
   ])
 }

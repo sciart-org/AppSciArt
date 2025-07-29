@@ -3,6 +3,8 @@ import { Seed } from '../models/Seed.js'
 import { Flower } from '../models/Flower.js'
 import { Fruit } from '../models/Fruit.js'
 import { filterPublished, includeFruitAuthors, includeSeedAuthors, mapToFruitPublicDetail, mapToFruitSummary } from './productUtils.js'
+import { errorThrower } from './errorThrower.js'
+import { checkExists } from '../validators/generalValidators.js'
 
 export async function getFruitsByEdition (editionId, showUnpublished) {
   const rawResponse = await Fruit.findAll({
@@ -57,6 +59,7 @@ export async function getFruitDetails (fruitId) {
       includeFruitAuthors
     ]
   })
+  errorThrower(!checkExists(rawResponse), 'Flower not found', 404)
   return mapToFruitPublicDetail(rawResponse)
 }
 

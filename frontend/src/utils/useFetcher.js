@@ -43,6 +43,9 @@ export default function useFetcher(error, setError) {
                 if (response.status === 401) {
                     navigate("/unauthorized")
                 }
+                if (response.status === 404) {
+                    navigate("/not-found")
+                }
                 return response.json();
             })
             .then((data) => {

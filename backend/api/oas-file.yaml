@@ -1832,12 +1832,6 @@ components:
           type: string
           format: uri
           nullable: true
-        startDate:
-          type: object
-          nullable: true
-        endDate:
-          type: object
-          nullable: true
         type:
           type: string
           enum: [ON_SITE, ONLINE, HYBRID]

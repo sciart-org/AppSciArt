@@ -1,7 +1,7 @@
 import * as service from '../services/hackathonsService.js'
 import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
-import { validateIsVisibleOrStaff } from '../validators/hackathonValidators.js'
+import { validateHackathonById } from '../validators/hackathonAndEditionValidators.js'
 
 export const getHackathons = withErrorHandler(async (req, res) => {
   const { filter } = req.query
@@ -28,9 +28,10 @@ export function createHackathon (req, res) {
 
 export const getHackathonDetails = withErrorHandler(async (req, res) => {
   const hackathonId = req.params.hackathonId
+  await validateHackathonById(req, hackathonId)
+
   const currentUser = await UsersService.getCurrentUserProfile(req)
   const result = await service.getHackathonDetails(hackathonId, currentUser?.id)
-  await validateIsVisibleOrStaff(req, result)
   return res.status(200).send(result)
 })
 

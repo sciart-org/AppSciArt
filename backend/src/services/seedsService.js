@@ -1,6 +1,8 @@
 import { Edition } from '../models/Edition.js'
 import { Hackathon } from '../models/Hackathon.js'
 import { Seed } from '../models/Seed.js'
+import { checkExists } from '../validators/generalValidators.js'
+import { errorThrower } from './errorThrower.js'
 import { filterPublished, includeSeedAuthors, mapToSeedSummary } from './productUtils.js'
 
 export async function getSeedsByEdition (editionId, showUnpublished) {
@@ -42,11 +44,9 @@ export function createSeed (req, res) {
 }
 
 export async function getSeedDetails (seedId) {
-  return await Seed.findOne({
-    where: {
-      id: seedId
-    }
-  })
+  const seed = await Seed.findByPk(seedId)
+  errorThrower(!checkExists(seed), 'Seed not found', 404)
+  return seed
 }
 
 export function updateSeed (req, res) {
