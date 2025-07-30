@@ -1,17 +1,24 @@
 import { Edition } from '../models/Edition.js'
 import { validateEdition } from '../schemas/edition.js'
 
-export async function getAllEditions () {
-  return await Edition.findAll({
-    order: [['year', 'DESC']]
-  })
+export const mapToEditionSummary = (rawEdition) => {
+  const edition = rawEdition.toJSON()
+  return {
+    id: edition.id,
+    name: edition.name,
+    logo: edition.logo,
+    year: edition.year,
+    shortDescription: edition.shortDescription,
+    isVisible: edition.isVisible
+  }
 }
 
-export async function getPublishedEditions () {
-  return await Edition.findAll({
-    where: { isVisible: true },
+export async function getAllEditions (showUnpublished) {
+  const rawResponse = await Edition.findAll({
+    where: showUnpublished ? {} : { isVisible: true },
     order: [['year', 'DESC']]
   })
+  return rawResponse.map(e => mapToEditionSummary(e))
 }
 
 export async function createEdition (req, res) {

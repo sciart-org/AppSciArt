@@ -85,6 +85,7 @@ button:focus-visible {
 
 .long-text {
   white-space: pre-line;
+  text-align: start;
 }
 
 #content {

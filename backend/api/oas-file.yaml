@@ -37,14 +37,6 @@ paths:
       tags: [Editions]
       summary: Get editions
       operationId: getEditions
-      parameters:
-        - name: visibility
-          in: query
-          required: true
-          schema:
-            type: string
-            enum: [all, published]
-          description: Filter editions by visibility status
       responses:
         "200":
           description: A list of editions
@@ -1615,6 +1607,9 @@ components:
           type: integer
           minimum: 1900
           maximum: 2200
+        shortDescription:
+          type: string
+          maxLength: 255
 
     EditionList:
       type: array

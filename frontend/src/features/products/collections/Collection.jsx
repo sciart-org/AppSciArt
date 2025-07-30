@@ -32,7 +32,7 @@ export default function Collection({ itemName: itemNameRaw }) {
 
   useEffect(() => {
     fetcher({
-      url: "editions?visibility=published",
+      url: "editions",
       onSuccess: (data) => {
         setAllEditions(data);
         if (data.length > 0) {

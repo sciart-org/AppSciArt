@@ -1,22 +1,11 @@
 import * as service from '../services/editionsService.js'
+import { checkIsStaff } from '../validators/userValidators.js'
 import { withErrorHandler } from './errorHandling.js'
 
 export const getEditions = withErrorHandler(async (req, res) => {
-  const { visibility } = req.query
-
-  if (visibility === 'published') {
-    const editions = await service.getPublishedEditions()
-    return res.status(200).send(editions)
-  }
-
-  if (visibility === 'all') {
-    const editions = await service.getAllEditions()
-    return res.status(200).send(editions)
-  }
-
-  return res.status(400).json({
-    message: 'Invalid visibility, or not yet implemented'
-  })
+  const showUnpublished = await checkIsStaff(req)
+  const editions = await service.getAllEditions(showUnpublished)
+  return res.status(200).send(editions)
 })
 
 export function createEdition (req, res) {
