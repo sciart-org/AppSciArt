@@ -1610,6 +1610,10 @@ components:
         shortDescription:
           type: string
           maxLength: 255
+          nullable: true
+        state:
+          type: string
+          enum: [PLANNED, ACTIVE, CLOSED, PUBLISHED]
 
     EditionList:
       type: array

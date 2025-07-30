@@ -29,10 +29,10 @@ export const Edition = sequelize.define(
     catalogLink: {
       type: DataTypes.STRING
     },
-    isVisible: {
-      type: DataTypes.BOOLEAN,
+    state: {
+      type: DataTypes.ENUM('PLANNED', 'ACTIVE', 'CLOSED', 'PUBLISHED'),
       allowNull: false,
-      defaultValue: false
+      defaultValue: 'PLANNED'
     }
   },
   {

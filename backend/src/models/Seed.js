@@ -19,7 +19,9 @@ export const Seed = sequelize.define(
       type: DataTypes.STRING
     },
     state: {
-      type: DataTypes.ENUM('IN_BLANK', 'IN_PROGRESS', 'IN_REVIEW', 'PUBLISHED')
+      type: DataTypes.ENUM('IN_BLANK', 'IN_PROGRESS', 'IN_REVIEW', 'PUBLISHED'),
+      allowNull: false,
+      defaultValue: 'IN_BLANK'
     },
     branchesOfKnowledge: {
       type: DataTypes.ARRAY(DataTypes.STRING)

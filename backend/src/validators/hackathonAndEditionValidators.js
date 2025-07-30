@@ -5,7 +5,7 @@ import { checkExists } from './generalValidators.js'
 import { checkIsStaff } from './userValidators.js'
 
 const validateIsVisibleOrStaff = async (req, resource) => {
-  return errorThrower(!resource.isVisible && !(await checkIsStaff(req)), 'Unauthorized: You cannot access this resource', 401)
+  return errorThrower(!(resource.state === 'PUBLISHED') && !(await checkIsStaff(req)), 'Unauthorized: You cannot access this resource', 401)
 }
 
 const validateEditionById = async (req, editionId) => {

@@ -15,7 +15,7 @@ export const mapToEditionSummary = (rawEdition) => {
 
 export async function getAllEditions (showUnpublished) {
   const rawResponse = await Edition.findAll({
-    where: showUnpublished ? {} : { isVisible: true },
+    where: showUnpublished ? {} : { state: 'PUBLISHED' },
     order: [['year', 'DESC']]
   })
   return rawResponse.map(e => mapToEditionSummary(e))
