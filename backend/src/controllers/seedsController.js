@@ -1,6 +1,6 @@
 import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/seedsService.js'
-import { validateEditionById } from '../validators/EditionValidators.js'
+import { validateEditionById } from '../validators/editionValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateHackathonById } from '../validators/hackathonValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
