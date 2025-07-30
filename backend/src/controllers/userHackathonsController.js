@@ -1,7 +1,7 @@
 import * as service from '../services/userHackathonsService.js'
 import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
-import { validateHackathonById } from '../validators/hackathonAndEditionValidators.js'
+import { validateHackathonById } from '../validators/hackathonValidators.js'
 
 export function getUserEnrolledHackathons (req, res) {
   service.getUserEnrolledHackathons(req, res)

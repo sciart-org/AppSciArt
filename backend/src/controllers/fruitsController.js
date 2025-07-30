@@ -1,5 +1,5 @@
 import * as service from '../services/fruitsService.js'
-import { validateEditionById } from '../validators/hackathonAndEditionValidators.js'
+import { validateEditionById } from '../validators/EditionValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { withErrorHandler } from './errorHandling.js'

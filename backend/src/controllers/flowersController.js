@@ -1,8 +1,8 @@
 import * as service from '../services/flowersService.js'
+import { validateEditionById } from '../validators/EditionValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { withErrorHandler } from './errorHandling.js'
-import { validateEditionById } from '../validators/hackathonAndEditionValidators.js'
 
 export const getFlowersByEdition = withErrorHandler(async (req, res) => {
   const editionId = req.query.editionId

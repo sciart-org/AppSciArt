@@ -1,7 +1,7 @@
 import * as service from '../services/hackathonsService.js'
 import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
-import { validateHackathonById } from '../validators/hackathonAndEditionValidators.js'
+import { validateHackathonById } from '../validators/hackathonValidators.js'
 
 export const getHackathons = withErrorHandler(async (req, res) => {
   const { filter } = req.query
