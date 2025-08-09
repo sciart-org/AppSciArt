@@ -67,17 +67,21 @@ export default function EditionDetails() {
     <div>
       <h1>{edition?.name}</h1>
       <EditionDescription />
-      <hr />
-      <div>
-        <h2>Take a look at what we achieved!</h2>
-        <Carousel
-          small={true}
-          allItems={edition?.fruits?.map((f) => {
-            return { id: f.id, image: f.mainImage, text: f.title };
-          })}
-          onClickIem={(o) => navigate(`/fruits/${o.id}`)}
-        />
-      </div>
+      {edition?.fruits?.length > 0 && (
+        <>
+          <hr />
+          <div>
+            <h2>Take a look at what we achieved!</h2>
+            <Carousel
+              small={true}
+              allItems={edition?.fruits?.map((f) => {
+                return { id: f.id, image: f.mainImage, text: f.title };
+              })}
+              onClickIem={(o) => navigate(`/fruits/${o.id}`)}
+            />
+          </div>
+        </>
+      )}
       <hr />
       <h2>Explore all collections</h2>
       <div className="edition-collections-container">
