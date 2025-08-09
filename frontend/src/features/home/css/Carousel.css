@@ -59,6 +59,7 @@
 .carousel-image {
     object-fit: cover;
     height: 40vh;
+    max-width: 25vw;
     user-select: none;
     cursor: pointer;
 }
