@@ -12,6 +12,9 @@ export default function EditionPicker({
     const edition = allEditions.find((e) => e.name === name);
     if (edition) {
       setSelectedEdition(edition);
+      const url = new URL(window.location);
+      url.searchParams.set("editionId", edition.id);
+      window.history.replaceState({}, "", url);
     } else {
       setSelectedEdition(null);
     }

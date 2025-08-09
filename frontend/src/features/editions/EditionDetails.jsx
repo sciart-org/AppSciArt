@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { useParams } from "react-router";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
-import { useEffect } from "react";
 import logoCatalog from "../../assets/logoCatalog.png";
-import "./css/edition-details.css";
 import Carousel from "../home/components/Carousel";
+import Seed from "../../components/sciartProducts/Seed";
+import Flower from "../../components/sciartProducts/Flower";
+import Fruit from "../../components/sciartProducts/Fruit";
+import AsterButton from "../../components/AsterButton";
+import "./css/edition-details.css";
 
 export default function EditionDetails() {
   const params = useParams();
@@ -14,13 +17,13 @@ export default function EditionDetails() {
   const [loading, setLoading] = useState(true);
 
   const { fetcher } = useFetcher(error, setError);
+  const navigate = useNavigate();
 
   const fetchEdition = async () => {
     await fetcher({
       url: `editions/${params.editionId}`,
       onSuccess: (data) => {
         setEdition(data);
-        console.log(data);
       },
     }).finally(() => {
       setLoading(false);
@@ -53,7 +56,7 @@ export default function EditionDetails() {
                 <img className="catalog-logo" src={logoCatalog} />
               </div>
             </div>
-          )}{" "}
+          )}
         </div>
         <p className="long-text">{edition?.longDescription}</p>
       </div>
@@ -74,6 +77,22 @@ export default function EditionDetails() {
           })}
           onClickIem={(o) => navigate(`/fruits/${o.id}`)}
         />
+      </div>
+      <hr />
+      <h2>Explore all collections</h2>
+      <div className="edition-collections-container">
+        <AsterButton to={`/collections/seeds?editionId=${edition?.id}`}>
+          <Seed style={{ width: "10rem" }} />
+          <p>Seeds</p>
+        </AsterButton>
+        <AsterButton to={`/collections/flowers?editionId=${edition?.id}`}>
+          <Flower style={{ width: "10rem" }} />
+          <p>Flowers</p>
+        </AsterButton>
+        <AsterButton to={`/collections/fruits?editionId=${edition?.id}`}>
+          <Fruit style={{ width: "10rem" }} />
+          <p>Fruits</p>
+        </AsterButton>
       </div>
     </div>
   );

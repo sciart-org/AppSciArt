@@ -35,9 +35,20 @@ export default function Collection({ itemName: itemNameRaw }) {
       url: "editions",
       onSuccess: (data) => {
         setAllEditions(data);
-        if (data.length > 0) {
-          setSelectedEdition(data[0]);
+
+        const url = new URL(window.location.href);
+        const initialEditionId = url.searchParams.get("editionId");
+
+        if (!data.length > 0) {
+          return;
         }
+
+        if (initialEditionId) {
+          setSelectedEdition(data.find((e) => e.id === initialEditionId));
+          return;
+        }
+
+        setSelectedEdition(data[0]);
       },
       onError: () => {
         setAllEditions([]);

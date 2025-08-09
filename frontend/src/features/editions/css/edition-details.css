@@ -28,3 +28,14 @@
 .catalog-logo-container {
     cursor: pointer;
 }
+
+.edition-collections-container {
+    margin-bottom: 5rem;
+}
+
+.edition-collections-container > .aster-button {
+    margin-right: 5rem;
+    margin-left: 5rem;
+    width: 12rem;
+    height: 12rem
+}
