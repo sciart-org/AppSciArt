@@ -44,6 +44,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditionList"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
     post:
       tags: [Editions]
       summary: Create an edition
@@ -83,6 +85,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditionDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
     put:
       tags: [Editions]
       summary: Update an edition
@@ -1576,17 +1582,15 @@ components:
           type: integer
           minimum: 1900
           maximum: 2200
-        shortDescription:
-          type: string
-          maxLength: 255
         longDescription:
           type: string
-          maxLength: 500
         catalogLink:
+          nullable: true
           type: string
           format: uri
-        isVisible:
-          type: boolean
+        state:
+          type: string
+          enum: [PLANNED, ACTIVE, CLOSED, PUBLISHED]
 
     EditionSummary:
       type: object

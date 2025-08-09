@@ -2,6 +2,9 @@ import { Edition } from '../models/Edition.js'
 import { validateEdition } from '../schemas/edition.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateEditionById } from '../validators/editionValidators.js'
+import { Fruit } from '../models/Fruit.js'
+import { Seed } from '../models/Seed.js'
+import { Flower } from '../models/Flower.js'
 
 export const mapToEditionSummary = (rawEdition) => {
   const edition = rawEdition.toJSON()
@@ -11,6 +14,20 @@ export const mapToEditionSummary = (rawEdition) => {
     logo: edition.logo,
     year: edition.year,
     shortDescription: edition.shortDescription,
+    state: edition.state
+  }
+}
+
+const mapToEditionDetails = (rawEdition) => {
+  const edition = rawEdition.toJSON()
+  return {
+    id: edition.id,
+    name: edition.name,
+    logo: edition.logo,
+    year: edition.year,
+    longDescription: edition.longDescription,
+    catalogLink: edition.catalogLink,
+    fruits: edition.seeds?.flatMap(seed => seed.flowers?.flatMap(flower => flower.fruits)),
     state: edition.state
   }
 }
@@ -34,8 +51,28 @@ export async function createEdition (req, res) {
 }
 
 export async function getEditionDetails (userId, editionId) {
-  const edition = await validateEditionById(userId, editionId)
-  return edition
+  await validateEditionById(userId, editionId)
+  const edition = await Edition.findByPk(editionId, {
+    include: [
+      {
+        model: Seed,
+        through: { attributes: [] },
+        attributes: ['id'],
+        include: [
+          {
+            model: Flower,
+            attributes: ['id'],
+            include: [
+              {
+                model: Fruit
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  })
+  return mapToEditionDetails(edition)
 }
 
 export function updateEdition (req, res) {
