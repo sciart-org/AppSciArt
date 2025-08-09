@@ -1,0 +1,30 @@
+.edition-details-container {
+    width: 70vw;
+    margin: auto;
+}
+
+.edition-logo {
+    height: auto;
+    max-width: 50vw;
+    max-height: 50vh;
+    object-fit: contain;
+    flex: 1
+}
+
+.edition-logo-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.catalog-logo {
+    height: auto;
+    max-width: 25vw;
+    max-height: 25vh;
+    object-fit: contain;
+}
+
+.catalog-logo-container {
+    cursor: pointer;
+}

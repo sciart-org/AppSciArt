@@ -8,6 +8,10 @@ export default function Carousel({
   small = false,
   onClickIem = () => {},
 }) {
+  if ((!allItems || allItems.length === 0) && !mocked) {
+    return <p>No items to display</p>;
+  }
+
   const [centerImage, setCenterImage] = useState(0);
   const [animating, setAnimating] = useState(null);
   const mockObjects = [

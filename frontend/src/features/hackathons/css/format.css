@@ -12,7 +12,9 @@
 
 .format-container {
     padding-right: 5vw;
-    padding-left: 5vw
+    padding-left: 5vw;
+    width: 70vw;
+    margin: auto;
 }
 
 .format-container > h2, .format-container > h3 {

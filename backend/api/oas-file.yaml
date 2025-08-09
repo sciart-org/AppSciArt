@@ -65,6 +65,7 @@ paths:
   /editions/{editionId}:
     x-router-controller: editionsController
     get:
+      security: [{}]
       tags: [Editions]
       summary: Get details of an edition
       operationId: getEditionDetails
@@ -228,9 +229,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/Hackathon"
         "401":
-          $ref: '#/components/responses/UnauthorisedError'
+          $ref: "#/components/responses/UnauthorisedError"
         default:
-          $ref: '#/components/responses/UnexpectedError'
+          $ref: "#/components/responses/UnexpectedError"
     put:
       tags: [Hackathons]
       summary: Update a hackathon
@@ -1140,7 +1141,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SeedList"
         default:
-          $ref: '#/components/responses/UnexpectedError'
+          $ref: "#/components/responses/UnexpectedError"
     post:
       tags: [SciArt seeds]
       summary: Create a new seed
@@ -1181,7 +1182,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/FlowerList"
         default:
-          $ref: '#/components/responses/UnexpectedError'
+          $ref: "#/components/responses/UnexpectedError"
     post:
       tags: [SciArt flowers]
       summary: Create a new flower
@@ -1222,7 +1223,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/FruitList"
         default:
-          $ref: '#/components/responses/UnexpectedError'
+          $ref: "#/components/responses/UnexpectedError"
     post:
       tags: [SciArt fruits]
       summary: Create a new fruit
@@ -1263,9 +1264,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/SeedDetails"
         "401":
-          $ref: '#/components/responses/UnauthorisedError'
+          $ref: "#/components/responses/UnauthorisedError"
         default:
-          $ref: '#/components/responses/UnexpectedError'
+          $ref: "#/components/responses/UnexpectedError"
     put:
       tags: [SciArt seeds]
       summary: Update a seed
@@ -1327,9 +1328,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/FlowerDetails"
         "401":
-          $ref: '#/components/responses/UnauthorisedError'
+          $ref: "#/components/responses/UnauthorisedError"
         default:
-          $ref: '#/components/responses/UnexpectedError'
+          $ref: "#/components/responses/UnexpectedError"
     put:
       tags: [SciArt flowers]
       summary: Update a flower
@@ -1433,9 +1434,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/FruitDetails"
         "401":
-          $ref: '#/components/responses/UnauthorisedError'
+          $ref: "#/components/responses/UnauthorisedError"
         default:
-          $ref: '#/components/responses/UnexpectedError'
+          $ref: "#/components/responses/UnexpectedError"
     put:
       tags: [SciArt fruits]
       summary: Update a fruit
@@ -1550,13 +1551,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
     UnauthorisedError:
       description: Unauthorised
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
   schemas:
     EditionDetails:
       type: object

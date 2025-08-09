@@ -21,6 +21,7 @@ import SeedDetails from "./features/products/details/SeedDetails";
 import FruitDetails from "./features/products/details/FruitDetails";
 import FlowerDetails from "./features/products/details/FlowerDetails";
 import Unauthorized from "./features/auth/Unauthorized";
+import EditionDetails from "./features/editions/EditionDetails";
 
 function App() {
   useEffect(() => {
@@ -52,6 +53,7 @@ function App() {
       <Route path="/not-found" element={<NotFound resource={true} />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/editions" element={<Editions />} />
+      <Route path="/editions/:editionId" element={<EditionDetails />} />
       <Route path="/hackathons" element={<Hackathons />} />
       <Route path="/about-the-hackathon" element={<Format />} />
       <Route path="/hackathons/:hackathonId/join" element={<JoinHackathon />} />
