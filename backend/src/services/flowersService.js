@@ -1,12 +1,12 @@
-import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
 import { Flower } from '../models/Flower.js'
-import { filterPublished, includeFlowerAuthors, includeSeedAuthors, mapToFlowerPublicDetail, mapToFlowerSummary } from './productUtils.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateEditionById } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
+import { mapToFlowerPublicDetail, mapToFlowerSummary } from './mappers/productMapper.js'
+import { includeSeedsOfEdition, filterPublished, includeFlowerAuthors, includeSeedAuthors } from './includes/productIncludes.js'
 
 export async function getFlowersByEdition (userId, editionId) {
   await validateEditionById(userId, editionId)
@@ -14,16 +14,7 @@ export async function getFlowersByEdition (userId, editionId) {
   const rawResponse = await Flower.findAll({
     where: showUnpublished ? {} : filterPublished,
     include: [
-      {
-        model: Seed,
-        required: true,
-        include: {
-          model: Edition,
-          where: { id: editionId },
-          attributes: []
-        },
-        attributes: ['title']
-      },
+      includeSeedsOfEdition(editionId),
       includeFlowerAuthors
     ]
   }

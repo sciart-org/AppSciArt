@@ -1,4 +1,4 @@
-import { Edition } from '../models/Edition.js'
+import { mapToSeedSummary } from './mappers/productMapper.js'
 import { Hackathon } from '../models/Hackathon.js'
 import { Seed } from '../models/Seed.js'
 import { validateEditionById } from '../validators/editionValidators.js'
@@ -7,7 +7,7 @@ import { validateHackathonById } from '../validators/hackathonValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { filterPublished, includeSeedAuthors, mapToSeedSummary } from './productUtils.js'
+import { filterPublished, includeEdition, includeSeedAuthors } from './includes/productIncludes.js'
 
 export async function getSeedsByEdition (userId, editionId) {
   await validateEditionById(userId, editionId)
@@ -16,9 +16,7 @@ export async function getSeedsByEdition (userId, editionId) {
     where: showUnpublished ? {} : filterPublished,
     include: [
       {
-        model: Edition,
-        where: { id: editionId },
-        attributes: [],
+        ...includeEdition(editionId),
         through: { attributes: [] }
       },
       includeSeedAuthors

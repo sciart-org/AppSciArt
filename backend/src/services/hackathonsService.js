@@ -1,54 +1,7 @@
-import { Op, literal } from 'sequelize'
+import { Op } from 'sequelize'
 import { Hackathon } from '../models/Hackathon.js'
-import { Edition } from '../models/Edition.js'
-import { sequelize } from '../config/sequelize.js'
 import { validateHackathonById } from '../validators/hackathonValidators.js'
-
-const includeEditionName = () => {
-  return {
-    attributes: {
-      include: [
-        [sequelize.col('edition.name'), 'editionName']
-      ]
-    },
-    include: [
-      {
-        model: Edition,
-        attributes: []
-      }
-    ]
-  }
-}
-
-const includeIsEnrolled = (userId) => {
-  return {
-    attributes: {
-      include: [
-        [
-          literal(userId
-            ? `EXISTS (
-    SELECT 1 FROM "participations" AS p
-      WHERE p."hackathonId" = "hackathons"."id"
-      AND p."userProfileId" = '${userId}'
-  )`
-            : false),
-          'isEnrolled'
-        ]
-      ]
-    }
-  }
-}
-
-const combineIncludes = (includesList) => {
-  const attributesInclude = includesList.flatMap(s => s.attributes.include).filter(s => s !== undefined)
-  const include = includesList.flatMap(s => s.include).filter(s => s !== undefined)
-  return {
-    attributes: {
-      include: attributesInclude
-    },
-    include
-  }
-}
+import { combineIncludes, includeEditionName, includeIsEnrolled } from './includes/hackathonIncludes.js'
 
 export async function getClosestHackathon (userId) {
   return await Hackathon.findOne({

@@ -1,47 +1,7 @@
-import { Participation } from '../models/Participation.js'
-import { InspiringScientist } from '../models/roles/InspiringScientist.js'
-import { UserProfile } from '../models/UserProfile.js'
-
-export const filterPublished = {
-  state: 'PUBLISHED'
-}
-
-export const includeSeedAuthors = {
-  model: InspiringScientist,
-  attributes: ['id'],
-  through: { attributes: [] },
-  include: [
-    {
-      model: UserProfile,
-      attributes: ['name', 'surname']
-    }
-  ]
-}
-
-export const includeFlowerAuthors = {
-  model: Participation,
-  attributes: ['id'],
-  include: [
-    {
-      model: UserProfile,
-      attributes: ['name', 'surname']
-    }
-  ]
-}
-
-export const includeFruitAuthors = {
-  model: Participation,
-  attributes: ['id'],
-  include: [
-    {
-      model: UserProfile,
-      attributes: ['name', 'surname']
-    }
-  ]
-}
+import { toPlainObject } from './utils.js'
 
 export const mapToSeedSummary = (rawSeed) => {
-  const seed = rawSeed.toJSON()
+  const seed = toPlainObject(rawSeed)
   return {
     id: seed.id,
     title: seed.title,
@@ -53,7 +13,7 @@ export const mapToSeedSummary = (rawSeed) => {
 }
 
 export const mapToFlowerSummary = (rawFlower) => {
-  const flower = rawFlower.toJSON()
+  const flower = toPlainObject(rawFlower)
   return {
     id: flower.id,
     title: flower.title,
@@ -68,7 +28,7 @@ export const mapToFlowerSummary = (rawFlower) => {
 }
 
 export const mapToFlowerPublicDetail = (rawFlower) => {
-  const flower = rawFlower.toJSON()
+  const flower = toPlainObject(rawFlower)
   return {
     id: flower.id,
     title: flower.title,
@@ -85,7 +45,7 @@ export const mapToFlowerPublicDetail = (rawFlower) => {
 }
 
 export const mapToFruitSummary = (rawFruit) => {
-  const fruit = rawFruit.toJSON()
+  const fruit = toPlainObject(rawFruit)
   return {
     id: fruit.id,
     title: fruit.title,
@@ -100,7 +60,7 @@ export const mapToFruitSummary = (rawFruit) => {
 }
 
 export const mapToFruitPublicDetail = (rawFruit) => {
-  const fruit = rawFruit.toJSON()
+  const fruit = toPlainObject(rawFruit)
   return {
     id: fruit.id,
     title: fruit.title,

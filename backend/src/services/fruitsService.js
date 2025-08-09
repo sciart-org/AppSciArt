@@ -1,13 +1,13 @@
-import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
 import { Flower } from '../models/Flower.js'
 import { Fruit } from '../models/Fruit.js'
-import { filterPublished, includeFruitAuthors, includeSeedAuthors, mapToFruitPublicDetail, mapToFruitSummary } from './productUtils.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateEditionById } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
+import { mapToFruitPublicDetail, mapToFruitSummary } from './mappers/productMapper.js'
+import { filterPublished, includeFruitAuthors, includeSeedAuthors, includeSeedsOfEdition } from './includes/productIncludes.js'
 
 export async function getFruitsByEdition (userId, editionId) {
   await validateEditionById(userId, editionId)
@@ -18,16 +18,7 @@ export async function getFruitsByEdition (userId, editionId) {
       {
         model: Flower,
         required: true,
-        include: {
-          model: Seed,
-          required: true,
-          include: {
-            model: Edition,
-            where: { id: editionId },
-            attributes: []
-          },
-          attributes: ['id', 'title']
-        },
+        include: includeSeedsOfEdition(editionId),
         attributes: ['id']
       },
       includeFruitAuthors
