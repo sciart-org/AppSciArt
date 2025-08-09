@@ -2,8 +2,7 @@ import { Op, literal } from 'sequelize'
 import { Hackathon } from '../models/Hackathon.js'
 import { Edition } from '../models/Edition.js'
 import { sequelize } from '../config/sequelize.js'
-import { errorThrower } from './errorThrower.js'
-import { checkExists } from '../validators/generalValidators.js'
+import { validateHackathonById } from '../validators/hackathonValidators.js'
 
 const includeEditionName = () => {
   return {
@@ -83,11 +82,11 @@ export function createHackathon (req, res) {
 }
 
 export async function getHackathonDetails (hackathonId, userId) {
+  await validateHackathonById(userId, hackathonId)
   const hackathon = await Hackathon.findByPk(
     hackathonId,
     combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
   )
-  errorThrower(!checkExists(hackathon), 'Hackathon not found.', 404)
   return hackathon
 }
 

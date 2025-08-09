@@ -1,5 +1,7 @@
 import { Edition } from '../models/Edition.js'
 import { validateEdition } from '../schemas/edition.js'
+import { checkIsStaff } from '../validators/userValidators.js'
+import { validateEditionById } from '../validators/editionValidators.js'
 
 export const mapToEditionSummary = (rawEdition) => {
   const edition = rawEdition.toJSON()
@@ -9,11 +11,12 @@ export const mapToEditionSummary = (rawEdition) => {
     logo: edition.logo,
     year: edition.year,
     shortDescription: edition.shortDescription,
-    isVisible: edition.isVisible
+    state: edition.state
   }
 }
 
-export async function getAllEditions (showUnpublished) {
+export async function getEditions (userId) {
+  const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Edition.findAll({
     where: showUnpublished ? {} : { state: 'PUBLISHED' },
     order: [['year', 'DESC']]
@@ -30,10 +33,9 @@ export async function createEdition (req, res) {
   res.status(201).send(newEdition)
 }
 
-export function getEditionDetails (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getEditionDetails'
-  })
+export async function getEditionDetails (userId, editionId) {
+  const edition = await validateEditionById(userId, editionId)
+  return edition
 }
 
 export function updateEdition (req, res) {

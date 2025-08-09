@@ -4,8 +4,13 @@ import { Flower } from '../models/Flower.js'
 import { filterPublished, includeFlowerAuthors, includeSeedAuthors, mapToFlowerPublicDetail, mapToFlowerSummary } from './productUtils.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
+import { validateEditionById } from '../validators/editionValidators.js'
+import { checkIsStaff } from '../validators/userValidators.js'
+import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 
-export async function getFlowersByEdition (editionId, showUnpublished) {
+export async function getFlowersByEdition (userId, editionId) {
+  await validateEditionById(userId, editionId)
+  const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Flower.findAll({
     where: showUnpublished ? {} : filterPublished,
     include: [
@@ -32,11 +37,8 @@ export function createFlower (req, res) {
   })
 }
 
-export async function getFlowerDetails (flowerId) {
-  const rawResponse = await Flower.findOne({
-    where: {
-      id: flowerId
-    },
+export async function getFlowerDetails (userId, flowerId) {
+  const rawResponse = await Flower.findByPk(flowerId, {
     include: [
       {
         model: Seed,
@@ -50,7 +52,9 @@ export async function getFlowerDetails (flowerId) {
     ]
   })
   errorThrower(!checkExists(rawResponse), 'Flower not found', 404)
-  return mapToFlowerPublicDetail(rawResponse)
+  const flower = mapToFlowerPublicDetail(rawResponse)
+  await validateIsPublishedOrStaff(userId, flower)
+  return flower
 }
 
 export function updateFlower (req, res) {

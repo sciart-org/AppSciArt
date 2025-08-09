@@ -1,11 +1,17 @@
 import { Edition } from '../models/Edition.js'
 import { Hackathon } from '../models/Hackathon.js'
 import { Seed } from '../models/Seed.js'
+import { validateEditionById } from '../validators/editionValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
+import { validateHackathonById } from '../validators/hackathonValidators.js'
+import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
+import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { filterPublished, includeSeedAuthors, mapToSeedSummary } from './productUtils.js'
 
-export async function getSeedsByEdition (editionId, showUnpublished) {
+export async function getSeedsByEdition (userId, editionId) {
+  await validateEditionById(userId, editionId)
+  const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Seed.findAll({
     where: showUnpublished ? {} : filterPublished,
     include: [
@@ -21,7 +27,9 @@ export async function getSeedsByEdition (editionId, showUnpublished) {
   return rawResponse.map(s => mapToSeedSummary(s))
 }
 
-export async function getSeedsByHackathon (hackathonId, showUnpublished) {
+export async function getSeedsByHackathon (userId, hackathonId) {
+  await validateHackathonById(userId, hackathonId)
+  const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Seed.findAll({
     where: showUnpublished ? {} : filterPublished,
     include: [
@@ -43,9 +51,10 @@ export function createSeed (req, res) {
   })
 }
 
-export async function getSeedDetails (seedId) {
+export async function getSeedDetails (userId, seedId) {
   const seed = await Seed.findByPk(seedId)
   errorThrower(!checkExists(seed), 'Seed not found', 404)
+  await validateIsPublishedOrStaff(userId, seed)
   return seed
 }
 

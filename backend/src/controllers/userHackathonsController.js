@@ -10,10 +10,11 @@ export function getUserEnrolledHackathons (req, res) {
 export const joinHackathon = withErrorHandler(async (req, res) => {
   const { roles, interests } = req.body
   const { hackathonId, userId } = req.params
-  await validateHackathonById(req, hackathonId)
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  await validateHackathonById(currentUser?.id, hackathonId)
 
-  const result = await service.joinHackathon(userId, hackathonId, roles, interests)
-  return res.status(201).send(result)
+  const participation = await service.joinHackathon(userId, hackathonId, roles, interests)
+  return res.status(201).send(participation)
 })
 
 export const joinMeHackathon = withErrorHandler(async (req, res) => {
