@@ -22,6 +22,7 @@ import FlowerDetails from "./features/products/details/FlowerDetails";
 import Unauthorized from "./features/auth/Unauthorized";
 import EditionDetails from "./features/editions/EditionDetails";
 import HomeRouter from "./features/home/HomeRouter";
+import ActiveHackathon from "./features/hackathons/ActiveHackathon";
 
 function App() {
   useEffect(() => {
@@ -55,6 +56,7 @@ function App() {
       <Route path="/editions" element={<Editions />} />
       <Route path="/editions/:editionId" element={<EditionDetails />} />
       <Route path="/hackathons" element={<Hackathons />} />
+      <Route path="/hackathons/:hackathonId" element={<ActiveHackathon />} />
       <Route path="/about-the-hackathon" element={<Format />} />
       <Route path="/hackathons/:hackathonId/join" element={<JoinHackathon />} />
       <Route

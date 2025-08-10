@@ -16,7 +16,11 @@ export default function ParticipantHome({ hackathon }) {
         {hackathon.editionName} - Day {Math.ceil(days)}
       </h2>
       <HackathonAccess hackathon={hackathon} localTime={localTime} />
-      <AsterButton>Click here when you are ready</AsterButton>
+      <AsterButton
+        onClick={() => window.open(`hackathons/${hackathon.id}`, "_blank")}
+      >
+        Click here when you are ready
+      </AsterButton>
     </div>
   );
 }
