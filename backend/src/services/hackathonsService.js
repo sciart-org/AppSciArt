@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { Hackathon } from '../models/Hackathon.js'
 import { validateHackathonById } from '../validators/hackathonValidators.js'
-import { combineIncludes, includeEditionName, includeIsEnrolled } from './includes/hackathonIncludes.js'
+import { combineIncludes, includeEditionName, includeIsEnrolled, includeMyHackathons } from './includes/hackathonIncludes.js'
 
 export async function getClosestHackathon (userId) {
   return await Hackathon.findOne({
@@ -25,6 +25,23 @@ export async function getIncomingHackathons (userId) {
       }
     },
     ...combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
+  })
+}
+
+export async function getActiveHackathon (userId) {
+  if (!userId) {
+    return null
+  }
+
+  const now = new Date()
+
+  return await Hackathon.findOne({
+    subQuery: false,
+    ...combineIncludes([includeEditionName(), includeMyHackathons(userId)]),
+    where: {
+      startDate: { [Op.lte]: now },
+      endDate: { [Op.gte]: now }
+    }
   })
 }
 

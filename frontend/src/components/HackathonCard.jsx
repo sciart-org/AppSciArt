@@ -16,6 +16,10 @@ export default function HackathonCard(props) {
   const hackathon = props.hackathon;
   const hideButton = props.hideButton;
 
+  if (!hackathon) {
+    return <></>;
+  }
+
   const parseType = (type) => {
     return type?.charAt(0) + type?.slice(1).toLowerCase().replace("_", " ");
   };

@@ -1,4 +1,3 @@
-import Carousel from "./components/Carousel.jsx";
 import AsterButton from "../../components/AsterButton.jsx";
 import HackathonCard from "../../components/HackathonCard.jsx";
 import InspiringScientist from "./components/InspiringScientist.jsx";
@@ -7,7 +6,6 @@ import SciArtProducts from "../../components/sciartProducts/SciArtProducts.jsx";
 import QuickRegisterBar from "./components/QuickRegisterBar.jsx";
 import { useEffect, useState } from "react";
 import useFetcher from "../../utils/useFetcher.js";
-import "./css/Home.css";
 import tokenService from "../../utils/token.service.js";
 
 function Roles() {
@@ -41,7 +39,7 @@ function MoreInfoSection() {
 function NextEvent() {
   const [error, setError] = useState(null);
   const { fetcher } = useFetcher(error, setError);
-  const [hackathon, setHackathon] = useState({});
+  const [hackathon, setHackathon] = useState(null);
 
   useEffect(() => {
     fetcher({
@@ -51,6 +49,10 @@ function NextEvent() {
       },
     });
   }, []);
+
+  if (!hackathon) {
+    return <></>;
+  }
 
   return (
     <div style={{ justifyItems: "center", display: "inline-block" }}>
@@ -63,8 +65,7 @@ function NextEvent() {
 export default function Home() {
   const jwt = tokenService.getLocalAccessToken();
   return (
-    <div>
-      <Carousel mocked={true} />
+    <>
       <h1 style={{ marginTop: 0 }}>This is SciArt</h1>
       <SciArtProducts fixed={true} />
       <Roles />
@@ -77,6 +78,6 @@ export default function Home() {
         </>
       )}
       <NextEvent />
-    </div>
+    </>
   );
 }

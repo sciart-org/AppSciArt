@@ -17,3 +17,7 @@
 .roles-container > :last-child {
     margin-right: 15vw;
 }
+
+.participant-home h2 {
+    margin: 0;
+}

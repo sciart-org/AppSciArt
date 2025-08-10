@@ -1,6 +1,7 @@
 import { literal } from 'sequelize'
 import { sequelize } from '../../config/sequelize.js'
 import { Edition } from '../../models/Edition.js'
+import { Participation } from '../../models/Participation.js'
 
 export const includeEditionName = () => {
   return {
@@ -38,12 +39,24 @@ export const includeIsEnrolled = (userId) => {
 }
 
 export const combineIncludes = (includesList) => {
-  const attributesInclude = includesList.flatMap(s => s.attributes.include).filter(s => s !== undefined)
+  const attributesInclude = includesList.flatMap(s => s.attributes?.include).filter(s => s !== undefined)
   const include = includesList.flatMap(s => s.include).filter(s => s !== undefined)
   return {
     attributes: {
       include: attributesInclude
     },
     include
+  }
+}
+
+export const includeMyHackathons = (userId) => {
+  return {
+    include: [
+      {
+        model: Participation,
+        required: true,
+        where: { userProfileId: userId }
+      }
+    ]
   }
 }

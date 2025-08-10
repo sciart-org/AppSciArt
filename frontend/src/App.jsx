@@ -6,7 +6,6 @@ import AppNavbar from "./components/core/AppNavbar";
 import NotFound from "./NotFound";
 import Editions from "./features/editions/Editions";
 import Login from "./features/auth/Login";
-import Home from "./features/home/Home";
 import tokenService from "./utils/token.service";
 import { useEffect, useLayoutEffect, useState } from "react";
 import Profile from "./features/auth/Profile";
@@ -22,6 +21,7 @@ import FruitDetails from "./features/products/details/FruitDetails";
 import FlowerDetails from "./features/products/details/FlowerDetails";
 import Unauthorized from "./features/auth/Unauthorized";
 import EditionDetails from "./features/editions/EditionDetails";
+import HomeRouter from "./features/home/HomeRouter";
 
 function App() {
   useEffect(() => {
@@ -49,7 +49,7 @@ function App() {
   const publicRoutes = (
     <>
       <Route path="*" element={<NotFound />} />
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<HomeRouter />} />
       <Route path="/not-found" element={<NotFound resource={true} />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/editions" element={<Editions />} />

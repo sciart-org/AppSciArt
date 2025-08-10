@@ -16,6 +16,11 @@ export const getHackathons = withErrorHandler(async (req, res) => {
     return res.status(200).send(hackathons)
   }
 
+  if (filter === 'active') {
+    const hackathon = await service.getActiveHackathon(currentUser?.id)
+    return res.status(200).send(hackathon)
+  }
+
   return res.status(400).json({
     message: 'Invalid filter or filtering not yet implemented'
   })

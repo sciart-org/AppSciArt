@@ -49,7 +49,7 @@ export default function useFetcher(error, setError) {
                 return response.json();
             })
             .then((data) => {
-                if (!data.error) {
+                if (!data || !data.error) {
                     setError(null);
                     onSuccess(data)
                 } else {
