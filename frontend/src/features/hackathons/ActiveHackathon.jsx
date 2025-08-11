@@ -28,5 +28,16 @@ export default function ActiveHackathon() {
     return <Loading />;
   }
 
-  return <div>You are in the hackathon!</div>;
+  if (hackathon.state === "FINISHED") {
+    return <h2>This hackathon has finished. Thanks for coming!</h2>;
+  }
+
+  const date = new Date(hackathon.startDate);
+  const rawDays = new Date() - date;
+
+  if (rawDays < 0) {
+    return <h2>This hackathon has not started yet.</h2>;
+  }
+
+  return <h2>You are in the hackathon!</h2>;
 }
