@@ -1,5 +1,4 @@
 import { Edition } from '../models/Edition.js'
-import { validateEdition } from '../schemas/edition.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateEditionById } from '../validators/editionValidators.js'
 import { mapToEditionDetails, mapToEditionSummary } from './mappers/editionMapper.js'
@@ -15,12 +14,9 @@ export async function getEditions (userId) {
 }
 
 export async function createEdition (req, res) {
-  const result = validateEdition(req.body)
-  if (!result.success) {
-    return res.status(400).json({ error: JSON.parse(result.error.message) })
-  }
-  const newEdition = await Edition.create({ body: result.data })
-  res.status(201).send(newEdition)
+  res.send({
+    message: 'This is the mockup controller for createEdition'
+  })
 }
 
 export async function getEditionDetails (userId, editionId) {
