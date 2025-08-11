@@ -362,7 +362,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Cluster"
 
-  /hackathons/{hackathonId}/clusters/{clusterId}:
+  /hackathons/{hackathonId}/clusters/{clusterNumber}:
     x-router-controller: clustersController
     get:
       tags: [Clusters]
@@ -375,12 +375,12 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "200":
           description: Cluster details
@@ -399,17 +399,17 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "204":
           description: Cluster deleted
 
-  /hackathons/{hackathonId}/clusters/{clusterId}/exploring-groups:
+  /hackathons/{hackathonId}/clusters/{clusterNumber}/exploring-groups:
     x-router-controller: groupsAndTeamsController
     get:
       tags: [Groups & Teams]
@@ -422,12 +422,12 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "200":
           description: List of exploring groups
@@ -448,12 +448,12 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "201":
           description: Exploring group created
@@ -462,7 +462,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/GroupDetails"
 
-  /hackathons/{hackathonId}/clusters/{clusterId}/exploring-groups/{groupId}:
+  /hackathons/{hackathonId}/clusters/{clusterNumber}/exploring-groups/{groupNumber}:
     x-router-controller: groupsAndTeamsController
     get:
       tags: [Groups & Teams]
@@ -475,18 +475,18 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
-        - name: groupId
+            type: integer
+            minimum: 1
+        - name: groupNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "200":
           description: Exploring group details
@@ -505,18 +505,18 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
-        - name: groupId
+            type: integer
+            minimum: 1
+        - name: groupNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "204":
           description: Exploring group deleted
@@ -531,18 +531,18 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
-        - name: groupId
+            type: integer
+            minimum: 1
+        - name: groupNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       requestBody:
         required: true
         content:
@@ -557,7 +557,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/GroupDetails"
 
-  /hackathons/{hackathonId}/clusters/{clusterId}/co-creation-teams:
+  /hackathons/{hackathonId}/clusters/{clusterNumber}/co-creation-teams:
     x-router-controller: groupsAndTeamsController
     get:
       tags: [Groups & Teams]
@@ -570,12 +570,12 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "200":
           description: List of co-creation teams
@@ -596,12 +596,12 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "201":
           description: Co-creation team created
@@ -610,7 +610,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/TeamDetails"
 
-  /hackathons/{hackathonId}/clusters/{clusterId}/co-creation-teams/{teamId}:
+  /hackathons/{hackathonId}/clusters/{clusterNumber}/co-creation-teams/{teamNumber}:
     x-router-controller: groupsAndTeamsController
     get:
       tags: [Groups & Teams]
@@ -623,18 +623,18 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
-        - name: teamId
+            type: integer
+            minimum: 1
+        - name: teamNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "200":
           description: Co-creation team details
@@ -653,18 +653,18 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
-        - name: teamId
+            type: integer
+            minimum: 1
+        - name: teamNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "204":
           description: Co-creation team deleted
@@ -679,18 +679,18 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
-        - name: teamId
+            type: integer
+            minimum: 1
+        - name: teamNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       requestBody:
         required: true
         content:
@@ -813,7 +813,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Contribution"
 
-  /users/{userId}/hackathons/{hackathonId}/clusters/{clusterId}:
+  /users/{userId}/hackathons/{hackathonId}/clusters/{clusterNumber}:
     x-router-controller: userHackathonsController
     post:
       tags: [User Hackathons]
@@ -832,12 +832,12 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: clusterId
+        - name: clusterNumber
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
+            minimum: 1
       responses:
         "201":
           description: Cluster enrollment created
@@ -1935,9 +1935,8 @@ components:
           type: string
           format: uuid
           minimum: 1
-        clusterId:
-          type: string
-          format: uuid
+        clusterNumber:
+          type: integer
           minimum: 1
         seedId:
           type: string
@@ -1960,9 +1959,8 @@ components:
           type: string
           format: uuid
           minimum: 1
-        clusterId:
-          type: string
-          format: uuid
+        clusterNumber:
+          type: integer
           minimum: 1
         seedId:
           type: string
