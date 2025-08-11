@@ -3,7 +3,7 @@ import { Hackathon } from '../models/Hackathon.js'
 import { Seed } from '../models/Seed.js'
 import { validateEditionById } from '../validators/editionValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { validateHackathonById } from '../validators/hackathonValidators.js'
+import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
@@ -26,7 +26,7 @@ export async function getSeedsByEdition (userId, editionId) {
 }
 
 export async function getSeedsByHackathon (userId, hackathonId) {
-  await validateHackathonById(userId, hackathonId)
+  await validateHackathonIsReadable(userId, hackathonId)
   const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Seed.findAll({
     where: showUnpublished ? {} : filterPublished,

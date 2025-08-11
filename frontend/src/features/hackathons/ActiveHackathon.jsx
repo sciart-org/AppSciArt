@@ -28,5 +28,5 @@ export default function ActiveHackathon() {
     return <Loading />;
   }
 
-  return <div></div>;
+  return <div>You are in the hackathon!</div>;
 }

@@ -1,12 +1,12 @@
 import { Op } from 'sequelize'
 import { Hackathon } from '../models/Hackathon.js'
-import { validateHackathonById } from '../validators/hackathonValidators.js'
+import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
 import { combineIncludes, includeEditionName, includeIsEnrolled, includeMyHackathons } from './includes/hackathonIncludes.js'
 
 export async function getClosestHackathon (userId) {
   return await Hackathon.findOne({
     where: {
-      isVisible: true,
+      state: { [Op.ne]: 'PLANNED' },
       startDate: {
         [Op.gte]: new Date()
       }
@@ -19,7 +19,7 @@ export async function getClosestHackathon (userId) {
 export async function getIncomingHackathons (userId) {
   return await Hackathon.findAll({
     where: {
-      isVisible: true,
+      state: { [Op.ne]: 'PLANNED' },
       startDate: {
         [Op.gte]: new Date()
       }
@@ -52,7 +52,7 @@ export function createHackathon (req, res) {
 }
 
 export async function getHackathonDetails (hackathonId, userId) {
-  await validateHackathonById(userId, hackathonId)
+  await validateHackathonIsReadable(userId, hackathonId)
   const hackathon = await Hackathon.findByPk(
     hackathonId,
     combineIncludes([includeEditionName(), includeIsEnrolled(userId)])

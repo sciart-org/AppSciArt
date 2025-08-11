@@ -11,7 +11,7 @@ export async function seedHackathons () {
       type: 'ON_SITE',
       location: 'University of Arts Linz, Hauptplatz 8, Lecture Theater, 4th Floor (Altenberger Str. 69, 4040 Linz, Austria).',
       description: 'Explore the boundaries of art and science around the brain and cognition, developing new ways to understand the human mind',
-      isVisible: true,
+      state: 'CLOSED',
       meetLink: null,
       editionId: '00000000-0000-0003-0000-000000000002'
     },
@@ -23,7 +23,7 @@ export async function seedHackathons () {
       type: 'ON_SITE',
       location: 'Escuela Técnica Superior de Ingeniería Informática de la Universidad de Sevilla (Av. Reina Mercedes s/n, 41012 Sevilla, Spain)',
       description: 'Explore the boundaries of art and science around the brain and cognition, developing new ways to understand the human mind',
-      isVisible: false,
+      state: 'PLANNED',
       meetLink: null,
       editionId: '00000000-0000-0003-0000-000000000002'
     },
@@ -35,7 +35,7 @@ export async function seedHackathons () {
       type: 'ON_SITE',
       location: 'Escuela Técnica Superior de Ingeniería Informática de la Universidad de Sevilla (Av. Reina Mercedes s/n, 41012 Sevilla, Spain)',
       description: 'Explore the boundaries of art and science around the brain and cognition, developing new ways to understand the human mind',
-      isVisible: true,
+      state: 'FINISHED',
       meetLink: null,
       editionId: '00000000-0000-0003-0000-000000000000'
     },
@@ -47,7 +47,7 @@ export async function seedHackathons () {
       type: 'ON_SITE',
       location: 'University of Arts Linz, Hauptplatz 8, Lecture Theater, 4th Floor (Altenberger Str. 69, 4040 Linz, Austria).',
       description: 'Explore the boundaries of art and science around the brain and cognition, developing new ways to understand the human mind',
-      isVisible: true,
+      state: 'OPEN',
       meetLink: null,
       editionId: '00000000-0000-0003-0000-000000000002'
     }

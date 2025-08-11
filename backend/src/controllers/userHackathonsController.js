@@ -1,7 +1,7 @@
 import * as service from '../services/userHackathonsService.js'
 import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
-import { validateHackathonById } from '../validators/hackathonValidators.js'
+import { validateHackathonIsOpen } from '../validators/hackathonValidators.js'
 
 export function getUserEnrolledHackathons (req, res) {
   service.getUserEnrolledHackathons(req, res)
@@ -11,7 +11,7 @@ export const joinHackathon = withErrorHandler(async (req, res) => {
   const { roles, interests } = req.body
   const { hackathonId, userId } = req.params
   const currentUser = await UsersService.getCurrentUserProfile(req)
-  await validateHackathonById(currentUser?.id, hackathonId)
+  await validateHackathonIsOpen(currentUser?.id, hackathonId)
 
   const participation = await service.joinHackathon(userId, hackathonId, roles, interests)
   return res.status(201).send(participation)

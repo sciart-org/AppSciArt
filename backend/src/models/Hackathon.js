@@ -29,10 +29,10 @@ export const Hackathon = sequelize.define(
     description: {
       type: DataTypes.STRING
     },
-    isVisible: {
-      type: DataTypes.BOOLEAN,
+    state: {
+      type: DataTypes.ENUM('PLANNED', 'OPEN', 'CLOSED', 'FINISHED'),
       allowNull: false,
-      defaultValue: false
+      defaultValue: 'PLANNED'
     },
     meetLink: {
       type: DataTypes.STRING
