@@ -34,6 +34,11 @@ export const Hackathon = sequelize.define(
       allowNull: false,
       defaultValue: 'PLANNED'
     },
+    phase: {
+      type: DataTypes.ENUM('PREPARING', 'GROUP_CREATION', 'GROUP_WORK', 'GROUP_PRESENTATION', 'TEAM_CREATION', 'TEAM_WORK'),
+      allowNull: false,
+      defaultValue: 'PREPARING'
+    },
     meetLink: {
       type: DataTypes.STRING
     },
