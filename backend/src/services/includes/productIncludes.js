@@ -25,27 +25,22 @@ export const includeSeedsOfEdition = (editionId) => {
   }
 }
 
+const includeAuthor = {
+  model: UserProfile,
+  attributes: ['name', 'surname']
+}
+
 export const includeSeedAuthors = {
   model: InspiringScientist,
   attributes: ['id'],
   through: { attributes: [] },
-  include: [
-    {
-      model: UserProfile,
-      attributes: ['name', 'surname']
-    }
-  ]
+  include: [includeAuthor]
 }
 
 export const includeFlowerAuthors = {
   model: Participation,
   attributes: ['id'],
-  include: [
-    {
-      model: UserProfile,
-      attributes: ['name', 'surname']
-    }
-  ]
+  include: [includeAuthor]
 }
 
 export const includeFruitAuthors = {

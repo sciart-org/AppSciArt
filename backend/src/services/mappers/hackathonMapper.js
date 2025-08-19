@@ -7,7 +7,7 @@ export const mapHackathonParticipation = (rawParticipation) => {
   return {
     id: participation?.id,
     clusterNumber: participation?.clusterNumber,
-    seed: participation?.flower.seed,
+    seed: participation?.flower?.seed,
     flower: mapToFlowerPublicDetail({ ...participation?.flower, seed: undefined }),
     fruit: { ...participation?.fruit, flower: undefined },
     groupMembers: participation?.groupMembers,
