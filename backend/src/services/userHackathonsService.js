@@ -1,4 +1,5 @@
 import { Flower } from '../models/Flower.js'
+import { Fruit } from '../models/Fruit.js'
 import { Participation } from '../models/Participation.js'
 import { Seed } from '../models/Seed.js'
 import { UserProfile } from '../models/UserProfile.js'
@@ -90,6 +91,9 @@ export async function getParticipation (userId, hackathonId) {
       hackathonId
     },
     include: [
+      {
+        model: Fruit
+      },
       {
         model: Flower,
         include: [{
