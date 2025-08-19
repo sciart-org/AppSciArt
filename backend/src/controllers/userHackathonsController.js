@@ -30,3 +30,10 @@ export function getUserHackathonContributions (req, res) {
 export function joinCluster (req, res) {
   service.joinCluster(req, res)
 }
+
+export const getMyHackathonParticipation = withErrorHandler(async (req, res) => {
+  const user = await UsersService.getCurrentUserProfile(req)
+  const { hackathonId } = req.params
+  const participation = await service.getParticipation(user.id, hackathonId)
+  return res.status(200).send(participation)
+})

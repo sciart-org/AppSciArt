@@ -730,6 +730,24 @@ paths:
 
   /hackathons/{hackathonId}/participants/me:
     x-router-controller: userHackathonsController
+    get:
+      tags: [User Hackathons]
+      summary: Get current user's participation in a hackathon
+      operationId: getMyHackathonParticipation
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Participation created
+        "404":
+          description: Resource not found
+        default:
+          description: Unexpected error
     post:
       tags: [User Hackathons]
       summary: Join the current user to a hackathon
@@ -749,7 +767,7 @@ paths:
               $ref: "#/components/schemas/HackathonJoinRequest"
       responses:
         "201":
-          description: Enrollment created
+          description: Participation created
         "404":
           description: Resource not found
         default:
@@ -782,7 +800,7 @@ paths:
               $ref: "#/components/schemas/HackathonJoinRequest"
       responses:
         "201":
-          description: Enrollment created
+          description: Participation created
 
   /users/{userId}/hackathons/{hackathonId}/contributions:
     x-router-controller: userHackathonsController

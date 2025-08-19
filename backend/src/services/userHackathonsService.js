@@ -1,7 +1,10 @@
+import { Flower } from '../models/Flower.js'
 import { Participation } from '../models/Participation.js'
+import { Seed } from '../models/Seed.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { errorThrower } from './errorThrower.js'
+import { mapHackathonParticipation } from './mappers/hackathonMapper.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
@@ -30,5 +33,78 @@ export function getUserHackathonContributions (req, res) {
 export function joinCluster (req, res) {
   res.send({
     message: 'This is the mockup controller for joinCluster'
+  })
+}
+
+const getMembers = async (participation) => {
+  let groupMembers = []
+  let teamMembers = []
+
+  const searchCriteria = {
+    where: {
+      clusterNumber: participation.clusterNumber,
+      hackathonId: participation.hackathonId
+    },
+    attributes: ['id'],
+    include: [{
+      model: UserProfile,
+      attributes: ['id', 'name', 'surname']
+    }]
+  }
+
+  if (checkExists(participation.flowerId)) {
+    groupMembers = await Participation.findAll({
+      ...searchCriteria,
+      where: {
+        ...searchCriteria.where,
+        flowerId: participation.flowerId
+      }
+    })
+    groupMembers = groupMembers.map(member => member.user_profile)
+  }
+
+  if (checkExists(participation.fruitId)) {
+    teamMembers = await Participation.findAll({
+      ...searchCriteria,
+      where: {
+        ...searchCriteria.where,
+        fruitId: participation.fruitId
+      }
+    })
+    teamMembers = teamMembers.map(member => member.user_profile)
+  }
+
+  return {
+    groupMembers,
+    teamMembers
+  }
+}
+
+export async function getParticipation (userId, hackathonId) {
+  const user = await UserProfile.findByPk(userId)
+  errorThrower(!checkExists(user), 'User not found.', 404)
+
+  const participation = await Participation.findOne({
+    where: {
+      userProfileId: userId,
+      hackathonId
+    },
+    include: [
+      {
+        model: Flower,
+        include: [{
+          model: Seed,
+          required: true
+        }]
+      }
+    ]
+  })
+  errorThrower(!checkExists(participation), 'Participation not found.', 404)
+
+  const members = await getMembers(participation)
+
+  return mapHackathonParticipation({
+    ...participation.toJSON(),
+    ...members
   })
 }
