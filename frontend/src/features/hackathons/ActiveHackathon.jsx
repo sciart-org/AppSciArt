@@ -3,11 +3,15 @@ import useFetcher from "../../utils/useFetcher";
 import { useEffect, useState } from "react";
 import Loading from "../../components/messages/Loading";
 import useWebSockets from "../../utils/useWebSockets";
+import CreatedGroups from "./components/phases/CreatedGroups";
+import CreatingGroups from "./components/phases/CreatingGroups";
+import PreparingHackathon from "./components/phases/PreparingHackathon";
 
 export default function ActiveHackathon() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [hackathon, setHackathon] = useState(null);
+  const [participation, setParticipation] = useState(null);
 
   const date = new Date(hackathon?.startDate);
   const rawDays = new Date() - date;
@@ -35,7 +39,17 @@ export default function ActiveHackathon() {
     }).finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
+  useEffect(() => {
+    if (hackathon?.phase !== "GROUP_WORK") return;
+    fetcher({
+      url: `hackathons/${params.hackathonId}/participants/me`,
+      onSuccess: (data) => {
+        setParticipation(data);
+      },
+    });
+  }, [hackathon?.phase]);
+
+  if (loading || !hackathon) {
     return <Loading />;
   }
 
@@ -47,5 +61,11 @@ export default function ActiveHackathon() {
     return <h2>This hackathon has not started yet.</h2>;
   }
 
-  return <h2>You are in the hackathon!</h2>;
+  if (hackathon.phase === "PREPARING") {
+    return <PreparingHackathon hackathon={hackathon} />;
+  } else if (hackathon.phase === "GROUP_CREATION") {
+    return <CreatingGroups />;
+  } else if (hackathon.phase === "GROUP_WORK") {
+    return <CreatedGroups participation={participation} />;
+  }
 }

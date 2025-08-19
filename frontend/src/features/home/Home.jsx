@@ -1,12 +1,12 @@
 import AsterButton from "../../components/AsterButton.jsx";
 import HackathonCard from "../../components/HackathonCard.jsx";
-import InspiringScientist from "./components/InspiringScientist.jsx";
-import Participant from "./components/Participant.jsx";
 import SciArtProducts from "../../components/sciartProducts/SciArtProducts.jsx";
 import QuickRegisterBar from "./components/QuickRegisterBar.jsx";
 import { useEffect, useState } from "react";
 import useFetcher from "../../utils/useFetcher.js";
 import tokenService from "../../utils/token.service.js";
+import InspiringScientist from "../../components/roles/InspiringScientist.jsx";
+import Participant from "../../components/roles/Participant.jsx";
 
 function Roles() {
   return (
