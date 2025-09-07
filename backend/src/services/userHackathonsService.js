@@ -53,23 +53,24 @@ const getMembers = async (participation) => {
     }]
   }
 
-  if (checkExists(participation.flowerId)) {
+  if (checkExists(participation.groupId)) {
     groupMembers = await Participation.findAll({
       ...searchCriteria,
       where: {
         ...searchCriteria.where,
-        flowerId: participation.flowerId
+        groupId: participation.groupId
       }
     })
     groupMembers = groupMembers.map(member => member.user_profile)
   }
 
-  if (checkExists(participation.fruitId)) {
+  if (checkExists(participation.teamId) || checkExists(participation.fruitId)) {
+    const teamSearchCondition = checkExists(participation.fruitId) ? { fruitId: participation.fruitId } : { teamId: participation.teamId }
     teamMembers = await Participation.findAll({
       ...searchCriteria,
       where: {
         ...searchCriteria.where,
-        fruitId: participation.fruitId
+        ...teamSearchCondition
       }
     })
     teamMembers = teamMembers.map(member => member.user_profile)
@@ -95,11 +96,10 @@ export async function getParticipation (userId, hackathonId) {
         model: Fruit
       },
       {
-        model: Flower,
-        include: [{
-          model: Seed,
-          required: true
-        }]
+        model: Flower
+      },
+      {
+        model: Seed
       }
     ]
   })

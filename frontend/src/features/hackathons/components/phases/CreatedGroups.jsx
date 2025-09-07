@@ -10,7 +10,7 @@ export default function CreatedGroups({ participation }) {
       <h3 style={{ marginBottom: "1rem", marginTop: "2rem" }}>
         Groups have been created! Your group will discover the seed:
       </h3>
-      <h3 style={{ marginTop: 0 }}>{participation?.seed?.title}</h3>
+      <h3 style={{ marginTop: 0 }}>{participation?.groupSeed?.title}</h3>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {participation?.groupMembers?.map((m) => {
           return (
@@ -23,7 +23,7 @@ export default function CreatedGroups({ participation }) {
           );
         })}
       </div>
-      <AsterButton to={`groups/test`}>
+      <AsterButton to={`groups/${participation?.groupSeed?.id}`}>
         <p>Enter exploring group</p>
       </AsterButton>
     </>

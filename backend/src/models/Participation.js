@@ -4,6 +4,7 @@ import { UserProfile } from './UserProfile.js'
 import { Hackathon } from './Hackathon.js'
 import { Fruit } from './Fruit.js'
 import { Flower } from './Flower.js'
+import { Seed } from './Seed.js'
 
 export const Participation = sequelize.define(
   'participations', {
@@ -22,7 +23,14 @@ export const Participation = sequelize.define(
     interests: {
       type: DataTypes.TEXT
     },
-    flowerId: {
+    groupId: {
+      type: DataTypes.UUID,
+      references: {
+        model: Seed,
+        key: 'id'
+      }
+    },
+    teamId: {
       type: DataTypes.UUID,
       references: {
         model: Flower,
