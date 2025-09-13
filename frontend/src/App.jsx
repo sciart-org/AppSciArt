@@ -23,6 +23,7 @@ import Unauthorized from "./features/auth/Unauthorized";
 import EditionDetails from "./features/editions/EditionDetails";
 import HomeRouter from "./features/home/HomeRouter";
 import ActiveHackathon from "./features/hackathons/ActiveHackathon";
+import CreatedGroups from "./features/hackathons/components/phases/CreatedGroups";
 
 function App() {
   useEffect(() => {
@@ -56,7 +57,6 @@ function App() {
       <Route path="/editions" element={<Editions />} />
       <Route path="/editions/:editionId" element={<EditionDetails />} />
       <Route path="/hackathons" element={<Hackathons />} />
-      <Route path="/hackathons/:hackathonId" element={<ActiveHackathon />} />
       <Route path="/about-the-hackathon" element={<Format />} />
       <Route path="/hackathons/:hackathonId/join" element={<JoinHackathon />} />
       <Route
@@ -117,6 +117,14 @@ function App() {
       {user && (
         <>
           <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/hackathons/:hackathonId"
+            element={<ActiveHackathon />}
+          />
+          <Route
+            path="/hackathons/:hackathonId/group"
+            element={<CreatedGroups justEntered={false} />}
+          />
         </>
       )}
     </>

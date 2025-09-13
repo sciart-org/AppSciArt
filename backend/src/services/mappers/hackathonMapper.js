@@ -1,4 +1,4 @@
-import { mapToFlowerPublicDetail, mapToFruitPublicDetail, mapToSeedSummary } from './productMapper.js'
+import { mapToFlowerPublicDetail, mapToFruitPublicDetail } from './productMapper.js'
 import { toPlainObject } from './utils.js'
 
 export const mapHackathonParticipation = (rawParticipation) => {
@@ -7,7 +7,7 @@ export const mapHackathonParticipation = (rawParticipation) => {
   return {
     id: participation?.id,
     clusterNumber: participation?.clusterNumber,
-    groupSeed: mapToSeedSummary(participation?.seed),
+    groupSeed: participation?.seed,
     teamFlower: { ...mapToFlowerPublicDetail(participation?.flower), seed: undefined },
     teamFruit: { ...mapToFruitPublicDetail(participation?.fruit), flower: undefined, seed: undefined },
     groupMembers: participation?.groupMembers,

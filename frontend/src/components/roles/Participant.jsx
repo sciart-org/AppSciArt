@@ -1,9 +1,14 @@
 import { FaRegUser } from "react-icons/fa";
 
-export default function Participant() {
+export default function Participant(props) {
   return (
     <div>
-      <FaRegUser size={"10vw"} color="black" />
+      <FaRegUser
+        style={{ ...props.style }}
+        className={props.className}
+        size={"10vw"}
+        color="black"
+      />
     </div>
   );
 }
