@@ -4,6 +4,8 @@ import { useNavigate, useParams } from "react-router";
 import useFetcher from "../../../../utils/useFetcher";
 import Loading from "../../../../components/messages/Loading";
 import ParticipantList from "../ParticipantList";
+import RenderPDF from "../../../../components/RenderPDF";
+import SeedResources from "../../../products/components/SeedResources";
 import "./phases.css";
 import PhaseTitle from "../PhaseTitle";
 
@@ -94,9 +96,28 @@ export default function CreatedGroups(props) {
     );
   };
 
+  const GroupSeedResources = () => {
+    return (
+      <div style={{ flex: 1 }}>
+        <RenderPDF
+          pdfUrl={participation?.groupSeed?.seedPDF}
+          style={{ margin: "1rem 0 1rem 0" }}
+        />
+        <SeedResources
+          seed={participation?.groupSeed}
+          style={{ marginLeft: 0 }}
+        />
+      </div>
+    );
+  };
+
   return (
     <div>
       <GroupHeader />
+      <div style={{ display: "flex" }}>
+        <GroupSeedResources />
+        <div style={{ flex: 1 }}></div>
+      </div>
     </div>
   );
 }

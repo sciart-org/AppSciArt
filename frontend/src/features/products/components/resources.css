@@ -1,0 +1,26 @@
+.seed-resources-container > * {
+    width: 30vw;
+    padding-left: 5vw;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.seed-resources-container p {
+    text-align: start;
+}
+
+.image-text {
+    display: flex;
+    font-size: 1.5rem;
+    align-items: center;
+    cursor: pointer;
+}
+
+.image-text p {
+    margin-left: 1rem;
+}
+
+.image-text > *:first-child {
+    width: 2rem;
+    height: 2rem;
+}

@@ -12,12 +12,6 @@
     flex: 3;
 }
 
-.seed-details-container .seed-resources-container > * {
-    width: 30vw;
-    padding-left: 5vw;
-    margin: auto;
-}
-
 .seed-details-container img, .flower-details-container img, .fruit-details-container img {
     height: auto;
     max-width: 50vw;
@@ -29,21 +23,14 @@
     width: 25vw;
 }
 
-.seed-details-container iframe {
-    height: auto;
-    width: 50vw;
-    height: 75vh;
-}
-
 .seed-details-container .image-text {
     display: flex;
     font-size: 1.5rem;
     align-items: center;
-    margin: auto;
     cursor: pointer;
 }
 
-.seed-details-container .seed-resources-container p {
+.seed-details-container p {
     text-align: start;
 }
 

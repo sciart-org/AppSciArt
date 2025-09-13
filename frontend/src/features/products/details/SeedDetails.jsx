@@ -4,13 +4,11 @@ import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
-import { RiVideoLine } from "react-icons/ri";
-import { PiPresentationBold } from "react-icons/pi";
-import { MdPodcasts } from "react-icons/md";
-import { isValidUrl } from "../../../utils/commonUtils";
 
 import "./css/details.css";
 import tokenService from "../../../utils/token.service";
+import SeedResources from "../components/SeedResources";
+import RenderPDF from "../../../components/RenderPDF";
 
 export default function SeedDetails() {
   const params = useParams();
@@ -47,7 +45,12 @@ export default function SeedDetails() {
 
   const LikeComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
-    const style = jwt ? {} : { color: "rgb(200, 200, 200)" };
+
+    const baseStyle = { width: "30vw", paddingLeft: "5vw" };
+    const style = jwt
+      ? { ...baseStyle }
+      : { ...baseStyle, color: "rgb(200, 200, 200)" };
+
     const onClick = jwt
       ? seed?.isLiked
         ? unlikeSeed
@@ -73,46 +76,6 @@ export default function SeedDetails() {
     );
   };
 
-  const getComponentProps = (url) => {
-    const style = isValidUrl(url)
-      ? {}
-      : { cursor: "default", color: "rgb(200, 200, 200)" };
-    const onClick = isValidUrl(url)
-      ? () => window.open(url, "_blank")
-      : () => {};
-    return { style, onClick };
-  };
-
-  const VideoComponent = () => {
-    const { style, onClick } = getComponentProps(seed?.videoLink);
-    return (
-      <div className="image-text" style={style} onClick={onClick}>
-        <RiVideoLine />
-        <p>See seed description video</p>
-      </div>
-    );
-  };
-
-  const PresentationComponent = () => {
-    const { style, onClick } = getComponentProps(seed?.presentationLink);
-    return (
-      <div className="image-text" style={style} onClick={onClick}>
-        <PiPresentationBold />
-        <p style={{ marginTop: 0, marginBottom: 0 }}>See seed presentation</p>
-      </div>
-    );
-  };
-
-  const PodcastComponent = () => {
-    const { style, onClick } = getComponentProps(seed?.podcastLink);
-    return (
-      <div className="image-text" style={style} onClick={onClick}>
-        <MdPodcasts />
-        <p>See seed description podcast</p>
-      </div>
-    );
-  };
-
   if (loading) {
     return <Loading />;
   }
@@ -123,21 +86,12 @@ export default function SeedDetails() {
       <div className="seed-details-container">
         <div>
           <img src={seed?.mainImage} />
-          <div className="seed-resources-container">
+          <div>
             <LikeComponent />
-            <p>Resources provided by the Inspiring Scientist(s):</p>
-            <VideoComponent />
-            <PresentationComponent />
-            <PodcastComponent />
+            <SeedResources seed={seed} />
           </div>
         </div>
-        <div>
-          {isValidUrl(seed?.seedPDF) ? (
-            <iframe src={seed?.seedPDF} title="SeedPDF" />
-          ) : (
-            <p>No PDF found for this seed</p>
-          )}
-        </div>
+        <RenderPDF pdfUrl={seed?.seedPDF} />
       </div>
     </div>
   );
