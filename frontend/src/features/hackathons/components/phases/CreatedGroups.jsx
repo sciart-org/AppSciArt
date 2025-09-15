@@ -8,9 +8,10 @@ import RenderPDF from "../../../../components/RenderPDF";
 import SeedResources from "../../../products/components/SeedResources";
 import "./phases.css";
 import PhaseTitle from "../PhaseTitle";
+import Diagram from "../Diagram";
 
 export default function CreatedGroups(props) {
-  const [justEntered, setJustEntered] = useState(props.justEntered);
+  const [justEntered, setJustEntered] = useState(true);
   const [participation, setParticipation] = useState(props.participation);
   const [isPhaseActive, setIsPhaseActive] = useState(true);
   const [error, setError] = useState(null);
@@ -19,6 +20,8 @@ export default function CreatedGroups(props) {
   const { fetcher } = useFetcher(error, setError);
   const navigate = useNavigate();
   const params = useParams();
+
+  const socket = props.socket;
 
   useEffect(() => {
     fetcher({
@@ -39,6 +42,20 @@ export default function CreatedGroups(props) {
       },
     });
   }, []);
+
+  const room = `${participation?.hackathonId}-group-${participation?.groupSeed.id}`;
+  useEffect(() => {
+    const shouldNotConnect =
+      !participation ||
+      !isPhaseActive ||
+      !participation?.hackathonId ||
+      !participation?.groupSeed?.id;
+
+    if (!socket) return;
+    if (shouldNotConnect) return;
+
+    socket.emit("join_room", room);
+  }, [participation, socket, isPhaseActive]);
 
   if (loading) {
     return <Loading />;
@@ -66,7 +83,6 @@ export default function CreatedGroups(props) {
         <AsterButton
           onClick={() => {
             setJustEntered(false);
-            navigate("group");
           }}
         >
           <p>Enter exploring group</p>
@@ -116,7 +132,9 @@ export default function CreatedGroups(props) {
       <GroupHeader />
       <div style={{ display: "flex" }}>
         <GroupSeedResources />
-        <div style={{ flex: 1 }}></div>
+        <div style={{ flex: 1 }}>
+          <Diagram socket={socket} room={room} />
+        </div>
       </div>
     </div>
   );

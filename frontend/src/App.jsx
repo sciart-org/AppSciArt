@@ -121,10 +121,6 @@ function App() {
             path="/hackathons/:hackathonId"
             element={<ActiveHackathon />}
           />
-          <Route
-            path="/hackathons/:hackathonId/group"
-            element={<CreatedGroups justEntered={false} />}
-          />
         </>
       )}
     </>

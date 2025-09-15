@@ -66,7 +66,13 @@ export default function ActiveHackathon() {
   } else if (hackathon.phase === "GROUP_CREATION") {
     return <CreatingGroups />;
   } else if (hackathon.phase === "GROUP_WORK") {
-    return <CreatedGroups participation={participation} justEntered={true} />;
+    return (
+      <CreatedGroups
+        participation={participation}
+        justEntered={true}
+        socket={socket}
+      />
+    );
   } else {
     return <h2>Unknown phase: {hackathon.phase}</h2>;
   }
