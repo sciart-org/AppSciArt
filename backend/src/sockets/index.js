@@ -37,7 +37,7 @@ export function initializeWebSockets (server) {
 
     socket.on('join_room', (room) => {
       socket.join(room)
-      loadInitialRoom()
+      loadInitialRoom(room)
       console.log(`User ${socket.id} joined room ${room}`)
     })
 
