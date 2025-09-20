@@ -15,6 +15,7 @@ import { Administrator } from './roles/Administrator.js'
 import { Designer } from './roles/Designer.js'
 import { Evaluator } from './roles/Evaluator.js'
 import { Facilitator } from './roles/Facilitator.js'
+import { ConceptualMap } from './ConceptualMap.js'
 
 const notNull = (attributeName) => {
   return {
@@ -50,16 +51,19 @@ Seed.hasMany(Flower, notNull('seedId'))
 Fruit.belongsTo(Flower)
 Flower.hasMany(Fruit, notNull('flowerId'))
 
-Seed.hasMany(Participation, { foreignKey: 'groupId' })
+ConceptualMap.hasMany(Participation, { foreignKey: 'groupId' })
 Flower.hasMany(Participation, { foreignKey: 'teamId' })
 Fruit.hasMany(Participation, { foreignKey: 'fruitId' })
 UserProfile.hasMany(Participation, notNull('userProfileId'))
 Hackathon.hasMany(Participation, notNull('hackathonId'))
-Participation.belongsTo(Seed, { foreignKey: 'groupId' })
+Participation.belongsTo(ConceptualMap, { foreignKey: 'groupId' })
 Participation.belongsTo(Flower, { foreignKey: 'teamId' })
 Participation.belongsTo(Fruit, { foreignKey: 'fruitId' })
 Participation.belongsTo(UserProfile, notNull('userProfileId'))
 Participation.belongsTo(Hackathon, notNull('hackathonId'))
+
+ConceptualMap.belongsTo(Seed)
+Seed.hasMany(ConceptualMap, notNull('seedId'))
 
 Seed.belongsToMany(InspiringScientist, { through: SeedScientists })
 InspiringScientist.belongsToMany(Seed, { through: SeedScientists })

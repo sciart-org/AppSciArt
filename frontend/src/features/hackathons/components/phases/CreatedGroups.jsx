@@ -43,13 +43,13 @@ export default function CreatedGroups(props) {
     });
   }, []);
 
-  const room = `${participation?.hackathonId}-group-${participation?.groupSeed.id}`;
+  const room = `${participation?.hackathonId}-group-${participation?.conceptualMap.id}`;
   useEffect(() => {
     const shouldNotConnect =
       !participation ||
       !isPhaseActive ||
       !participation?.hackathonId ||
-      !participation?.groupSeed?.id;
+      !participation?.conceptualMap?.id;
 
     if (!socket) return;
     if (shouldNotConnect) return;

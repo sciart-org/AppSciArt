@@ -1,3 +1,4 @@
+import { ConceptualMap } from '../models/ConceptualMap.js'
 import { Flower } from '../models/Flower.js'
 import { Fruit } from '../models/Fruit.js'
 import { Participation } from '../models/Participation.js'
@@ -99,7 +100,10 @@ export async function getParticipation (userId, hackathonId) {
         model: Flower
       },
       {
-        model: Seed
+        model: ConceptualMap,
+        include: {
+          model: Seed
+        }
       }
     ]
   })
