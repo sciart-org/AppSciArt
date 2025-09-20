@@ -82,14 +82,10 @@ export default function CustomNode(props) {
       </div>
       {props.includeHandles && (
         <>
-          <Handle type="source" position="top" id={"top" + (label || "")} />
-          <Handle
-            type="source"
-            position="bottom"
-            id={"bottom" + (label || "")}
-          />
-          <Handle type="source" position="left" id={"left" + (label || "")} />
-          <Handle type="source" position="right" id={"right" + (label || "")} />
+          <Handle type="source" position="top" id={"t"} />
+          <Handle type="source" position="bottom" id={"b"} />
+          <Handle type="source" position="left" id={"l"} />
+          <Handle type="source" position="right" id={"r"} />
         </>
       )}
     </>

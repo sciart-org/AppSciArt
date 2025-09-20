@@ -1,4 +1,5 @@
 import { Server } from 'socket.io'
+import { ConceptualMap } from '../models/ConceptualMap.js'
 
 export function initializeWebSockets (server) {
   const FRONTEND_URL = process.env.FRONTEND_URL
@@ -11,24 +12,44 @@ export function initializeWebSockets (server) {
 
   const rooms = {}
 
+  const storeMapOfGroup = async (group) => {
+    const conceptualMapId = group.split('-group-')[1]
+    const conceptualMap = await ConceptualMap.findByPk(conceptualMapId)
+    conceptualMap.map = rooms[group]
+    await conceptualMap.save()
+  }
+
   const storeEmptyRooms = () => {
     const inMemoryGroups = Object.keys(rooms)
     const activeGroups = [...io.sockets.adapter.rooms].filter(([key]) => key.includes('group')).map(([key, value]) => key)
     const groupsToStore = inMemoryGroups.filter(room => !activeGroups.includes(room))
-    // Store group to DB
+
     for (const group of groupsToStore) {
-      console.log(JSON.stringify(rooms[group]))
+      storeMapOfGroup(group).then(() => {
+        delete rooms[group]
+      })
     }
   }
 
-  const loadInitialRoom = (room) => {
-    if (room.includes('group') && !rooms[room]) {
-      rooms[room] = {
+  const getMapOfGroup = async (group) => {
+    const conceptualMapId = group.split('-group-')[1]
+    const conceptualMap = await ConceptualMap.findByPk(conceptualMapId, {
+      attributes: ['map']
+    })
+    if (!conceptualMap || !conceptualMap.map) {
+      return {
         nodes: [
           { id: 'n0', position: { x: 0, y: 0 }, data: { label: 'ASTER+S' }, type: 'text' }
         ],
         edges: []
       }
+    }
+    return conceptualMap.map
+  }
+
+  const loadInitialRoom = async (room) => {
+    if (room.includes('group') && !rooms[room]) {
+      rooms[room] = await getMapOfGroup(room)
     }
   }
 
