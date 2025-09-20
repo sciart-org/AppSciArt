@@ -25,7 +25,7 @@ export function initializeWebSockets (server) {
     if (room.includes('group') && !rooms[room]) {
       rooms[room] = {
         nodes: [
-          { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'ASTER+S' } }
+          { id: 'n0', position: { x: 0, y: 0 }, data: { label: 'ASTER+S' }, type: 'text' }
         ],
         edges: []
       }

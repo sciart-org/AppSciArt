@@ -8,7 +8,7 @@ import RenderPDF from "../../../../components/RenderPDF";
 import SeedResources from "../../../products/components/SeedResources";
 import "./phases.css";
 import PhaseTitle from "../PhaseTitle";
-import Diagram from "../Diagram";
+import Diagram from "../diagramming/Diagram";
 
 export default function CreatedGroups(props) {
   const [justEntered, setJustEntered] = useState(true);
