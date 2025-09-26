@@ -15,6 +15,8 @@ export const mapHackathonParticipation = (rawParticipation) => {
     teamMembers: participation?.teamMembers,
     hackathonId: participation?.hackathonId,
     interests: participation?.interests,
-    roles: participation?.roles
+    roles: participation?.roles,
+    isGroupVoice: participation?.isGroupVoice,
+    isTeamSpeaker: participation?.isTeamSpeaker
   }
 }

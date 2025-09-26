@@ -23,6 +23,16 @@ export const Participation = sequelize.define(
     interests: {
       type: DataTypes.TEXT
     },
+    isGroupVoice: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    isTeamSpeaker: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     groupId: {
       type: DataTypes.UUID,
       references: {

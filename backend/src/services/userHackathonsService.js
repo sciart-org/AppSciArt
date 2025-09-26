@@ -47,7 +47,7 @@ const getMembers = async (participation) => {
       clusterNumber: participation.clusterNumber,
       hackathonId: participation.hackathonId
     },
-    attributes: ['id'],
+    attributes: ['id', 'isGroupVoice', 'isTeamSpeaker'],
     include: [{
       model: UserProfile,
       attributes: ['id', 'name', 'surname']
@@ -62,7 +62,10 @@ const getMembers = async (participation) => {
         groupId: participation.groupId
       }
     })
-    groupMembers = groupMembers.map(member => member.user_profile)
+    groupMembers = groupMembers.map(m => {
+      const member = m.toJSON()
+      return { ...member.user_profile, isGroupVoice: member.isGroupVoice }
+    })
   }
 
   if (checkExists(participation.teamId) || checkExists(participation.fruitId)) {
@@ -74,7 +77,10 @@ const getMembers = async (participation) => {
         ...teamSearchCondition
       }
     })
-    teamMembers = teamMembers.map(member => member.user_profile)
+    teamMembers = teamMembers.map(m => {
+      const member = m.toJSON()
+      return { ...member.user_profile, isTeamSpeaker: member.isTeamSpeaker }
+    })
   }
 
   return {
