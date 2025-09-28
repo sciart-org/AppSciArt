@@ -1,0 +1,15 @@
+.modal {
+    z-index: 999;
+    inset: 0;
+    backdrop-filter: blur(6px);
+    position: fixed;
+    align-content: flex-start;
+    transition: backdrop-filter 0.3s ease; /* animate blur */
+}
+
+.modal dialog {
+    width: 40vw;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-top: 20vh;
+}

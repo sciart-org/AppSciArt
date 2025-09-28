@@ -2,17 +2,23 @@
     width: 45vw;
     height: 75vh;
     border: 1px solid black;
-    margin-top: 1rem
+    margin: 1rem 0;
 }
 
 .create-node-button {
-    margin: 0 1rem;
-    max-width: 20rem;
-    min-width: 15rem;
-    width: auto;
+    margin: 0.5rem;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .create-node-buttons-container {
     display: flex;
     justify-content: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 999;
 }

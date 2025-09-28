@@ -10,12 +10,13 @@ import {
   applyNodeChanges,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import AsterButton from "../../../../components/AsterButton";
 import TextNode from "./TextNode";
 import { DiagramContext } from "./DiagramContext";
 import AnnotationNode from "./AnnotationNode";
 import "./diagramming.css";
 import CreateNodeButton from "./CreateNodeButton";
+import { FaRegSquare } from "react-icons/fa";
+import { RxText } from "react-icons/rx";
 
 function findFirstMissingNode(list) {
   const numbers = Array.from({ length: list.length + 1 }, (_, i) => i);
@@ -144,16 +145,16 @@ export default function Diagram({ socket, room }) {
           <Background />
           <Controls />
           <MiniMap zoomable pannable nodeClassName={(node) => node.type} />
+          <div className="create-node-buttons-container">
+            <CreateNodeButton onClick={() => createNode("text")}>
+              <FaRegSquare size={"1.5rem"} />
+            </CreateNodeButton>
+            <CreateNodeButton onClick={() => createNode("annotation")}>
+              <RxText size={"1.5rem"} />
+            </CreateNodeButton>
+          </div>
         </ReactFlow>
       </DiagramContext>
-      <div className="create-node-buttons-container">
-        <CreateNodeButton onClick={() => createNode("text")}>
-          Add node
-        </CreateNodeButton>
-        <CreateNodeButton onClick={() => createNode("annotation")}>
-          Add annotation
-        </CreateNodeButton>
-      </div>
     </div>
   );
 }

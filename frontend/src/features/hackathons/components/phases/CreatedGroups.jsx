@@ -6,15 +6,47 @@ import Loading from "../../../../components/messages/Loading";
 import ParticipantList from "../ParticipantList";
 import RenderPDF from "../../../../components/RenderPDF";
 import SeedResources from "../../../products/components/SeedResources";
-import "./phases.css";
 import PhaseTitle from "../PhaseTitle";
 import Diagram from "../diagramming/Diagram";
+import Modal from "../../../../components/Modal";
+import "./phases.css";
+
+const GroupHeader = ({ groupMembers }) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ flex: 1, marginTop: "1vw" }}>
+        <ParticipantList
+          participants={groupMembers || []}
+          fontSize={"1vw"}
+          className={"participant-icon"}
+        />
+      </div>
+      <PhaseTitle>Exploring group</PhaseTitle>
+      <div style={{ flex: 1 }}></div>
+    </div>
+  );
+};
+
+const GroupSeedResources = ({ pdf, seed }) => {
+  return (
+    <div style={{ flex: 1 }}>
+      <RenderPDF pdfUrl={pdf} style={{ margin: "1rem 0" }} />
+      <SeedResources seed={seed} style={{ marginLeft: 0 }} />
+    </div>
+  );
+};
 
 export default function CreatedGroups(props) {
   const [justEntered, setJustEntered] = useState(true);
   const [participation, setParticipation] = useState(props.participation);
   const [isPhaseActive, setIsPhaseActive] = useState(true);
   const [error, setError] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const { fetcher } = useFetcher(error, setError);
@@ -91,49 +123,58 @@ export default function CreatedGroups(props) {
     );
   }
 
-  const GroupHeader = () => {
+  const DeliverMapButton = () => {
+    if (!participation?.isGroupVoice) {
+      return <></>;
+    }
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
+      <AsterButton
+        onClick={() => {
+          setOpenModal(true);
         }}
       >
-        <div style={{ flex: 1, marginTop: "1vw" }}>
-          <ParticipantList
-            participants={participation?.groupMembers || []}
-            fontSize={"1vw"}
-            className={"participant-icon"}
-          />
-        </div>
-        <PhaseTitle>Exploring group</PhaseTitle>
-        <div style={{ flex: 1 }}></div>
-      </div>
+        Deliver conceptual map
+      </AsterButton>
     );
   };
 
-  const GroupSeedResources = () => {
+  const ConfirmDeliveryModal = () => {
     return (
-      <div style={{ flex: 1 }}>
-        <RenderPDF
-          pdfUrl={participation?.groupSeed?.seedPDF}
-          style={{ margin: "1rem 0 1rem 0" }}
-        />
-        <SeedResources
-          seed={participation?.groupSeed}
-          style={{ marginLeft: 0 }}
-        />
-      </div>
+      <Modal openCondition={participation?.isGroupVoice && openModal}>
+        <h3>Submit conceptual map</h3>
+        <hr style={{ width: "90%" }} />
+        <p>
+          Are you sure you want to submit your conceptual map? {"\n"} This
+          cannot be undone
+        </p>
+        <hr style={{ width: "90%" }} />
+        <div
+          style={{
+            display: "flex",
+            gap: "5vw",
+          }}
+        >
+          <div></div>
+          <AsterButton>Submit</AsterButton>
+          <AsterButton onClick={() => setOpenModal(false)}>Cancel</AsterButton>
+          <div></div>
+        </div>
+      </Modal>
     );
   };
 
   return (
     <div>
-      <GroupHeader />
+      <ConfirmDeliveryModal />
+      <GroupHeader groupMembers={participation?.groupMembers} />
       <div style={{ display: "flex" }}>
-        <GroupSeedResources />
+        <GroupSeedResources
+          pdf={participation?.groupSeed?.seedPDF}
+          seed={participation?.groupSeed}
+        />
         <div style={{ flex: 1 }}>
           <Diagram socket={socket} room={room} />
+          <DeliverMapButton />
         </div>
       </div>
     </div>
