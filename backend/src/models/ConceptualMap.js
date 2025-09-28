@@ -3,7 +3,7 @@ import { sequelize } from '../config/sequelize.js'
 import { Seed } from './Seed.js'
 
 export const ConceptualMap = sequelize.define(
-  'conceptualMaps',
+  'conceptual_maps',
   {
     id: {
       type: DataTypes.UUID,
