@@ -1,4 +1,6 @@
 import * as service from '../services/groupsAndTeamsService.js'
+import { withErrorHandler } from './errorHandling.js'
+import * as UsersService from '../services/usersService.js'
 
 export function getClusterExploringGroups (req, res) {
   service.getClusterExploringGroups(req, res)
@@ -39,3 +41,11 @@ export function deleteCoCreationTeam (req, res) {
 export function updateCoCreationTeam (req, res) {
   service.updateCoCreationTeam(req, res)
 }
+
+export const submitConceptualMap = withErrorHandler(async (req, res) => {
+  const groupId = req.params.groupId
+  const mapToSubmit = req.body
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  const updatedParticipation = await service.submitConceptualMap(currentUser?.id, groupId, mapToSubmit)
+  return res.status(200).send(updatedParticipation)
+})

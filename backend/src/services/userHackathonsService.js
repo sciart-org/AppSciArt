@@ -1,11 +1,8 @@
-import { ConceptualMap } from '../models/ConceptualMap.js'
-import { Flower } from '../models/Flower.js'
-import { Fruit } from '../models/Fruit.js'
 import { Participation } from '../models/Participation.js'
-import { Seed } from '../models/Seed.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { errorThrower } from './errorThrower.js'
+import { includeParticipationItems } from './includes/participationIncludes.js'
 import { mapHackathonParticipation } from './mappers/hackathonMapper.js'
 
 export function getUserEnrolledHackathons (req, res) {
@@ -38,7 +35,7 @@ export function joinCluster (req, res) {
   })
 }
 
-const getMembers = async (participation) => {
+export const getMembers = async (participation) => {
   let groupMembers = []
   let teamMembers = []
 
@@ -98,20 +95,7 @@ export async function getParticipation (userId, hackathonId) {
       userProfileId: userId,
       hackathonId
     },
-    include: [
-      {
-        model: Fruit
-      },
-      {
-        model: Flower
-      },
-      {
-        model: ConceptualMap,
-        include: {
-          model: Seed
-        }
-      }
-    ]
+    include: includeParticipationItems()
   })
   errorThrower(!checkExists(participation), 'Participation not found.', 404)
 

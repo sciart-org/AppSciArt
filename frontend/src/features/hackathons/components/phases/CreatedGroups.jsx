@@ -10,6 +10,7 @@ import PhaseTitle from "../PhaseTitle";
 import Diagram from "../diagramming/Diagram";
 import Modal from "../../../../components/Modal";
 import "./phases.css";
+import { DiagramContext } from "../diagramming/DiagramContext";
 
 const GroupHeader = ({ groupMembers }) => {
   return (
@@ -48,6 +49,8 @@ export default function CreatedGroups(props) {
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
 
   const { fetcher } = useFetcher(error, setError);
   const navigate = useNavigate();
@@ -123,6 +126,17 @@ export default function CreatedGroups(props) {
     );
   }
 
+  if (participation?.conceptualMap?.isDelivered) {
+    return (
+      <>
+        <GroupHeader groupMembers={participation?.groupMembers} />
+        <h3 style={{ marginTop: "5vh" }}>
+          Your conceptual map has been submitted! Feel free to take a break.
+        </h3>
+      </>
+    );
+  }
+
   const DeliverMapButton = () => {
     if (!participation?.isGroupVoice) {
       return <></>;
@@ -136,6 +150,17 @@ export default function CreatedGroups(props) {
         Deliver conceptual map
       </AsterButton>
     );
+  };
+
+  const submitConceptualMap = async () => {
+    fetcher({
+      url: `exploring-groups/${participation?.conceptualMap?.id}/conceptual-map/submit`,
+      method: "PATCH",
+      body: { nodes, edges },
+      onSuccess: (data) => {
+        setParticipation(data)
+      },
+    });
   };
 
   const ConfirmDeliveryModal = () => {
@@ -155,7 +180,7 @@ export default function CreatedGroups(props) {
           }}
         >
           <div></div>
-          <AsterButton>Submit</AsterButton>
+          <AsterButton onClick={submitConceptualMap}>Submit</AsterButton>
           <AsterButton onClick={() => setOpenModal(false)}>Cancel</AsterButton>
           <div></div>
         </div>
@@ -173,7 +198,9 @@ export default function CreatedGroups(props) {
           seed={participation?.groupSeed}
         />
         <div style={{ flex: 1 }}>
-          <Diagram socket={socket} room={room} />
+          <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
+            <Diagram socket={socket} room={room} />
+          </DiagramContext>
           <DeliverMapButton />
         </div>
       </div>

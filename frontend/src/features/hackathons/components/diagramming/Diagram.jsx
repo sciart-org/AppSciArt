@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useContext } from "react";
 import {
   Background,
   Controls,
@@ -33,9 +33,8 @@ function findFirstMissingNode(list) {
 const nodeTypes = { text: TextNode, annotation: AnnotationNode };
 
 export default function Diagram({ socket, room }) {
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
   const [initialsLoaded, setInitialsLoaded] = useState(false);
+  const { nodes, edges, setNodes, setEdges } = useContext(DiagramContext);
 
   const skipEmit = useRef(false);
 
@@ -130,31 +129,29 @@ export default function Diagram({ socket, room }) {
 
   return (
     <div className="diagram-container">
-      <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={getEdgesWithEnds()}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-          connectionMode="loose"
-          fitView
-          style={{ marginBottom: "1rem" }}
-        >
-          <Background />
-          <Controls />
-          <MiniMap zoomable pannable nodeClassName={(node) => node.type} />
-          <div className="create-node-buttons-container">
-            <CreateNodeButton onClick={() => createNode("text")}>
-              <FaRegSquare size={"1.5rem"} />
-            </CreateNodeButton>
-            <CreateNodeButton onClick={() => createNode("annotation")}>
-              <RxText size={"1.5rem"} />
-            </CreateNodeButton>
-          </div>
-        </ReactFlow>
-      </DiagramContext>
+      <ReactFlow
+        nodes={nodes}
+        edges={getEdgesWithEnds()}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        nodeTypes={nodeTypes}
+        connectionMode="loose"
+        fitView
+        style={{ marginBottom: "1rem" }}
+      >
+        <Background />
+        <Controls />
+        <MiniMap zoomable pannable nodeClassName={(node) => node.type} />
+        <div className="create-node-buttons-container">
+          <CreateNodeButton onClick={() => createNode("text")}>
+            <FaRegSquare size={"1.5rem"} />
+          </CreateNodeButton>
+          <CreateNodeButton onClick={() => createNode("annotation")}>
+            <RxText size={"1.5rem"} />
+          </CreateNodeButton>
+        </div>
+      </ReactFlow>
     </div>
   );
 }

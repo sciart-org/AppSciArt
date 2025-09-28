@@ -705,6 +705,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/TeamDetails"
 
+  /exploring-groups/{groupId}/conceptual-map/submit:
+    x-router-controller: groupsAndTeamsController
+    patch:
+      tags: [Groups & Teams]
+      summary: Submit
+      operationId: submitConceptualMap
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Conceptual map submitted
+        "403":
+          description: Forbidden
+        "404":
+          description: Resource not found
+        "409":
+          description: Conceptual map already delivered
+
   /users/{userId}/hackathons:
     x-router-controller: userHackathonsController
     get:
