@@ -78,18 +78,18 @@ export default function CreatedGroups(props) {
     });
   }, []);
 
-  const room = `${participation?.hackathonId}-group-${participation?.conceptualMap.id}`;
+  const groupRoom = `${participation?.hackathonId}/group/${participation?.conceptualMap.id}`;
   useEffect(() => {
     const shouldNotConnect =
+      !socket ||
       !participation ||
       !isPhaseActive ||
-      !participation?.hackathonId ||
-      !participation?.conceptualMap?.id;
+      !participation?.hackathonId;
+    const shouldNotJoinGroup = !participation?.conceptualMap?.id;
 
-    if (!socket) return;
-    if (shouldNotConnect) return;
+    if (shouldNotConnect || shouldNotJoinGroup) return;
 
-    socket.emit("join_room", room);
+    socket.emit("join_room", groupRoom);
   }, [participation, socket, isPhaseActive]);
 
   if (loading) {
@@ -158,7 +158,7 @@ export default function CreatedGroups(props) {
       method: "PATCH",
       body: { nodes, edges },
       onSuccess: (data) => {
-        setParticipation(data)
+        setParticipation(data);
       },
     });
   };
@@ -199,7 +199,7 @@ export default function CreatedGroups(props) {
         />
         <div style={{ flex: 1 }}>
           <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
-            <Diagram socket={socket} room={room} />
+            <Diagram socket={socket} room={groupRoom} />
           </DiagramContext>
           <DeliverMapButton />
         </div>

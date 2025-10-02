@@ -2,7 +2,7 @@
     width: 45vw;
     height: 75vh;
     border: 1px solid black;
-    margin: 1rem 0;
+    margin: 1rem auto;
 }
 
 .create-node-button {

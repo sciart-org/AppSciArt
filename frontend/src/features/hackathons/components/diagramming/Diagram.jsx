@@ -38,12 +38,14 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
 
   const skipEmit = useRef(false);
 
+  const handleInitialState = ({ nodes: initNodes, edges: initEdges }) => {
+    setNodes(initNodes);
+    setEdges(initEdges);
+    setInitialsLoaded(true);
+  };
+
   useEffect(() => {
-    const handleInitialState = ({ nodes: initNodes, edges: initEdges }) => {
-      setNodes(initNodes);
-      setEdges(initEdges);
-      setInitialsLoaded(true);
-    };
+    if (!socket) return;
 
     socket.on("initial_state", handleInitialState);
 
@@ -56,10 +58,7 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
       skipEmit.current = true;
       setEdges(edges);
     });
-  }, []);
 
-  useEffect(() => {
-    if (!socket) return;
     socket.emit("get_initial_state", room);
   }, [socket]);
 
