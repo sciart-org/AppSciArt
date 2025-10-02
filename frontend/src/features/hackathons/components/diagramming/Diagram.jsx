@@ -32,7 +32,7 @@ function findFirstMissingNode(list) {
 
 const nodeTypes = { text: TextNode, annotation: AnnotationNode };
 
-export default function Diagram({ socket, room }) {
+export default function Diagram({ socket, room, editionMode = true, style }) {
   const [initialsLoaded, setInitialsLoaded] = useState(false);
   const { nodes, edges, setNodes, setEdges } = useContext(DiagramContext);
 
@@ -128,13 +128,13 @@ export default function Diagram({ socket, room }) {
   };
 
   return (
-    <div className="diagram-container">
+    <div className="diagram-container" style={style}>
       <ReactFlow
         nodes={nodes}
         edges={getEdgesWithEnds()}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
+        onNodesChange={editionMode ? onNodesChange : () => {}}
+        onEdgesChange={editionMode ? onEdgesChange : () => {}}
+        onConnect={editionMode ? onConnect : () => {}}
         nodeTypes={nodeTypes}
         connectionMode="loose"
         fitView
@@ -143,14 +143,16 @@ export default function Diagram({ socket, room }) {
         <Background />
         <Controls />
         <MiniMap zoomable pannable nodeClassName={(node) => node.type} />
-        <div className="create-node-buttons-container">
-          <CreateNodeButton onClick={() => createNode("text")}>
-            <FaRegSquare size={"1.5rem"} />
-          </CreateNodeButton>
-          <CreateNodeButton onClick={() => createNode("annotation")}>
-            <RxText size={"1.5rem"} />
-          </CreateNodeButton>
-        </div>
+        {editionMode && (
+          <div className="create-node-buttons-container">
+            <CreateNodeButton onClick={() => createNode("text")}>
+              <FaRegSquare size={"1.5rem"} />
+            </CreateNodeButton>
+            <CreateNodeButton onClick={() => createNode("annotation")}>
+              <RxText size={"1.5rem"} />
+            </CreateNodeButton>
+          </div>
+        )}
       </ReactFlow>
     </div>
   );

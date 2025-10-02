@@ -6,6 +6,7 @@ import useWebSockets from "../../utils/useWebSockets";
 import CreatedGroups from "./components/phases/CreatedGroups";
 import CreatingGroups from "./components/phases/CreatingGroups";
 import PreparingHackathon from "./components/phases/PreparingHackathon";
+import GroupPresentation from "./components/phases/GroupPresentation";
 
 export default function ActiveHackathon() {
   const [error, setError] = useState(null);
@@ -49,6 +50,17 @@ export default function ActiveHackathon() {
     });
   }, [hackathon?.phase]);
 
+  useEffect(() => {
+    const shouldNotConnect =
+      !socket || !participation || !participation?.hackathonId;
+    const shouldNotJoinCluster = participation?.clusterNumber === null;
+
+    if (shouldNotConnect || shouldNotJoinCluster) return;
+
+    const clusterRoom = `${participation?.hackathonId}/cluster/${participation?.clusterNumber}`;
+    socket.emit("join_room", clusterRoom);
+  }, [participation, socket]);
+
   if (loading || !hackathon) {
     return <Loading />;
   }
@@ -66,11 +78,13 @@ export default function ActiveHackathon() {
   } else if (hackathon.phase === "GROUP_CREATION") {
     return <CreatingGroups />;
   } else if (hackathon.phase === "GROUP_WORK") {
+    return <CreatedGroups participation={participation} socket={socket} />;
+  } else if (hackathon.phase === "GROUP_PRESENTATION") {
     return (
-      <CreatedGroups
-        participation={participation}
-        justEntered={true}
+      <GroupPresentation
         socket={socket}
+        hackathonId={params.hackathonId}
+        clusterNumber={participation?.clusterNumber}
       />
     );
   } else {

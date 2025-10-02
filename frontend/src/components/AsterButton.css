@@ -21,7 +21,7 @@
   transform: scale(1.01, 1.01);
 }
 
-.aster-button:hover {
+.aster-button-hover, .aster-button:hover {
   background-color: rgba(191, 191, 191, 255);
 }
 

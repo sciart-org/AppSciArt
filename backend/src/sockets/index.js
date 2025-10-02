@@ -1,5 +1,6 @@
 import { Server } from 'socket.io'
 import { initializeDiagramming, onConnectDiagramming, onDisconnectDiagramming, onJoinDiagramming } from './diagramming.js'
+import { onConnectPresentations } from './presentations.js'
 
 export function initializeWebSockets (server) {
   const FRONTEND_URL = process.env.FRONTEND_URL
@@ -16,6 +17,7 @@ export function initializeWebSockets (server) {
     console.log(`User connected: ${socket.id}`)
 
     onConnectDiagramming(socket)
+    onConnectPresentations(socket)
 
     socket.on('join_room', (room) => {
       socket.join(room)

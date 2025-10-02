@@ -5,3 +5,11 @@
     padding: 1rem 0.5rem 0 0.5rem;
     outline: 2px solid black;
 }
+
+.groups-container {
+    display: flex;
+    width: 92vw;
+    justify-content: space-evenly;
+    padding: 1.5vw 4vw;
+    align-items: center;
+}
