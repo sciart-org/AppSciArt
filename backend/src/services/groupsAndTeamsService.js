@@ -1,15 +1,28 @@
 import { ConceptualMap } from '../models/ConceptualMap.js'
 import { Participation } from '../models/Participation.js'
 import { checkExists } from '../validators/generalValidators.js'
+import { checkUserIsGroupVoice } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { includeParticipationItems } from './includes/participationIncludes.js'
+import { includeParticipationItems, searchParticipantsOf } from './includes/participationIncludes.js'
 import { mapHackathonParticipation } from './mappers/hackathonMapper.js'
+import { mapGroupMember } from './mappers/participationMapper.js'
 import { getMembers } from './userHackathonsService.js'
 
-export function getClusterExploringGroups (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getClusterExploringGroups'
-  })
+export async function getClusterExploringGroups (hackathonId, clusterNumber) {
+  const allGroupsMembers = await Participation.findAll(searchParticipantsOf({ hackathonId, clusterNumber }))
+
+  const groupIds = [...new Set(allGroupsMembers.map(m => m.groupId))].sort()
+  const groups = []
+
+  for (const groupId of groupIds) {
+    groups.push({
+      id: groupId,
+      members: allGroupsMembers.filter(m => m.groupId === groupId).map(m => mapGroupMember(m)),
+      number: groups.length + 1
+    })
+  }
+
+  return groups
 }
 
 export function createExploringGroup (req, res) {
@@ -66,18 +79,6 @@ export function updateCoCreationTeam (req, res) {
   })
 }
 
-const checkUserIsGroupVoice = async (userId, groupId) => {
-  const participation = await Participation.findOne({
-    where: {
-      userProfileId: userId,
-      groupId,
-      isGroupVoice: true
-    }
-  })
-  errorThrower(!checkExists(participation), 'Only the group voice can submit the conceptual map', 403)
-  return participation
-}
-
 const updateConceptualMap = async (conceptualMapId, map) => {
   const mapToUpdate = await ConceptualMap.findByPk(conceptualMapId)
   errorThrower(!checkExists(mapToUpdate), 'Group not found', 404)
@@ -88,9 +89,9 @@ const updateConceptualMap = async (conceptualMapId, map) => {
 }
 
 export async function submitConceptualMap (userId, groupId, map) {
-  const userParticipation = await checkUserIsGroupVoice(userId, groupId)
+  const userParticipationId = await checkUserIsGroupVoice(userId, groupId)
   await updateConceptualMap(groupId, map)
-  const updatedParticipation = await Participation.findByPk(userParticipation.id, {
+  const updatedParticipation = await Participation.findByPk(userParticipationId, {
     include: includeParticipationItems()
   })
   return mapHackathonParticipation({

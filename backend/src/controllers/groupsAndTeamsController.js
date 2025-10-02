@@ -2,9 +2,11 @@ import * as service from '../services/groupsAndTeamsService.js'
 import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
 
-export function getClusterExploringGroups (req, res) {
-  service.getClusterExploringGroups(req, res)
-}
+export const getClusterExploringGroups = withErrorHandler(async (req, res) => {
+  const { hackathonId, clusterNumber } = req.params
+  const exploringGroups = await service.getClusterExploringGroups(hackathonId, clusterNumber)
+  return res.status(200).send(exploringGroups)
+})
 
 export function createExploringGroup (req, res) {
   service.createExploringGroup(req, res)

@@ -2,8 +2,9 @@ import { Participation } from '../models/Participation.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { includeParticipationItems } from './includes/participationIncludes.js'
+import { includeParticipationItems, searchParticipantsOf } from './includes/participationIncludes.js'
 import { mapHackathonParticipation } from './mappers/hackathonMapper.js'
+import { mapGroupMember, mapTeamMember } from './mappers/participationMapper.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
@@ -39,45 +40,23 @@ export const getMembers = async (participation) => {
   let groupMembers = []
   let teamMembers = []
 
-  const searchCriteria = {
-    where: {
-      clusterNumber: participation.clusterNumber,
-      hackathonId: participation.hackathonId
-    },
-    attributes: ['id', 'isGroupVoice', 'isTeamSpeaker'],
-    include: [{
-      model: UserProfile,
-      attributes: ['id', 'name', 'surname']
-    }]
-  }
-
   if (checkExists(participation.groupId)) {
-    groupMembers = await Participation.findAll({
-      ...searchCriteria,
-      where: {
-        ...searchCriteria.where,
-        groupId: participation.groupId
-      }
-    })
-    groupMembers = groupMembers.map(m => {
-      const member = m.toJSON()
-      return { ...member.user_profile, isGroupVoice: member.isGroupVoice }
-    })
+    groupMembers = await Participation.findAll(searchParticipantsOf({
+      hackathonId: participation.hackathonId,
+      clusterNumber: participation.clusterNumber,
+      groupId: participation.groupId
+    }))
+    groupMembers = groupMembers.map(m => mapGroupMember(m))
   }
 
   if (checkExists(participation.teamId) || checkExists(participation.fruitId)) {
     const teamSearchCondition = checkExists(participation.fruitId) ? { fruitId: participation.fruitId } : { teamId: participation.teamId }
-    teamMembers = await Participation.findAll({
-      ...searchCriteria,
-      where: {
-        ...searchCriteria.where,
-        ...teamSearchCondition
-      }
-    })
-    teamMembers = teamMembers.map(m => {
-      const member = m.toJSON()
-      return { ...member.user_profile, isTeamSpeaker: member.isTeamSpeaker }
-    })
+    teamMembers = await Participation.findAll(searchParticipantsOf({
+      hackathonId: participation.hackathonId,
+      clusterNumber: participation.clusterNumber,
+      ...teamSearchCondition
+    }))
+    teamMembers = teamMembers.map(m => mapTeamMember(m))
   }
 
   return {
