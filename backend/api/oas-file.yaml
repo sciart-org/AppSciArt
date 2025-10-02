@@ -380,7 +380,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
       responses:
         "200":
           description: Cluster details
@@ -404,7 +404,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
       responses:
         "204":
           description: Cluster deleted
@@ -427,16 +427,14 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
       responses:
         "200":
           description: List of exploring groups
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/GroupList"
+                $ref: "#/components/schemas/GroupList"
     post:
       tags: [Groups & Teams]
       summary: Create a new exploring group
@@ -453,7 +451,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
       responses:
         "201":
           description: Exploring group created
@@ -480,7 +478,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
         - name: groupNumber
           in: path
           required: true
@@ -510,7 +508,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
         - name: groupNumber
           in: path
           required: true
@@ -536,7 +534,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
         - name: groupNumber
           in: path
           required: true
@@ -575,7 +573,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
       responses:
         "200":
           description: List of co-creation teams
@@ -601,7 +599,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
       responses:
         "201":
           description: Co-creation team created
@@ -628,7 +626,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
         - name: teamNumber
           in: path
           required: true
@@ -658,7 +656,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
         - name: teamNumber
           in: path
           required: true
@@ -684,7 +682,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
         - name: teamNumber
           in: path
           required: true
@@ -709,7 +707,7 @@ paths:
     x-router-controller: groupsAndTeamsController
     patch:
       tags: [Groups & Teams]
-      summary: Submit
+      summary: Submit conceptual map of an exploring group
       operationId: submitConceptualMap
       parameters:
         - name: groupId
@@ -884,7 +882,7 @@ paths:
           required: true
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
       responses:
         "201":
           description: Cluster enrollment created
