@@ -41,7 +41,6 @@ export default function ActiveHackathon() {
   }, []);
 
   useEffect(() => {
-    if (hackathon?.phase !== "GROUP_WORK") return;
     fetcher({
       url: `hackathons/${params.hackathonId}/participants/me`,
       onSuccess: (data) => {
