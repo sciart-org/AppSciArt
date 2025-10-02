@@ -44,6 +44,13 @@ export function updateCoCreationTeam (req, res) {
   service.updateCoCreationTeam(req, res)
 }
 
+export const getConceptualMap = withErrorHandler(async (req, res) => {
+  const groupId = req.params.groupId
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  const conceptualMap = await service.getConceptualMap(currentUser?.id, groupId)
+  return res.status(200).send(conceptualMap)
+})
+
 export const submitConceptualMap = withErrorHandler(async (req, res) => {
   const groupId = req.params.groupId
   const mapToSubmit = req.body

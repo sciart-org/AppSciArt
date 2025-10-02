@@ -703,6 +703,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/TeamDetails"
 
+  /exploring-groups/{groupId}/conceptual-map:
+    x-router-controller: groupsAndTeamsController
+    get:
+      tags: [Groups & Teams]
+      summary: Get conceptual map of an exploring group
+      operationId: getConceptualMap
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Conceptual map submitted
+        "403":
+          description: Forbidden
+        "404":
+          description: Resource not found
+
   /exploring-groups/{groupId}/conceptual-map/submit:
     x-router-controller: groupsAndTeamsController
     patch:

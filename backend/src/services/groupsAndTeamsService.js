@@ -1,7 +1,7 @@
 import { ConceptualMap } from '../models/ConceptualMap.js'
 import { Participation } from '../models/Participation.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { checkUserIsGroupVoice } from '../validators/userHackathonValidators.js'
+import { checkUserIsGroupVoice, checkUserIsInHackathon } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { includeParticipationItems, searchParticipantsOf } from './includes/participationIncludes.js'
 import { mapHackathonParticipation } from './mappers/hackathonMapper.js'
@@ -98,4 +98,16 @@ export async function submitConceptualMap (userId, groupId, map) {
     ...updatedParticipation.toJSON(),
     ...(await getMembers(updatedParticipation))
   })
+}
+
+export async function getConceptualMap (userId, groupId) {
+  const hackathonId = (await Participation.findOne({
+    attributes: ['hackathonId'],
+    where: {
+      groupId
+    }
+  })).hackathonId
+  errorThrower(!checkExists(hackathonId), 'Group not found', 404)
+  await checkUserIsInHackathon(userId, hackathonId)
+  return await ConceptualMap.findByPk(groupId)
 }

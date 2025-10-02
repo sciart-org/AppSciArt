@@ -21,6 +21,22 @@ export default function GroupPresentation({
   const [showMap, setShowMap] = useState(true);
   const { fetcher } = useFetcher(error, setError);
 
+  const presentingGroupId = groups.find(
+    (g) => g.number === presentingGroup
+  )?.id;
+
+  useEffect(() => {
+    if (presentingGroup === null || !presentingGroupId) return;
+    fetcher({
+      url: `exploring-groups/${presentingGroupId}/conceptual-map`,
+      onSuccess: (data) => {
+        setNodes(data.map.nodes || []);
+        setEdges(data.map.edges || []);
+        setShowMap(true);
+      },
+    });
+  }, [presentingGroup, presentingGroupId]);
+
   useEffect(() => {
     if (!hackathonId || clusterNumber === undefined) return;
     fetcher({
