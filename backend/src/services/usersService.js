@@ -34,9 +34,7 @@ export function editUser (req, res) {
   })
 }
 
-export async function getCurrentUserProfile (req) {
-  const jwt = getJwt(req)
-  if (!jwt) return null
+export async function getCurrentUserProfileFromJwt (jwt) {
   const userEmail = jwtDecode(jwt).email
   const user = await UserProfile.findOne({
     where: {
@@ -45,6 +43,12 @@ export async function getCurrentUserProfile (req) {
   })
   errorThrower(!user, 'User not found', 404)
   return user
+}
+
+export async function getCurrentUserProfile (req) {
+  const jwt = getJwt(req)
+  if (!jwt) return null
+  return await getCurrentUserProfileFromJwt(jwt)
 }
 
 export async function getCurrentUser (req) {
