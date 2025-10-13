@@ -13,3 +13,12 @@
     padding: 1.5vw 4vw;
     align-items: center;
 }
+
+.rating-card-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}

@@ -6,7 +6,31 @@ import Diagram from "../diagramming/Diagram";
 import AsterButton from "../../../../components/AsterButton";
 import SelectorBar from "../../../../components/SelectorBar";
 import Loading from "../../../../components/messages/Loading";
+import Seed from "../../../../components/sciartProducts/Seed";
+import StarRating from "../../../../components/StarRating";
 import "./phases.css";
+import "../../../products/collections/css/collections.css";
+
+const RatingCard = ({ item }) => {
+  return (
+    <div>
+      <img
+        src={item.mainImage}
+        style={{ justifySelf: "center", maxHeight: "30vh" }}
+      />
+      <div className="rating-card-content">
+        <div
+          onClick={() => window.open(`/seeds/${item.id}`, "_blank")}
+          style={{ cursor: "pointer" }}
+        >
+          <Seed style={{ width: "3rem" }} />
+        </div>
+        <StarRating />
+        <div style={{ width: "3rem" }} />
+      </div>
+    </div>
+  );
+};
 
 export default function GroupPresentation({
   socket,
@@ -108,8 +132,12 @@ export default function GroupPresentation({
           style={{ width: "80vw", display: showMap ? "block" : "none" }}
         />
       </DiagramContext>
-      <div style={{ height: "50vh", display: showMap ? "none" : "block" }}>
-        Ratings view coming soon!
+      <div style={{ display: showMap ? "none" : "block" }}>
+        <div className="collection-grid" style={{ margin: "1rem 5rem" }}>
+          {ratingItems.map((item) => (
+            <RatingCard item={item} />
+          ))}
+        </div>
       </div>
     </div>
   );
