@@ -19,6 +19,7 @@ export default function GroupPresentation({
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [showMap, setShowMap] = useState(true);
+  const [ratingItems, setRatingItems] = useState([]);
   const { fetcher } = useFetcher(error, setError);
 
   const presentingGroupId = groups.find(
@@ -33,6 +34,10 @@ export default function GroupPresentation({
         setNodes(data.map.nodes || []);
         setEdges(data.map.edges || []);
         setShowMap(true);
+        setRatingItems([
+          ...ratingItems,
+          { ...data.seed, groupNumber: presentingGroup },
+        ]);
       },
     });
   }, [presentingGroup, presentingGroupId]);
@@ -49,12 +54,17 @@ export default function GroupPresentation({
 
   useEffect(() => {
     if (!socket || !hackathonId || clusterNumber) return;
+    socket.on("presenting_state", (presentingState) => {
+      setPresentingGroup(presentingState.presentingGroup);
+      setRatingItems([...ratingItems, ...presentingState.previousSeeds]);
+    });
+
     socket.on("new_presenting_group", (groupNumber) => {
       setPresentingGroup(groupNumber);
     });
 
     socket.emit(
-      "get_presenting_group",
+      "get_presenting_state",
       `${hackathonId}/cluster/${clusterNumber}`
     );
   }, [socket, hackathonId, clusterNumber]);

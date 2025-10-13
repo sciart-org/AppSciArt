@@ -1,5 +1,6 @@
 import { ConceptualMap } from '../models/ConceptualMap.js'
 import { Participation } from '../models/Participation.js'
+import { Seed } from '../models/Seed.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { checkUserIsGroupVoice, checkUserIsInHackathon } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
@@ -109,5 +110,11 @@ export async function getConceptualMap (userId, groupId) {
   })).hackathonId
   errorThrower(!checkExists(hackathonId), 'Group not found', 404)
   await checkUserIsInHackathon(userId, hackathonId)
-  return await ConceptualMap.findByPk(groupId)
+  return await ConceptualMap.findByPk(groupId, {
+    attributes: { exclude: ['seedId'] },
+    include: [{
+      model: Seed,
+      attributes: ['id', 'mainImage', 'title']
+    }]
+  })
 }
