@@ -10,8 +10,9 @@ import Seed from "../../../../components/sciartProducts/Seed";
 import StarRating from "../../../../components/StarRating";
 import "./phases.css";
 import "../../../products/collections/css/collections.css";
+import CreatingTeams from "./CreatingTeams";
 
-const RatingCard = ({ item }) => {
+const RatingCard = ({ item, setRatingItems }) => {
   return (
     <div>
       <img
@@ -25,7 +26,15 @@ const RatingCard = ({ item }) => {
         >
           <Seed style={{ width: "3rem" }} />
         </div>
-        <StarRating />
+        <StarRating
+          onChange={(newRating) => {
+            setRatingItems((prevItems) =>
+              prevItems.map((ri) =>
+                ri.id === item.id ? { ...ri, rating: newRating } : ri
+              )
+            );
+          }}
+        />
         <div style={{ width: "3rem" }} />
       </div>
     </div>
@@ -44,6 +53,8 @@ export default function GroupPresentation({
   const [edges, setEdges] = useState([]);
   const [showMap, setShowMap] = useState(true);
   const [ratingItems, setRatingItems] = useState([]);
+  const [canSubmitRatings, setCanSubmitRatings] = useState(false);
+  const [ratingsSubmitted, setRatingsSubmitted] = useState(false);
   const { fetcher } = useFetcher(error, setError);
 
   const presentingGroupId = groups.find(
@@ -81,10 +92,16 @@ export default function GroupPresentation({
     socket.on("presenting_state", (presentingState) => {
       setPresentingGroup(presentingState.presentingGroup);
       setRatingItems([...ratingItems, ...presentingState.previousSeeds]);
+      setCanSubmitRatings(presentingState.submissionEnabled);
+      setRatingsSubmitted(presentingState.hasSubmitted);
     });
 
     socket.on("new_presenting_group", (groupNumber) => {
       setPresentingGroup(groupNumber);
+    });
+
+    socket.on("enable_ratings_submission", () => {
+      setCanSubmitRatings(true);
     });
 
     socket.emit(
@@ -92,6 +109,10 @@ export default function GroupPresentation({
       `${hackathonId}/cluster/${clusterNumber}`
     );
   }, [socket, hackathonId, clusterNumber]);
+
+  if (ratingsSubmitted) {
+    return <CreatingTeams/>
+  }
 
   if (!presentingGroup) {
     return <Loading />;
@@ -135,9 +156,27 @@ export default function GroupPresentation({
       <div style={{ display: showMap ? "none" : "block" }}>
         <div className="collection-grid" style={{ margin: "1rem 5rem" }}>
           {ratingItems.map((item) => (
-            <RatingCard item={item} />
+            <RatingCard item={item} setRatingItems={setRatingItems} />
           ))}
         </div>
+        {canSubmitRatings && (
+          <div>
+            <AsterButton
+              onClick={() => {
+                socket.emit(
+                  "submit_ratings",
+                  `${hackathonId}/cluster/${clusterNumber}`,
+                  ratingItems.map((ri) => {
+                    return { seedId: ri.id, rating: ri.rating || 0.5 };
+                  })
+                );
+                setRatingsSubmitted(true);
+              }}
+            >
+              Submit my ratings
+            </AsterButton>
+          </div>
+        )}
       </div>
     </div>
   );

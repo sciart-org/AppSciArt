@@ -1,6 +1,6 @@
 import { RiStarSLine, RiStarSFill, RiStarHalfSFill } from "react-icons/ri";
 import "./StarRating.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const StarWrapper = ({ children, starRating, setSelectedRating }) => {
   return (
@@ -20,8 +20,14 @@ const StarWrapper = ({ children, starRating, setSelectedRating }) => {
   );
 };
 
-export default function StarRating() {
+export default function StarRating({ onChange }) {
   const [selectedRating, setSelectedRating] = useState(0.5);
+
+  useEffect(() => {
+    if (!onChange) return;
+    onChange(selectedRating);
+  }, [selectedRating]);
+
   return (
     <div className="rating-container">
       {[1, 2, 3, 4, 5].map((s) => {

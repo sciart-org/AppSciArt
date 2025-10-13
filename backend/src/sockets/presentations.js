@@ -2,6 +2,7 @@ import { getClusterExploringGroups, getConceptualMap } from '../services/groupsA
 import { getUserIdFromSocket } from './index.js'
 
 const presentingGroups = {}
+const ratings = {}
 
 async function getPreviousGroupSeeds (socket, clusterRoom) {
   const hackathonId = clusterRoom.split('/cluster/')[0]
@@ -24,9 +25,28 @@ export function onConnectPresentations (socket) {
     if (!presentingGroups[clusterRoom]) {
       presentingGroups[clusterRoom] = 1
     }
+    if (!ratings[clusterRoom]) {
+      ratings[clusterRoom] = {
+        submissionEnabled: false,
+        participantRatings: {}
+      }
+    }
+
+    const userId = getUserIdFromSocket(socket)
 
     getPreviousGroupSeeds(socket, clusterRoom).then((previousSeeds) => {
-      socket.emit('presenting_state', { presentingGroup: presentingGroups[clusterRoom], previousSeeds })
+      socket.emit('presenting_state', {
+        presentingGroup: presentingGroups[clusterRoom],
+        previousSeeds,
+        submissionEnabled: ratings[clusterRoom].submissionEnabled,
+        hasSubmitted: ratings[clusterRoom].submissionEnabled && !!ratings[clusterRoom].participantRatings[userId]
+      })
     })
+  })
+
+  socket.on('submit_ratings', (clusterRoom, submittedRatings) => {
+    const userId = getUserIdFromSocket(socket)
+    ratings[clusterRoom].participantRatings[userId] = submittedRatings
+    console.log(ratings[clusterRoom].participantRatings[userId])
   })
 }
