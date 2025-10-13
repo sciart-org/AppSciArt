@@ -19,19 +19,19 @@ export default function Carousel({
       id: 1,
       text: "ASTER+S > ART ^ NEUROSCIENCE - 2025",
       image:
-        "https://drive.google.com/thumbnail?id=1_DUOT1fdH2Osrnfx7Ua5-YMLaswmBGwh&sz=s4000",
+        "https://drive.google.com/thumbnail?id=1_DUOT1fdH2Osrnfx7Ua5-YMLaswmBGwh&sz=s512",
     },
     {
       id: 2,
       text: "ASTER+S > ART ^ SEALIFE - 2023",
       image:
-        "https://drive.google.com/thumbnail?id=1csVlBreYkkey1NkDyxE0VnWZJToG7geP&sz=s4000",
+        "https://drive.google.com/thumbnail?id=1csVlBreYkkey1NkDyxE0VnWZJToG7geP&sz=s512",
     },
     {
       id: 3,
       text: "ASTER+S > ART ^ ENVIRONMENT & AI - 2024",
       image:
-        "https://drive.google.com/thumbnail?id=1nntzSuxqmzgW6-DCsHyp1FgqWpZH_MHX&sz=s4000",
+        "https://drive.google.com/thumbnail?id=1nntzSuxqmzgW6-DCsHyp1FgqWpZH_MHX&sz=s512",
     },
     {
       id: 4,

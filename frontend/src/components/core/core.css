@@ -1,7 +1,7 @@
 #navbar,
 #footer {
     outline: solid;
-    outline-color: black;
+    outline-color: rgb(200, 200, 200);
     outline-width: 1px;
     width: 96vw;
     padding-left: 2vw;
@@ -76,7 +76,7 @@
     z-index: 1000;
     top: 1.75rem;
     left: -0.25rem;
-    border: 0.1rem solid rgb(100, 100, 100);
+    border: 0.1rem solid rgb(200, 200, 200);
     border-radius: 0.5rem;
     width: 7rem;
 }
@@ -84,7 +84,7 @@
 .collections-dropdown > * {
     padding: 0.5rem;
     text-align: start;
-    border-bottom: 0.1rem solid rgb(100, 100, 100);
+    border-bottom: 0.1rem solid rgb(200, 200, 200);
 }
 
 .collections-dropdown > *:last-child {
