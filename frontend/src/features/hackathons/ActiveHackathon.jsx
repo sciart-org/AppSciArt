@@ -7,6 +7,8 @@ import CreatedGroups from "./components/phases/CreatedGroups";
 import CreatingGroups from "./components/phases/CreatingGroups";
 import PreparingHackathon from "./components/phases/PreparingHackathon";
 import GroupPresentation from "./components/phases/GroupPresentation";
+import CreatingTeams from "./components/phases/CreatingTeams";
+import CreatedTeams from "./components/phases/CreatedTeams";
 
 export default function ActiveHackathon() {
   const [error, setError] = useState(null);
@@ -86,6 +88,10 @@ export default function ActiveHackathon() {
         clusterNumber={participation?.clusterNumber}
       />
     );
+  } else if (hackathon.phase === "TEAM_CREATION") {
+    return <CreatingTeams />;
+  } else if (hackathon.phase === "TEAM_WORK") {
+    return <CreatedTeams participation={participation} />;
   } else {
     return <h2>Unknown phase: {hackathon.phase}</h2>;
   }

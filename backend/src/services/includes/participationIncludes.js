@@ -3,6 +3,7 @@ import { Flower } from '../../models/Flower.js'
 import { Fruit } from '../../models/Fruit.js'
 import { Seed } from '../../models/Seed.js'
 import { UserProfile } from '../../models/UserProfile.js'
+import { includeSeedAuthors } from './productIncludes.js'
 
 export const includeParticipationItems = () => {
   return [
@@ -18,7 +19,8 @@ export const includeParticipationItems = () => {
         model: Seed,
         attributes: {
           exclude: ['template', 'state', 'branchesOfKnowledge']
-        }
+        },
+        include: includeSeedAuthors
       }
     },
     {
