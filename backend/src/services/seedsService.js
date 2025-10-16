@@ -1,4 +1,4 @@
-import { mapToSeedSummary } from './mappers/productMapper.js'
+import { mapSeedAuthors } from './mappers/productMapper.js'
 import { Hackathon } from '../models/Hackathon.js'
 import { Seed } from '../models/Seed.js'
 import { validateEditionById } from '../validators/editionValidators.js'
@@ -14,6 +14,7 @@ export async function getSeedsByEdition (userId, editionId) {
   const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Seed.findAll({
     where: showUnpublished ? {} : filterPublished,
+    attributes: ['id', 'title', 'mainImage', 'branchesOfKnowledge'],
     include: [
       {
         ...includeEdition(editionId),
@@ -22,25 +23,25 @@ export async function getSeedsByEdition (userId, editionId) {
       includeSeedAuthors
     ]
   })
-  return rawResponse.map(s => mapToSeedSummary(s))
+  return rawResponse.map(s => mapSeedAuthors(s))
 }
 
 export async function getSeedsByHackathon (userId, hackathonId) {
   await validateHackathonIsReadable(userId, hackathonId)
   const showUnpublished = await checkIsStaff(userId)
-  const rawResponse = await Seed.findAll({
+  const seeds = await Seed.findAll({
     where: showUnpublished ? {} : filterPublished,
+    attributes: ['id', 'title', 'mainImage'],
     include: [
       {
         model: Hackathon,
         where: { id: hackathonId },
         attributes: [],
         through: { attributes: [] }
-      },
-      includeSeedAuthors
+      }
     ]
   })
-  return rawResponse.map(s => mapToSeedSummary(s))
+  return seeds
 }
 
 export function createSeed (req, res) {

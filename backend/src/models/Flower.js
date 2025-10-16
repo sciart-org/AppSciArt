@@ -42,6 +42,9 @@ export const Flower = sequelize.define(
       }
     }
   }, {
+    defaultScope: {
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    },
     indexes: [
       {
         unique: true,

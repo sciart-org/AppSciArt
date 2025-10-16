@@ -1,16 +1,19 @@
 import { Edition } from '../models/Edition.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateEditionById } from '../validators/editionValidators.js'
-import { mapToEditionDetails, mapToEditionSummary } from './mappers/editionMapper.js'
+import { mapToEditionDetails } from './mappers/editionMapper.js'
 import { includeEditionFruits } from './includes/editionIncludes.js'
 
 export async function getEditions (userId) {
   const showUnpublished = await checkIsStaff(userId)
-  const rawResponse = await Edition.findAll({
+  const editions = await Edition.findAll({
+    attributes: {
+      exclude: ['longDescription', 'catalogLink']
+    },
     where: showUnpublished ? {} : { state: 'PUBLISHED' },
     order: [['year', 'DESC']]
   })
-  return rawResponse.map(e => mapToEditionSummary(e))
+  return editions
 }
 
 export async function createEdition (req, res) {
@@ -22,6 +25,7 @@ export async function createEdition (req, res) {
 export async function getEditionDetails (userId, editionId) {
   await validateEditionById(userId, editionId)
   const edition = await Edition.findByPk(editionId, {
+    attributes: { exclude: ['shortDescription'] },
     include: includeEditionFruits
   })
   return mapToEditionDetails(edition)

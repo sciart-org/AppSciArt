@@ -52,6 +52,8 @@ export const Hackathon = sequelize.define(
     }
   },
   {
-    // Other model options go here
+    defaultScope: {
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    }
   }
 )

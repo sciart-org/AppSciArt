@@ -17,7 +17,6 @@ export default function HomeRouter() {
     fetcher({
       url: "hackathons?filter=active",
       onSuccess: (data) => {
-        console.log(data)
         setActiveHackathon(data);
       },
     }).finally(() => setLoading(false));

@@ -71,6 +71,9 @@ export const Participation = sequelize.define(
       }
     }
   }, {
+    defaultScope: {
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    },
     indexes: [
       {
         unique: true,

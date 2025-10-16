@@ -42,6 +42,9 @@ export const Seed = sequelize.define(
       type: DataTypes.STRING
     }
   }, {
+    defaultScope: {
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    },
     indexes: [
       {
         unique: true,

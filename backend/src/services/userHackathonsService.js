@@ -70,6 +70,9 @@ export async function getParticipation (userId, hackathonId) {
   errorThrower(!checkExists(user), 'User not found.', 404)
 
   const participation = await Participation.findOne({
+    attributes: {
+      exclude: ['interests', 'roles', 'groupId', 'teamId', 'fruitId', 'userProfileId', 'createdAt', 'updatedAt']
+    },
     where: {
       userProfileId: userId,
       hackathonId

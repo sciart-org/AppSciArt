@@ -23,7 +23,6 @@ import Unauthorized from "./features/auth/Unauthorized";
 import EditionDetails from "./features/editions/EditionDetails";
 import HomeRouter from "./features/home/HomeRouter";
 import ActiveHackathon from "./features/hackathons/ActiveHackathon";
-import CreatedGroups from "./features/hackathons/components/phases/CreatedGroups";
 
 function App() {
   useEffect(() => {

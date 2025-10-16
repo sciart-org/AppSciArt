@@ -48,7 +48,7 @@ export default function JoinSuccess({ hackathonId }) {
           allItems={hackathonSeeds.map((s) => {
             return { id: s.id, image: s.mainImage, text: s.title };
           })}
-          onClickIem={(o) => navigate(`/seeds/${o.id}`)}
+          onClickItem={(o) => navigate(`/seeds/${o.id}`)}
         />
       </div>
       <ClickableText

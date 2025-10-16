@@ -6,6 +6,7 @@ import { Participation } from '../../models/Participation.js'
 export const includeEditionName = () => {
   return {
     attributes: {
+      exclude: ['editionId'],
       include: [
         [sequelize.col('edition.name'), 'editionName']
       ]
@@ -38,11 +39,13 @@ export const includeIsEnrolled = (userId) => {
   }
 }
 
-export const combineIncludes = (includesList) => {
-  const attributesInclude = includesList.flatMap(s => s.attributes?.include).filter(s => s !== undefined)
-  const include = includesList.flatMap(s => s.include).filter(s => s !== undefined)
+export const combineIncludes = (optionList) => {
+  const attributesInclude = optionList.flatMap(s => s.attributes?.include).filter(s => s !== undefined)
+  const attributesExclude = optionList.flatMap(s => s.attributes?.exclude).filter(s => s !== undefined)
+  const include = optionList.flatMap(s => s.include).filter(s => s !== undefined)
   return {
     attributes: {
+      exclude: attributesExclude,
       include: attributesInclude
     },
     include
@@ -54,6 +57,7 @@ export const includeMyHackathons = (userId) => {
     include: [
       {
         model: Participation,
+        attributes: [],
         required: true,
         where: { userProfileId: userId }
       }

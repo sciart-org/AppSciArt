@@ -4,7 +4,7 @@ import { Seed } from '../../models/Seed.js'
 
 export const includeEditionFruits = {
   model: Seed,
-  attributes: ['id', 'title'],
+  attributes: ['id'],
   include: [
     {
       model: Flower,

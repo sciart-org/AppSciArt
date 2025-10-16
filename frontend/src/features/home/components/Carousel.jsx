@@ -6,7 +6,7 @@ export default function Carousel({
   mocked,
   allItems,
   small = false,
-  onClickIem = () => {},
+  onClickItem = () => {},
 }) {
   if ((!allItems || allItems.length === 0) && !mocked) {
     return <p>No items to display</p>;
@@ -109,7 +109,7 @@ export default function Carousel({
           {shownObjects.map((o) => (
             <div
               className={small ? "image-container small" : "image-container"}
-              onClick={() => onClickIem(o)}
+              onClick={() => onClickItem(o)}
             >
               <img src={o.image} className="carousel-image" />
             </div>

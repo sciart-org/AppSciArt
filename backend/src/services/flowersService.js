@@ -5,7 +5,7 @@ import { checkExists } from '../validators/generalValidators.js'
 import { validateEditionById } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
-import { mapToFlowerPublicDetail, mapToFlowerSummary } from './mappers/productMapper.js'
+import { mapFlowerAuthors } from './mappers/productMapper.js'
 import { includeSeedsOfEdition, filterPublished, includeFlowerAuthors, includeSeedAuthors } from './includes/productIncludes.js'
 
 export async function getFlowersByEdition (userId, editionId) {
@@ -13,13 +13,14 @@ export async function getFlowersByEdition (userId, editionId) {
   const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Flower.findAll({
     where: showUnpublished ? {} : filterPublished,
+    attributes: ['id', 'title', 'mainImage', 'state'],
     include: [
       includeSeedsOfEdition(editionId),
       includeFlowerAuthors
     ]
   }
   )
-  return rawResponse.map(f => mapToFlowerSummary(f))
+  return rawResponse.map(f => mapFlowerAuthors(f))
 }
 
 export function createFlower (req, res) {
@@ -30,6 +31,9 @@ export function createFlower (req, res) {
 
 export async function getFlowerDetails (userId, flowerId) {
   const rawResponse = await Flower.findByPk(flowerId, {
+    attributes: {
+      exclude: ['template', 'conceptualMap', 'driveLink', 'seedId']
+    },
     include: [
       {
         model: Seed,
@@ -43,7 +47,7 @@ export async function getFlowerDetails (userId, flowerId) {
     ]
   })
   errorThrower(!checkExists(rawResponse), 'Flower not found', 404)
-  const flower = mapToFlowerPublicDetail(rawResponse)
+  const flower = mapFlowerAuthors(rawResponse)
   await validateIsPublishedOrStaff(userId, flower)
   return flower
 }
