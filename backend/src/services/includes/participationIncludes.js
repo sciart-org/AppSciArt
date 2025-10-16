@@ -12,24 +12,24 @@ export const includeParticipationItems = () => {
     {
       model: Flower,
       attributes: {
-        exclude: ['title', 'mainImage', 'concept', 'conceptualMap', 'state', 'seedId', 'createdAt', 'updatedAt']
+        exclude: ['title', 'mainImage', 'concept', 'conceptualMap', 'state', 'seedId']
       },
       include: {
         model: Seed,
         attributes: {
-          exclude: ['template', 'state', 'branchesOfKnowledge', 'createdAt', 'updatedAt']
+          exclude: ['template', 'state', 'branchesOfKnowledge']
         }
       }
     },
     {
       model: ConceptualMap,
       attributes: {
-        exclude: ['seedId', 'createdAt', 'updatedAt']
+        exclude: ['seedId']
       },
       include: {
         model: Seed,
         attributes: {
-          exclude: ['template', 'state', 'branchesOfKnowledge', 'createdAt', 'updatedAt']
+          exclude: ['template', 'state', 'branchesOfKnowledge']
         }
       }
     }

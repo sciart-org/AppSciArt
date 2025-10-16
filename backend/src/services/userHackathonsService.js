@@ -71,7 +71,7 @@ export async function getParticipation (userId, hackathonId) {
 
   const participation = await Participation.findOne({
     attributes: {
-      exclude: ['interests', 'roles', 'groupId', 'teamId', 'fruitId', 'userProfileId', 'createdAt', 'updatedAt']
+      exclude: ['interests', 'roles', 'userProfileId']
     },
     where: {
       userProfileId: userId,
