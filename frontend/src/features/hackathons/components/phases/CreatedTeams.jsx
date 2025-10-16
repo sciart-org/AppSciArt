@@ -7,8 +7,7 @@ import AsterButton from "../../../../components/AsterButton";
 import PhaseTitle from "../PhaseTitle";
 import "./phases.css";
 import SeedResources from "../../../products/components/SeedResources";
-import { DiagramContext } from "../diagramming/DiagramContext";
-import Diagram from "../diagramming/Diagram";
+import { DiagramGallery } from "../diagramming/DiagramGallery";
 
 const TeamHeader = ({ teamMembers, scientists }) => {
   return (
@@ -37,30 +36,13 @@ const TeamHeader = ({ teamMembers, scientists }) => {
   );
 };
 
-const DiagramGallery = (props) => {
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
-  const [error, setError] = useState(null);
-
-  const { fetcher } = useFetcher(error, setError);
-
-  return (
-    <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
-      <Diagram
-        editionMode={false}
-        style={{ width: "80vw", display: props.showMap ? "block" : "none" }}
-      />
-    </DiagramContext>
-  );
-};
-
 export default function CreatedTeams(props) {
   const [justEntered, setJustEntered] = useState(true);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPhaseActive, setIsPhaseActive] = useState(true);
   const [participation, setParticipation] = useState(props.participation);
-  const [showMap, setShowMap] = useState(false);
+  const [showMap, setShowMap] = useState(true);
 
   const params = useParams();
 
@@ -135,6 +117,7 @@ export default function CreatedTeams(props) {
         teamMembers={participation?.teamMembers}
         scientists={seed?.authors}
       />
+      <div style={{ height: "70vh", border: "solid 1px" }} />
       <h3>Additional information</h3>
       <p>Seed: {seed?.title}</p>
       <SeedResources seed={seed} isHorizontal includePdf />
@@ -144,7 +127,10 @@ export default function CreatedTeams(props) {
       >
         {showMap ? "Hide" : "Show"} maps
       </AsterButton>
-      <DiagramGallery showMap={showMap} />
+      <DiagramGallery
+        showMap={showMap}
+        seedId={participation?.teamFlower?.seed?.id}
+      />
     </div>
   );
 }

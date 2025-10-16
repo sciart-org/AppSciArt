@@ -8,6 +8,7 @@ import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { filterPublished, includeEdition, includeSeedAuthors } from './includes/productIncludes.js'
+import { ConceptualMap } from '../models/ConceptualMap.js'
 
 export async function getSeedsByEdition (userId, editionId) {
   await validateEditionById(userId, editionId)
@@ -55,6 +56,20 @@ export async function getSeedDetails (userId, seedId) {
   errorThrower(!checkExists(seed), 'Seed not found', 404)
   await validateIsPublishedOrStaff(userId, seed)
   return seed
+}
+
+export async function getSeedConceptualMapIds (userId, seedId) {
+  const seed = await Seed.findByPk(seedId, { attributes: ['id', 'state'] })
+  errorThrower(!checkExists(seed), 'Seed not found', 404)
+  await validateIsPublishedOrStaff(userId, seed)
+  const conceptualMapsIds = await ConceptualMap.findAll({
+    where: {
+      seedId,
+      isDelivered: true
+    },
+    attributes: ['id']
+  })
+  return conceptualMapsIds
 }
 
 export function updateSeed (req, res) {

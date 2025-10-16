@@ -43,3 +43,10 @@ export function deleteSeed (req, res) {
 export function publishSeed (req, res) {
   service.publishSeed(req, res)
 }
+
+export const getSeedConceptualMapsIds = withErrorHandler(async (req, res) => {
+  const seedId = req.params.seedId
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  const conceptualMapsIds = await service.getSeedConceptualMapIds(currentUser?.id, seedId)
+  return res.status(200).send(conceptualMapsIds.map(cm => cm.id))
+})

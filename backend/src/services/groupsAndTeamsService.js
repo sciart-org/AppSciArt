@@ -102,19 +102,28 @@ export async function submitConceptualMap (userId, groupId, map) {
 }
 
 export async function getConceptualMap (userId, groupId) {
-  const hackathonId = (await Participation.findOne({
-    attributes: ['hackathonId'],
-    where: {
-      groupId
-    }
-  })).hackathonId
-  errorThrower(!checkExists(hackathonId), 'Group not found', 404)
-  await checkUserIsInHackathon(userId, hackathonId)
-  return await ConceptualMap.findByPk(groupId, {
+  const conceptualMap = await ConceptualMap.findByPk(groupId, {
     attributes: { exclude: ['seedId'] },
     include: [{
       model: Seed,
       attributes: ['id', 'mainImage', 'title']
     }]
   })
+  errorThrower(!checkExists(conceptualMap), 'Map not found', 404)
+
+  if (conceptualMap.isDelivered) {
+    return conceptualMap
+  }
+
+  const hackathonId = (await Participation.findOne({
+    attributes: ['hackathonId'],
+    where: {
+      groupId
+    }
+  }))?.hackathonId
+  errorThrower(!checkExists(hackathonId), 'Group not found', 404)
+
+  await checkUserIsInHackathon(userId, hackathonId)
+
+  return conceptualMap
 }
