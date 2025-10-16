@@ -6,6 +6,9 @@ import ParticipantList from "../ParticipantList";
 import AsterButton from "../../../../components/AsterButton";
 import PhaseTitle from "../PhaseTitle";
 import "./phases.css";
+import SeedResources from "../../../products/components/SeedResources";
+import { DiagramContext } from "../diagramming/DiagramContext";
+import Diagram from "../diagramming/Diagram";
 
 const TeamHeader = ({ teamMembers, scientists }) => {
   return (
@@ -34,16 +37,36 @@ const TeamHeader = ({ teamMembers, scientists }) => {
   );
 };
 
+const DiagramGallery = (props) => {
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
+  const [error, setError] = useState(null);
+
+  const { fetcher } = useFetcher(error, setError);
+
+  return (
+    <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
+      <Diagram
+        editionMode={false}
+        style={{ width: "80vw", display: props.showMap ? "block" : "none" }}
+      />
+    </DiagramContext>
+  );
+};
+
 export default function CreatedTeams(props) {
   const [justEntered, setJustEntered] = useState(true);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPhaseActive, setIsPhaseActive] = useState(true);
   const [participation, setParticipation] = useState(props.participation);
+  const [showMap, setShowMap] = useState(false);
 
   const params = useParams();
 
   const { fetcher } = useFetcher(error, setError);
+
+  const seed = participation?.teamFlower?.seed;
 
   useEffect(() => {
     fetcher({
@@ -90,9 +113,7 @@ export default function CreatedTeams(props) {
           Co-creation teams have been created!
           {"\n"}Your team will help this seed flourish:
         </h3>
-        <h3 style={{ marginTop: 0 }}>
-          {participation?.teamFlower?.seed?.title}
-        </h3>
+        <h3 style={{ marginTop: 0 }}>{seed?.title}</h3>
         <ParticipantList
           participants={participation?.teamMembers}
           participantStyle={{ margin: "2vw 2vw 0 2vw" }}
@@ -112,8 +133,18 @@ export default function CreatedTeams(props) {
     <div>
       <TeamHeader
         teamMembers={participation?.teamMembers}
-        scientists={participation?.teamFlower?.seed?.authors}
+        scientists={seed?.authors}
       />
+      <h3>Additional information</h3>
+      <p>Seed: {seed?.title}</p>
+      <SeedResources seed={seed} isHorizontal includePdf />
+      <AsterButton
+        onClick={() => setShowMap(!showMap)}
+        style={{ margin: "1rem", width: "10rem" }}
+      >
+        {showMap ? "Hide" : "Show"} maps
+      </AsterButton>
+      <DiagramGallery showMap={showMap} />
     </div>
   );
 }
