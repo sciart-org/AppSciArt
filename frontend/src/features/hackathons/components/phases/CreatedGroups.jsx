@@ -25,6 +25,7 @@ const GroupHeader = ({ groupMembers }) => {
           participants={groupMembers || []}
           fontSize={"1vw"}
           className={"participant-icon"}
+          isGroup={true}
         />
       </div>
       <PhaseTitle>Exploring group</PhaseTitle>

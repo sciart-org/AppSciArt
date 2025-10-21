@@ -4,14 +4,13 @@ import { checkExists } from './generalValidators.js'
 
 const checkUserIsInGroup = async (userId, groupId) => {
   const participation = await Participation.findOne({
-    attributes: ['id'],
     where: {
       userProfileId: userId,
       groupId
     }
   })
   errorThrower(!checkExists(participation), 'You are not in this group', 403)
-  return participation.id
+  return participation
 }
 
 export const checkUserIsGroupVoice = async (userId, groupId) => {

@@ -14,6 +14,7 @@ const reorganizeParticipants = (participants) => {
 export default function ParticipantList(props) {
   const { participants, participantStyle, fontSize, className } = props;
   const participantsLists = reorganizeParticipants(participants);
+  const isGroup = props.isGroup
 
   return (
     <div
@@ -36,8 +37,12 @@ export default function ParticipantList(props) {
               return (
                 <div>
                   <Participant style={participantStyle} className={className} />
-                  <p style={{ fontSize: fontSize || "1rem" }}>
+                  <p style={{ fontSize: fontSize || "1rem", marginBottom: 0 }}>
                     {m.name} {m.surname}
+                  </p>
+                  <p style={{ fontSize: fontSize || "1rem", marginTop: 0 }}>
+                    {isGroup && m?.isGroupVoice && <>(Group voice)</>}
+                    {!isGroup && m?.isTeamSpeaker && <>(Team speaker)</>}
                   </p>
                 </div>
               );
