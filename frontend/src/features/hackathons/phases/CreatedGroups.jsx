@@ -1,43 +1,21 @@
 import { useEffect, useState } from "react";
-import AsterButton from "../../../../components/AsterButton";
+import AsterButton from "../../../components/AsterButton";
 import { useNavigate, useParams } from "react-router";
-import useFetcher from "../../../../utils/useFetcher";
-import Loading from "../../../../components/messages/Loading";
-import ParticipantList from "../ParticipantList";
-import RenderPDF from "../../../../components/RenderPDF";
-import SeedResources from "../../../products/components/SeedResources";
-import PhaseTitle from "../PhaseTitle";
-import Diagram from "../diagramming/Diagram";
-import Modal from "../../../../components/Modal";
+import useFetcher from "../../../utils/useFetcher";
+import Loading from "../../../components/messages/Loading";
+import ParticipantList from "../components/ParticipantList";
+import SeedResources from "../../products/components/SeedResources";
+import Diagram from "../components/diagramming/Diagram";
+import Modal from "../../../components/Modal";
 import "./phases.css";
-import { DiagramContext } from "../diagramming/DiagramContext";
-
-const GroupHeader = ({ groupMembers }) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <div style={{ flex: 1, marginTop: "1vw" }}>
-        <ParticipantList
-          participants={groupMembers || []}
-          fontSize={"1vw"}
-          className={"participant-icon"}
-          isGroup={true}
-        />
-      </div>
-      <PhaseTitle>Exploring group</PhaseTitle>
-      <div style={{ flex: 1 }}></div>
-    </div>
-  );
-};
+import { DiagramContext } from "../components/diagramming/DiagramContext";
+import CreationProcessHeader from "../../../components/CreationProcessHeader";
+import RenderUrl from "../../../components/RenderUrl";
 
 const GroupSeedResources = ({ pdf, seed }) => {
   return (
     <div style={{ flex: 1 }}>
-      <RenderPDF pdfUrl={pdf} style={{ margin: "1rem 0" }} />
+      <RenderUrl url={pdf} style={{ margin: "1rem 0" }} />
       <SeedResources seed={seed} style={{ marginLeft: 0 }} />
     </div>
   );
@@ -130,7 +108,9 @@ export default function CreatedGroups(props) {
   if (participation?.conceptualMap?.isDelivered) {
     return (
       <>
-        <GroupHeader groupMembers={participation?.groupMembers} />
+        <CreationProcessHeader members={participation?.groupMembers}>
+          Exploring group
+        </CreationProcessHeader>
         <h3 style={{ marginTop: "5vh" }}>
           Your conceptual map has been submitted! Feel free to take a break.
         </h3>
@@ -192,7 +172,9 @@ export default function CreatedGroups(props) {
   return (
     <div>
       <ConfirmDeliveryModal />
-      <GroupHeader groupMembers={participation?.groupMembers} />
+      <CreationProcessHeader members={participation?.groupMembers}>
+        Exploring group
+      </CreationProcessHeader>
       <div style={{ display: "flex" }}>
         <GroupSeedResources
           pdf={participation?.groupSeed?.seedPDF}

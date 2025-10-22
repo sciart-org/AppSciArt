@@ -19,11 +19,11 @@ import Collection from "./features/products/collections/Collection";
 import SeedDetails from "./features/products/details/SeedDetails";
 import FruitDetails from "./features/products/details/FruitDetails";
 import FlowerDetails from "./features/products/details/FlowerDetails";
-import Unauthorized from "./features/auth/Unauthorized";
+import Unauthorized from "./features/auth/errors/Unauthorized";
 import EditionDetails from "./features/editions/EditionDetails";
 import HomeRouter from "./features/home/HomeRouter";
 import ActiveHackathon from "./features/hackathons/ActiveHackathon";
-import Forbidden from "./features/auth/Forbidden";
+import Forbidden from "./features/auth/errors/Forbidden";
 
 function App() {
   useEffect(() => {

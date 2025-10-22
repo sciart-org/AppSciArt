@@ -3,12 +3,12 @@ import useFetcher from "../../utils/useFetcher";
 import { useEffect, useState } from "react";
 import Loading from "../../components/messages/Loading";
 import useWebSockets from "../../utils/useWebSockets";
-import CreatedGroups from "./components/phases/CreatedGroups";
-import CreatingGroups from "./components/phases/CreatingGroups";
-import PreparingHackathon from "./components/phases/PreparingHackathon";
-import GroupPresentation from "./components/phases/GroupPresentation";
-import CreatingTeams from "./components/phases/CreatingTeams";
-import CreatedTeams from "./components/phases/CreatedTeams";
+import CreatedGroups from "./phases/CreatedGroups";
+import CreatingGroups from "./phases/CreatingGroups";
+import PreparingHackathon from "./phases/PreparingHackathon";
+import GroupPresentation from "./phases/GroupPresentation";
+import CreatingTeams from "./phases/CreatingTeams";
+import CreatedTeams from "./phases/CreatedTeams";
 
 export default function ActiveHackathon() {
   const [error, setError] = useState(null);

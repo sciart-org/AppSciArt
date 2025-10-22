@@ -11,7 +11,7 @@ export const DiagramGallery = (props) => {
   const [error, setError] = useState(null);
   const [showingMapId, setShowingMapId] = useState(null);
   const [conceptualMapIds, setConceptualMapIds] = useState([]);
-  const currentIndex = conceptualMapIds.indexOf(showingMapId);
+  const currentIndex = conceptualMapIds?.indexOf(showingMapId);
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -46,7 +46,7 @@ export const DiagramGallery = (props) => {
     return <Loading />;
   }
 
-  if (!!nodes && !conceptualMapIds) {
+  if (!!nodes && !conceptualMapIds && props.showMap) {
     return <p>No maps found</p>;
   }
 
@@ -74,7 +74,7 @@ export const DiagramGallery = (props) => {
             Previous
           </AsterButton>
           <p>
-            {conceptualMapIds.indexOf(showingMapId) + 1}/
+            {conceptualMapIds?.indexOf(showingMapId) + 1}/
             {conceptualMapIds.length}
           </p>
           <AsterButton

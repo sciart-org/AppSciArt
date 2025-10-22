@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import useFetcher from "../../../../utils/useFetcher";
-import Participant from "../../../../components/roles/Participant";
-import { DiagramContext } from "../diagramming/DiagramContext";
-import Diagram from "../diagramming/Diagram";
-import AsterButton from "../../../../components/AsterButton";
-import SelectorBar from "../../../../components/SelectorBar";
-import Loading from "../../../../components/messages/Loading";
-import Seed from "../../../../components/sciartProducts/Seed";
-import StarRating from "../../../../components/StarRating";
+import useFetcher from "../../../utils/useFetcher";
+import Participant from "../../../components/roles/Participant";
+import { DiagramContext } from "../components/diagramming/DiagramContext";
+import Diagram from "../components/diagramming/Diagram";
+import AsterButton from "../../../components/AsterButton";
+import SelectorBar from "../../../components/SelectorBar";
+import Loading from "../../../components/messages/Loading";
+import Seed from "../../../components/sciartProducts/Seed";
+import StarRating from "../../../components/StarRating";
 import "./phases.css";
-import "../../../products/collections/css/collections.css";
+import "../../products/collections/css/collections.css";
 import CreatingTeams from "./CreatingTeams";
 
 const RatingCard = ({ item, setRatingItems }) => {
@@ -111,7 +111,7 @@ export default function GroupPresentation({
   }, [socket, hackathonId, clusterNumber]);
 
   if (ratingsSubmitted) {
-    return <CreatingTeams/>
+    return <CreatingTeams />;
   }
 
   if (!presentingGroup) {

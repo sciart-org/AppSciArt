@@ -1,40 +1,13 @@
 import { useEffect, useState } from "react";
-import useFetcher from "../../../../utils/useFetcher";
-import Loading from "../../../../components/messages/Loading";
+import useFetcher from "../../../utils/useFetcher";
+import Loading from "../../../components/messages/Loading";
 import { useParams } from "react-router";
-import ParticipantList from "../ParticipantList";
-import AsterButton from "../../../../components/AsterButton";
-import PhaseTitle from "../PhaseTitle";
+import ParticipantList from "../components/ParticipantList";
+import AsterButton from "../../../components/AsterButton";
 import "./phases.css";
-import SeedResources from "../../../products/components/SeedResources";
-import { DiagramGallery } from "../diagramming/DiagramGallery";
-
-const TeamHeader = ({ teamMembers, scientists }) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <div style={{ flex: 1, marginTop: "1vw" }}>
-        <ParticipantList
-          participants={teamMembers || []}
-          fontSize={"1vw"}
-          className={"participant-icon"}
-        />
-      </div>
-      <PhaseTitle>Co-creation team</PhaseTitle>
-      <div style={{ flex: 1, marginTop: "1vw" }}>
-        <ParticipantList
-          participants={scientists || []}
-          fontSize={"1vw"}
-          className={"participant-icon"}
-        />
-      </div>
-    </div>
-  );
-};
+import SeedResources from "../../products/components/SeedResources";
+import { DiagramGallery } from "../components/diagramming/DiagramGallery";
+import CreationProcessHeader from "../../../components/CreationProcessHeader";
 
 export default function CreatedTeams(props) {
   const [justEntered, setJustEntered] = useState(true);
@@ -42,7 +15,7 @@ export default function CreatedTeams(props) {
   const [loading, setLoading] = useState(true);
   const [isPhaseActive, setIsPhaseActive] = useState(true);
   const [participation, setParticipation] = useState(props.participation);
-  const [showMap, setShowMap] = useState(true);
+  const [showMap, setShowMap] = useState(false);
 
   const params = useParams();
 
@@ -113,10 +86,12 @@ export default function CreatedTeams(props) {
 
   return (
     <div>
-      <TeamHeader
-        teamMembers={participation?.teamMembers}
+      <CreationProcessHeader
+        members={participation?.teamMembers}
         scientists={seed?.authors}
-      />
+      >
+        Co-creation team
+      </CreationProcessHeader>
       <div style={{ height: "70vh", border: "solid 1px" }} />
       <h3>Additional information</h3>
       <p>Seed: {seed?.title}</p>

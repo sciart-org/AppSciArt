@@ -1,4 +1,4 @@
-import Meet from "../../../home/components/Meet";
+import Meet from "../../home/components/Meet";
 
 export default function PreparingHackathon({ hackathon }) {
   return (
