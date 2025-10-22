@@ -46,6 +46,9 @@ export default function useFetcher(error, setError) {
                 if (response.status === 404) {
                     navigate("/not-found")
                 }
+                if (response.status === 403) {
+                    navigate("/forbidden")
+                }
                 return response.json();
             })
             .then((data) => {

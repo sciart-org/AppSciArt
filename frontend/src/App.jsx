@@ -23,6 +23,7 @@ import Unauthorized from "./features/auth/Unauthorized";
 import EditionDetails from "./features/editions/EditionDetails";
 import HomeRouter from "./features/home/HomeRouter";
 import ActiveHackathon from "./features/hackathons/ActiveHackathon";
+import Forbidden from "./features/auth/Forbidden";
 
 function App() {
   useEffect(() => {
@@ -53,6 +54,7 @@ function App() {
       <Route path="/" element={<HomeRouter />} />
       <Route path="/not-found" element={<NotFound resource={true} />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/forbidden" element={<Forbidden />} />
       <Route path="/editions" element={<Editions />} />
       <Route path="/editions/:editionId" element={<EditionDetails />} />
       <Route path="/hackathons" element={<Hackathons />} />
