@@ -16,6 +16,7 @@ import { Designer } from './roles/Designer.js'
 import { Evaluator } from './roles/Evaluator.js'
 import { Facilitator } from './roles/Facilitator.js'
 import { ConceptualMap } from './ConceptualMap.js'
+import { ScientistEditions } from './intermediate/ScientistEditions.js'
 
 const notNull = (attributeName) => {
   return {
@@ -67,6 +68,9 @@ Seed.hasMany(ConceptualMap, notNull('seedId'))
 
 Seed.belongsToMany(InspiringScientist, { through: SeedScientists })
 InspiringScientist.belongsToMany(Seed, { through: SeedScientists })
+
+Edition.belongsToMany(InspiringScientist, { through: ScientistEditions })
+InspiringScientist.belongsToMany(Edition, { through: ScientistEditions })
 
 //  ROLES BELOW
 
