@@ -16,7 +16,6 @@ import RegistrationEntry from "./features/auth/RegistrationEntry";
 import JoinHackathon from "./features/hackathons/JoinHackathon";
 import { Message } from "./components/messages/Message";
 import Collection from "./features/products/collections/Collection";
-import SeedDetails from "./features/products/details/SeedDetails";
 import FruitDetails from "./features/products/details/FruitDetails";
 import FlowerDetails from "./features/products/details/FlowerDetails";
 import Unauthorized from "./features/auth/errors/Unauthorized";
@@ -24,6 +23,7 @@ import EditionDetails from "./features/editions/EditionDetails";
 import HomeRouter from "./features/home/HomeRouter";
 import ActiveHackathon from "./features/hackathons/ActiveHackathon";
 import Forbidden from "./features/auth/errors/Forbidden";
+import SeedRouter from "./features/products/details/SeedRouter";
 
 function App() {
   useEffect(() => {
@@ -83,7 +83,7 @@ function App() {
         path="/collections/fruits"
         element={<Collection itemName="fruit" />}
       />
-      <Route path="/seeds/:seedId" element={<SeedDetails />} />
+      <Route path="/seeds/:seedId" element={<SeedRouter />} />
       <Route path="/flowers/:flowerId" element={<FlowerDetails />} />
       <Route path="/fruits/:fruitId" element={<FruitDetails />} />
     </>

@@ -1,39 +1,13 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import useFetcher from "../../../utils/useFetcher";
-import Loading from "../../../components/messages/Loading";
+import { useNavigate } from "react-router";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
-
-import "./css/details.css";
 import tokenService from "../../../utils/token.service";
 import SeedResources from "../components/SeedResources";
-import RenderPDF from "../../../components/RenderPDF";
+import "./css/details.css";
+import RenderUrl from "../../../components/RenderUrl";
 
-export default function SeedDetails() {
-  const params = useParams();
-  const [error, setError] = useState(null);
-  const [seed, setSeed] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+export default function SeedDetails({ seed, setSeed }) {
   const navigate = useNavigate();
-
-  const { fetcher } = useFetcher(error, setError);
-
-  const fetchSeed = async () => {
-    await fetcher({
-      url: `seeds/${params.seedId}`,
-      onSuccess: (data) => {
-        setSeed(data);
-      },
-    }).finally(() => {
-      setLoading(false);
-    });
-  };
-
-  useEffect(() => {
-    fetchSeed();
-  }, []);
 
   const likeSeed = () => {
     setSeed({ ...seed, isLiked: true });
@@ -76,10 +50,6 @@ export default function SeedDetails() {
     );
   };
 
-  if (loading) {
-    return <Loading />;
-  }
-
   return (
     <div>
       <h1>{seed?.title}</h1>
@@ -91,7 +61,7 @@ export default function SeedDetails() {
             <SeedResources seed={seed} />
           </div>
         </div>
-        <RenderPDF pdfUrl={seed?.seedPDF} />
+        <RenderUrl url={seed?.seedPDF} />
       </div>
     </div>
   );
