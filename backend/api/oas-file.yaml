@@ -28,6 +28,8 @@ tags:
     description: Group and team management
   - name: Clusters
     description: Cluster management
+  - name: Scientists
+    description: Scientist-related endpoints
 
 paths:
   /editions:
@@ -1630,6 +1632,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DomainItemList"
+
+  /scientists/me/editions:
+    x-router-controller: scientistsController
+    get:
+      tags: [Scientists]
+      summary: Get editions in which I can create seeds
+      operationId: getMyScientistEditions
+      responses:
+        "200":
+          description: A list of editions
+
+  /scientists/me/editions/{editionId}/seeds:
+    x-router-controller: scientistsController
+    get:
+      tags: [Scientists]
+      summary: Get my seeds of an edition
+      operationId: getMyEditionSeeds
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: A list of seeds
 
 components:
   securitySchemes:
