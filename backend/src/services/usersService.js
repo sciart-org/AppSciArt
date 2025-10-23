@@ -4,11 +4,10 @@ import { UserProfile } from '../models/UserProfile.js'
 import { errorThrower } from './errorThrower.js'
 import { getJwt } from './authService.js'
 import { Administrator } from '../models/roles/Administrator.js'
-import { checkHasRoleById } from '../validators/userValidators.js'
+import { checkHasRoleById, checkIsInspiringScientist } from '../validators/userValidators.js'
 import { Designer } from '../models/roles/Designer.js'
 import { Evaluator } from '../models/roles/Evaluator.js'
 import { Facilitator } from '../models/roles/Facilitator.js'
-import { InspiringScientist } from '../models/roles/InspiringScientist.js'
 
 export function getUsers (req, res) {
   res.send({
@@ -81,7 +80,7 @@ export async function getUserRoles (userId) {
     roles.push('facilitator')
   }
 
-  const isScientist = await checkHasRoleById(userId, InspiringScientist)
+  const isScientist = await checkIsInspiringScientist(userId)
   if (isScientist) {
     roles.push('inspiring_scientist')
   }

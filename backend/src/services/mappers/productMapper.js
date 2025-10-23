@@ -4,8 +4,8 @@ export const mapSeedAuthors = (rawSeed) => {
   const seed = toPlainObject(rawSeed)
   return {
     ...seed,
-    authors: seed?.inspiring_scientists?.map(is => is.user_profile),
-    inspiring_scientists: undefined
+    authors: seed?.user_profiles,
+    user_profiles: undefined
   }
 }
 

@@ -10,9 +10,10 @@ import { Administrator } from '../src/models/roles/Administrator.js'
 import { Designer } from '../src/models/roles/Designer.js'
 import { Evaluator } from '../src/models/roles/Evaluator.js'
 import { Facilitator } from '../src/models/roles/Facilitator.js'
-import { InspiringScientist } from '../src/models/roles/InspiringScientist.js'
 import { Seed } from '../src/models/Seed.js'
 import { UserProfile } from '../src/models/UserProfile.js'
+import { ConceptualMap } from '../src/models/ConceptualMap.js'
+import { ScientistEditions } from '../src/models/intermediate/ScientistEditions.js'
 
 const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ADMIN_KEY, {
   auth: {
@@ -23,6 +24,8 @@ const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABAS
 })
 
 export const deleteDatabase = async () => {
+  await ScientistEditions.destroy({ truncate: { cascade: true } })
+  await ConceptualMap.destroy({ truncate: { cascade: true } })
   await Participation.destroy({ truncate: { cascade: true } })
   await Fruit.destroy({ truncate: { cascade: true } })
   await Flower.destroy({ truncate: { cascade: true } })
@@ -34,7 +37,6 @@ export const deleteDatabase = async () => {
   await Designer.destroy({ truncate: { cascade: true } })
   await Evaluator.destroy({ truncate: { cascade: true } })
   await Facilitator.destroy({ truncate: { cascade: true } })
-  await InspiringScientist.destroy({ truncate: { cascade: true } })
 
   const { data: { users }, error } = await supabaseAdmin.auth.admin.listUsers()
   for (const u of users) {

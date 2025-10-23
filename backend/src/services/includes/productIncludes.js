@@ -1,7 +1,6 @@
 import { Edition } from '../../models/Edition.js'
 import { Seed } from '../../models/Seed.js'
 import { UserProfile } from '../../models/UserProfile.js'
-import { InspiringScientist } from '../../models/roles/InspiringScientist.js'
 import { Participation } from '../../models/Participation.js'
 
 export const filterPublished = {
@@ -32,12 +31,7 @@ const includeAuthor = () => {
   }
 }
 
-export const includeSeedAuthors = {
-  model: InspiringScientist,
-  attributes: ['id'],
-  through: { attributes: [] },
-  include: [includeAuthor()]
-}
+export const includeSeedAuthors = { ...includeAuthor(), through: { attributes: [] } }
 
 export const includeFlowerAuthors = {
   model: Participation,

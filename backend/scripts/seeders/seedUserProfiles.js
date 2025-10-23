@@ -2,7 +2,6 @@ import { Administrator } from '../../src/models/roles/Administrator.js'
 import { Designer } from '../../src/models/roles/Designer.js'
 import { Evaluator } from '../../src/models/roles/Evaluator.js'
 import { Facilitator } from '../../src/models/roles/Facilitator.js'
-import { InspiringScientist } from '../../src/models/roles/InspiringScientist.js'
 import { UserProfile } from '../../src/models/UserProfile.js'
 import { directRegister } from '../../src/services/authService.js'
 
@@ -171,9 +170,6 @@ export async function seedUserProfiles () {
       }
       if (u.name.includes('facilitator')) {
         await Facilitator.create(body)
-      }
-      if (u.name.includes('scientist')) {
-        await InspiringScientist.create(body)
       }
     } catch (err) {
       console.error(err)

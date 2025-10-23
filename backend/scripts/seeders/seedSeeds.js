@@ -3,7 +3,7 @@ import { SeedLikes } from '../../src/models/intermediate/SeedLikes.js'
 import { Seed } from '../../src/models/Seed.js'
 import { UserProfile } from '../../src/models/UserProfile.js'
 import { SeedScientists } from '../../src/models/intermediate/SeedScientists.js'
-import { InspiringScientist } from '../../src/models/roles/InspiringScientist.js'
+import { Op } from 'sequelize'
 
 const baseSeed = {
   id: null,
@@ -177,84 +177,90 @@ export async function seedSeeds () {
     }
   ])
 
-  const scientists = await InspiringScientist.findAll()
+  const scientists = await UserProfile.findAll({
+    where: {
+      name: {
+        [Op.iLike]: '%scientist%'
+      }
+    }
+  })
 
   await SeedScientists.bulkCreate([
     {
       seedId: '00000000-0000-0005-0000-000000000000',
-      inspiringScientistId: scientists[1].id
+      userProfileId: scientists[1].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000001',
-      inspiringScientistId: scientists[0].id
+      userProfileId: scientists[0].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000001',
-      inspiringScientistId: scientists[2].id
+      userProfileId: scientists[2].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000002',
-      inspiringScientistId: scientists[3].id
+      userProfileId: scientists[3].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000003',
-      inspiringScientistId: scientists[1].id
+      userProfileId: scientists[1].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000003',
-      inspiringScientistId: scientists[3].id
+      userProfileId: scientists[3].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000004',
-      inspiringScientistId: scientists[0].id
+      userProfileId: scientists[0].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000004',
-      inspiringScientistId: scientists[1].id
+      userProfileId: scientists[1].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000004',
-      inspiringScientistId: scientists[3].id
+      userProfileId: scientists[3].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000005',
-      inspiringScientistId: scientists[2].id
+      userProfileId: scientists[2].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000006',
-      inspiringScientistId: scientists[0].id
+      userProfileId: scientists[0].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000006',
-      inspiringScientistId: scientists[2].id
+      userProfileId: scientists[2].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000006',
-      inspiringScientistId: scientists[3].id
+      userProfileId: scientists[3].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000007',
-      inspiringScientistId: scientists[1].id
+      userProfileId: scientists[1].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000007',
-      inspiringScientistId: scientists[2].id
+      userProfileId: scientists[2].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000007',
-      inspiringScientistId: scientists[3].id
+      userProfileId: scientists[3].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000007',
-      inspiringScientistId: scientists[0].id
+      userProfileId: scientists[0].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000008',
-      inspiringScientistId: scientists[0].id
+      userProfileId: scientists[0].id
     },
     {
       seedId: '00000000-0000-0005-0000-000000000008',
-      inspiringScientistId: scientists[3].id
+      userProfileId: scientists[3].id
     }
   ])
 }

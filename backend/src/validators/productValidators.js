@@ -1,8 +1,7 @@
-import { InspiringScientist } from '../models/roles/InspiringScientist.js'
 import { Seed } from '../models/Seed.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { errorThrower } from '../services/errorThrower.js'
-import { checkHasRoleById, checkIsStaff } from './userValidators.js'
+import { checkIsInspiringScientist, checkIsStaff } from './userValidators.js'
 
 const validateIsPublishedOrStaff = async (userId, product) => {
   return errorThrower(product.state !== 'PUBLISHED' && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this resource', 403)
@@ -15,17 +14,10 @@ const checkSeedIsFromScientist = async (seedId, userId) => {
     },
     include: [
       {
-        model: InspiringScientist,
+        model: UserProfile,
+        where: { id: userId },
         attributes: [],
-        required: true,
-        include: [
-          {
-            model: UserProfile,
-            where: { id: userId },
-            attributes: [],
-            required: true
-          }
-        ]
+        required: true
       }
     ]
   })
@@ -39,7 +31,7 @@ const validateCanGetSeed = async (userId, seed) => {
 
   const errorMessage = 'You cannot access this seed'
   const isStaff = await checkIsStaff(userId)
-  const isScientist = await checkHasRoleById(userId, InspiringScientist)
+  const isScientist = await checkIsInspiringScientist(userId)
   const isSeedOwner = await checkSeedIsFromScientist(seed?.id, userId)
 
   if (seed.state === 'IN_REVIEW') {

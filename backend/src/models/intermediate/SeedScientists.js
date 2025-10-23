@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../../config/sequelize.js'
 import { Seed } from '../Seed.js'
-import { InspiringScientist } from '../roles/InspiringScientist.js'
+import { UserProfile } from '../UserProfile.js'
 
 export const SeedScientists = sequelize.define(
   'seed_scientists',
@@ -15,12 +15,12 @@ export const SeedScientists = sequelize.define(
         key: 'id'
       }
     },
-    inspiringScientistId: {
+    userProfileId: {
       type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
       references: {
-        model: InspiringScientist,
+        model: UserProfile,
         key: 'id'
       }
     }
@@ -32,7 +32,7 @@ export const SeedScientists = sequelize.define(
     indexes: [
       {
         unique: true,
-        fields: ['seedId', 'inspiringScientistId']
+        fields: ['seedId', 'userProfileId']
       }
     ]
   }

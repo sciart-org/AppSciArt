@@ -1,4 +1,7 @@
+import { Op } from 'sequelize'
 import { Edition } from '../../src/models/Edition.js'
+import { ScientistEditions } from '../../src/models/intermediate/ScientistEditions.js'
+import { UserProfile } from '../../src/models/UserProfile.js'
 
 const baseEdition = {
   id: null,
@@ -12,7 +15,7 @@ const baseEdition = {
 }
 
 export async function seedEditions () {
-  await Edition.bulkCreate([
+  const editions = [
     {
       ...baseEdition,
       id: '00000000-0000-0003-0000-000000000000',
@@ -56,5 +59,35 @@ Science alone cannot imagine more habitable worlds; art alone cannot transform t
 
 The ASTER+S experience, and the works it gathers, stand as testimony to that pursuit. They are not mere documentary records; they are invitations to cross thresholds: from left to right hemisphere, from data to gesture, from standardized cognition to disruptive, transformative imagination... and back again. May participatory experiences and exhibitions like this awaken our curiosity, care, and respect for art and science as complementary languages with which to inhabit a more conscious present and a more humane future.`
     }
-  ])
+  ]
+
+  await Edition.bulkCreate([...editions, {
+    id: '00000000-0000-0003-0000-000000000003',
+    name: 'ASTER+S > ART ^ GENETICS',
+    year: 2026,
+    state: 'PLANNED'
+  }])
+
+  const scientists = await UserProfile.findAll({
+    where: {
+      name: {
+        [Op.iLike]: '%scientist%'
+      }
+    }
+  })
+
+  const scientistEditions = []
+  for (const edition of editions) {
+    for (const userProfile of scientists) {
+      scientistEditions.push({
+        userProfileId: userProfile.id,
+        editionId: edition.id
+      })
+    }
+  }
+  await ScientistEditions.bulkCreate(scientistEditions)
+  await ScientistEditions.create({
+    userProfileId: scientists[0].id,
+    editionId: '00000000-0000-0003-0000-000000000003'
+  })
 }

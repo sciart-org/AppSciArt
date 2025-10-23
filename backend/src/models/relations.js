@@ -10,7 +10,6 @@ import { SeedEditions } from './intermediate/SeedEditions.js'
 import { HackathonSeeds } from './intermediate/HackathonSeeds.js'
 import { SeedLikes } from './intermediate/SeedLikes.js'
 import { SeedScientists } from './intermediate/SeedScientists.js'
-import { InspiringScientist } from './roles/InspiringScientist.js'
 import { Administrator } from './roles/Administrator.js'
 import { Designer } from './roles/Designer.js'
 import { Evaluator } from './roles/Evaluator.js'
@@ -66,11 +65,11 @@ Participation.belongsTo(Hackathon, notNull('hackathonId'))
 ConceptualMap.belongsTo(Seed)
 Seed.hasMany(ConceptualMap, notNull('seedId'))
 
-Seed.belongsToMany(InspiringScientist, { through: SeedScientists })
-InspiringScientist.belongsToMany(Seed, { through: SeedScientists })
+Seed.belongsToMany(UserProfile, { through: SeedScientists })
+UserProfile.belongsToMany(Seed, { through: SeedScientists })
 
-Edition.belongsToMany(InspiringScientist, { through: ScientistEditions })
-InspiringScientist.belongsToMany(Edition, { through: ScientistEditions })
+Edition.belongsToMany(UserProfile, { through: ScientistEditions })
+UserProfile.belongsToMany(Edition, { through: ScientistEditions })
 
 //  ROLES BELOW
 
@@ -81,11 +80,6 @@ UserProfile.hasOne(Facilitator, notNull('userProfileId'))
 Facilitator.belongsTo(UserProfile)
 // Facilitator.belongsTo(Methodology)
 // Methodology.hasMany(Facilitator)
-
-UserProfile.hasOne(InspiringScientist, notNull('userProfileId'))
-InspiringScientist.belongsTo(UserProfile)
-// InspiringScientist.belongsTo(Methodology)
-// Methodology.hasMany(InspiringScientist)
 
 UserProfile.hasOne(Evaluator, notNull('userProfileId'))
 Evaluator.belongsTo(UserProfile)
