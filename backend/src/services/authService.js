@@ -98,7 +98,7 @@ async function createUserProfile (body) {
   const createdUserProfile = await UserProfile.findByPk(body.id)
   if (checkExists(createdUserProfile)) {
     createdUserProfile.set(body)
-    if (checkExists(createUserProfile.ageRange)) {
+    if (checkExists(createdUserProfile.ageRange)) {
       createdUserProfile.rangeSetAt = Date.now()
     }
     await createdUserProfile.save()
