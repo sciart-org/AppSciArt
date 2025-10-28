@@ -45,9 +45,21 @@ export default function Editions() {
     );
   }
 
+  const AdminEditions = () => {
+    const ongoingEditions = editions.filter((e) => e.state !== "PUBLISHED");
+    if (!ongoingEditions || ongoingEditions.length === 0) return;
+    return (
+      <>
+        <h1>Ongoing editions</h1>
+        {ongoingEditions.map((e) => (
+          <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
+        ))}
+      </>
+    );
+  };
+
   return (
     <div>
-      <Header />
       <div
         style={{
           display: "flex",
@@ -55,9 +67,15 @@ export default function Editions() {
           alignItems: "center",
         }}
       >
-        {editions.map((e) => (
-          <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
-        ))}
+        <AdminEditions />
+        <Header />
+        {editions.map((e) => {
+          return (
+            e.state === "PUBLISHED" && (
+              <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
+            )
+          );
+        })}
       </div>
     </div>
   );

@@ -1,7 +1,4 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
-import useFetcher from "../../utils/useFetcher";
-import Loading from "../../components/messages/Loading";
+import { useNavigate } from "react-router";
 import logoCatalog from "../../assets/logoCatalog.png";
 import Carousel from "../home/components/Carousel";
 import Seed from "../../components/sciartProducts/Seed";
@@ -10,33 +7,8 @@ import Fruit from "../../components/sciartProducts/Fruit";
 import AsterButton from "../../components/AsterButton";
 import "./css/edition-details.css";
 
-export default function EditionDetails() {
-  const params = useParams();
-  const [error, setError] = useState(null);
-  const [edition, setEdition] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const { fetcher } = useFetcher(error, setError);
+export default function EditionDetails({ edition }) {
   const navigate = useNavigate();
-
-  const fetchEdition = async () => {
-    await fetcher({
-      url: `editions/${params.editionId}`,
-      onSuccess: (data) => {
-        setEdition(data);
-      },
-    }).finally(() => {
-      setLoading(false);
-    });
-  };
-
-  useEffect(() => {
-    fetchEdition();
-  }, []);
-
-  if (loading) {
-    return <Loading />;
-  }
 
   const EditionDescription = () => {
     return (

@@ -1691,6 +1691,7 @@ components:
           type: string
           maxLength: 50
         logo:
+          nullable: true
           type: string
           format: uri
         year:
@@ -1698,6 +1699,7 @@ components:
           minimum: 1900
           maximum: 2200
         longDescription:
+          nullable: true
           type: string
         catalogLink:
           nullable: true
@@ -1718,6 +1720,7 @@ components:
           type: string
           maxLength: 50
         logo:
+          nullable: true
           type: string
           format: uri
         fruitLogo:

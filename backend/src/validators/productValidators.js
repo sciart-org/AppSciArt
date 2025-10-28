@@ -25,9 +25,7 @@ const checkSeedIsFromScientist = async (seedId, userId) => {
 }
 
 const validateCanGetSeed = async (userId, seed) => {
-  if (seed.state !== 'PUBLISHED') {
-    errorThrower(!userId, 'Authentication required', 401)
-  }
+  errorThrower(!userId && seed.state !== 'PUBLISHED', 'Authentication required', 401)
 
   const errorMessage = 'You cannot access this seed'
   const isStaff = await checkIsStaff(userId)
