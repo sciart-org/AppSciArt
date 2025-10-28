@@ -19,7 +19,7 @@ export function editUser (req, res) {
 
 export const getCurrentUser = withErrorHandler(async (req, res) => {
   const result = await service.getCurrentUser(req)
-  const roles = await service.getUserRoles(req)
+  const roles = await service.getUserRoles(result?.id)
   return res.status(200).send({
     jwt: result.jwt,
     name: result.user.user_metadata.name,
