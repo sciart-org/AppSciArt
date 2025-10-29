@@ -5,6 +5,7 @@ import { EarlySignup } from '../models/EarlySignup.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { getUserRoles } from './usersService.js'
+import { sendQuickRegisterEmail } from '../emails/emailService.js'
 
 export async function login ({ email, password }) {
   const { data, error } = await signInEmail(email, password)
@@ -55,7 +56,8 @@ export async function quickRegister (email) {
   const alreadyRegistered = existingUser !== null || existingEarlySignup !== null
   errorThrower(alreadyRegistered, 'Account with that email already registered.', 400)
 
-  await EarlySignup.create({ email })
+  const preRegistration = await EarlySignup.create({ email })
+  sendQuickRegisterEmail(email, preRegistration?.id)
   return { message: 'Pre-registered successfully' }
 }
 
