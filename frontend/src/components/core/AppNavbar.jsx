@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import tokenService from "../../utils/token.service";
 import { IoChevronDown } from "react-icons/io5";
 import "./core.css";
+import Dropdown from "../Dropdown";
 
 export default function AppNavbar() {
   const [username, setUsername] = useState("");
@@ -16,45 +17,65 @@ export default function AppNavbar() {
     }
   }, [user]);
 
-  const [showCollections, setShowCollections] = useState(false);
+  const permanentLinks = {
+    left: (
+      <>
+        <Link to={"/"}>Home</Link>
+        <Dropdown title="Collections">
+          <Link to={"/collections/seeds"}>Seeds</Link>
+          <Link to={"/collections/flowers"}>Flowers</Link>
+          <Link to={"/collections/fruits"}>Fruits</Link>
+        </Dropdown>
+        <Link to={"/hackathons"}>Hackathons</Link>
+        <Link to={"/editions"}>Editions</Link>
+      </>
+    ),
+    right: (
+      <>
+        <Link to={"/about-the-hackathon"}>Our format</Link>
+      </>
+    ),
+  };
 
-  const CollectionsDropdown = () => {
-    return (
-      <div className="collections-dropdown">
-        <Link to={"/collections/seeds"}>Seeds</Link>
-        <Link to={"/collections/flowers"}>Flowers</Link>
-        <Link to={"/collections/fruits"}>Fruits</Link>
-      </div>
-    );
+  const guestLinks = {
+    left: null,
+    right: (
+      <>
+        <Link to={"/signin"}>Log in</Link>
+        <Link to={"/signup"}>Register</Link>
+      </>
+    ),
+  };
+
+  const authenticatedLinks = {
+    left: null,
+    right: <Link to={"/profile"}>{username}</Link>,
+  };
+
+  const adminLinks = {
+    left: (
+      <Dropdown title="Users">
+        <Link to={"/users/scientists"}>Scientists</Link>
+      </Dropdown>
+    ),
+    right: null,
   };
 
   return (
     <div id="navbar">
       <div className="left-button-container">
-        <Link to={"/"}>Home</Link>
-        <Link
-          onClick={() => setShowCollections(!showCollections)}
-          className="collections-container"
-        >
-          <text>Collections</text>
-          <IoChevronDown size={"1.25rem"} style={{ marginLeft: "0.2rem" }} />
-          {showCollections && <CollectionsDropdown />}
-        </Link>
-        <Link to={"/about-the-hackathon"}>Our format</Link>
-        <Link to={"/hackathons"}>Hackathons</Link>
-        <Link to={"/editions"}>Editions</Link>
+        {permanentLinks.left}
+        {user ? authenticatedLinks.left : guestLinks.left}
+        {user && user.roles.includes("administrator") && adminLinks.left}
       </div>
+
       <h2 style={{ textAlign: "center", flex: 1 }}>AppSciArt</h2>
-      {!user ? (
-        <div className="right-button-container">
-          <Link to={"/signin"}>Log in</Link>
-          <Link to={"/signup"}>Register</Link>
-        </div>
-      ) : (
-        <div className="right-button-container">
-          <Link to={"/profile"}>{username}</Link>
-        </div>
-      )}
+
+      <div className="right-button-container">
+        {permanentLinks.right}
+        {user ? authenticatedLinks.right : guestLinks.right}
+        {user && user.roles.includes("administrator") && adminLinks.right}
+      </div>
     </div>
   );
 }

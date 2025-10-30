@@ -133,6 +133,7 @@ function App() {
       {user && user.roles.includes("administrator") && (
         <>
           <Route path="/collections/seeds/create" element={<SeedCreator />} />
+          <Route path="/users/scientists" element={<></>} />
         </>
       )}
     </>
