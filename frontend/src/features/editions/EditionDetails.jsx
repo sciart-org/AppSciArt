@@ -1,11 +1,8 @@
 import { useNavigate } from "react-router";
 import logoCatalog from "../../assets/logoCatalog.png";
 import Carousel from "../home/components/Carousel";
-import Seed from "../../components/sciartProducts/Seed";
-import Flower from "../../components/sciartProducts/Flower";
-import Fruit from "../../components/sciartProducts/Fruit";
-import AsterButton from "../../components/AsterButton";
 import "./css/edition-details.css";
+import EditionCollectionButtons from "./components/EditionCollectionButtons";
 
 export default function EditionDetails({ edition }) {
   const navigate = useNavigate();
@@ -55,21 +52,7 @@ export default function EditionDetails({ edition }) {
         </>
       )}
       <hr />
-      <h2>Explore all collections</h2>
-      <div className="edition-collections-container">
-        <AsterButton to={`/collections/seeds?editionId=${edition?.id}`}>
-          <Seed style={{ width: "10rem" }} />
-          <p>Seeds</p>
-        </AsterButton>
-        <AsterButton to={`/collections/flowers?editionId=${edition?.id}`}>
-          <Flower style={{ width: "10rem" }} />
-          <p>Flowers</p>
-        </AsterButton>
-        <AsterButton to={`/collections/fruits?editionId=${edition?.id}`}>
-          <Fruit style={{ width: "10rem" }} />
-          <p>Fruits</p>
-        </AsterButton>
-      </div>
+      <EditionCollectionButtons editionId={edition?.id} />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
-import EditionCreation from "./css/EditionCreation";
+import EditionCreation from "./EditionCreation";
 
 export default function EditionRouter() {
   const params = useParams();

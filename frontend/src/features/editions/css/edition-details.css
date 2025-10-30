@@ -39,3 +39,10 @@
     width: 12rem;
     height: 12rem
 }
+
+.edition-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}

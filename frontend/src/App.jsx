@@ -24,6 +24,7 @@ import ActiveHackathon from "./features/hackathons/ActiveHackathon";
 import Forbidden from "./features/auth/errors/Forbidden";
 import SeedRouter from "./features/products/details/SeedRouter";
 import EditionRouter from "./features/editions/EditionRouter";
+import SeedCreator from "./features/products/creators/SeedCreator";
 
 function App() {
   useEffect(() => {
@@ -127,6 +128,16 @@ function App() {
     </>
   );
 
+  const adminRoutes = (
+    <>
+      {user && user.roles.includes("administrator") && (
+        <>
+          <Route path="/collections/seeds/create" element={<SeedCreator />} />
+        </>
+      )}
+    </>
+  );
+
   return (
     <ScrollToTopWrapper>
       <Message />
@@ -136,6 +147,7 @@ function App() {
           {publicRoutes}
           {unauthenticatedRoutes}
           {authenticatedRoutes}
+          {adminRoutes}
         </Routes>
       </div>
       <AppFooter />

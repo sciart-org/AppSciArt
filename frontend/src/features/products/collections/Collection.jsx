@@ -102,6 +102,18 @@ export default function Collection({ itemName: itemNameRaw }) {
     );
   };
 
+  const CreateButton = () => {
+    if (selectedEdition?.state === "PUBLISHED") return <></>;
+    return (
+      <AsterButton
+        style={{ marginBottom: "2rem" }}
+        to={`create?editionId=${selectedEdition?.id}`}
+      >
+        Create {itemName}
+      </AsterButton>
+    );
+  };
+
   if (loading) {
     return (
       <>
@@ -115,6 +127,7 @@ export default function Collection({ itemName: itemNameRaw }) {
     return (
       <>
         <Header />
+        <CreateButton />
         <h2 style={{ fontWeight: "normal" }}>
           No {itemName}s for this edition yet
         </h2>
@@ -125,6 +138,7 @@ export default function Collection({ itemName: itemNameRaw }) {
   return (
     <div>
       <Header />
+      <CreateButton />
       <CollectionsPagination
         items={items || []}
         itemsNumber={6}
