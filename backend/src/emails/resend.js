@@ -1,7 +1,10 @@
 import { Resend } from 'resend'
 
 const RESEND_KEY = process.env.RESEND_KEY
-const resend = new Resend(RESEND_KEY)
+let resend
+if (RESEND_KEY) {
+  resend = new Resend(RESEND_KEY)
+}
 
 export const sendEmail = async ({ recipient, subject, html }) => {
   if (!RESEND_KEY) {
