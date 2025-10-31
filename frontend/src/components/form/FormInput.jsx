@@ -24,7 +24,7 @@ export default function FormInput({
       {multiline ? (
         <textarea
           type={type}
-          name={name.toLowerCase()}
+          name={name?.toLowerCase()}
           placeholder={placeholder || name + "..."}
           value={value}
           onChange={onChange}
@@ -34,7 +34,7 @@ export default function FormInput({
       ) : (
         <input
           type={type}
-          name={name.toLowerCase()}
+          name={name?.toLowerCase()}
           placeholder={placeholder || name + "..."}
           value={value}
           onChange={onChange}

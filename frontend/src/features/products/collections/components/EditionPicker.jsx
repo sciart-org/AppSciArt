@@ -4,6 +4,8 @@ export default function EditionPicker({
   selectedEdition,
   setSelectedEdition,
   allEditions,
+  style,
+  size,
 }) {
   const selectedEditionName = selectedEdition?.name;
   const allEditionNames = allEditions.map((e) => e.name);
@@ -27,7 +29,8 @@ export default function EditionPicker({
       setValue={setSelectedEditionByName}
       options={allEditionNames}
       clearable={false}
-      className={"edition-picker"}
+      className={size === "small" ? "" : "edition-picker"}
+      style={style}
     />
   );
 }

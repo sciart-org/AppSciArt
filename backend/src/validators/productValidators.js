@@ -35,8 +35,7 @@ const validateCanGetSeed = async (userId, seed) => {
   if (seed.state === 'IN_REVIEW') {
     errorThrower(!isStaff, errorMessage, 403)
   } else if (seed.state !== 'PUBLISHED') {
-    errorThrower(!(isScientist || isStaff), errorMessage, 403)
-    errorThrower(!isSeedOwner, errorMessage, 403)
+    errorThrower(!(isScientist || isStaff) && !isSeedOwner, errorMessage, 403)
   }
 
   if (!(isStaff || isSeedOwner)) {

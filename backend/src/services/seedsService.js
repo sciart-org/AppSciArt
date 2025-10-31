@@ -9,6 +9,7 @@ import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { filterPublished, includeEdition, includeSeedAuthors } from './includes/productIncludes.js'
 import { ConceptualMap } from '../models/ConceptualMap.js'
+import { Edition } from '../models/Edition.js'
 
 export async function getSeedsByEdition (userId, editionId) {
   await validateEditionById(userId, editionId)
@@ -45,10 +46,20 @@ export async function getSeedsByHackathon (userId, hackathonId) {
   return seeds
 }
 
-export function createSeed (req, res) {
-  res.send({
-    message: 'This is the mockup controller for createSeed'
+export async function createSeed (userId, title, editionId, template) {
+  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create this resource', 403)
+
+  const edition = await Edition.findByPk(editionId)
+  errorThrower(!checkExists(edition), 'Edition not found', 404)
+
+  const newSeed = await Seed.create({
+    title,
+    template
   })
+
+  await newSeed.addEdition(edition)
+
+  return newSeed
 }
 
 export async function getSeedDetails (userId, seedId) {

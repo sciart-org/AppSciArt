@@ -16,6 +16,7 @@ import { Evaluator } from './roles/Evaluator.js'
 import { Facilitator } from './roles/Facilitator.js'
 import { ConceptualMap } from './ConceptualMap.js'
 import { ScientistEditions } from './intermediate/ScientistEditions.js'
+import { ScientistInvitation } from './roles/ScientistInvitation.js'
 
 const notNull = (attributeName) => {
   return {
@@ -40,8 +41,15 @@ Edition.belongsToMany(Seed, { through: SeedEditions })
 Hackathon.belongsToMany(Seed, { through: HackathonSeeds })
 Seed.belongsToMany(Hackathon, { through: HackathonSeeds })
 
-Seed.belongsToMany(UserProfile, { through: SeedLikes })
-UserProfile.belongsToMany(Seed, { through: SeedLikes })
+Seed.belongsToMany(UserProfile, {
+  through: SeedLikes,
+  as: 'LikedByUsers'
+})
+
+UserProfile.belongsToMany(Seed, {
+  through: SeedLikes,
+  as: 'LikedSeeds'
+})
 
 //  ITEMS
 
@@ -90,3 +98,9 @@ UserProfile.hasOne(Designer, notNull('userProfileId'))
 Designer.belongsTo(UserProfile)
 // Designer.belongsTo(Methodology)
 // Methodology.hasMany(Designer)
+
+ScientistInvitation.belongsTo(Seed)
+Seed.hasMany(ScientistInvitation)
+
+ScientistInvitation.belongsTo(Edition)
+Edition.hasMany(ScientistInvitation, notNull('editionId'))

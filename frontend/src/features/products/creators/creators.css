@@ -1,0 +1,27 @@
+.seed-create {
+    width: 80vw;
+    display: flex;
+    margin: auto;
+    justify-content: space-around;
+}
+
+.seed-create .scientists-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.scientists-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scientists-item > *:first-child{
+    width: 15rem;
+}
+
+.scientists-section > *:last-child {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+}

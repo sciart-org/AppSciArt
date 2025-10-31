@@ -3,6 +3,7 @@ import * as service from '../services/seedsService.js'
 import * as UsersService from '../services/usersService.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { withErrorHandler } from './errorHandling.js'
+import * as ScientistsService from '../services/scientistsService.js'
 
 export const getSeeds = withErrorHandler(async (req, res) => {
   const editionId = req.query.editionId
@@ -21,9 +22,16 @@ export const getSeeds = withErrorHandler(async (req, res) => {
   return res.status(200).send(seeds)
 })
 
-export function createSeed (req, res) {
-  service.createSeed(req, res)
-}
+export const createSeed = withErrorHandler(async (req, res) => {
+  const { title, editionId, template, scientistsToInvite } = req.body
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!currentUser, 'Authentication required', 401)
+  const newSeed = await service.createSeed(currentUser?.id, title, editionId, template, scientistsToInvite)
+  for (const email of scientistsToInvite || []) {
+    await ScientistsService.inviteScientist(email, editionId, newSeed)
+  }
+  return res.status(201).send(newSeed)
+})
 
 export const getSeedDetails = withErrorHandler(async (req, res) => {
   const seedId = req.params.seedId

@@ -1225,7 +1225,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SeedDetails"
+              type: object
       responses:
         "201":
           description: Seed created
