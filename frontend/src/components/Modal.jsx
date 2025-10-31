@@ -6,7 +6,7 @@ export default function Modal(props) {
   }
   return (
     <div className="modal">
-      <dialog open>{props.children}</dialog>;
+      <dialog open>{props.children}</dialog>
     </div>
   );
 }

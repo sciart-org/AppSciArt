@@ -26,9 +26,7 @@ export const ScientistEditions = sequelize.define(
     }
   },
   {
-    timestamps: false
-  },
-  {
+    timestamps: false,
     indexes: [
       {
         unique: true,

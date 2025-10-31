@@ -26,9 +26,7 @@ export const SeedEditions = sequelize.define(
     }
   },
   {
-    timestamps: false
-  },
-  {
+    timestamps: false,
     indexes: [
       {
         unique: true,

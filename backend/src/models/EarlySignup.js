@@ -25,8 +25,7 @@ export const EarlySignup = sequelize.define(
   },
   {
     schema: 'profiles',
-    timestamps: false
-  }, {
+    timestamps: false,
     indexes: [
       {
         unique: true,

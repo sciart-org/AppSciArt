@@ -57,9 +57,7 @@ export const UserProfile = sequelize.define(
   },
   {
     schema: 'profiles',
-    timestamps: false
-  },
-  {
+    timestamps: false,
     indexes: [
       {
         unique: true,

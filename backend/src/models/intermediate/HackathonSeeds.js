@@ -26,13 +26,12 @@ export const HackathonSeeds = sequelize.define(
     }
   },
   {
-    timestamps: false
-  },
-  {
+    timestamps: false,
     indexes: [
       {
         unique: true,
         fields: ['seedId', 'hackathonId']
       }
     ]
-  })
+  }
+)

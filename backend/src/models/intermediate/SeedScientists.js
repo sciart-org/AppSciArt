@@ -26,9 +26,7 @@ export const SeedScientists = sequelize.define(
     }
   },
   {
-    timestamps: false
-  },
-  {
+    timestamps: false,
     indexes: [
       {
         unique: true,

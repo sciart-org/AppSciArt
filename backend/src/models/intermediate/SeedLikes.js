@@ -26,9 +26,7 @@ export const SeedLikes = sequelize.define(
     }
   },
   {
-    timestamps: false
-  },
-  {
+    timestamps: false,
     indexes: [
       {
         unique: true,
