@@ -25,6 +25,7 @@ import Forbidden from "./features/auth/errors/Forbidden";
 import SeedRouter from "./features/products/details/SeedRouter";
 import EditionRouter from "./features/editions/EditionRouter";
 import SeedCreator from "./features/products/creators/SeedCreator";
+import Scientists from "./features/users/scientists/Scientists";
 
 function App() {
   useEffect(() => {
@@ -133,7 +134,7 @@ function App() {
       {user && user.roles.includes("administrator") && (
         <>
           <Route path="/collections/seeds/create" element={<SeedCreator />} />
-          <Route path="/users/scientists" element={<></>} />
+          <Route path="/users/scientists" element={<Scientists />} />
         </>
       )}
     </>

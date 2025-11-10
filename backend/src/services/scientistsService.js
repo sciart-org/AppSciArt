@@ -1,4 +1,4 @@
-import { checkIsInspiringScientist } from '../validators/userValidators.js'
+import { checkIsInspiringScientist, checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { Edition } from '../models/Edition.js'
 import { UserProfile } from '../models/UserProfile.js'
@@ -44,6 +44,24 @@ export async function getScientistSeedsOfEdition (userId, editionId) {
     ]
   })
 }
+
+export async function getScientists (userId, editionId = null) {
+  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot access this resource', 403)
+  const whereClause = editionId ? { id: editionId } : undefined
+  return await UserProfile.findAll({
+    attributes: ['id', 'name', 'surname', 'email'],
+    include: [
+      {
+        model: Edition,
+        where: whereClause,
+        through: { attributes: [] },
+        attributes: ['name'],
+        required: true
+      }
+    ]
+  })
+}
+
 export async function inviteScientist (email, editionId, seed) {
   const userProfile = await UserProfile.findOne({ where: { email } })
   if (checkExists(userProfile)) {

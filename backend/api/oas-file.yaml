@@ -1633,6 +1633,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/DomainItemList"
 
+  /scientists:
+    x-router-controller: scientistsController
+    get:
+      tags: [Scientists]
+      summary: Get scientists profiles
+      operationId: getScientists
+      parameters:
+        - name: editionId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: A list of scientists
+
   /scientists/me/editions:
     x-router-controller: scientistsController
     get:
