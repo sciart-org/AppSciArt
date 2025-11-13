@@ -68,13 +68,17 @@ export async function inviteScientist (email, editionId, seedId) {
   const editionName = (await Edition.findByPk(editionId, { attributes: ['name'] })).name
 
   if (checkExists(userProfile)) {
-    await inviteExistingUser(userProfile, editionId, seedId)
-    // emailService.sendScientistInvitedEmail(email, editionName)
+    const isAlreadyInvited = await inviteExistingUser(userProfile, editionId, seedId)
+    if (isAlreadyInvited) {
+      // emailService.sendScientistInvitedEmail(email, editionName)
+    }
     return
   }
 
   const earlySignUpId = await inviteNonExistingUser(email, editionId, seedId)
-  emailService.sendScientistPreRegistrationEmail(email, earlySignUpId, editionName)
+  if (checkExists(earlySignUpId)) {
+    emailService.sendScientistPreRegistrationEmail(email, earlySignUpId, editionName)
+  }
 }
 
 const inviteExistingUser = async (user, editionId, seedId) => {
@@ -86,20 +90,21 @@ const inviteExistingUser = async (user, editionId, seedId) => {
   if (seedId) {
     await user.addSeed(seedId)
   }
-  return !isAlreadyInvited
+  return isAlreadyInvited
 }
 
 const inviteNonExistingUser = async (email, editionId, seedId) => {
-  let earlySignup = await EarlySignup.findOne({ where: { email } })
-  if (!checkExists(earlySignup)) {
-    earlySignup = await EarlySignup.create({ email })
+  const isAlreadyInvited = await EarlySignup.findOne({ where: { email } })
+  let earlySignUp = null
+  if (!checkExists(isAlreadyInvited)) {
+    earlySignUp = await EarlySignup.create({ email })
   }
 
   const scientistInvitation = await ScientistInvitation.findOne({ where: { email, seedId, editionId } })
   if (!checkExists(scientistInvitation)) {
     await ScientistInvitation.create({ email, seedId, editionId })
   }
-  return earlySignup?.id
+  return earlySignUp?.id
 }
 
 export const completeScientistInvitationIfPresent = async (user) => {
