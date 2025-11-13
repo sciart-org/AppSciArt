@@ -8,6 +8,7 @@ const validateIsPublishedOrStaff = async (userId, product) => {
 }
 
 const checkSeedIsFromScientist = async (seedId, userId) => {
+  if (!userId || !seedId) return false
   const count = await Seed.count({
     where: {
       id: seedId
@@ -29,12 +30,12 @@ const validateCanGetSeed = async (userId, seed) => {
 
   const errorMessage = 'You cannot access this seed'
   const isStaff = await checkIsStaff(userId)
-  const isScientist = await checkIsInspiringScientist(userId)
   const isSeedOwner = await checkSeedIsFromScientist(seed?.id, userId)
 
   if (seed.state === 'IN_REVIEW') {
     errorThrower(!isStaff, errorMessage, 403)
   } else if (seed.state !== 'PUBLISHED') {
+    const isScientist = await checkIsInspiringScientist(userId)
     errorThrower(!(isScientist || isStaff) && !isSeedOwner, errorMessage, 403)
   }
 
