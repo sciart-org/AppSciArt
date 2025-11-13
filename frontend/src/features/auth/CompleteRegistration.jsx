@@ -5,7 +5,7 @@ import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
 import { jwtDecode } from "jwt-decode";
 import useFetcher from "../../utils/useFetcher.js";
-import { itemsToUpperCase, validateEmail } from "../../utils/commonUtils.js";
+import { itemsToUpperCase, validateEmail, toEnumValue } from "../../utils/commonUtils.js";
 
 export default function CompleteRegistration() {
   const [loading, setLoading] = useState(true);

@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import EditionPicker from "../collections/components/EditionPicker";
 import { useEffect } from "react";
 import "./creators.css";
+import { validateEmail } from "../../../utils/commonUtils";
 
 export default function SeedCreator() {
   const [error, setError] = useState(null);
@@ -14,7 +15,7 @@ export default function SeedCreator() {
   const [allEditions, setAllEditions] = useState([]);
 
   const { fetcher } = useFetcher(error, setError);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetcher({
@@ -58,7 +59,8 @@ export default function SeedCreator() {
     setSubmissionBody({ ...submissionBody, [attribute]: value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     fetcher({
       url: "seeds",
       method: "POST",
@@ -69,7 +71,7 @@ export default function SeedCreator() {
         scientistsToInvite: submissionBody.scientistsToInvite,
       },
       onSuccess: (data) => {
-        navigate(`/seeds/${data.id}`)
+        navigate(`/seeds/${data.id}`);
       },
     });
   };
@@ -77,93 +79,99 @@ export default function SeedCreator() {
   return (
     <div>
       <h1>Create Seed</h1>
-      <div className="seed-create">
-        <div>
-          <h3>Seed details:</h3>
-          <FormInput
-            name={"Title"}
-            placeholder={"Seed title..."}
-            value={submissionBody.title}
-            onChange={(e) => handleChange("title", e)}
-          />
-          <FormInput
-            name={"Google docs link"}
-            placeholder={"Paste your link here"}
-            required={true}
-            value={submissionBody.template}
-            onChange={(e) => handleChange("template", e)}
-          />
-          <text style={{ textAlign: "start" }}>Edition</text>
-          <EditionPicker
-            selectedEdition={selectedEdition}
-            setSelectedEdition={setSelectedEdition}
-            allEditions={allEditions}
-            size={"small"}
-          />
-        </div>
-        <div className="scientists-section">
-          <h3>Scientists to invite:</h3>
+      <form onSubmit={handleSubmit} className="seed-creation-form">
+        <div className="seed-create">
           <div>
-            {submissionBody.scientistsToInvite.length === 0 && (
-              <p>No scientists added yet</p>
-            )}
-            {submissionBody.scientistsToInvite.map((scientist) => (
-              <div key={scientist} className="scientists-item">
-                <span>{scientist}</span>
-                <MdDelete
-                  size={"1.5rem"}
-                  style={{
-                    cursor: "pointer",
-                    marginLeft: "0.5rem",
-                  }}
-                  onClick={() => {
-                    setSubmissionBody({
-                      ...submissionBody,
-                      scientistsToInvite:
-                        submissionBody.scientistsToInvite.filter(
-                          (s) => s != scientist
-                        ),
-                    });
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-          <div>
+            <h3>Seed details:</h3>
             <FormInput
-              name={"Add scientist email"}
-              placeholder={"Enter scientist email"}
-              value={submissionBody.addingEmail}
-              onChange={(e) => handleChange("addingEmail", e)}
+              name={"Title"}
+              placeholder={"Seed title..."}
+              value={submissionBody.title}
+              onChange={(e) => handleChange("title", e)}
             />
-            <text
-              style={{
-                cursor: "pointer",
-                marginTop: "1.5rem",
-                maxWidth: "3rem",
-              }}
-              onClick={() => {
-                if (!submissionBody.addingEmail) return;
-                setSubmissionBody({
-                  ...submissionBody,
-                  scientistsToInvite: Array.from(
-                    new Set([
-                      ...submissionBody.scientistsToInvite,
-                      submissionBody.addingEmail,
-                    ])
-                  ),
-                  addingEmail: "",
-                });
-              }}
-            >
-              Add
-            </text>
+            <FormInput
+              name={"Google docs link"}
+              placeholder={"Paste your link here"}
+              required={true}
+              value={submissionBody.template}
+              onChange={(e) => handleChange("template", e)}
+            />
+            <text style={{ textAlign: "start" }}>Edition</text>
+            <EditionPicker
+              selectedEdition={selectedEdition}
+              setSelectedEdition={setSelectedEdition}
+              allEditions={allEditions}
+              size={"small"}
+            />
+          </div>
+          <div className="scientists-section">
+            <h3>Scientists to invite:</h3>
+            <div>
+              {submissionBody.scientistsToInvite.length === 0 && (
+                <p>No scientists added yet</p>
+              )}
+              {submissionBody.scientistsToInvite.map((scientist) => (
+                <div key={scientist} className="scientists-item">
+                  <span>{scientist}</span>
+                  <MdDelete
+                    size={"1.5rem"}
+                    style={{
+                      cursor: "pointer",
+                      marginLeft: "0.5rem",
+                    }}
+                    onClick={() => {
+                      setSubmissionBody({
+                        ...submissionBody,
+                        scientistsToInvite:
+                          submissionBody.scientistsToInvite.filter(
+                            (s) => s != scientist
+                          ),
+                      });
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            <div>
+              <FormInput
+                name={"Add scientist email"}
+                placeholder={"Enter scientist email"}
+                value={submissionBody.addingEmail}
+                onChange={(e) => handleChange("addingEmail", e)}
+              />
+              <text
+                style={{
+                  cursor: "pointer",
+                  marginTop: "1.5rem",
+                  maxWidth: "3rem",
+                }}
+                onClick={() => {
+                  if (!submissionBody.addingEmail) return;
+                  if (!validateEmail(submissionBody.addingEmail)) {
+                    window.alert("Invalid email format")
+                    return
+                  }
+                  setSubmissionBody({
+                    ...submissionBody,
+                    scientistsToInvite: Array.from(
+                      new Set([
+                        ...submissionBody.scientistsToInvite,
+                        submissionBody.addingEmail,
+                      ])
+                    ),
+                    addingEmail: "",
+                  });
+                }}
+              >
+                Add
+              </text>
+            </div>
           </div>
         </div>
-      </div>
-      <AsterButton style={{ marginTop: "2rem" }} onClick={handleSubmit}>
-        Submit
-      </AsterButton>
+        <AsterButton type="submit" style={{ marginTop: "2rem" }}>
+          Submit
+        </AsterButton>
+      </form>
     </div>
   );
 }
