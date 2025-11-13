@@ -58,32 +58,20 @@ export async function getCurrentUser (req) {
 }
 
 export async function getUserRoles (userId) {
+  const [isAdministrator, isDesigner, isEvaluator, isFacilitator, isScientist] = await Promise.all([
+    checkHasRoleById(userId, Administrator),
+    checkHasRoleById(userId, Designer),
+    checkHasRoleById(userId, Evaluator),
+    checkHasRoleById(userId, Facilitator),
+    checkIsInspiringScientist(userId)
+  ])
+
   const roles = []
-
-  const isAdministrator = await checkHasRoleById(userId, Administrator)
-  if (isAdministrator) {
-    roles.push('administrator')
-  }
-
-  const isDesigner = await checkHasRoleById(userId, Designer)
-  if (isDesigner) {
-    roles.push('designer')
-  }
-
-  const isEvaluator = await checkHasRoleById(userId, Evaluator)
-  if (isEvaluator) {
-    roles.push('evaluator')
-  }
-
-  const isFacilitator = await checkHasRoleById(userId, Facilitator)
-  if (isFacilitator) {
-    roles.push('facilitator')
-  }
-
-  const isScientist = await checkIsInspiringScientist(userId)
-  if (isScientist) {
-    roles.push('inspiring_scientist')
-  }
+  if (isAdministrator) roles.push('administrator')
+  if (isDesigner) roles.push('designer')
+  if (isEvaluator) roles.push('evaluator')
+  if (isFacilitator) roles.push('facilitator')
+  if (isScientist) roles.push('inspiring_scientist')
 
   return roles
 }
