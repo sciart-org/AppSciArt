@@ -6,6 +6,7 @@ import { Seed } from '../models/Seed.js'
 import { EarlySignup } from '../models/EarlySignup.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { ScientistInvitation } from '../models/roles/ScientistInvitation.js'
+import * as emailService from '../emails/emailService.js'
 
 export async function getScientistOpenEditions (userId) {
   errorThrower(!(await checkIsInspiringScientist(userId)), 'You are not an inspiring scientist', 403)
@@ -62,19 +63,59 @@ export async function getScientists (userId, editionId = null) {
   })
 }
 
-export async function inviteScientist (email, editionId, seed) {
+export async function inviteScientist (email, editionId, seedId) {
   const userProfile = await UserProfile.findOne({ where: { email } })
+  const editionName = (await Edition.findByPk(editionId, { attributes: ['name'] })).name
+
   if (checkExists(userProfile)) {
-    await userProfile.addSeed(seed)
-    // send invitation email
+    await inviteExistingUser(userProfile, editionId, seedId)
+    // emailService.sendScientistInvitedEmail(email, editionName)
     return
   }
 
-  const earlySignup = await EarlySignup.findOne({ where: { email } })
+  const earlySignUpId = await inviteNonExistingUser(email, editionId, seedId)
+  emailService.sendScientistPreRegistrationEmail(email, earlySignUpId, editionName)
+}
+
+const inviteExistingUser = async (user, editionId, seedId) => {
+  const editions = await user.getEditions()
+  const isAlreadyInvited = editions.map(e => e.id).includes(editionId)
+  if (!isAlreadyInvited) {
+    await user.addEdition(editionId)
+  }
+  if (seedId) {
+    await user.addSeed(seedId)
+  }
+  return !isAlreadyInvited
+}
+
+const inviteNonExistingUser = async (email, editionId, seedId) => {
+  let earlySignup = await EarlySignup.findOne({ where: { email } })
   if (!checkExists(earlySignup)) {
-    await EarlySignup.create({ email })
+    earlySignup = await EarlySignup.create({ email })
   }
 
-  await ScientistInvitation.create({ email, seedId: seed?.id, editionId })
-  // send signup invitation email
+  const scientistInvitation = await ScientistInvitation.findOne({ where: { email, seedId, editionId } })
+  if (!checkExists(scientistInvitation)) {
+    await ScientistInvitation.create({ email, seedId, editionId })
+  }
+  return earlySignup?.id
+}
+
+export const completeScientistInvitationIfPresent = async (user) => {
+  if (!checkExists(user?.email)) return
+  const invitations = await ScientistInvitation.findAll({
+    where: {
+      email: user?.email
+    }
+  })
+  for (const invitation of invitations) {
+    await inviteExistingUser(user, invitation?.editionId, invitation?.seedId)
+  }
+  await ScientistInvitation.destroy({
+    where: {
+      email: user?.email
+    }
+  })
+  return invitations.length > 0
 }

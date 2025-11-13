@@ -32,3 +32,25 @@ export const sendQuickRegisterEmail = (email, preRegistrationId) => {
   })
   errorThrower(error?.status, error?.message, error?.status)
 }
+
+export const sendScientistPreRegistrationEmail = (email, preRegistrationId, editionName) => {
+  const completeRegistrationUrl = FRONTEND_URL + '/signup/complete/' + preRegistrationId
+  const html = readEmail('scientist-pre-registration', { completeRegistrationUrl, editionName })
+  const { _, error } = sendEmail({
+    recipient: email,
+    subject: 'Welcome to AppSciArt!',
+    html
+  })
+  errorThrower(error?.status, error?.message, error?.status)
+}
+
+export const sendCompleteRegistrationEmail = (email, name) => {
+  const homeUrl = FRONTEND_URL
+  const html = readEmail('completed-registration', { homeUrl, name })
+  const { _, error } = sendEmail({
+    recipient: email,
+    subject: "You're All Set!",
+    html
+  })
+  errorThrower(error?.status, error?.message, error?.status)
+}
