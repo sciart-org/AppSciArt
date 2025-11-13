@@ -22,5 +22,5 @@ export const sendEmail = async ({ recipient, subject, html }) => {
     subject,
     html
   })
-  return { data, error }
+  return { data, error: { status: error.statusCode, message: error.message } }
 }
