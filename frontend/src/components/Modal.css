@@ -4,7 +4,7 @@
     backdrop-filter: blur(6px);
     position: fixed;
     align-content: flex-start;
-    transition: backdrop-filter 0.3s ease; /* animate blur */
+    transition: backdrop-filter 0.3s ease;
 }
 
 .modal dialog {
