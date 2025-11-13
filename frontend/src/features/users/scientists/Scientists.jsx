@@ -5,12 +5,15 @@ import AsterButton from "../../../components/AsterButton";
 import { CiEdit } from "react-icons/ci";
 import "../users.css";
 import InvitationModal from "./InvitationModal";
+import EditScientistModal from "./EditScientistModal";
 
 export default function Scientists() {
   const [scientists, setScientists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [editingScientist, setEditingScientist] = useState(null);
+  const showEditModal = !!editingScientist;
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -70,7 +73,11 @@ export default function Scientists() {
                 alignItems: "center",
               }}
             >
-              <CiEdit size={"2rem"} style={{ cursor: "pointer" }} />
+              <CiEdit
+                size={"2rem"}
+                style={{ cursor: "pointer" }}
+                onClick={() => setEditingScientist(scientist)}
+              />
             </div>
           </div>
         ))}
@@ -92,6 +99,13 @@ export default function Scientists() {
       <InvitationModal
         openModal={showInviteModal}
         setOpenModal={setShowInviteModal}
+      />
+      <EditScientistModal
+        openModal={showEditModal}
+        setOpenModal={(value) => {
+          if (!value) setEditingScientist(null);
+        }}
+        scientist={editingScientist}
       />
       <h1>Scientists</h1>
       <AsterButton
