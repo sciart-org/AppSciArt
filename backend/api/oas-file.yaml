@@ -130,6 +130,34 @@ paths:
         "204":
           description: Edition deleted
 
+  /editions/{editionId}/scientists:
+    x-router-controller: editionsController
+    post:
+      tags: [Editions]
+      summary: Invite scientist to edition
+      operationId: inviteScientistToEdition
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  nullable: false
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Invitation to edition
+
   /editions/{editionId}/publish:
     x-router-controller: editionsController
     patch:

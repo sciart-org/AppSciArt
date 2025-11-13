@@ -7,7 +7,7 @@ import { MdDelete } from "react-icons/md";
 import EditionPicker from "../collections/components/EditionPicker";
 import { useEffect } from "react";
 import "./creators.css";
-import { validateEmail } from "../../../utils/commonUtils";
+import ScientistEmailForm from "../components/ScientistEmailForm";
 
 export default function SeedCreator() {
   const [error, setError] = useState(null);
@@ -53,11 +53,6 @@ export default function SeedCreator() {
     scientistsToInvite: [],
     template: "",
   });
-
-  const handleChange = (attribute, e) => {
-    const { _, value } = e.target;
-    setSubmissionBody({ ...submissionBody, [attribute]: value });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -132,45 +127,23 @@ export default function SeedCreator() {
                 </div>
               ))}
             </div>
-            <div>
-              <FormInput
-                name={"Add scientist email"}
-                placeholder={"Enter scientist email"}
-                value={submissionBody.addingEmail}
-                onChange={(e) => handleChange("addingEmail", e)}
-              />
-              <text
-                style={{
-                  cursor: "pointer",
-                  marginTop: "1.5rem",
-                  maxWidth: "3rem",
-                }}
-                onClick={() => {
-                  if (!submissionBody.addingEmail) return;
-                  if (!validateEmail(submissionBody.addingEmail)) {
-                    window.alert("Invalid email format")
-                    return
-                  }
-                  setSubmissionBody({
-                    ...submissionBody,
-                    scientistsToInvite: Array.from(
-                      new Set([
-                        ...submissionBody.scientistsToInvite,
-                        submissionBody.addingEmail,
-                      ])
-                    ),
-                    addingEmail: "",
-                  });
-                }}
-              >
-                Add
-              </text>
-            </div>
+            <ScientistEmailForm
+              submissionBody={submissionBody}
+              setSubmissionBody={setSubmissionBody}
+            />
           </div>
         </div>
-        <AsterButton type="submit" style={{ marginTop: "2rem" }}>
-          Submit
-        </AsterButton>
+        <div style={{ display: "flex", justifyContent: "center", gap: "5rem" }}>
+          <AsterButton type="submit" style={{ marginTop: "2rem" }}>
+            Submit
+          </AsterButton>
+          <AsterButton
+            style={{ marginTop: "2rem" }}
+            onClick={() => navigate("/collections/seeds")}
+          >
+            Cancel
+          </AsterButton>
+        </div>
       </form>
     </div>
   );

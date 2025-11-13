@@ -1,5 +1,6 @@
 import * as service from '../services/editionsService.js'
 import * as UsersService from '../services/usersService.js'
+import * as ScientistsService from '../services/scientistsService.js'
 import { withErrorHandler } from './errorHandling.js'
 
 export const getEditions = withErrorHandler(async (req, res) => {
@@ -34,3 +35,10 @@ export function publishEdition (req, res) {
 export function getEditionMethodology (req, res) {
   service.getEditionMethodology(req, res)
 }
+
+export const inviteScientistToEdition = withErrorHandler(async (req, res) => {
+  const editionId = req.params.editionId
+  const email = req.body.email
+  await ScientistsService.inviteScientist(email, editionId, null)
+  return res.status(200).send({ message: 'Scientist invited successfully' })
+})

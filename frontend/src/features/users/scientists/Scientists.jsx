@@ -4,11 +4,13 @@ import Loading from "../../../components/messages/Loading";
 import AsterButton from "../../../components/AsterButton";
 import { CiEdit } from "react-icons/ci";
 import "../users.css";
+import InvitationModal from "./InvitationModal";
 
 export default function Scientists() {
   const [scientists, setScientists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -87,11 +89,18 @@ export default function Scientists() {
 
   return (
     <div>
+      <InvitationModal
+        openModal={showInviteModal}
+        setOpenModal={setShowInviteModal}
+      />
       <h1>Scientists</h1>
-      <Table />
-      <AsterButton style={{ marginTop: "2rem" }}>
-        Create invitation link
+      <AsterButton
+        style={{ marginBottom: "2rem" }}
+        onClick={() => setShowInviteModal(true)}
+      >
+        Invite scientist
       </AsterButton>
+      <Table />
     </div>
   );
 }
