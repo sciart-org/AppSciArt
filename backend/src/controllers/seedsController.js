@@ -25,7 +25,7 @@ export const getSeeds = withErrorHandler(async (req, res) => {
 export const createSeed = withErrorHandler(async (req, res) => {
   const { title, editionId, template, scientistsToInvite } = req.body
   const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!currentUser, 'Authentication required', 401)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
   const newSeed = await service.createSeed(currentUser?.id, title, editionId, template, scientistsToInvite)
   for (const email of scientistsToInvite || []) {
     await ScientistsService.inviteScientist(email, editionId, newSeed?.id)

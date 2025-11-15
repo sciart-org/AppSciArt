@@ -61,9 +61,11 @@ export async function getScientists (userId, editionId = null) {
       }
     ]
   })
+
 }
 
-export async function inviteScientist (email, editionId, seedId) {
+export async function inviteScientist (currentUserId, email, editionId, seedId) {
+  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot invite scientists', 403)
   const userProfile = await UserProfile.findOne({ where: { email } })
   const editionName = (await Edition.findByPk(editionId, { attributes: ['name'] })).name
 

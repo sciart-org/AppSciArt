@@ -2,6 +2,8 @@ import * as service from '../services/editionsService.js'
 import * as UsersService from '../services/usersService.js'
 import * as ScientistsService from '../services/scientistsService.js'
 import { withErrorHandler } from './errorHandling.js'
+import { errorThrower } from '../services/errorThrower.js'
+import { checkExists } from '../validators/generalValidators.js'
 
 export const getEditions = withErrorHandler(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
@@ -37,8 +39,10 @@ export function getEditionMethodology (req, res) {
 }
 
 export const inviteScientistToEdition = withErrorHandler(async (req, res) => {
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
   const editionId = req.params.editionId
   const email = req.body.email
-  await ScientistsService.inviteScientist(email, editionId, null)
+  await ScientistsService.inviteScientist(currentUser?.id, email, editionId, null)
   return res.status(200).send({ message: 'Scientist invited successfully' })
 })
