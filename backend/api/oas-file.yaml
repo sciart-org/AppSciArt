@@ -1688,6 +1688,31 @@ paths:
         "200":
           description: A list of editions
 
+  /scientists/{scientistId}/editions:
+    x-router-controller: scientistsController
+    patch:
+      tags: [Scientists]
+      summary: Modify editions in which a scientist is enrolled
+      operationId: modifyScientistEditions
+      parameters:
+        - name: scientistId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: boolean
+      responses:
+        "200":
+          description: New scientist editions
+
   /scientists/me/editions/{editionId}/seeds:
     x-router-controller: scientistsController
     get:

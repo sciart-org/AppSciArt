@@ -24,7 +24,7 @@ export default function Scientists() {
         setScientists(data);
       },
     }).finally(() => setLoading(false));
-  }, []);
+  }, [showEditModal]);
 
   const TableHeader = () => {
     return (
@@ -61,7 +61,7 @@ export default function Scientists() {
             <div style={{ flex: 2 }}>
               <ul>
                 {scientist?.editions.map((edition) => (
-                  <li>{edition?.name}</li>
+                  <li>{edition}</li>
                 ))}
               </ul>
             </div>

@@ -15,12 +15,12 @@ export default function EditScientistModal({
   useEffect(() => {
     if (!allEditions || allEditions.length === 0) return;
     const initialSelectedEditions = {};
-    allEditions.map((e) => {
-      const isIncluded = scientist?.editions
-        ?.map((e) => e.name)
-        .includes(e.name);
-      initialSelectedEditions[e.name] = isIncluded;
-    });
+    allEditions
+      .sort((a, b) => a.year - b.year)
+      .map((e) => {
+        const isIncluded = scientist?.editions?.includes(e.name);
+        initialSelectedEditions[e.id] = isIncluded;
+      });
     setEditionSelection(initialSelectedEditions);
   }, [allEditions, scientist]);
 
@@ -38,8 +38,16 @@ export default function EditScientistModal({
     });
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    fetcher({
+      url: `scientists/${scientist?.id}/editions`,
+      method: "PATCH",
+      body: editionSelection,
+      onSuccess: () => {
+        setOpenModal(false);
+      },
+    });
   };
 
   return (
@@ -52,25 +60,43 @@ export default function EditScientistModal({
         onSubmit={handleSubmit}
         className="seed-creation-form"
         style={{
-          width: "80%",
+          width: "90%",
           margin: "auto",
           marginTop: "1rem",
         }}
       >
         <div style={{ textAlign: "start" }}>
-          {Object.entries(editionSelection).map(([key, value]) => (
-            <div key={key} style={{ display: "flex", alignItems: "center" }}>
-              <input
-                type="checkbox"
-                checked={value}
-                onChange={() =>
-                  setEditionSelection({ ...editionSelection, [key]: !value })
-                }
-                style={{ height: "1rem", width: "1rem", marginRight: "1rem" }}
-              />
-              {key}
-            </div>
-          ))}
+          {Object.entries(editionSelection).map(([key, value]) => {
+            const currentEdition = allEditions.filter((e) => e.id === key)[0];
+            const isClosed = ["CLOSED", "PUBLISHED"].includes(
+              currentEdition.state
+            );
+            return (
+              <div
+                key={key}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  opacity: isClosed ? 0.5 : 1,
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={value}
+                  disabled={isClosed}
+                  onChange={() =>
+                    setEditionSelection({ ...editionSelection, [key]: !value })
+                  }
+                  style={{
+                    height: "1rem",
+                    width: "1rem",
+                    marginRight: "1rem",
+                  }}
+                />
+                {currentEdition?.name} {isClosed ? "(Enrollment closed)" : ""}
+              </div>
+            );
+          })}
         </div>
         <div style={{ display: "flex", gap: "2rem" }}>
           <AsterButton type="submit" style={{ marginTop: "1rem" }}>
