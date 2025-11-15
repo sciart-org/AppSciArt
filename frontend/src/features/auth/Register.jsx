@@ -4,7 +4,7 @@ import RegistrationForm from "./components/RegistrationForm.jsx";
 import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
 import useFetcher from "../../utils/useFetcher.js";
-import { itemsToUpperCase, toEnumValue } from "../../utils/commonUtils.js";
+import { itemsToUpperCase, toEnumValue, validateEmail } from "../../utils/commonUtils.js";
 import { Link } from "react-router";
 
 export default function Register() {
@@ -25,6 +25,10 @@ export default function Register() {
   const { refreshSession, setJustRegistered } = useContext(RegistrationContext);
 
   const signUp = async () => {
+    if(!validateEmail(formData.email)) {
+      setError("Invalid email format")
+      return
+    }
     await fetcher({
       url: "register?method=direct",
       method: "POST",

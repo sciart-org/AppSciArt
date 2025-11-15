@@ -12,7 +12,8 @@ const validateEnumList = (toValidate, possibleValues, property) => {
   for (let v = 0; v < toValidate.length; v = v + 1) {
     if (checkExists(errorMessage)) break
     errorMessage = validateEnumValues(toValidate[v], possibleValues, property)
-    possibleValues.pop(toValidate[v])
+    const index = possibleValues.indexOf(toValidate[v])
+    if (index > -1) possibleValues.splice(index, 1)
   }
 
   return errorMessage
@@ -34,7 +35,7 @@ const validateAffiliations = (affiliations) => {
 }
 
 const validateAreasOfInterest = (areasOfInterest) => {
-  const acceptedAreas = ['ART', 'PURE SCIENCES', 'SCIENCE APPLICATIONS', 'IT', 'OTHER']
+  const acceptedAreas = ['ART', 'PURE_SCIENCES', 'SCIENCE_APPLICATIONS', 'IT', 'OTHER']
   return validateEnumList(areasOfInterest, acceptedAreas, 'areasOfInterest')
 }
 
