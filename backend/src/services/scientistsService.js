@@ -29,7 +29,7 @@ export async function getScientistOpenEditions (userId) {
 
 export async function getScientistSeedsOfEdition (userId, editionId) {
   errorThrower(!(await checkIsInspiringScientist(userId)), 'You are not an inspiring scientist', 403)
-  return await getScientistSeedsOfEdition(userId, editionId)
+  return await scientistsRepository.getScientistSeedsOfEdition(userId, editionId)
 }
 
 export async function getScientists (currentUserId, editionId = null) {
