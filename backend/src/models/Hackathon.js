@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { Edition } from './Edition.js'
+import { notNull } from './modelUtils.js'
 
 export const Hackathon = sequelize.define(
   'hackathons',
@@ -57,3 +58,11 @@ export const Hackathon = sequelize.define(
     }
   }
 )
+
+Hackathon.associate = (db) => {
+  const { Edition, Seed, HackathonSeeds } = db
+  Hackathon.belongsTo(Edition)
+  Edition.hasMany(Hackathon, notNull('editionId'))
+
+  Hackathon.belongsToMany(Seed, { through: HackathonSeeds })
+}

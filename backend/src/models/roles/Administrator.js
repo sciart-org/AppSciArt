@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../../config/sequelize.js'
 import { UserProfile } from '../UserProfile.js'
+import { notNull } from '../modelUtils.js'
 
 export const Administrator = sequelize.define(
   'administrators',
@@ -22,3 +23,9 @@ export const Administrator = sequelize.define(
     schema: 'profiles'
   }
 )
+
+Administrator.associate = (db) => {
+  const { UserProfile } = db
+  Administrator.belongsTo(UserProfile)
+  UserProfile.hasOne(Administrator, notNull('userProfileId'))
+}

@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { Seed } from './Seed.js'
+import { notNull } from './modelUtils.js'
 
 export const ConceptualMap = sequelize.define(
   'conceptual_maps',
@@ -33,3 +34,9 @@ export const ConceptualMap = sequelize.define(
     }
   }
 )
+
+ConceptualMap.associate = (db) => {
+  const { Seed } = db
+  ConceptualMap.belongsTo(Seed)
+  Seed.hasMany(ConceptualMap, notNull('seedId'))
+}

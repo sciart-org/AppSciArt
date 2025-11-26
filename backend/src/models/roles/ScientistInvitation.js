@@ -2,6 +2,7 @@ import { DataTypes } from 'sequelize'
 import { sequelize } from '../../config/sequelize.js'
 import { Seed } from '../Seed.js'
 import { Edition } from '../Edition.js'
+import { notNull } from '../modelUtils.js'
 
 export const ScientistInvitation = sequelize.define(
   'scientist_invitations',
@@ -31,6 +32,22 @@ export const ScientistInvitation = sequelize.define(
     }
   },
   {
-    schema: 'public'
+    schema: 'public',
+    indexes: [
+      {
+        unique: true,
+        fields: ['email', 'seedId', 'editionId'],
+        name: 'scientist_invitations_unique_email_seed_edition'
+      }
+    ]
   }
 )
+
+ScientistInvitation.associate = (db) => {
+  const { Seed, Edition } = db
+  ScientistInvitation.belongsTo(Seed)
+  Seed.hasMany(ScientistInvitation)
+
+  ScientistInvitation.belongsTo(Edition)
+  Edition.hasMany(ScientistInvitation, notNull('editionId'))
+}

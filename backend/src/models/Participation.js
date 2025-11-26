@@ -5,6 +5,7 @@ import { Hackathon } from './Hackathon.js'
 import { Fruit } from './Fruit.js'
 import { Flower } from './Flower.js'
 import { ConceptualMap } from './ConceptualMap.js'
+import { notNull } from './modelUtils.js'
 
 export const Participation = sequelize.define(
   'participations', {
@@ -81,3 +82,17 @@ export const Participation = sequelize.define(
       }
     ]
   })
+
+Participation.associate = (db) => {
+  const { ConceptualMap, Flower, Fruit, UserProfile, Hackathon } = db
+  ConceptualMap.hasMany(Participation, { foreignKey: 'groupId' })
+  Flower.hasMany(Participation, { foreignKey: 'teamId' })
+  Fruit.hasMany(Participation, { foreignKey: 'fruitId' })
+  UserProfile.hasMany(Participation, notNull('userProfileId'))
+  Hackathon.hasMany(Participation, notNull('hackathonId'))
+  Participation.belongsTo(ConceptualMap, { foreignKey: 'groupId' })
+  Participation.belongsTo(Flower, { foreignKey: 'teamId' })
+  Participation.belongsTo(Fruit, { foreignKey: 'fruitId' })
+  Participation.belongsTo(UserProfile, notNull('userProfileId'))
+  Participation.belongsTo(Hackathon, notNull('hackathonId'))
+}

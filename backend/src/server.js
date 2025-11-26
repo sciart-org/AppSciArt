@@ -1,11 +1,11 @@
 import 'dotenv/config'
+import db from './models/index.js'
 import http from 'http'
 import express, { json } from 'express'
 import { corsMiddleware } from './middlewares/cors.js'
 import { sequelize } from './config/sequelize.js'
 import { initialize } from '@oas-tools/core'
 import { bearerJwt } from '@oas-tools/auth/handlers'
-import './models/relations.js'
 import { customErrorHandler } from './middlewares/customErrorHandler.js'
 import { initializeWebSockets } from './sockets/index.js'
 

@@ -41,3 +41,13 @@ export const Edition = sequelize.define(
     }
   }
 )
+
+Edition.associate = (db) => {
+  const { UserProfile, ScientistEditions, Seed, SeedEditions } = db
+  Edition.belongsToMany(UserProfile, { through: ScientistEditions })
+
+  Edition.belongsToMany(Seed, { through: SeedEditions })
+
+  //  Edition.belongsTo(Methodology)
+  //  Methodology.hasMany(Edition)
+}

@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { Flower } from './Flower.js'
+import { notNull } from './modelUtils.js'
 
 export const Fruit = sequelize.define(
   'fruits',
@@ -53,3 +54,9 @@ export const Fruit = sequelize.define(
     ]
   }
 )
+
+Fruit.associate = (db) => {
+  const { Flower } = db
+  Fruit.belongsTo(Flower)
+  Flower.hasMany(Fruit, notNull('flowerId'))
+}
