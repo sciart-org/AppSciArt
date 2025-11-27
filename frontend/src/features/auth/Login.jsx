@@ -5,9 +5,11 @@ import AsterButton from "../../components/AsterButton";
 import FormInput from "../../components/form/FormInput";
 import useFetcher from "../../utils/useFetcher";
 import { Link } from "react-router";
+import Loading from "../../components/messages/Loading";
 
 export default function Login() {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const { fetcher } = useFetcher(error, setError);
   const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     fetcher({
       url: "login",
       method: "POST",
@@ -30,13 +33,17 @@ export default function Login() {
         tokenService.setUser(data);
         window.location.href = "/";
       },
-    });
+    }).finally(() => setLoading(false));
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div>
