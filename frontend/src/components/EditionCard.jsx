@@ -9,9 +9,11 @@ export default function EditionCard(props) {
 
   return (
     <div className="card" style={{ ...props.style, ...includeAutoHeight }}>
-      <div style={includeAutoHeight}>
-        <img src={edition?.logo} style={includeAutoHeight} />
-      </div>
+      {edition?.logo && (
+        <div style={includeAutoHeight}>
+          <img src={edition?.logo} style={includeAutoHeight} />
+        </div>
+      )}
       <div style={includeAutoHeight}>
         <div style={{ width: "100%", textAlign: "center" }}>
           <h2 style={{ marginBottom: 0 }}>{edition?.name}</h2>

@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import EditionCard from "../../components/EditionCard";
+import AsterButton from "../../components/AsterButton";
 
 export default function Editions() {
   const [editions, setEditions] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const ongoingEditions = editions.filter((e) => e.state !== "PUBLISHED");
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -25,7 +27,11 @@ export default function Editions() {
     fetchEditions();
   }, []);
 
-  const Header = () => <h1>Previous editions</h1>;
+  const Header = () => (
+    <h1 style={{ marginBottom: ongoingEditions.length === 0 ? "auto" : 0 }}>
+      Editions
+    </h1>
+  );
 
   if (loading) {
     return (
@@ -46,14 +52,17 @@ export default function Editions() {
   }
 
   const AdminEditions = () => {
-    const ongoingEditions = editions.filter((e) => e.state !== "PUBLISHED");
     if (!ongoingEditions || ongoingEditions.length === 0) return;
     return (
       <>
-        <h1>Ongoing editions</h1>
+        <AsterButton style={{ marginTop: "5vh", width: "20vw" }}>
+          Create Edition
+        </AsterButton>
+        <h2 style={{ textAlign: "start", width: "70vw" }}>Ongoing editions</h2>
         {ongoingEditions.map((e) => (
           <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
         ))}
+        <h2 style={{ textAlign: "start", width: "70vw" }}>Previous editions</h2>
       </>
     );
   };
@@ -67,8 +76,8 @@ export default function Editions() {
           alignItems: "center",
         }}
       >
-        <AdminEditions />
         <Header />
+        <AdminEditions />
         {editions.map((e) => {
           return (
             e.state === "PUBLISHED" && (
