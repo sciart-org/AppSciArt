@@ -2,7 +2,7 @@ import { CiEdit } from "react-icons/ci";
 import EditionCollectionButtons from "./components/EditionCollectionButtons";
 import "./css/edition-details.css";
 
-export default function EditionCreation({ edition }) {
+export default function EditionEdit({ edition }) {
   const EditorWrapper = ({ children, field, title }) => {
     return (
       <div className="edition-wrapper">

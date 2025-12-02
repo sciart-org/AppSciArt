@@ -3,6 +3,7 @@ import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import EditionCard from "../../components/EditionCard";
 import AsterButton from "../../components/AsterButton";
+import { useNavigate } from "react-router";
 
 export default function Editions() {
   const [editions, setEditions] = useState([]);
@@ -11,6 +12,7 @@ export default function Editions() {
   const ongoingEditions = editions.filter((e) => e.state !== "PUBLISHED");
 
   const { fetcher } = useFetcher(error, setError);
+  const navigate = useNavigate();
 
   const fetchEditions = async () => {
     await fetcher({
@@ -27,11 +29,7 @@ export default function Editions() {
     fetchEditions();
   }, []);
 
-  const Header = () => (
-    <h1 style={{ marginBottom: ongoingEditions.length === 0 ? "auto" : 0 }}>
-      Editions
-    </h1>
-  );
+  const Header = () => <h1 style={{ marginBottom: "5vh" }}>Editions</h1>;
 
   if (loading) {
     return (
@@ -55,7 +53,10 @@ export default function Editions() {
     if (!ongoingEditions || ongoingEditions.length === 0) return;
     return (
       <>
-        <AsterButton style={{ marginTop: "5vh", width: "20vw" }}>
+        <AsterButton
+          style={{ width: "20rem" }}
+          onClick={() => navigate("create")}
+        >
           Create Edition
         </AsterButton>
         <h2 style={{ textAlign: "start", width: "70vw" }}>Ongoing editions</h2>

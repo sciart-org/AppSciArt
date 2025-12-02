@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
-import EditionCreation from "./EditionCreation";
+import EditionEdit from "./EditionEdit";
 
 export default function EditionRouter() {
   const params = useParams();
@@ -32,8 +32,16 @@ export default function EditionRouter() {
     return <Loading />;
   }
 
-  if (edition?.state !== "PUBLISHED") {
-    return <EditionCreation edition={edition} />;
+  if (!edition) {
+    return (
+      <div style={{ height: "100%", alignContent: "center" }}>
+        <p>No edition found.</p>
+      </div>
+    );
+  }
+
+  if (edition && edition?.state !== "PUBLISHED") {
+    return <EditionEdit edition={edition} />;
   }
 
   return <EditionDetails edition={edition} />;

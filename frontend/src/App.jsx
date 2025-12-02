@@ -26,6 +26,7 @@ import SeedRouter from "./features/products/details/SeedRouter";
 import EditionRouter from "./features/editions/EditionRouter";
 import SeedCreator from "./features/products/creators/SeedCreator";
 import Scientists from "./features/users/scientists/Scientists";
+import EditionCreate from "./features/editions/EditionCreate";
 
 function App() {
   useEffect(() => {
@@ -135,6 +136,7 @@ function App() {
         <>
           <Route path="/collections/seeds/create" element={<SeedCreator />} />
           <Route path="/users/scientists" element={<Scientists />} />
+          <Route path="/editions/create" element={<EditionCreate />} />
         </>
       )}
     </>

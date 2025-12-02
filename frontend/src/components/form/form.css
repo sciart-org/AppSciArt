@@ -28,9 +28,26 @@ input:disabled, textarea:disabled {
     background-color:rgb(230, 230, 230);
 }
 
-.input-box-container {
+.input-box-container, .long-input-box-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 50vw;
+}
+
+.long-input-box-container > * {
+    width: 100%
+}
+
+.long-input-box-container > * > * {
+    width: auto
+}
+
+.image-picker-label {
+    width: auto;
+    align-self: flex-start;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0.5rem;
+    cursor: pointer;
+    border-radius: 8px;
 }
