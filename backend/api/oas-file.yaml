@@ -65,6 +65,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditionDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
 
   /editions/{editionId}:
     x-router-controller: editionsController
@@ -115,6 +119,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EditionDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
     delete:
       tags: [Editions]
       summary: Delete an edition

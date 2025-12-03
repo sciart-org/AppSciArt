@@ -11,9 +11,12 @@ export const getEditions = withErrorHandler(async (req, res) => {
   return res.status(200).send(editions)
 })
 
-export function createEdition (req, res) {
-  service.createEdition(req, res)
-}
+export const createEdition = withErrorHandler(async (req, res) => {
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const createdEdition = await service.createEdition(currentUser?.id, req.body)
+  return res.status(201).send(createdEdition)
+})
 
 export const getEditionDetails = withErrorHandler(async (req, res) => {
   const editionId = req.params.editionId

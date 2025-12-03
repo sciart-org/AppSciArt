@@ -1,5 +1,6 @@
 import "./form.css";
 import "../AsterButton.css";
+import { toCamelCase } from "../../utils/commonUtils";
 
 const InputComponent = (props) => {
   const {
@@ -18,7 +19,7 @@ const InputComponent = (props) => {
     return (
       <textarea
         type={type}
-        name={name?.toLowerCase()}
+        name={toCamelCase(name)}
         placeholder={placeholder ?? name + "..."}
         value={value}
         onChange={onChange}
@@ -38,7 +39,7 @@ const InputComponent = (props) => {
           {value instanceof File ? "Change file" : "Choose file"}
           <input
             type="file"
-            name={name?.toLowerCase()}
+            name={toCamelCase(name)}
             accept="image/*"
             onChange={onChange}
             style={{ display: "none" }}
@@ -47,9 +48,13 @@ const InputComponent = (props) => {
           />
         </label>
 
-        {value instanceof File && (
+        {value && (
           <img
-            src={URL.createObjectURL(value)}
+            src={
+              value instanceof File
+                ? URL.createObjectURL(value)
+                : value
+            }
             alt="preview"
             style={{ width: 150, margin: 10 }}
           />
@@ -61,7 +66,7 @@ const InputComponent = (props) => {
   return (
     <input
       type={type}
-      name={name?.toLowerCase()}
+      name={toCamelCase(name)}
       placeholder={placeholder ?? name + "..."}
       value={value}
       onChange={onChange}

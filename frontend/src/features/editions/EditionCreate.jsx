@@ -1,21 +1,38 @@
 import { useState } from "react";
 import FormInput from "../../components/form/FormInput";
 import AsterButton from "../../components/AsterButton";
+import useFetcher from "../../utils/useFetcher";
+import { fileToBase64 } from "../../utils/commonUtils";
+import { useNavigate } from "react-router";
 
 export default function EditionCreate(props) {
   const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
+
+  const { fetcher } = useFetcher(error, setError);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // call backend
+    fetcher({
+      url: "editions",
+      method: "POST",
+      body: {
+        ...formData,
+        year: parseInt(formData.year),
+      },
+      onSuccess: (data) => {
+        navigate("/editions/" + data.id);
+      },
+    });
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const { name, type, files, value } = e.target;
 
     setFormData({
       ...formData,
-      [name]: type === "file" ? files[0] : value,
+      [name]: type === "file" ? await fileToBase64(files[0]) : value,
     });
   };
 

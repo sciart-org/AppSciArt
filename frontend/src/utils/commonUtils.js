@@ -20,3 +20,18 @@ export function isValidUrl(string) {
         return false;
     }
 }
+
+export function toCamelCase(str) {
+  return str
+    .replace(/[-_ ]+([a-zA-Z0-9])/g, (_, letter) => letter.toUpperCase())
+    .replace(/^[A-Z]/, (m) => m.toLowerCase());
+}
+
+export function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file); // includes "data:image/png;base64,"
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (err) => reject(err);
+  });
+}
