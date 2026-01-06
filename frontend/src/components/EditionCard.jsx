@@ -11,7 +11,7 @@ export default function EditionCard(props) {
     <div className="card" style={{ ...props.style, ...includeAutoHeight }}>
       {edition?.logo && (
         <div style={includeAutoHeight}>
-          <img src={edition?.logo} style={includeAutoHeight} />
+          <img src={edition?.logo} referrerPolicy="no-referrer"/>
         </div>
       )}
       <div style={includeAutoHeight}>
