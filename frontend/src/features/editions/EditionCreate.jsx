@@ -4,16 +4,19 @@ import AsterButton from "../../components/AsterButton";
 import useFetcher from "../../utils/useFetcher";
 import { fileToBase64 } from "../../utils/commonUtils";
 import { useNavigate } from "react-router";
+import Loading from "../../components/messages/Loading";
 
 export default function EditionCreate(props) {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const { fetcher } = useFetcher(error, setError);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     fetcher({
       url: "editions",
       method: "POST",
@@ -23,6 +26,9 @@ export default function EditionCreate(props) {
       },
       onSuccess: (data) => {
         navigate("/editions/" + data.id);
+      },
+      onError: () => {
+        setLoading(false);
       },
     });
   };
@@ -35,6 +41,10 @@ export default function EditionCreate(props) {
       [name]: type === "file" ? await fileToBase64(files[0]) : value,
     });
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div>

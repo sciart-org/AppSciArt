@@ -33,7 +33,10 @@ export default function Login() {
         tokenService.setUser(data);
         window.location.href = "/";
       },
-    }).finally(() => setLoading(false));
+      onError: () => {
+        setLoading(false);
+      },
+    });
   };
 
   const handleInputChange = (e) => {
