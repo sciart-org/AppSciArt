@@ -14,7 +14,7 @@ export const Edition = sequelize.define(
       allowNull: false,
       unique: true
     },
-    logo: {
+    driveLink: {
       type: DataTypes.STRING
     },
     year: {

@@ -4,6 +4,47 @@ import { validateEditionById } from '../validators/editionValidators.js'
 import { mapToEditionDetails } from './mappers/editionMapper.js'
 import { includeEditionFruits } from './includes/editionIncludes.js'
 import { errorThrower } from './errorThrower.js'
+import { createDriveEdition } from './driveService.js'
+import { drive } from '../config/drive.js'
+
+const getEditionsWithLogo = async (editionList) => {
+  const editionsWithLogo = await Promise.all(
+    editionList.map(async (edition) => {
+      const logo = edition.driveLink
+        ? await getLogoFromDrive(edition.driveLink)
+        : null
+
+      return {
+        ...edition.toJSON(),
+        logo
+      }
+    })
+  )
+
+  return editionsWithLogo
+}
+
+export const getLogoFromDrive = async (driveLink) => {
+  if (!driveLink) return null
+
+  const match = driveLink.match(/[-\w]{25,}/)
+  if (!match) return null
+  const folderId = match[0]
+
+  const res = await drive.files.list({
+    q: `'${folderId}' in parents and name contains 'logo' and trashed = false`,
+    fields: 'files(id, name, mimeType)',
+    pageSize: 1
+  })
+
+  if (!res.data.files || res.data.files.length === 0) {
+    return null
+  }
+
+  const logoFile = res.data.files[0]
+
+  return `https://drive.google.com/thumbnail?id=${logoFile.id}&sz=s4000`
+}
 
 export async function getEditions (userId) {
   const showUnpublished = await checkIsStaff(userId)
@@ -14,7 +55,9 @@ export async function getEditions (userId) {
     where: showUnpublished ? {} : { state: 'PUBLISHED' },
     order: [['year', 'DESC']]
   })
-  return editions
+
+  const editionsWithLogo = await getEditionsWithLogo(editions)
+  return editionsWithLogo
 }
 
 export async function createEdition (userId, body) {
@@ -22,13 +65,12 @@ export async function createEdition (userId, body) {
   const { name, year, logo, shortDescription, longDescription } = body
   const alreadyExists = await Edition.findOne({ where: { name }, attributes: ['id'] })
   errorThrower(alreadyExists, `Edition with name '${name}' already exists`, 409)
-  // create folder in gDrive
-  // upload logo to gDrive
-  const logoUrl = null
+  const editionFolderId = await createDriveEdition(year, name, logo)
+  const driveLink = `https://drive.google.com/drive/folders/${editionFolderId}`
   const createdEdition = await Edition.create({
     name,
     year,
-    logo: logoUrl,
+    driveLink,
     shortDescription,
     longDescription
   })
@@ -40,7 +82,10 @@ export async function getEditionDetails (userId, editionId) {
   const edition = await Edition.findByPk(editionId, {
     include: includeEditionFruits
   })
-  return mapToEditionDetails(edition)
+  const editionDetails = mapToEditionDetails(edition)
+
+  const editionsWithLogo = await getEditionsWithLogo([editionDetails])
+  return editionsWithLogo[0]
 }
 
 export function updateEdition (req, res) {
