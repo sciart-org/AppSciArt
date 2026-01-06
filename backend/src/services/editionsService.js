@@ -6,6 +6,7 @@ import { includeEditionFruits } from './includes/editionIncludes.js'
 import { errorThrower } from './errorThrower.js'
 import { createDriveEdition } from './driveService.js'
 import { drive } from '../config/drive.js'
+import { toPlainObject } from './mappers/utils.js'
 
 const getEditionsWithLogo = async (editionList) => {
   const editionsWithLogo = await Promise.all(
@@ -15,7 +16,7 @@ const getEditionsWithLogo = async (editionList) => {
         : null
 
       return {
-        ...edition.toJSON(),
+        ...toPlainObject(edition),
         logo
       }
     })
