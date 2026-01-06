@@ -14,6 +14,16 @@ const PORT = process.env.PORT || 3000
 const JWT_SECRET = process.env.JWT_SECRET
 const JWT_ISSUER = process.env.JWT_ISSUER
 
+process.on('unhandledRejection', (err) => {
+  console.error('UNHANDLED REJECTION:', err)
+  process.exit(1)
+})
+
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err)
+  process.exit(1)
+})
+
 const app = express()
 const server = http.createServer(app)
 
@@ -28,24 +38,27 @@ const config = {
   middleware: {
     security: {
       auth: {
-        bearerAuth: bearerJwt({ issuer: JWT_ISSUER, secret: JWT_SECRET })
+        bearerAuth: bearerJwt({
+          issuer: JWT_ISSUER,
+          secret: JWT_SECRET
+        })
       }
     }
   }
 }
 
-initialize(app, config).then(() => {
-  sequelize.authenticate().then(() => {
-    server.listen(PORT, () => {
-      console.log('\nApp running at http://localhost:' + PORT)
+try {
+  await initialize(app, config)
+  await sequelize.authenticate()
+  server.listen(PORT, () => {
+    console.log('\nApp running at http://localhost:' + PORT)
+    console.log('________________________________________________________________')
+    if (!config?.middleware?.swagger?.disable) {
+      console.log('API docs (Swagger UI) available on http://localhost:' + PORT + '/docs')
       console.log('________________________________________________________________')
-      if (!config?.middleware?.swagger?.disable) {
-        console.log('API docs (Swagger UI) available on http://localhost:' + PORT + '/docs')
-        console.log('________________________________________________________________')
-      }
-    })
+    }
   })
-    .catch((error) => {
-      console.log(error.message)
-    })
-})
+} catch (err) {
+  console.error('Startup failed:', err)
+  process.exit(1)
+}
