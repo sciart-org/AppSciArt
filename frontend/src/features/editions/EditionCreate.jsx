@@ -65,7 +65,7 @@ export default function EditionCreate(props) {
             onChange={handleInputChange}
             required={true}
             min={1900}
-            max={3000}
+            max={2200}
           />
         </div>
         <div className="input-box-container">
