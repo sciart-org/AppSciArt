@@ -54,7 +54,7 @@ export default function ActiveHackathon() {
   useEffect(() => {
     const shouldNotConnect =
       !socket || !participation || !participation?.hackathonId;
-    const shouldNotJoinCluster = participation?.clusterNumber === null;
+    const shouldNotJoinCluster = participation?.clusterNumber == null;
 
     if (shouldNotConnect || shouldNotJoinCluster) return;
 

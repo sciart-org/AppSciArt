@@ -88,7 +88,7 @@ export default function GroupPresentation({
   }, [hackathonId, clusterNumber]);
 
   useEffect(() => {
-    if (!socket || !hackathonId || clusterNumber) return;
+    if (!socket || !hackathonId || clusterNumber == null) return;
     socket.on("presenting_state", (presentingState) => {
       setPresentingGroup(presentingState.presentingGroup);
       setRatingItems([...ratingItems, ...presentingState.previousSeeds]);
