@@ -53,7 +53,7 @@ export default function Login() {
       <h1>Log in now</h1>
       <div style={{ margin: "2rem" }}>
         <h3 style={{ margin: 0 }}>Not a member of AppSciArt?</h3>
-        <Link to={"/signin"} style={{ margin: 0 }}>
+        <Link to={"/signup"} style={{ margin: 0 }}>
           Register
         </Link>
       </div>
