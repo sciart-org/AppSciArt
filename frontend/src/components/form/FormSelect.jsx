@@ -24,26 +24,26 @@ export default function FormSelect({
     value == null
       ? null
       : multiple
-      ? value.map((v) => {
-          return {
-            label: v,
-            value: v,
-          };
-        })
-      : { label: value, value };
+        ? value.map((v) => {
+            return {
+              label: v,
+              value: v,
+            };
+          })
+        : { label: value, value };
 
   const handleSelectChange = (v) => {
     v === null || v.length === 0
       ? setValue(null)
       : multiple
-      ? setValue(v.map((i) => i.value))
-      : setValue(v.value);
+        ? setValue(v.map((i) => i.value))
+        : setValue(v.value);
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", ...style }}>
       <div style={{ display: "flex" }}>
-        <span>{name}</span>
+        <h3 style={{ margin: 0 }}>{name}</h3>
         {required && <span style={{ color: "red", marginLeft: "3px" }}>*</span>}
       </div>
       <Select

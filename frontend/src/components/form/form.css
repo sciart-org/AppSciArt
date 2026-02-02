@@ -40,7 +40,7 @@ input:disabled, textarea:disabled {
 }
 
 .long-input-box-container > * > * {
-    width: auto
+    width: auto !important
 }
 
 .image-picker-label {

@@ -1,6 +1,7 @@
 import "./form.css";
 import "../AsterButton.css";
 import { toCamelCase } from "../../utils/commonUtils";
+import ImageRenderer from "../ImageRenderer";
 
 const InputComponent = (props) => {
   const {
@@ -49,15 +50,7 @@ const InputComponent = (props) => {
         </label>
 
         {value && (
-          <img
-            src={
-              value instanceof File
-                ? URL.createObjectURL(value)
-                : value
-            }
-            alt="preview"
-            style={{ width: 150, margin: 10 }}
-          />
+          <ImageRenderer image={value} style={{ width: 150, margin: 10 }} />
         )}
       </div>
     );
@@ -90,7 +83,7 @@ export default function FormInput(props) {
       }}
     >
       <div style={{ display: "flex" }}>
-        <text>{name}</text>
+        <h3 style={{ margin: 0 }}>{name}</h3>
         {required && <span style={{ color: "red", marginLeft: "3px" }}>*</span>}
       </div>
       <InputComponent {...props} />

@@ -6,7 +6,7 @@ import { fileToBase64 } from "../../utils/commonUtils";
 import { useNavigate } from "react-router";
 import Loading from "../../components/messages/Loading";
 
-export default function EditionCreate(props) {
+export default function EditionCreate() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
