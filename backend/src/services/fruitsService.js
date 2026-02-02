@@ -3,14 +3,14 @@ import { Flower } from '../models/Flower.js'
 import { Fruit } from '../models/Fruit.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { validateEditionById } from '../validators/editionValidators.js'
+import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { mapFruitAuthors } from './mappers/productMapper.js'
 import { filterPublished, includeFruitAuthors, includeSeedAuthors, includeSeedsOfEdition } from './includes/productIncludes.js'
 
 export async function getFruitsByEdition (userId, editionId) {
-  await validateEditionById(userId, editionId)
+  await validateCanSeeEdition(userId, editionId)
   const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Fruit.findAll({
     where: showUnpublished ? {} : filterPublished,

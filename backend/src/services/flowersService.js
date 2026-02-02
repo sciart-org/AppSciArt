@@ -2,14 +2,14 @@ import { Seed } from '../models/Seed.js'
 import { Flower } from '../models/Flower.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { validateEditionById } from '../validators/editionValidators.js'
+import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
 import { mapFlowerAuthors } from './mappers/productMapper.js'
 import { includeSeedsOfEdition, filterPublished, includeFlowerAuthors, includeSeedAuthors } from './includes/productIncludes.js'
 
 export async function getFlowersByEdition (userId, editionId) {
-  await validateEditionById(userId, editionId)
+  await validateCanSeeEdition(userId, editionId)
   const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Flower.findAll({
     where: showUnpublished ? {} : filterPublished,

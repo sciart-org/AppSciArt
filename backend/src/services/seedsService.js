@@ -1,7 +1,7 @@
 import { mapSeedAuthors } from './mappers/productMapper.js'
 import { Hackathon } from '../models/Hackathon.js'
 import { Seed } from '../models/Seed.js'
-import { validateEditionById } from '../validators/editionValidators.js'
+import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
 import { validateCanGetSeed, validateIsPublishedOrStaff } from '../validators/productValidators.js'
@@ -12,7 +12,7 @@ import { ConceptualMap } from '../models/ConceptualMap.js'
 import { Edition } from '../models/Edition.js'
 
 export async function getSeedsByEdition (userId, editionId) {
-  await validateEditionById(userId, editionId)
+  await validateCanSeeEdition(userId, editionId)
   const showUnpublished = await checkIsStaff(userId)
   const rawResponse = await Seed.findAll({
     where: showUnpublished ? {} : filterPublished,
