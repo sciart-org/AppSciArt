@@ -25,9 +25,16 @@ export const getEditionDetails = withErrorHandler(async (req, res) => {
   return res.status(200).send(edition)
 })
 
-export function updateEdition (req, res) {
-  service.updateEdition(req, res)
-}
+export const updateEdition = withErrorHandler(async (req, res) => {
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
+  const editionId = req.params.editionId
+  const edition = req.body
+
+  const updatedEdition = await service.updateEdition(currentUser?.id, editionId, edition)
+  return res.status(200).send(updatedEdition)
+})
 
 export function deleteEdition (req, res) {
   service.deleteEdition(req, res)

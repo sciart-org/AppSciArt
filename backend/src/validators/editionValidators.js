@@ -20,9 +20,15 @@ const validateCanSeeEdition = async (userId, editionId) => {
   return edition
 }
 
+const validateCanEditEdition = async (userId, editionId) => {
+  const edition = await validateEditionExists(editionId)
+  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot edit this edition', 403)
+  return edition
+}
+
 const validateEditionNameUnique = async (name, editingEditionId = null) => {
   const alreadyExists = await Edition.findOne({ where: { name }, attributes: ['id'] })
   errorThrower(alreadyExists && alreadyExists.id !== editingEditionId, `Edition with name '${name}' already exists`, 409)
 }
 
-export { validateCanSeeEdition, validateIsPublishedOrStaff, validateEditionNameUnique }
+export { validateCanSeeEdition, validateCanEditEdition, validateIsPublishedOrStaff, validateEditionNameUnique }

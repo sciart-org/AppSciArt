@@ -1,10 +1,10 @@
 import { Edition } from '../models/Edition.js'
 import { checkIsStaff } from '../validators/userValidators.js'
-import { validateCanSeeEdition, validateEditionNameUnique } from '../validators/editionValidators.js'
+import { validateCanEditEdition, validateCanSeeEdition, validateEditionNameUnique } from '../validators/editionValidators.js'
 import { mapToEditionDetails } from './mappers/editionMapper.js'
 import { includeEditionFruits } from './includes/editionIncludes.js'
 import { errorThrower } from './errorThrower.js'
-import { createDriveEdition, getLogoFromDrive } from './driveService.js'
+import { createDriveEdition, getLogoFromDrive, updateFolderName, uploadImg } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
 
 const getEditionsWithLogo = async (editionList) => {
@@ -64,10 +64,34 @@ export async function getEditionDetails (userId, editionId) {
   return editionsWithLogo[0]
 }
 
-export function updateEdition (req, res) {
-  res.send({
-    message: 'This is the mockup controller for updateEdition'
-  })
+export async function updateEdition (currentUserId, editionId, body) {
+  await validateCanEditEdition(currentUserId, editionId)
+
+  const { name, year, logo, shortDescription, longDescription } = body
+  await validateEditionNameUnique(name || '', editionId)
+
+  const edition = { name, year, shortDescription, longDescription }
+  let updatedEdition
+
+  if (!Object.values(edition).every(v => v === undefined)) {
+    const [_, updatedEditions] = await Edition.update(edition, {
+      where: { id: editionId },
+      returning: true
+    })
+    updatedEdition = updatedEditions[0]
+  }
+
+  if (name || year) {
+    const { driveLink, year, name } = updatedEdition
+    await updateFolderName(driveLink, year, name)
+  }
+
+  if (logo) {
+    const editionToUse = updatedEdition || (await Edition.findByPk(editionId))
+    await uploadImg(logo, editionToUse.driveLink)
+  }
+
+  return getEditionDetails(currentUserId, editionId)
 }
 
 export function deleteEdition (req, res) {

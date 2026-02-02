@@ -151,6 +151,17 @@ const createDriveFolderLink = (editionFolderId) => {
   return `https://drive.google.com/drive/folders/${editionFolderId}`
 }
 
+export const updateFolderName = async (driveLink, year, name) => {
+  const folderId = extractDriveFolderId(driveLink)
+  await drive.files.update({
+    fileId: folderId,
+    requestBody: {
+      name: createFolderName(year, name)
+    },
+    fields: 'id, name'
+  })
+}
+
 export const createDriveEdition = async (year, name, logo) => {
   const folderName = createFolderName(year, name)
   const editionFolder = await createEditionFolder(folderName)

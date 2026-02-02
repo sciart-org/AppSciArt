@@ -1,51 +1,161 @@
-import { CiEdit } from "react-icons/ci";
 import EditionCollectionButtons from "./components/EditionCollectionButtons";
+import AsterButton from "../../components/AsterButton";
+import { useState } from "react";
+import useFetcher from "../../utils/useFetcher";
+import Loading from "../../components/messages/Loading";
+import { fileToBase64 } from "../../utils/commonUtils";
+import EditorWrapper from "./components/EditorWrapper";
+import { EditionEditContext } from "./components/EditionEditContext";
 import "./css/edition-details.css";
 
-export default function EditionEdit({ edition }) {
-  const EditorWrapper = ({ children, field, title }) => {
-    return (
-      <div className="edition-wrapper">
-        <div style={{ flex: 1, marginLeft: "2rem", textAlign: "start" }}>
-          <h3>{title}</h3>
-          {field ? children : <p>No content yet</p>}
-        </div>
-        <CiEdit size={"2rem"} style={{ flex: "1 1 1", margin: "0 2rem" }} />
-      </div>
-    );
+export default function EditionEdit({ edition: editingEdition }) {
+  const [edition, setEdition] = useState(editingEdition);
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { fetcher } = useFetcher(error, setError);
+
+  const getFormData = (edition) => {
+    return {
+      name: edition?.name || null,
+      year: edition?.year || null,
+      shortDescription: edition?.shortDescription || null,
+      longDescription: edition?.longDescription || null,
+      logo: edition?.logo || null,
+    };
+  };
+
+  const filterNotChangedFields = () => {
+    return Object.entries(formData).reduce((editedFields, [key, value]) => {
+      if (value === edition[key]) return editedFields;
+      editedFields[key] = key === "year" ? parseInt(value) : value;
+      return editedFields;
+    }, {});
+  };
+
+  const [formData, setFormData] = useState(getFormData(edition));
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  const handleInputChange = async (e) => {
+    const { name, type, files, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: type === "file" ? await fileToBase64(files[0]) : value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!isEditing) {
+      setIsEditing(true);
+      return;
+    }
+
+    setLoading(true);
+    const body = filterNotChangedFields();
+    if (Object.keys(body).length === 0) {
+      setIsEditing(false);
+      setLoading(false);
+      return;
+    }
+    fetcher({
+      url: "editions/" + edition.id,
+      method: "PUT",
+      body,
+      onSuccess: (data) => {
+        setFormData(getFormData(data));
+        setEdition((prev) => ({ ...prev, ...data }));
+      },
+      onError: () => {
+        setFormData(getFormData(edition));
+      },
+    }).finally(() => {
+      setIsEditing(false);
+      setLoading(false);
+    });
   };
 
   return (
-    <div>
-      <h1>{edition?.name}</h1>
-      <div
-        className="edition-details-container"
-        style={{
-          border: "1px solid rgb(200, 200, 200)",
-          borderRadius: "1rem",
-        }}
-      >
-        <EditorWrapper
-          field={edition?.shortDescription}
-          title={"Short description"}
-        >
-          <p className="long-text">{edition?.shortDescription}</p>
-        </EditorWrapper>
-        <EditorWrapper
-          field={edition?.longDescription}
-          title={"Long description"}
-        >
-          <p className="long-text">{edition?.longDescription}</p>
-        </EditorWrapper>
-        <EditorWrapper field={edition?.location} title={"Location"}>
-          <p className="long-text">{edition?.location}</p>
-        </EditorWrapper>
-        <EditorWrapper field={edition?.location} title={"Catalog link"}>
-          <p className="long-text">{edition?.location}</p>
-        </EditorWrapper>
+    <EditionEditContext value={{ isEditing, handleInputChange }}>
+      <div>
+        <form onSubmit={handleSubmit}>
+          <h1>{edition?.name}</h1>
+          <div
+            className="edition-details-container"
+            style={{
+              border: "1px solid rgb(200, 200, 200)",
+              borderRadius: "1rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "start" }}>
+              <div style={{ flex: 1 / 2 }}>
+                <EditorWrapper
+                  value={formData?.name}
+                  name={"Name"}
+                  required={true}
+                />
+                <EditorWrapper
+                  value={formData?.year}
+                  name={"Year"}
+                  type={"number"}
+                  max={2200}
+                  min={1900}
+                  required={true}
+                />
+              </div>
+              <div style={{ position: "absolute", left: "50vw" }}>
+                <EditorWrapper
+                  value={formData?.logo}
+                  name={"Logo"}
+                  type={"image"}
+                />
+              </div>
+            </div>
+            <EditorWrapper
+              value={formData?.shortDescription}
+              name={"Short description"}
+              multiline={true}
+            />
+            <EditorWrapper
+              value={formData?.longDescription}
+              name={"Long description"}
+              collapsible={true}
+              multiline={true}
+            />
+          </div>
+          <div
+            style={{
+              marginTop: "1rem",
+              gap: "1rem",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <AsterButton type="submit">
+              {isEditing ? "Save" : "Edit"}
+            </AsterButton>
+            {isEditing && (
+              <AsterButton
+                onClick={() => {
+                  setIsEditing(false);
+                  setFormData(getFormData(edition));
+                }}
+                type="button"
+                variant="secondary"
+              >
+                Cancel
+              </AsterButton>
+            )}
+          </div>
+        </form>
+        <hr />
+        <EditionCollectionButtons editionId={edition?.id} />
       </div>
-      <hr />
-      <EditionCollectionButtons editionId={edition?.id} />
-    </div>
+    </EditionEditContext>
   );
 }
