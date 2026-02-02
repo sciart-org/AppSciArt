@@ -4,6 +4,7 @@ import Loading from "../../components/messages/Loading";
 import EditionCard from "../../components/EditionCard";
 import AsterButton from "../../components/AsterButton";
 import { useNavigate } from "react-router";
+import tokenService from "../../utils/token.service";
 
 export default function Editions() {
   const [editions, setEditions] = useState([]);
@@ -13,6 +14,7 @@ export default function Editions() {
 
   const { fetcher } = useFetcher(error, setError);
   const navigate = useNavigate();
+  const user = tokenService.getUser();
 
   const fetchEditions = async () => {
     await fetcher({
@@ -40,29 +42,43 @@ export default function Editions() {
     );
   }
 
+  const AdminCreateButton = () => {
+    if (!user || !user.roles.includes("administrator")) return null;
+    return (
+      <AsterButton
+        style={{ width: "20rem" }}
+        onClick={() => navigate("create")}
+      >
+        Create Edition
+      </AsterButton>
+    );
+  };
+
   if (editions.length === 0) {
     return (
       <>
         <Header />
+        <AdminCreateButton />
         <h2 style={{ fontWeight: "normal" }}>No editions found</h2>
       </>
     );
   }
 
   const AdminEditions = () => {
-    if (!ongoingEditions || ongoingEditions.length === 0) return;
+    if (!user || !user.roles.includes("administrator")) return null;
     return (
       <>
-        <AsterButton
-          style={{ width: "20rem" }}
-          onClick={() => navigate("create")}
-        >
-          Create Edition
-        </AsterButton>
-        <h2 style={{ textAlign: "start", width: "70vw" }}>Ongoing editions</h2>
-        {ongoingEditions.map((e) => (
-          <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
-        ))}
+        <AdminCreateButton />
+        {ongoingEditions.length > 0 && (
+          <>
+            <h2 style={{ textAlign: "start", width: "70vw" }}>
+              Ongoing editions
+            </h2>
+            {ongoingEditions.map((e) => (
+              <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
+            ))}
+          </>
+        )}
         <h2 style={{ textAlign: "start", width: "70vw" }}>Previous editions</h2>
       </>
     );
