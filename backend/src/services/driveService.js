@@ -1,7 +1,26 @@
 import { PassThrough } from 'stream'
-import { drive } from '../config/drive.js'
+import { loadDriveAuthConfig } from '../config/drive.js'
 
 const ROOT_FOLDER_ID = process.env.DRIVE_FOLDER_ID
+
+let driveInstance = await loadDriveAuthConfig()
+
+const drive = new Proxy({}, {
+  get: (_, prop) => new Proxy({}, {
+    get: (_, method) => async (...args) => {
+      try {
+        return await driveInstance[prop][method](...args)
+      } catch (error) {
+        if (error.response?.status === 400 || error.code === 400) {
+          console.log('Refreshing auth...')
+          driveInstance = await loadDriveAuthConfig()
+          return await driveInstance[prop][method](...args)
+        }
+        throw error
+      }
+    }
+  })
+})
 
 const createReaderLink = async (id) => {
   await drive.permissions.create({
