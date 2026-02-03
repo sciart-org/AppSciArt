@@ -7,12 +7,16 @@ import { fileToBase64 } from "../../utils/commonUtils";
 import EditorWrapper from "./components/EditorWrapper";
 import { EditionEditContext } from "./components/EditionEditContext";
 import "./css/edition-details.css";
+import EditionDetails from "./EditionDetails";
+import EditionCard from "../../components/EditionCard";
+import { EditionActionButton } from "./components/EditionActionButton";
 
 export default function EditionEdit({ edition: editingEdition }) {
   const [edition, setEdition] = useState(editingEdition);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [previewMode, setPreviewMode] = useState(false);
   const { fetcher } = useFetcher(error, setError);
 
   const getFormData = (edition) => {
@@ -80,16 +84,49 @@ export default function EditionEdit({ edition: editingEdition }) {
     });
   };
 
+  if (previewMode) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <h1>{edition?.name} (preview)</h1>
+        <AsterButton onClick={() => setPreviewMode(false)}>
+          Exit preview
+        </AsterButton>
+        <hr />
+        <h2>Card preview</h2>
+        <EditionCard forceNotAdmin={true} edition={formData} />
+        <hr />
+        <h2>Details preview</h2>
+        <EditionDetails edition={formData} />;
+      </div>
+    );
+  }
+
   return (
     <EditionEditContext value={{ isEditing, handleInputChange }}>
       <div>
         <form onSubmit={handleSubmit}>
           <h1>{edition?.name}</h1>
+          <AsterButton
+            onClick={() => {
+              setPreviewMode(true);
+            }}
+            type="button"
+            variant="secondary"
+          >
+            Preview
+          </AsterButton>
           <div
             className="edition-details-container"
             style={{
               border: "1px solid rgb(200, 200, 200)",
               borderRadius: "1rem",
+              marginTop: "4vh",
             }}
           >
             <div style={{ display: "flex", alignItems: "start" }}>
@@ -131,7 +168,7 @@ export default function EditionEdit({ edition: editingEdition }) {
           <div
             style={{
               marginTop: "1rem",
-              gap: "1rem",
+              gap: "5rem",
               display: "flex",
               justifyContent: "center",
             }}
@@ -139,7 +176,7 @@ export default function EditionEdit({ edition: editingEdition }) {
             <AsterButton type="submit">
               {isEditing ? "Save" : "Edit"}
             </AsterButton>
-            {isEditing && (
+            {isEditing ? (
               <AsterButton
                 onClick={() => {
                   setIsEditing(false);
@@ -148,8 +185,14 @@ export default function EditionEdit({ edition: editingEdition }) {
                 type="button"
                 variant="secondary"
               >
-                Cancel
+                Discard
               </AsterButton>
+            ) : (
+              <EditionActionButton
+                type="button"
+                variant="secondary"
+                edition={edition}
+              />
             )}
           </div>
         </form>

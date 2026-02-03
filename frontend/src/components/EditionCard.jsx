@@ -1,59 +1,16 @@
+import { EditionActionButton } from "../features/editions/components/EditionActionButton";
 import tokenService from "../utils/token.service";
 import AsterButton from "./AsterButton";
 import "./Card.css";
 import ImageRenderer from "./ImageRenderer";
 
-const AdminEditionButtons = ({ edition }) => {
-  const buttonStyle = { width: "15rem" };
-  const ExtraButton = () => {
-    switch (edition?.state) {
-      case "PLANNED":
-        return (
-          <AsterButton
-            style={buttonStyle}
-            onClick={() => console.log("Announce")}
-          >
-            Announce
-          </AsterButton>
-        );
-
-      case "ACTIVE":
-        return (
-          <AsterButton style={buttonStyle} onClick={() => console.log("Close")}>
-            Close
-          </AsterButton>
-        );
-
-      case "CLOSED":
-        return (
-          <AsterButton
-            style={buttonStyle}
-            onClick={() => console.log("Publish")}
-          >
-            Publish
-          </AsterButton>
-        );
-
-      default:
-        return null;
-    }
-  };
-  return (
-    <div
-      style={{ display: "flex", justifyContent: "space-around", width: "100%" }}
-    >
-      <AsterButton to={`/editions/${edition?.id}`} style={buttonStyle}>
-        Edit
-      </AsterButton>
-      <ExtraButton />
-    </div>
-  );
-};
 export default function EditionCard(props) {
   const edition = props.edition;
   const isPublished = edition?.state === "PUBLISHED";
   const user = tokenService.getUser();
-  const isAdmin = user.roles.includes("administrator");
+  const forceNotAdmin = props.forceNotAdmin || false;
+
+  const isAdmin = !forceNotAdmin && user.roles.includes("administrator");
 
   const includeAutoHeight = isPublished ? {} : { height: "auto" };
 
@@ -71,7 +28,21 @@ export default function EditionCard(props) {
           <p className="long-text">{edition?.shortDescription}</p>
         </div>
         {isAdmin ? (
-          <AdminEditionButtons edition={edition} />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "100%",
+            }}
+          >
+            <AsterButton
+              to={`/editions/${edition?.id}`}
+              style={{ width: "15rem" }}
+            >
+              Edit
+            </AsterButton>
+            <EditionActionButton style={{ width: "15rem" }} edition={edition} />
+          </div>
         ) : (
           <AsterButton to={`/editions/${edition?.id}`}>Know more</AsterButton>
         )}
