@@ -11,16 +11,22 @@ export default function Editions() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const ongoingEditions = editions.filter((e) => e.state !== "PUBLISHED");
+  const publishedEditions = editions.filter((e) => e.state === "PUBLISHED");
 
   const { fetcher } = useFetcher(error, setError);
   const navigate = useNavigate();
   const user = tokenService.getUser();
+  const isAdmin = user?.roles.includes("administrator");
 
   const fetchEditions = async () => {
     await fetcher({
       url: `editions`,
       onSuccess: (data) => {
-        setEditions(data);
+        if (isAdmin) {
+          setEditions(data);
+          return;
+        }
+        setEditions(data.filter((edition) => edition.state !== "PLANNED"));
       },
     }).finally(() => {
       setLoading(false);
@@ -43,7 +49,7 @@ export default function Editions() {
   }
 
   const AdminCreateButton = () => {
-    if (!user || !user.roles.includes("administrator")) return null;
+    if (!isAdmin) return null;
     return (
       <AsterButton
         style={{ width: "20rem" }}
@@ -64,26 +70,6 @@ export default function Editions() {
     );
   }
 
-  const AdminEditions = () => {
-    if (!user || !user.roles.includes("administrator")) return null;
-    return (
-      <>
-        <AdminCreateButton />
-        {ongoingEditions.length > 0 && (
-          <>
-            <h2 style={{ textAlign: "start", width: "70vw" }}>
-              Ongoing editions
-            </h2>
-            {ongoingEditions.map((e) => (
-              <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
-            ))}
-          </>
-        )}
-        <h2 style={{ textAlign: "start", width: "70vw" }}>Previous editions</h2>
-      </>
-    );
-  };
-
   return (
     <div>
       <div
@@ -94,14 +80,18 @@ export default function Editions() {
         }}
       >
         <Header />
-        <AdminEditions />
-        {editions.map((e) => {
-          return (
-            e.state === "PUBLISHED" && (
-              <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
-            )
-          );
-        })}
+        <AdminCreateButton />
+        <h2 style={{ textAlign: "start", width: "70vw" }}>Ongoing editions</h2>
+
+        {ongoingEditions.length > 0 ? ongoingEditions.map((e) => (
+          <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
+        )) : <h3 style={{ fontWeight: "normal" }}>No ongoing editions found</h3>}
+        
+        <h2 style={{ textAlign: "start", width: "70vw" }}>Previous editions</h2>
+
+        {publishedEditions.length > 0 ? publishedEditions.map((e) => {
+          return <EditionCard edition={e} style={{ marginBottom: "5vh" }} />;
+        }) : <h3 style={{ fontWeight: "normal" }}>No published editions found</h3>}
       </div>
     </div>
   );

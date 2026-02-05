@@ -10,7 +10,7 @@ export default function EditionCard(props) {
   const user = tokenService.getUser();
   const forceNotAdmin = props.forceNotAdmin || false;
 
-  const isAdmin = !forceNotAdmin && user.roles.includes("administrator");
+  const isAdmin = !forceNotAdmin && user?.roles.includes("administrator");
 
   const includeAutoHeight = isPublished ? {} : { height: "auto" };
 

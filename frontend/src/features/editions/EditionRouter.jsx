@@ -4,12 +4,15 @@ import { useParams } from "react-router";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import EditionEdit from "./EditionEdit";
+import tokenService from "../../utils/token.service";
 
 export default function EditionRouter() {
   const params = useParams();
   const [error, setError] = useState(null);
   const [edition, setEdition] = useState(null);
   const [loading, setLoading] = useState(true);
+  const user = tokenService.getUser();
+  const isAdmin = user?.roles.includes("administrator");
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -40,7 +43,7 @@ export default function EditionRouter() {
     );
   }
 
-  if (edition && edition?.state !== "PUBLISHED") {
+  if (isAdmin && edition && edition?.state !== "PUBLISHED") {
     return <EditionEdit edition={edition} />;
   }
 
