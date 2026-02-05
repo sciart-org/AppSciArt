@@ -3,6 +3,7 @@ import logoCatalog from "../../assets/logoCatalog.png";
 import Carousel from "../home/components/Carousel";
 import "./css/edition-details.css";
 import EditionCollectionButtons from "./components/EditionCollectionButtons";
+import ImageRenderer from "../../components/ImageRenderer";
 
 export default function EditionDetails({ edition }) {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ export default function EditionDetails({ edition }) {
     return (
       <div className="edition-details-container">
         <div className="edition-logo-container">
-          <img className="edition-logo" src={edition?.logo} />
+          <ImageRenderer className="edition-logo" image={edition?.logo} />
           {edition?.catalogLink && (
             <div style={{ textAlign: "center", flex: 1 }}>
               <h2 style={{ marginBottom: 0 }}>
