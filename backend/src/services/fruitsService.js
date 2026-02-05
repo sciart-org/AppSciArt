@@ -5,7 +5,7 @@ import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
-import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
+import { validateIsPublicOrStaff } from '../validators/productValidators.js'
 import { mapFruitAuthors } from './mappers/productMapper.js'
 import { filterPublished, includeFruitAuthors, includeSeedAuthors, includeSeedsOfEdition } from './includes/productIncludes.js'
 
@@ -58,7 +58,7 @@ export async function getFruitDetails (userId, fruitId) {
   })
   errorThrower(!checkExists(rawResponse), 'Fruit not found', 404)
   const fruit = mapFruitAuthors(rawResponse)
-  await validateIsPublishedOrStaff(userId, fruit)
+  await validateIsPublicOrStaff(userId, fruit)
   return fruit
 }
 

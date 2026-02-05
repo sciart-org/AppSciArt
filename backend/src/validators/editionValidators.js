@@ -3,8 +3,8 @@ import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from './generalValidators.js'
 import { checkIsStaff } from './userValidators.js'
 
-const validateIsPublishedOrStaff = async (userId, edition) => {
-  return errorThrower(!(edition.state === 'PUBLISHED') && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this edition', 403)
+const validateIsPublicOrStaff = async (userId, edition) => {
+  return errorThrower(!(edition.state !== 'PLANNED') && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this edition', 403)
 }
 
 const validateEditionExists = async (editionId) => {
@@ -15,8 +15,7 @@ const validateEditionExists = async (editionId) => {
 
 const validateCanSeeEdition = async (userId, editionId) => {
   const edition = await validateEditionExists(editionId)
-  errorThrower(!userId && edition.state !== 'PUBLISHED', 'Authentication required', 401)
-  await validateIsPublishedOrStaff(userId, edition)
+  await validateIsPublicOrStaff(userId, edition)
   return edition
 }
 
@@ -31,4 +30,4 @@ const validateEditionNameUnique = async (name, editingEditionId = null) => {
   errorThrower(alreadyExists && alreadyExists.id !== editingEditionId, `Edition with name '${name}' already exists`, 409)
 }
 
-export { validateCanSeeEdition, validateCanEditEdition, validateIsPublishedOrStaff, validateEditionNameUnique }
+export { validateCanSeeEdition, validateCanEditEdition, validateIsPublicOrStaff, validateEditionNameUnique }

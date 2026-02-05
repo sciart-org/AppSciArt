@@ -4,7 +4,7 @@ import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
-import { validateIsPublishedOrStaff } from '../validators/productValidators.js'
+import { validateIsPublicOrStaff } from '../validators/productValidators.js'
 import { mapFlowerAuthors } from './mappers/productMapper.js'
 import { includeSeedsOfEdition, filterPublished, includeFlowerAuthors, includeSeedAuthors } from './includes/productIncludes.js'
 
@@ -48,7 +48,7 @@ export async function getFlowerDetails (userId, flowerId) {
   })
   errorThrower(!checkExists(rawResponse), 'Flower not found', 404)
   const flower = mapFlowerAuthors(rawResponse)
-  await validateIsPublishedOrStaff(userId, flower)
+  await validateIsPublicOrStaff(userId, flower)
   return flower
 }
 

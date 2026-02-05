@@ -4,7 +4,7 @@ import { Seed } from '../models/Seed.js'
 import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
-import { validateCanGetSeed, validateIsPublishedOrStaff } from '../validators/productValidators.js'
+import { validateCanGetSeed, validateIsPublicOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { filterPublished, includeEdition, includeSeedAuthors } from './includes/productIncludes.js'
@@ -72,7 +72,7 @@ export async function getSeedDetails (userId, seedId) {
 export async function getSeedConceptualMapIds (userId, seedId) {
   const seed = await Seed.findByPk(seedId, { attributes: ['id', 'state'] })
   errorThrower(!checkExists(seed), 'Seed not found', 404)
-  await validateIsPublishedOrStaff(userId, seed)
+  await validateIsPublicOrStaff(userId, seed)
   const conceptualMapsIds = await ConceptualMap.findAll({
     where: {
       seedId,

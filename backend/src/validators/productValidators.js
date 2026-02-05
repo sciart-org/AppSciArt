@@ -3,7 +3,7 @@ import { UserProfile } from '../models/UserProfile.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { checkIsInspiringScientist, checkIsStaff } from './userValidators.js'
 
-const validateIsPublishedOrStaff = async (userId, product) => {
+const validateIsPublicOrStaff = async (userId, product) => {
   return errorThrower(product.state !== 'PUBLISHED' && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this resource', 403)
 }
 
@@ -44,4 +44,4 @@ const validateCanGetSeed = async (userId, seed) => {
   }
 }
 
-export { validateIsPublishedOrStaff, validateCanGetSeed }
+export { validateIsPublicOrStaff, validateCanGetSeed }

@@ -6,6 +6,7 @@ import { includeEditionFruits } from './includes/editionIncludes.js'
 import { errorThrower } from './errorThrower.js'
 import { createDriveEdition, getLogoFromDrive, updateFolderName, uploadImg } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
+import { Op } from 'sequelize'
 
 const getEditionsWithLogo = async (editionList) => {
   const editionsWithLogo = await Promise.all(
@@ -25,12 +26,12 @@ const getEditionsWithLogo = async (editionList) => {
 }
 
 export async function getEditions (userId) {
-  const showUnpublished = await checkIsStaff(userId)
+  const showPlannedEditions = await checkIsStaff(userId)
   const editions = await Edition.findAll({
     attributes: {
       exclude: ['longDescription', 'catalogLink']
     },
-    where: showUnpublished ? {} : { state: 'PUBLISHED' },
+    where: showPlannedEditions ? {} : { state: { [Op.ne]: 'PLANNED' } },
     order: [['year', 'DESC']]
   })
 
@@ -65,20 +66,16 @@ export async function getEditionDetails (userId, editionId) {
 }
 
 export async function updateEdition (currentUserId, editionId, body) {
-  await validateCanEditEdition(currentUserId, editionId)
+  const edition = await validateCanEditEdition(currentUserId, editionId)
 
   const { name, year, logo, shortDescription, longDescription } = body
   await validateEditionNameUnique(name || '', editionId)
 
-  const edition = { name, year, shortDescription, longDescription }
+  const editionBody = { name, year, shortDescription, longDescription }
   let updatedEdition
 
-  if (!Object.values(edition).every(v => v === undefined)) {
-    const [_, updatedEditions] = await Edition.update(edition, {
-      where: { id: editionId },
-      returning: true
-    })
-    updatedEdition = updatedEditions[0]
+  if (!Object.values(editionBody).every(v => v === undefined)) {
+    updatedEdition = await edition.update(editionBody)
   }
 
   if (name || year) {
@@ -87,7 +84,7 @@ export async function updateEdition (currentUserId, editionId, body) {
   }
 
   if (logo) {
-    const editionToUse = updatedEdition || (await Edition.findByPk(editionId))
+    const editionToUse = updatedEdition || (await Edition.findByPk(editionId, { attributes: ['driveLink'] }))
     await uploadImg(logo, editionToUse.driveLink)
   }
 
