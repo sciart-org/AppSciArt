@@ -33,7 +33,7 @@ function showErrorMessage(errorMessage, setErrorMessage) {
   });
 }
 
-function showSuccessMessage(message, setMessage) {
+function showSuccessMessage(message, setMessage = () => {}) {
   toast.success(message, {
     position: "top-center",
     autoClose: 5000,

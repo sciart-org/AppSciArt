@@ -26,7 +26,6 @@ export default function QuickRegisterBar() {
         setEmail("");
         showSuccessMessage(
           "Thank you for registering! Check your inbox for the next steps.",
-          () => {}
         );
       },
     });
