@@ -30,4 +30,10 @@ const validateEditionNameUnique = async (name, editingEditionId = null) => {
   errorThrower(alreadyExists && alreadyExists.id !== editingEditionId, `Edition with name '${name}' already exists`, 409)
 }
 
-export { validateCanSeeEdition, validateCanEditEdition, validateIsPublicOrStaff, validateEditionNameUnique }
+const validateCanBeAnnounced = async (userId, editionId) => {
+  const edition = await validateCanEditEdition(userId, editionId)
+  errorThrower(edition.state !== 'PLANNED', 'This edition is already announced', 400)
+  return edition
+}
+
+export { validateCanSeeEdition, validateCanEditEdition, validateIsPublicOrStaff, validateEditionNameUnique, validateCanBeAnnounced }

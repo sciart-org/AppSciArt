@@ -138,6 +138,31 @@ paths:
         "204":
           description: Edition deleted
 
+  /editions/{editionId}/announce:
+    x-router-controller: editionsController
+    post:
+      tags: [Editions]
+      summary: Announce a (planned) edition
+      operationId: announceEdition
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Edition announced
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditionDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
   /editions/{editionId}/scientists:
     x-router-controller: editionsController
     post:

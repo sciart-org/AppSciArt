@@ -1,6 +1,6 @@
 import { Edition } from '../models/Edition.js'
 import { checkIsStaff } from '../validators/userValidators.js'
-import { validateCanEditEdition, validateCanSeeEdition, validateEditionNameUnique } from '../validators/editionValidators.js'
+import { validateCanBeAnnounced, validateCanEditEdition, validateCanSeeEdition, validateEditionNameUnique } from '../validators/editionValidators.js'
 import { mapToEditionDetails } from './mappers/editionMapper.js'
 import { includeEditionFruits } from './includes/editionIncludes.js'
 import { errorThrower } from './errorThrower.js'
@@ -107,4 +107,11 @@ export function getEditionMethodology (req, res) {
   res.send({
     message: 'This is the mockup controller for getEditionMethodology'
   })
+}
+
+export async function announceEdition (currentUserId, editionId) {
+  const edition = await validateCanBeAnnounced(currentUserId, editionId)
+  edition.state = 'ACTIVE'
+  await edition.save()
+  return edition
 }

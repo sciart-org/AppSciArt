@@ -56,3 +56,13 @@ export const inviteScientistToEdition = withErrorHandler(async (req, res) => {
   await ScientistsService.inviteScientist(currentUser?.id, email, editionId, null)
   return res.status(200).send({ message: 'Scientist invited successfully' })
 })
+
+export const announceEdition = withErrorHandler(async (req, res) => {
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
+  const editionId = req.params.editionId
+
+  const announcedEdition = await service.announceEdition(currentUser?.id, editionId)
+  return res.status(200).send(announcedEdition)
+})
