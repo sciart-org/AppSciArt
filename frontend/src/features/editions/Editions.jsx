@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import EditionCard from "../../components/EditionCard";
-import AsterButton from "../../components/AsterButton";
-import { useNavigate } from "react-router";
-import tokenService from "../../utils/token.service";
+import AdminCreateButton from "../../components/AdminCreateButton";
 
 export default function Editions() {
   const [editions, setEditions] = useState([]);
@@ -14,19 +12,12 @@ export default function Editions() {
   const publishedEditions = editions.filter((e) => e.state === "PUBLISHED");
 
   const { fetcher } = useFetcher(error, setError);
-  const navigate = useNavigate();
-  const user = tokenService.getUser();
-  const isAdmin = user?.roles.includes("administrator");
 
   const fetchEditions = async () => {
     await fetcher({
       url: `editions`,
       onSuccess: (data) => {
-        if (isAdmin) {
-          setEditions(data);
-          return;
-        }
-        setEditions(data.filter((edition) => edition.state !== "PLANNED"));
+        setEditions(data);
       },
     }).finally(() => {
       setLoading(false);
@@ -37,7 +28,7 @@ export default function Editions() {
     fetchEditions();
   }, []);
 
-  const Header = () => <h1 style={{ marginBottom: "5vh" }}>Editions</h1>;
+  const Header = () => <h1>Editions</h1>;
 
   if (loading) {
     return (
@@ -48,23 +39,11 @@ export default function Editions() {
     );
   }
 
-  const AdminCreateButton = () => {
-    if (!isAdmin) return null;
-    return (
-      <AsterButton
-        style={{ width: "20rem" }}
-        onClick={() => navigate("create")}
-      >
-        Create Edition
-      </AsterButton>
-    );
-  };
-
   if (editions.length === 0) {
     return (
       <>
         <Header />
-        <AdminCreateButton />
+        <AdminCreateButton entity="Edition" />
         <h2 style={{ fontWeight: "normal" }}>No editions found</h2>
       </>
     );
@@ -80,18 +59,26 @@ export default function Editions() {
         }}
       >
         <Header />
-        <AdminCreateButton />
+        <AdminCreateButton entity="Edition" />
         <h2 style={{ textAlign: "start", width: "70vw" }}>Ongoing editions</h2>
 
-        {ongoingEditions.length > 0 ? ongoingEditions.map((e) => (
-          <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
-        )) : <h3 style={{ fontWeight: "normal" }}>No ongoing editions found</h3>}
-        
+        {ongoingEditions.length > 0 ? (
+          ongoingEditions.map((e) => (
+            <EditionCard edition={e} style={{ marginBottom: "5vh" }} />
+          ))
+        ) : (
+          <h3 style={{ fontWeight: "normal" }}>No ongoing editions found</h3>
+        )}
+
         <h2 style={{ textAlign: "start", width: "70vw" }}>Previous editions</h2>
 
-        {publishedEditions.length > 0 ? publishedEditions.map((e) => {
-          return <EditionCard edition={e} style={{ marginBottom: "5vh" }} />;
-        }) : <h3 style={{ fontWeight: "normal" }}>No published editions found</h3>}
+        {publishedEditions.length > 0 ? (
+          publishedEditions.map((e) => {
+            return <EditionCard edition={e} style={{ marginBottom: "5vh" }} />;
+          })
+        ) : (
+          <h3 style={{ fontWeight: "normal" }}>No published editions found</h3>
+        )}
       </div>
     </div>
   );
