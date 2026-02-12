@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import HackathonCard from "../../components/HackathonCard";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
+import AdminCreateButton from "../../components/AdminCreateButton";
 
 export default function Hackathons() {
   const [hackathons, setHackathons] = useState([]);
@@ -35,7 +36,7 @@ export default function Hackathons() {
       groupedHackathons[hackathon.editionName].push(hackathon);
       return groupedHackathons;
     },
-    {}
+    {},
   );
 
   const Header = () => <h1>Next hackathons</h1>;
@@ -53,6 +54,7 @@ export default function Hackathons() {
     return (
       <>
         <Header />
+        <AdminCreateButton entity="Hackathon" />
         <h2 style={{ fontWeight: "normal" }}>No incoming hackthons</h2>
       </>
     );
@@ -61,6 +63,7 @@ export default function Hackathons() {
   return (
     <div>
       <Header />
+      <AdminCreateButton entity="Hackathon" />
       <div
         style={{
           display: "flex",
@@ -84,7 +87,7 @@ export default function Hackathons() {
                 <HackathonCard hackathon={h} style={{ marginBottom: "5vh" }} />
               ))}
             </>
-          )
+          ),
         )}
       </div>
     </div>

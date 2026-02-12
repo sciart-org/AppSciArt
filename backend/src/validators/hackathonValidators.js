@@ -21,4 +21,9 @@ const validateHackathonIsOpen = async (userId, hackathonId) => {
   return hackathon
 }
 
-export { validateHackathonIsReadable, validateHackathonIsOpen }
+const validateHackathonNameUnique = async (internalName, editingHackathonId = null) => {
+  const alreadyExists = await Hackathon.findOne({ where: { internalName }, attributes: ['id'] })
+  errorThrower(alreadyExists && alreadyExists.id !== editingHackathonId, `Hackathon with name '${internalName}' already exists`, 409)
+}
+
+export { validateHackathonIsReadable, validateHackathonIsOpen, validateHackathonNameUnique }

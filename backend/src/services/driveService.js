@@ -162,6 +162,15 @@ const createEditionFolder = async (folderName) => {
   await createReaderLink(editionFolder.data.id)
   return editionFolder.data
 }
+
+const createHackathonFolder = async (folderName, editionFolderId) => {
+  if (!editionFolderId) return null
+  const editionHackathonsFolderId = await getOrCreateFolder(editionFolderId, 'hackathons')
+  const hackathonFolder = await createFolderGeneric(folderName, editionHackathonsFolderId)
+  await createReaderLink(hackathonFolder.data.id)
+  return hackathonFolder.data
+}
+
 const createDriveFolderLink = (editionFolderId) => {
   return `https://drive.google.com/drive/folders/${editionFolderId}`
 }
@@ -181,6 +190,15 @@ export const createDriveEdition = async (year, name, logo) => {
   const folderName = createEditionFolderName(year, name)
   const editionFolder = await createEditionFolder(folderName)
   const driveLink = createDriveFolderLink(editionFolder.id)
+  await uploadImg(logo, driveLink)
+  return driveLink
+}
+
+export const createDriveHackathon = async (editionDriveLink, internalName, logo) => {
+  const folderName = parseFolderName(internalName)
+  const editionFolderId = extractDriveFolderId(editionDriveLink)
+  const hackathonFolder = await createHackathonFolder(folderName, editionFolderId)
+  const driveLink = createDriveFolderLink(hackathonFolder.id)
   await uploadImg(logo, driveLink)
   return driveLink
 }

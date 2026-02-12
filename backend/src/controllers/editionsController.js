@@ -7,7 +7,10 @@ import { checkExists } from '../validators/generalValidators.js'
 
 export const getEditions = withErrorHandler(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
-  const editions = await service.getEditions(currentUser?.id)
+
+  const { state } = req.query
+
+  const editions = await service.getEditions(currentUser?.id, state)
   return res.status(200).send(editions)
 })
 

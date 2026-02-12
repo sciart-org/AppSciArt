@@ -11,7 +11,20 @@ export const Hackathon = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
-    logo: {
+    internalName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      },
+      unique: true
+    },
+    isPrivate: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    driveLink: {
       type: DataTypes.STRING
     },
     startDate: {

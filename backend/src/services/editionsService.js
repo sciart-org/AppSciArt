@@ -25,13 +25,24 @@ const getEditionsWithLogo = async (editionList) => {
   return editionsWithLogo
 }
 
-export async function getEditions (userId) {
+export async function getEditions (userId, state) {
   const showPlannedEditions = await checkIsStaff(userId)
+
+  const whereClause = {}
+
+  if (!showPlannedEditions) {
+    whereClause.state = state
+      ? { [Op.and]: [state, { [Op.ne]: 'PLANNED' }] }
+      : { [Op.ne]: 'PLANNED' }
+  } else if (state) {
+    whereClause.state = state
+  }
+
   const editions = await Edition.findAll({
     attributes: {
       exclude: ['longDescription', 'catalogLink']
     },
-    where: showPlannedEditions ? {} : { state: { [Op.ne]: 'PLANNED' } },
+    where: whereClause,
     order: [['year', 'DESC']]
   })
 

@@ -27,13 +27,17 @@ import EditionRouter from "./features/editions/EditionRouter";
 import SeedCreator from "./features/products/creators/SeedCreator";
 import Scientists from "./features/users/scientists/Scientists";
 import EditionCreate from "./features/editions/EditionCreate";
+import HackathonCreate from "./features/hackathons/HackathonCreate";
 
 function App() {
-  useEffect(() => {
-    tokenService.checkToken();
-  }, []);
   const [user, setUser] = useState(tokenService.getUser());
   const [justRegistered, setJustRegistered] = useState(false);
+
+  useEffect(() => {
+    if (!tokenService.checkToken()) {
+      setUser(undefined);
+    }
+  }, []);
 
   const refreshSession = () => {
     const foundUser = tokenService.getUser();
@@ -137,6 +141,7 @@ function App() {
           <Route path="/collections/seeds/create" element={<SeedCreator />} />
           <Route path="/users/scientists" element={<Scientists />} />
           <Route path="/editions/create" element={<EditionCreate />} />
+          <Route path="/hackathons/create" element={<HackathonCreate />} />
         </>
       )}
     </>

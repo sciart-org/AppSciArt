@@ -36,4 +36,10 @@ const validateCanBeAnnounced = async (userId, editionId) => {
   return edition
 }
 
-export { validateCanSeeEdition, validateCanEditEdition, validateIsPublicOrStaff, validateEditionNameUnique, validateCanBeAnnounced }
+const validateIsActive = async (editionId) => {
+  const edition = await validateEditionExists(editionId)
+  errorThrower(edition.state !== 'ACTIVE', 'This edition is not active', 400)
+  return edition
+}
+
+export { validateCanSeeEdition, validateCanEditEdition, validateIsPublicOrStaff, validateEditionNameUnique, validateCanBeAnnounced, validateIsActive }

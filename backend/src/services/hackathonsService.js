@@ -1,7 +1,11 @@
 import { Op } from 'sequelize'
 import { Hackathon } from '../models/Hackathon.js'
-import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
+import { validateHackathonIsReadable, validateHackathonNameUnique } from '../validators/hackathonValidators.js'
 import { combineIncludes, includeEditionName, includeIsEnrolled, includeMyHackathons } from './includes/hackathonIncludes.js'
+import { errorThrower } from './errorThrower.js'
+import { checkIsStaff } from '../validators/userValidators.js'
+import { validateIsActive } from '../validators/editionValidators.js'
+import { createDriveHackathon } from './driveService.js'
 
 export async function getClosestHackathon (userId) {
   return await Hackathon.findOne({
@@ -45,10 +49,16 @@ export async function getActiveHackathon (userId) {
   })
 }
 
-export function createHackathon (req, res) {
-  res.send({
-    message: 'This is the mockup controller for createHackathon'
+export async function createHackathon (userId, body) {
+  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create a hackathon', 403)
+  const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate } = body
+  const edition = await validateIsActive(editionId)
+  await validateHackathonNameUnique(internalName)
+  const driveLink = await createDriveHackathon(edition?.driveLink, internalName, logo)
+  const createdHackathon = await Hackathon.create({
+    startDate, endDate, type, location, description, editionId, internalName, isPrivate, driveLink
   })
+  return createdHackathon
 }
 
 export async function getHackathonDetails (hackathonId, userId) {
