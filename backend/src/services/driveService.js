@@ -92,9 +92,9 @@ const deleteOldImg = async (newImgId, folderId) => {
   }
 }
 
-export const uploadImg = async (imgB64, driveId) => {
+export const uploadImg = async (imgB64, driveLink) => {
   if (!imgB64) return null
-  const folderId = extractDriveFolderId(driveId)
+  const folderId = extractDriveFolderId(driveLink)
 
   const media = buildImgMedia(imgB64)
   const fileMetadata = {
@@ -115,7 +115,7 @@ export const uploadImg = async (imgB64, driveId) => {
   return getImgUrl(newImgId)
 }
 
-const parseEditionName = (name) => {
+const parseFolderName = (name) => {
   return name
     .toLowerCase()
     .normalize('NFD')
@@ -126,44 +126,40 @@ const parseEditionName = (name) => {
     .replace(/-+/g, '-')
 }
 
-const createFolderName = (year, name) => {
-  return `${year}-${parseEditionName(name)}`
+const createEditionFolderName = (year, name) => {
+  return `${year}-${parseFolderName(name)}`
 }
 
-const createEditionFolder = async (folderName) => {
-  const editionsFolder = await drive.files.list({
-    q: `'${ROOT_FOLDER_ID}' in parents and name = 'editions' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+const getOrCreateFolder = async (parentFolderId, folderName) => {
+  const folder = await drive.files.list({
+    q: `'${parentFolderId}' in parents and name = '${folderName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
     fields: 'files(id, name)',
     spaces: 'drive'
   })
 
-  let editionsFolderId
-
-  if (editionsFolder.data.files.length > 0) {
-    editionsFolderId = editionsFolder.data.files[0].id
+  if (folder.data.files.length > 0) {
+    return folder.data.files[0].id
   } else {
-    const createdEditionsFolder = await drive.files.create({
-      requestBody: {
-        name: 'editions',
-        mimeType: 'application/vnd.google-apps.folder',
-        parents: [ROOT_FOLDER_ID]
-      },
-      fields: 'id'
-    })
-    editionsFolderId = createdEditionsFolder.data.id
+    const createdFolder = await createFolderGeneric(folderName, parentFolderId)
+    return createdFolder.data.id
   }
+}
 
-  const editionFolder = await drive.files.create({
+const createFolderGeneric = async (folderName, parentId) => {
+  return await drive.files.create({
     requestBody: {
       name: folderName,
       mimeType: 'application/vnd.google-apps.folder',
-      parents: [editionsFolderId]
+      parents: [parentId]
     },
     fields: 'id, name'
   })
+}
 
+const createEditionFolder = async (folderName) => {
+  const editionsFolderId = await getOrCreateFolder(ROOT_FOLDER_ID, 'editions')
+  const editionFolder = await createFolderGeneric(folderName, editionsFolderId)
   await createReaderLink(editionFolder.data.id)
-
   return editionFolder.data
 }
 const createDriveFolderLink = (editionFolderId) => {
@@ -175,14 +171,14 @@ export const updateFolderName = async (driveLink, year, name) => {
   await drive.files.update({
     fileId: folderId,
     requestBody: {
-      name: createFolderName(year, name)
+      name: createEditionFolderName(year, name)
     },
     fields: 'id, name'
   })
 }
 
 export const createDriveEdition = async (year, name, logo) => {
-  const folderName = createFolderName(year, name)
+  const folderName = createEditionFolderName(year, name)
   const editionFolder = await createEditionFolder(folderName)
   const driveLink = createDriveFolderLink(editionFolder.id)
   await uploadImg(logo, driveLink)
