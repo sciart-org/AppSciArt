@@ -4,8 +4,8 @@ export default function EditionPicker({
   selectedEdition,
   setSelectedEdition,
   allEditions,
-  style,
   size,
+  ...props
 }) {
   const selectedEditionName = selectedEdition?.name;
   const allEditionNames = allEditions.map((e) => e.name);
@@ -25,12 +25,13 @@ export default function EditionPicker({
   return (
     <FormSelect
       name={""}
+      placeholder={"Select edition..."}
       value={selectedEditionName}
       setValue={setSelectedEditionByName}
       options={allEditionNames}
       clearable={false}
       className={size === "small" ? "" : "edition-picker"}
-      style={style}
+      {...props}
     />
   );
 }

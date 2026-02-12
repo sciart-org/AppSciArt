@@ -1,10 +1,10 @@
 import { useState } from "react";
 import FormInput from "../../components/form/FormInput";
-import AsterButton from "../../components/AsterButton";
 import useFetcher from "../../utils/useFetcher";
 import { fileToBase64 } from "../../utils/commonUtils";
 import { useNavigate } from "react-router";
 import Loading from "../../components/messages/Loading";
+import SubmitCancelButtons from "../../components/SubmitCancelButtons";
 
 export default function EditionCreate() {
   const [formData, setFormData] = useState({});
@@ -43,7 +43,12 @@ export default function EditionCreate() {
   };
 
   if (loading) {
-    return <Loading />;
+    return (
+      <>
+        <h1>Create Edition</h1>
+        <Loading />
+      </>
+    );
   }
 
   return (
@@ -94,7 +99,7 @@ export default function EditionCreate() {
             multiline={true}
           />
         </div>
-        <AsterButton type="submit">Submit</AsterButton>
+        <SubmitCancelButtons />
       </form>
     </div>
   );

@@ -4,7 +4,7 @@ export function itemsToUpperCase(list) {
 };
 
 export function toEnumValue(value) {
-    return value ? value.trim().replaceAll(" ", "_").toUpperCase() : null
+    return value ? value.trim().replaceAll(" ", "_").replaceAll("-", "_").toUpperCase() : null
 }
 
 export function validateEmail(email) {
@@ -22,16 +22,16 @@ export function isValidUrl(string) {
 }
 
 export function toCamelCase(str) {
-  return str
-    .replace(/[-_ ]+([a-zA-Z0-9])/g, (_, letter) => letter.toUpperCase())
-    .replace(/^[A-Z]/, (m) => m.toLowerCase());
+    return str
+        .replace(/[-_ ]+([a-zA-Z0-9])/g, (_, letter) => letter.toUpperCase())
+        .replace(/^[A-Z]/, (m) => m.toLowerCase());
 }
 
 export function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file); // includes "data:image/png;base64,"
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (err) => reject(err);
-  });
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (err) => reject(err);
+    });
 }

@@ -3,19 +3,17 @@ import "../AsterButton.css";
 import { toCamelCase } from "../../utils/commonUtils";
 import ImageRenderer from "../ImageRenderer";
 
-const InputComponent = (props) => {
-  const {
-    name,
-    type,
-    placeholder,
-    value,
-    onChange,
-    required,
-    disabled,
-    multiline,
-    min,
-    max,
-  } = props;
+const InputComponent = ({
+  name,
+  type,
+  placeholder,
+  value,
+  required,
+  multiline,
+  min,
+  max,
+  ...props
+}) => {
   if (multiline) {
     return (
       <textarea
@@ -23,12 +21,10 @@ const InputComponent = (props) => {
         name={toCamelCase(name)}
         placeholder={placeholder ?? name + "..."}
         value={value}
-        onChange={onChange}
-        required={required}
-        disabled={disabled}
         minLength={min ?? undefined}
         maxLength={max ?? undefined}
         style={{ resize: "vertical" }}
+        {...props}
       />
     );
   }
@@ -42,10 +38,8 @@ const InputComponent = (props) => {
             type="file"
             name={toCamelCase(name)}
             accept="image/*"
-            onChange={onChange}
             style={{ display: "none" }}
-            required={required}
-            disabled={disabled}
+            {...props}
           />
         </label>
 
@@ -62,11 +56,9 @@ const InputComponent = (props) => {
       name={toCamelCase(name)}
       placeholder={placeholder ?? name + "..."}
       value={value}
-      onChange={onChange}
-      required={required}
-      disabled={disabled}
       min={min ?? undefined}
       max={max ?? undefined}
+      {...props}
     />
   );
 };
