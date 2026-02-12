@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import Modal from "../../../components/Modal";
 import FormInput from "../../../components/form/FormInput";
 import { validateEmail } from "../../../utils/commonUtils";
-import AsterButton from "../../../components/AsterButton";
 import useFetcher from "../../../utils/useFetcher";
 import EditionPicker from "../../products/collections/components/EditionPicker";
+import SubmitCancelButtons from "../../../components/SubmitCancelButtons";
 
 export default function InvitationModal({ openModal, setOpenModal }) {
   const [scientistEmail, setScientistEmail] = useState("");
@@ -92,17 +92,7 @@ export default function InvitationModal({ openModal, setOpenModal }) {
             justifyContent: "space-between",
           }}
         />
-        <div style={{ display: "flex", gap: "2rem" }}>
-          <AsterButton type="submit" style={{ marginTop: "1rem" }}>
-            Submit
-          </AsterButton>
-          <AsterButton
-            style={{ marginTop: "1rem" }}
-            onClick={() => setOpenModal(false)}
-          >
-            Cancel
-          </AsterButton>
-        </div>
+        <SubmitCancelButtons />
       </form>
     </Modal>
   );

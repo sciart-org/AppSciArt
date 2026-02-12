@@ -1,6 +1,6 @@
 import AsterButton from "./AsterButton";
 
-export default function SubmitCancelButtons() {
+export default function SubmitCancelButtons({ submitText = "Submit" }) {
   return (
     <div
       style={{
@@ -10,7 +10,7 @@ export default function SubmitCancelButtons() {
         justifyContent: "center",
       }}
     >
-      <AsterButton type="submit">Submit</AsterButton>
+      <AsterButton type="submit">{submitText}</AsterButton>
       <AsterButton type="secondary" to={-1}>
         Cancel
       </AsterButton>

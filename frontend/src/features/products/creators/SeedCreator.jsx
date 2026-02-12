@@ -8,6 +8,7 @@ import EditionPicker from "../collections/components/EditionPicker";
 import { useEffect } from "react";
 import "./creators.css";
 import ScientistEmailForm from "../components/ScientistEmailForm";
+import SubmitCancelButtons from "../../../components/SubmitCancelButtons";
 
 export default function SeedCreator() {
   const [error, setError] = useState(null);
@@ -119,7 +120,7 @@ export default function SeedCreator() {
                         ...submissionBody,
                         scientistsToInvite:
                           submissionBody.scientistsToInvite.filter(
-                            (s) => s != scientist
+                            (s) => s != scientist,
                           ),
                       });
                     }}
@@ -133,17 +134,7 @@ export default function SeedCreator() {
             />
           </div>
         </div>
-        <div style={{ display: "flex", justifyContent: "center", gap: "5rem" }}>
-          <AsterButton type="submit" style={{ marginTop: "2rem" }}>
-            Submit
-          </AsterButton>
-          <AsterButton
-            style={{ marginTop: "2rem" }}
-            onClick={() => navigate("/collections/seeds")}
-          >
-            Cancel
-          </AsterButton>
-        </div>
+        <SubmitCancelButtons />
       </form>
     </div>
   );

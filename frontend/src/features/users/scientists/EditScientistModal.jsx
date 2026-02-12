@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "../../../components/Modal";
 import useFetcher from "../../../utils/useFetcher";
-import AsterButton from "../../../components/AsterButton";
+import SubmitCancelButtons from "../../../components/SubmitCancelButtons";
 
 export default function EditScientistModal({
   openModal,
@@ -69,7 +69,7 @@ export default function EditScientistModal({
           {Object.entries(editionSelection).map(([key, value]) => {
             const currentEdition = allEditions.filter((e) => e.id === key)[0];
             const isClosed = ["CLOSED", "PUBLISHED"].includes(
-              currentEdition.state
+              currentEdition.state,
             );
             return (
               <div
@@ -98,17 +98,7 @@ export default function EditScientistModal({
             );
           })}
         </div>
-        <div style={{ display: "flex", gap: "2rem" }}>
-          <AsterButton type="submit" style={{ marginTop: "1rem" }}>
-            Save
-          </AsterButton>
-          <AsterButton
-            style={{ marginTop: "1rem" }}
-            onClick={() => setOpenModal(false)}
-          >
-            Cancel
-          </AsterButton>
-        </div>
+        <SubmitCancelButtons submitText="Save" />
       </form>
     </Modal>
   );
