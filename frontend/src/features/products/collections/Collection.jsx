@@ -10,6 +10,7 @@ import FlowerCard from "./components/FlowerCard";
 import SeedCard from "./components/SeedCard";
 import EditionPicker from "./components/EditionPicker";
 import Loading from "../../../components/messages/Loading";
+import AdminCreateButton from "../../../components/AdminCreateButton";
 
 export default function Collection({ itemName: itemNameRaw }) {
   const jwt = tokenService.getLocalAccessToken();
@@ -25,8 +26,8 @@ export default function Collection({ itemName: itemNameRaw }) {
     itemName === "seed"
       ? SeedCard
       : itemName === "flower"
-      ? FlowerCard
-      : FruitCard;
+        ? FlowerCard
+        : FruitCard;
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -104,14 +105,7 @@ export default function Collection({ itemName: itemNameRaw }) {
 
   const CreateButton = () => {
     if (selectedEdition?.state === "PUBLISHED") return <></>;
-    return (
-      <AsterButton
-        style={{ marginBottom: "2rem" }}
-        to={`create?editionId=${selectedEdition?.id}`}
-      >
-        Create {itemName}
-      </AsterButton>
-    );
+    return <AdminCreateButton entity={itemName} />;
   };
 
   if (loading) {

@@ -73,7 +73,7 @@ export default function FruitDetails() {
       </div>
       <hr style={{ width: "70vw" }} />
       <h2>More about this fruit</h2>
-      <div className="buttons-container">
+      <div className="product-buttons-container">
         <AsterButton to={`/seeds/${fruit?.seed?.id}`}>
           <div className="button-container">
             <Seed className="seed" />

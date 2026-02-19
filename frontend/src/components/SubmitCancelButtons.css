@@ -1,0 +1,6 @@
+.buttons-container {
+    margin-top: 1rem;
+    gap: 5rem;
+    display: flex;
+    justify-content: center;
+}

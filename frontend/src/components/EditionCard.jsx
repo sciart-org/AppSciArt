@@ -28,13 +28,7 @@ export default function EditionCard(props) {
           <p className="long-text">{edition?.shortDescription}</p>
         </div>
         {isAdmin ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-around",
-              width: "100%",
-            }}
-          >
+          <div className="buttons-container">
             <AsterButton
               to={`/editions/${edition?.id}`}
               style={{ width: "15rem" }}

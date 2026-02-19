@@ -52,7 +52,7 @@
     text-align: start;
 }
 
-.buttons-container > * {
+.product-buttons-container > * {
     flex: 1;
     width: 30rem;
     margin-left: 5rem;

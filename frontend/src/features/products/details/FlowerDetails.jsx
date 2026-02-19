@@ -67,7 +67,7 @@ export default function FlowerDetails() {
       </div>
       <hr style={{ width: "70vw" }} />
       <h2>More about this flower</h2>
-      <div className="buttons-container">
+      <div className="product-buttons-container">
         <AsterButton to={`/seeds/${flower?.seed?.id}`}>
           <div className="button-container">
             <Seed className="seed" />
