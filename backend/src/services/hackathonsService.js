@@ -49,6 +49,21 @@ export async function getActiveHackathon (userId) {
   })
 }
 
+export async function getHackathons (userId) {
+  const showPlannedHackathons = await checkIsStaff(userId)
+
+  const whereClause = {}
+
+  if (!showPlannedHackathons) {
+    whereClause.state = { [Op.ne]: 'PLANNED' }
+  }
+
+  return await Hackathon.findAll({
+    where: whereClause,
+    ...combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
+  })
+}
+
 export async function createHackathon (userId, body) {
   errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create a hackathon', 403)
   const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate } = body

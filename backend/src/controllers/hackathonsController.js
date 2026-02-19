@@ -8,24 +8,23 @@ export const getHackathons = withErrorHandler(async (req, res) => {
   const { filter } = req.query
   const currentUser = await UsersService.getCurrentUserProfile(req)
 
+  let hackathons
+
   if (filter === 'closest') {
-    const hackathon = await service.getClosestHackathon(currentUser?.id)
-    return res.status(200).send(hackathon)
+    hackathons = await service.getClosestHackathon(currentUser?.id)
+  } else if (filter === 'incoming') {
+    hackathons = await service.getIncomingHackathons(currentUser?.id)
+  } else if (filter === 'active') {
+    hackathons = await service.getActiveHackathon(currentUser?.id)
+  } else if (!filter) {
+    hackathons = await service.getHackathons(currentUser?.id)
+  } else {
+    return res.status(400).json({
+      message: 'Invalid filter or filtering not yet implemented'
+    })
   }
 
-  if (filter === 'incoming') {
-    const hackathons = await service.getIncomingHackathons(currentUser?.id)
-    return res.status(200).send(hackathons)
-  }
-
-  if (filter === 'active') {
-    const hackathon = await service.getActiveHackathon(currentUser?.id)
-    return res.status(200).send(hackathon)
-  }
-
-  return res.status(400).json({
-    message: 'Invalid filter or filtering not yet implemented'
-  })
+  return res.status(200).send(hackathons)
 })
 
 export const createHackathon = withErrorHandler(async (req, res) => {
