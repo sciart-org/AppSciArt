@@ -3,9 +3,11 @@ import tokenService from "../utils/token.service";
 import AsterButton from "./AsterButton";
 import "./Card.css";
 import ImageRenderer from "./ImageRenderer";
+import AdminEditButton from "./AdminEditButton";
 
 export default function HackathonCard(props) {
   const jwt = tokenService.getLocalAccessToken();
+  const isAdmin = tokenService.getIsAdmin();
 
   var options = {
     weekday: "long",
@@ -64,7 +66,7 @@ export default function HackathonCard(props) {
   return (
     <div className="card" style={{ ...props.style }}>
       <div>
-          <ImageRenderer image={hackathon?.logo} />
+        <ImageRenderer image={hackathon?.logo} />
       </div>
       <div>
         <div style={{ width: "100%" }}>
@@ -72,7 +74,7 @@ export default function HackathonCard(props) {
           <text>
             {new Date(hackathon?.startDate).toLocaleDateString(
               "en-US",
-              options
+              options,
             )}
             {" - "}
             {new Date(hackathon?.endDate).toLocaleDateString("en-US", options)}
@@ -86,7 +88,8 @@ export default function HackathonCard(props) {
             <text>{hackathon?.description}</text>
           </div>
         </div>
-        <JoinButton />
+        <AdminEditButton entityName="hackathon" entity={hackathon} />
+        {!isAdmin && <JoinButton />}
       </div>
     </div>
   );
