@@ -13,7 +13,7 @@ export default function JoinForm(props) {
 
   return (
     <form onSubmit={handleSubmit} className="register-form">
-      <div className="input-box-container" style={{ width: "70vw" }}>
+      <div className="input-box-container" style={{ width: "70vw", gap: '5rem' }}>
         <FormSelect
           name={"What roles could you take on during the hackathon?"}
           options={["Artist", "Technologist", "Scientist", "Other"]}

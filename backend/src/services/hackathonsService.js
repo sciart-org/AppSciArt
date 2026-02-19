@@ -86,7 +86,8 @@ export async function createHackathon (userId, body) {
   const createdHackathon = await Hackathon.create({
     startDate, endDate, type, location, description, editionId, internalName, isPrivate, driveLink
   })
-  return await getEntitiesWithLogo([createdHackathon])[0]
+  const hackathonsWithLogo = await getEntitiesWithLogo([createdHackathon])
+  return hackathonsWithLogo[0]
 }
 
 export async function getHackathonDetails (hackathonId, userId) {
@@ -95,7 +96,8 @@ export async function getHackathonDetails (hackathonId, userId) {
     hackathonId,
     combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
   )
-  return getEntitiesWithLogo([hackathon])[0]
+  const hackathonsWithLogo = await getEntitiesWithLogo([hackathon])
+  return hackathonsWithLogo[0]
 }
 
 export function updateHackathon (req, res) {
