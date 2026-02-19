@@ -44,8 +44,8 @@ export default function HackathonCreate() {
         type: toEnumValue(formData?.type),
         editionId: selectedEdition?.id,
       },
-      onSuccess: (data) => {
-        navigate(`/hackathons/${data?.id}`);
+      onSuccess: () => {
+        navigate("/hackathons");
       },
       onError: () => {
         setLoading(false);

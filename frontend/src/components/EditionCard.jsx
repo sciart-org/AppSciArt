@@ -27,7 +27,7 @@ export default function EditionCard(props) {
           <h3 style={{ marginTop: 0 }}>{edition?.year}</h3>
           <p className="long-text">{edition?.shortDescription}</p>
         </div>
-        <AdminEditButton entityName="edition" entity={edition} />
+        <AdminEditButton entityName="editions" entity={edition} />
         {!isAdmin && (
           <AsterButton to={`/editions/${edition?.id}`}>Know more</AsterButton>
         )}

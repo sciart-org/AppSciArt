@@ -88,7 +88,7 @@ export default function HackathonCard(props) {
             <text>{hackathon?.description}</text>
           </div>
         </div>
-        <AdminEditButton entityName="hackathon" entity={hackathon} />
+        <AdminEditButton entityName="hackathons" entity={hackathon} />
         {!isAdmin && <JoinButton />}
       </div>
     </div>
