@@ -11,8 +11,7 @@ export default function EditionRouter() {
   const [error, setError] = useState(null);
   const [edition, setEdition] = useState(null);
   const [loading, setLoading] = useState(true);
-  const user = tokenService.getUser();
-  const isAdmin = user?.roles.includes("administrator");
+  const isAdmin = tokenService.getIsAdmin();
 
   const { fetcher } = useFetcher(error, setError);
 

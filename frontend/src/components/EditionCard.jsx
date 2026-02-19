@@ -7,10 +7,9 @@ import ImageRenderer from "./ImageRenderer";
 export default function EditionCard(props) {
   const edition = props.edition;
   const isPublished = edition?.state === "PUBLISHED";
-  const user = tokenService.getUser();
   const forceNotAdmin = props.forceNotAdmin || false;
 
-  const isAdmin = !forceNotAdmin && user?.roles.includes("administrator");
+  const isAdmin = !forceNotAdmin && tokenService.getIsAdmin();
 
   const includeAutoHeight = isPublished ? {} : { height: "auto" };
 

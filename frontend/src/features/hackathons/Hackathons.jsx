@@ -3,6 +3,7 @@ import HackathonCard from "../../components/HackathonCard";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import AdminCreateButton from "../../components/AdminCreateButton";
+import tokenService from "../../utils/token.service";
 
 export default function Hackathons() {
   const [hackathons, setHackathons] = useState([]);
@@ -12,10 +13,10 @@ export default function Hackathons() {
   const { fetcher } = useFetcher(error, setError);
 
   const fetchHackathons = async () => {
-    const isAdmin = false;
+    const isAdmin = tokenService.getIsAdmin();
 
     await fetcher({
-      url: `hackathons?filter=${isAdmin ? "all" : "incoming"}`,
+      url: `hackathons${isAdmin ? "" : "?filter=incoming"}`,
       onSuccess: (data) => {
         setHackathons(data);
       },
