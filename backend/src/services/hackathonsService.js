@@ -5,10 +5,10 @@ import { combineIncludes, includeEditionName, includeIsEnrolled, includeMyHackat
 import { errorThrower } from './errorThrower.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsActive } from '../validators/editionValidators.js'
-import { createDriveHackathon } from './driveService.js'
+import { createDriveHackathon, getEntitiesWithLogo } from './driveService.js'
 
 export async function getClosestHackathon (userId) {
-  return await Hackathon.findOne({
+  const hackathon = await Hackathon.findOne({
     where: {
       state: { [Op.ne]: 'PLANNED' },
       startDate: {
@@ -18,10 +18,13 @@ export async function getClosestHackathon (userId) {
     order: [['startDate', 'ASC']],
     ...combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
   })
+
+  const hackathonsWithLogo = await getEntitiesWithLogo([hackathon])
+  return hackathonsWithLogo[0]
 }
 
 export async function getIncomingHackathons (userId) {
-  return await Hackathon.findAll({
+  const hackathons = await Hackathon.findAll({
     where: {
       state: { [Op.ne]: 'PLANNED' },
       startDate: {
@@ -30,6 +33,9 @@ export async function getIncomingHackathons (userId) {
     },
     ...combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
   })
+
+  const hackathonsWithLogo = await getEntitiesWithLogo(hackathons)
+  return hackathonsWithLogo
 }
 
 export async function getActiveHackathon (userId) {
@@ -39,7 +45,7 @@ export async function getActiveHackathon (userId) {
 
   const now = new Date()
 
-  return await Hackathon.findOne({
+  const hackathon = await Hackathon.findOne({
     subQuery: false,
     ...combineIncludes([includeEditionName(), includeMyHackathons(userId)]),
     where: {
@@ -47,21 +53,28 @@ export async function getActiveHackathon (userId) {
       endDate: { [Op.gte]: now }
     }
   })
+
+  const hackathonsWithLogo = await getEntitiesWithLogo([hackathon])
+  return hackathonsWithLogo[0]
 }
 
 export async function getHackathons (userId) {
-  const showPlannedHackathons = await checkIsStaff(userId)
+  const showAdminHackathons = await checkIsStaff(userId)
 
   const whereClause = {}
 
-  if (!showPlannedHackathons) {
+  if (!showAdminHackathons) {
     whereClause.state = { [Op.ne]: 'PLANNED' }
+    whereClause.where = { isPrivate: false }
   }
 
-  return await Hackathon.findAll({
+  const hackathons = await Hackathon.findAll({
     where: whereClause,
     ...combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
   })
+
+  const hackathonsWithLogo = await getEntitiesWithLogo(hackathons)
+  return hackathonsWithLogo
 }
 
 export async function createHackathon (userId, body) {
@@ -73,7 +86,7 @@ export async function createHackathon (userId, body) {
   const createdHackathon = await Hackathon.create({
     startDate, endDate, type, location, description, editionId, internalName, isPrivate, driveLink
   })
-  return createdHackathon
+  return await getEntitiesWithLogo([createdHackathon])[0]
 }
 
 export async function getHackathonDetails (hackathonId, userId) {
@@ -82,7 +95,7 @@ export async function getHackathonDetails (hackathonId, userId) {
     hackathonId,
     combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
   )
-  return hackathon
+  return getEntitiesWithLogo([hackathon])[0]
 }
 
 export function updateHackathon (req, res) {

@@ -4,26 +4,8 @@ import { validateCanBeAnnounced, validateCanEditEdition, validateCanSeeEdition, 
 import { mapToEditionDetails } from './mappers/editionMapper.js'
 import { includeEditionFruits } from './includes/editionIncludes.js'
 import { errorThrower } from './errorThrower.js'
-import { createDriveEdition, getLogoFromDrive, updateFolderName, uploadImg } from './driveService.js'
-import { toPlainObject } from './mappers/utils.js'
+import { createDriveEdition, getEntitiesWithLogo, updateFolderName, uploadImg } from './driveService.js'
 import { Op } from 'sequelize'
-
-const getEditionsWithLogo = async (editionList) => {
-  const editionsWithLogo = await Promise.all(
-    editionList.map(async (edition) => {
-      const logo = edition.driveLink
-        ? await getLogoFromDrive(edition.driveLink)
-        : null
-
-      return {
-        ...toPlainObject(edition),
-        logo
-      }
-    })
-  )
-
-  return editionsWithLogo
-}
 
 export async function getEditions (userId, state) {
   const showPlannedEditions = await checkIsStaff(userId)
@@ -46,7 +28,7 @@ export async function getEditions (userId, state) {
     order: [['year', 'DESC']]
   })
 
-  const editionsWithLogo = await getEditionsWithLogo(editions)
+  const editionsWithLogo = await getEntitiesWithLogo(editions)
   return editionsWithLogo
 }
 
@@ -72,7 +54,7 @@ export async function getEditionDetails (userId, editionId) {
   })
   const editionDetails = mapToEditionDetails(edition)
 
-  const editionsWithLogo = await getEditionsWithLogo([editionDetails])
+  const editionsWithLogo = await getEntitiesWithLogo([editionDetails])
   return editionsWithLogo[0]
 }
 

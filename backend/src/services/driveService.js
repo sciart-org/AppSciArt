@@ -1,5 +1,6 @@
 import { PassThrough } from 'stream'
 import { loadDriveAuthConfig } from '../config/drive.js'
+import { toPlainObject } from './mappers/utils.js'
 
 const ROOT_FOLDER_ID = process.env.DRIVE_FOLDER_ID
 
@@ -184,6 +185,22 @@ export const updateFolderName = async (driveLink, year, name) => {
     },
     fields: 'id, name'
   })
+}
+
+export const getEntitiesWithLogo = async (entitiesList) => {
+  const entitiesWithLogo = await Promise.all(
+    entitiesList.map(async (entity) => {
+      if (!entity?.driveLink) return toPlainObject(entity)
+      const logo = await getLogoFromDrive(entity.driveLink)
+
+      return {
+        ...toPlainObject(entity),
+        logo
+      }
+    })
+  )
+
+  return entitiesWithLogo
 }
 
 export const createDriveEdition = async (year, name, logo) => {

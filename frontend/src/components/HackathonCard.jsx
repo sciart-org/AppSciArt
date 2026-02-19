@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import tokenService from "../utils/token.service";
 import AsterButton from "./AsterButton";
 import "./Card.css";
+import ImageRenderer from "./ImageRenderer";
 
 export default function HackathonCard(props) {
   const jwt = tokenService.getLocalAccessToken();
@@ -63,7 +64,7 @@ export default function HackathonCard(props) {
   return (
     <div className="card" style={{ ...props.style }}>
       <div>
-        <img src={hackathon?.logo} />
+          <ImageRenderer image={hackathon?.logo} />
       </div>
       <div>
         <div style={{ width: "100%" }}>
