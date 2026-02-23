@@ -10,13 +10,18 @@ import "./css/edition-details.css";
 import EditionDetails from "./EditionDetails";
 import EditionCard from "../../components/EditionCard";
 import { EditionActionButton } from "./components/EditionActionButton";
+import SelectorBar from "../../components/SelectorBar";
 
 export default function EditionEdit({ edition: editingEdition }) {
   const [edition, setEdition] = useState(editingEdition);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [previewMode, setPreviewMode] = useState(false);
+  const [previewItem, setPreviewItem] = useState(null);
+
+  const showPreview = previewItem != null;
+  const showDetailsPreview = previewItem === 0;
+
   const { fetcher } = useFetcher(error, setError);
 
   const getFormData = (edition) => {
@@ -84,7 +89,7 @@ export default function EditionEdit({ edition: editingEdition }) {
     });
   };
 
-  if (previewMode) {
+  if (showPreview) {
     return (
       <div
         style={{
@@ -94,15 +99,33 @@ export default function EditionEdit({ edition: editingEdition }) {
         }}
       >
         <h1>{edition?.name} (preview)</h1>
-        <AsterButton onClick={() => setPreviewMode(false)}>
+        <AsterButton onClick={() => setPreviewItem(null)}>
           Exit preview
         </AsterButton>
+        <SelectorBar style={{ marginTop: "4vh" }}>
+          <AsterButton
+            onClick={() => setPreviewItem(0)}
+            className={showDetailsPreview ? "aster-button-hover" : ""}
+          >
+            Details preview
+          </AsterButton>
+          <AsterButton
+            onClick={() => setPreviewItem(1)}
+            className={!showDetailsPreview ? "aster-button-hover" : ""}
+          >
+            Card preview
+          </AsterButton>
+        </SelectorBar>
         <hr />
-        <h2>Card preview</h2>
-        <EditionCard forceNotAdmin={true} edition={formData} />
-        <hr />
-        <h2>Details preview</h2>
-        <EditionDetails edition={formData} />;
+        {previewItem === 0 ? (
+          <EditionDetails edition={formData} />
+        ) : (
+          <EditionCard
+            forceNotAdmin={true}
+            edition={formData}
+            style={{ marginTop: "4vh" }}
+          />
+        )}
       </div>
     );
   }
@@ -114,7 +137,7 @@ export default function EditionEdit({ edition: editingEdition }) {
           <h1>{edition?.name}</h1>
           <AsterButton
             onClick={() => {
-              setPreviewMode(true);
+              setPreviewItem(0);
             }}
             type="button"
             variant="secondary"

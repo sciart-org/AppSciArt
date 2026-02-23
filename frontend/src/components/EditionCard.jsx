@@ -1,4 +1,3 @@
-import { EditionActionButton } from "../features/editions/components/EditionActionButton";
 import tokenService from "../utils/token.service";
 import AdminEditButton from "./AdminEditButton";
 import AsterButton from "./AsterButton";
@@ -27,8 +26,9 @@ export default function EditionCard(props) {
           <h3 style={{ marginTop: 0 }}>{edition?.year}</h3>
           <p className="long-text">{edition?.shortDescription}</p>
         </div>
-        <AdminEditButton entityName="editions" entity={edition} />
-        {!isAdmin && (
+        {isAdmin ? (
+          <AdminEditButton entityName="editions" entity={edition} />
+        ) : (
           <AsterButton to={`/editions/${edition?.id}`}>Know more</AsterButton>
         )}
       </div>
