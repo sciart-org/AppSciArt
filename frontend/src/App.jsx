@@ -28,6 +28,7 @@ import SeedCreator from "./features/products/creators/SeedCreator";
 import Scientists from "./features/users/scientists/Scientists";
 import EditionCreate from "./features/editions/EditionCreate";
 import HackathonCreate from "./features/hackathons/HackathonCreate";
+import HackathonRouter from "./features/hackathons/HackathonRouter";
 
 function App() {
   const [user, setUser] = useState(tokenService.getUser());
@@ -127,7 +128,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route
             path="/hackathons/:hackathonId"
-            element={<ActiveHackathon />}
+            element={<HackathonRouter />}
           />
         </>
       )}

@@ -1,7 +1,6 @@
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import useFetcher from "../../utils/useFetcher";
 import { useEffect, useState } from "react";
-import Loading from "../../components/messages/Loading";
 import useWebSockets from "../../utils/useWebSockets";
 import CreatedGroups from "./phases/CreatedGroups";
 import CreatingGroups from "./phases/CreatingGroups";
@@ -10,10 +9,8 @@ import GroupPresentation from "./phases/GroupPresentation";
 import CreatingTeams from "./phases/CreatingTeams";
 import CreatedTeams from "./phases/CreatedTeams";
 
-export default function ActiveHackathon() {
+export default function ActiveHackathon({ hackathon }) {
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [hackathon, setHackathon] = useState(null);
   const [participation, setParticipation] = useState(null);
 
   const date = new Date(hackathon?.startDate);
@@ -21,7 +18,6 @@ export default function ActiveHackathon() {
 
   const { fetcher } = useFetcher(error, setError);
   const params = useParams();
-  const navigate = useNavigate();
 
   const socketCondition = !(
     !hackathon ||
@@ -29,18 +25,6 @@ export default function ActiveHackathon() {
     rawDays < 0
   );
   const { socket } = useWebSockets(socketCondition, params.hackathonId);
-
-  useEffect(() => {
-    fetcher({
-      url: `hackathons/${params.hackathonId}`,
-      onSuccess: (data) => {
-        if (!data.isEnrolled) {
-          navigate(`/unauthorized`);
-        }
-        setHackathon(data);
-      },
-    }).finally(() => setLoading(false));
-  }, []);
 
   useEffect(() => {
     fetcher({
@@ -62,8 +46,8 @@ export default function ActiveHackathon() {
     socket.emit("join_room", clusterRoom);
   }, [participation, socket]);
 
-  if (loading || !hackathon) {
-    return <Loading />;
+  if (!hackathon) {
+    return <h2>No hackathon found.</h2>;
   }
 
   if (hackathon.state === "FINISHED") {
