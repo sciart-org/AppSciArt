@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AsterButton from "../../../components/AsterButton";
+import AsterButton from "../../../components/buttons/AsterButton";
 import useFetcher from "../../../utils/useFetcher";
 import { showSuccessMessage } from "../../../components/messages/Message";
 

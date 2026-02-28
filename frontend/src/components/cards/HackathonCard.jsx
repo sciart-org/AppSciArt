@@ -1,9 +1,9 @@
 import { Link } from "react-router";
-import tokenService from "../utils/token.service";
-import AsterButton from "./AsterButton";
+import tokenService from "../../utils/token.service";
+import AsterButton from "../buttons/AsterButton";
 import "./Card.css";
-import ImageRenderer from "./ImageRenderer";
-import AdminEditButton from "./AdminEditButton";
+import ImageRenderer from "../ImageRenderer";
+import AdminEditButton from "../buttons/AdminEditButton";
 
 export default function HackathonCard(props) {
   const jwt = tokenService.getLocalAccessToken();

@@ -1,5 +1,5 @@
 import React from "react";
-import AsterButton from "../../components/AsterButton.jsx";
+import AsterButton from "../../components/buttons/AsterButton.jsx";
 import tokenService from "../../utils/token.service.js";
 
 export default function Profile() {

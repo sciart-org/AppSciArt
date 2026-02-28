@@ -47,6 +47,11 @@ input:disabled, textarea:disabled {
     width: auto !important
 }
 
+.editable-form-creator .long-input-box-container,
+.editable-form-creator .input-box-container {
+    width: 65vw;
+}
+
 .image-picker-label {
     width: auto;
     align-self: flex-start;

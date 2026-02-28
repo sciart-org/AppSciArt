@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import AsterButton from "../../components/AsterButton";
 import Loading from "../../components/messages/Loading";
 import useFetcher from "../../utils/useFetcher";
 import FormInput from "../../components/form/FormInput";
@@ -7,7 +6,7 @@ import FormSelect from "../../components/form/FormSelect";
 import EditionPicker from "../products/collections/components/EditionPicker";
 import { fileToBase64, toEnumValue } from "../../utils/commonUtils";
 import { useNavigate } from "react-router";
-import SubmitCancelButtons from "../../components/SubmitCancelButtons";
+import SubmitCancelButtons from "../../components/buttons/SubmitCancelButtons";
 
 export default function HackathonCreate() {
   const [formData, setFormData] = useState({});

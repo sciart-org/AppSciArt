@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import HackathonCard from "../../components/HackathonCard.jsx";
 import JoinForm from "./components/JoinForm.jsx";
 import HackathonDescription from "./components/HackathonDescription.jsx";
-import AsterButton from "../../components/AsterButton.jsx";
+import AsterButton from "../../components/buttons/AsterButton.jsx";
 import JoinSuccess from "./components/JoinSuccess.jsx";
 import useFetcher from "../../utils/useFetcher.js";
 import { itemsToUpperCase } from "../../utils/commonUtils.js";
 import Loading from "../../components/messages/Loading.jsx";
+import HackathonCard from "../../components/cards/HackathonCard.jsx";
 
 export default function JoinHackathon() {
   const [loading, setLoading] = useState(true);

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import HackathonCard from "../../components/HackathonCard";
+import HackathonCard from "../../components/cards/HackathonCard";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
-import AdminCreateButton from "../../components/AdminCreateButton";
+import AdminCreateButton from "../../components/buttons/AdminCreateButton";
 import tokenService from "../../utils/token.service";
 
 export default function Hackathons() {

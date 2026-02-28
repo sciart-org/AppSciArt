@@ -1,6 +1,6 @@
 import { useState } from "react";
-import AsterButton from "./AsterButton";
 import "./CollectionsPagination.css";
+import AsterButton from "./buttons/AsterButton";
 
 export default function CollectionsPagination({
   items,

@@ -3,7 +3,7 @@ import useFetcher from "../../../../utils/useFetcher";
 import Loading from "../../../../components/messages/Loading";
 import { DiagramContext } from "./DiagramContext";
 import Diagram from "./Diagram";
-import AsterButton from "../../../../components/AsterButton";
+import AsterButton from "../../../../components/buttons/AsterButton";
 
 export const DiagramGallery = (props) => {
   const [nodes, setNodes] = useState([]);

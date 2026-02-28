@@ -1,5 +1,5 @@
 import logoAstersBlack from "../../assets/logoAstersBlack.png";
-import SocialNetworks from "../SocialNetworks";
+import SocialNetworks from "../buttons/SocialNetworks";
 import "./core.css";
 
 export default function AppFooter() {

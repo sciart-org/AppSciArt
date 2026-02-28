@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import { useDropdown } from "../utils/useDropdown";
+import { useDropdown } from "../../utils/useDropdown";
 import { Link } from "react-router";
-import "./core/core.css";
+import "../core/core.css";
 import { IoChevronDown } from "react-icons/io5";
 
 export default function Dropdown({ children, title, style }) {

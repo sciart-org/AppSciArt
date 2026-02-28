@@ -1,4 +1,4 @@
-import AsterButton from "../../../../components/AsterButton";
+import AsterButton from "../../../../components/buttons/AsterButton";
 
 export default function FruitCard({ item: fruit }) {
   return (

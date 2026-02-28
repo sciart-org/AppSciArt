@@ -1,4 +1,4 @@
-import tokenService from "../utils/token.service";
+import tokenService from "../../utils/token.service";
 import AsterButton from "./AsterButton";
 
 export default function AdminCreateButton({ entity }) {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
-import AsterButton from "../../../components/AsterButton";
+import AsterButton from "../../../components/buttons/AsterButton";
 import Seed from "../../../components/sciartProducts/Seed";
 import Flower from "../../../components/sciartProducts/Flower";
 

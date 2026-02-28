@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import tokenService from "../../utils/token.service";
-import { IoChevronDown } from "react-icons/io5";
 import "./core.css";
-import Dropdown from "../Dropdown";
+import Dropdown from "../buttons/Dropdown";
 
 export default function AppNavbar() {
   const [username, setUsername] = useState("");

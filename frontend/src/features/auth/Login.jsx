@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import tokenService from "../../utils/token.service";
 import Providers from "./components/Providers";
-import AsterButton from "../../components/AsterButton";
+import AsterButton from "../../components/buttons/AsterButton";
 import FormInput from "../../components/form/FormInput";
 import useFetcher from "../../utils/useFetcher";
 import { Link } from "react-router";

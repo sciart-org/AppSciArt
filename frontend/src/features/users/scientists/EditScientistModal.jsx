@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "../../../components/Modal";
 import useFetcher from "../../../utils/useFetcher";
-import SubmitCancelButtons from "../../../components/SubmitCancelButtons";
+import SubmitCancelButtons from "../../../components/buttons/SubmitCancelButtons";
 
 export default function EditScientistModal({
   openModal,

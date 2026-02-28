@@ -4,7 +4,7 @@ import FormInput from "../../../components/form/FormInput";
 import { validateEmail } from "../../../utils/commonUtils";
 import useFetcher from "../../../utils/useFetcher";
 import EditionPicker from "../../products/collections/components/EditionPicker";
-import SubmitCancelButtons from "../../../components/SubmitCancelButtons";
+import SubmitCancelButtons from "../../../components/buttons/SubmitCancelButtons";
 
 export default function InvitationModal({ openModal, setOpenModal }) {
   const [scientistEmail, setScientistEmail] = useState("");

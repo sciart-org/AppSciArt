@@ -1,6 +1,6 @@
 import SciArtProducts from "../../components/sciartProducts/SciArtProducts";
 import "./css/format.css";
-import AsterButton from "../../components/AsterButton";
+import AsterButton from "../../components/buttons/AsterButton";
 
 export default function Format() {
   return (

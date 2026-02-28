@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AsterButton from "../../../components/AsterButton";
+import AsterButton from "../../../components/buttons/AsterButton";
 import { useNavigate, useParams } from "react-router";
 import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";

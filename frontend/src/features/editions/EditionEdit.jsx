@@ -1,16 +1,16 @@
 import EditionCollectionButtons from "./components/EditionCollectionButtons";
-import AsterButton from "../../components/AsterButton";
+import AsterButton from "../../components/buttons/AsterButton";
 import { useState } from "react";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import { fileToBase64 } from "../../utils/commonUtils";
-import EditorWrapper from "./components/EditorWrapper";
 import { EditionEditContext } from "./components/EditionEditContext";
 import "./css/edition-details.css";
 import EditionDetails from "./EditionDetails";
-import EditionCard from "../../components/EditionCard";
+import EditionCard from "../../components/cards/EditionCard";
+import SelectorBar from "../../components/buttons/SelectorBar";
+import EditionsForm from "./EditionForm";
 import { EditionActionButton } from "./components/EditionActionButton";
-import SelectorBar from "../../components/SelectorBar";
 
 export default function EditionEdit({ edition: editingEdition }) {
   const [edition, setEdition] = useState(editingEdition);
@@ -133,92 +133,43 @@ export default function EditionEdit({ edition: editingEdition }) {
   return (
     <EditionEditContext value={{ isEditing, handleInputChange }}>
       <div>
-        <form onSubmit={handleSubmit}>
-          <h1>{edition?.name}</h1>
-          <AsterButton
-            onClick={() => {
-              setPreviewItem(0);
-            }}
-            type="button"
-            variant="secondary"
-          >
-            Preview
-          </AsterButton>
-          <div
-            className="edition-details-container"
-            style={{
-              border: "1px solid rgb(200, 200, 200)",
-              borderRadius: "1rem",
-              marginTop: "4vh",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "start" }}>
-              <div style={{ flex: 1 / 2 }}>
-                <EditorWrapper
-                  value={formData?.name}
-                  name={"Name"}
-                  required={true}
-                />
-                <EditorWrapper
-                  value={formData?.year}
-                  name={"Year"}
-                  type={"number"}
-                  max={2200}
-                  min={1900}
-                  required={true}
-                />
-              </div>
-              <div style={{ position: "absolute", left: "50vw" }}>
-                <EditorWrapper
-                  value={formData?.logo}
-                  name={"Logo"}
-                  type={"image"}
-                />
-              </div>
-            </div>
-            <EditorWrapper
-              value={formData?.shortDescription}
-              name={"Short description"}
-              multiline={true}
-            />
-            <EditorWrapper
-              value={formData?.longDescription}
-              name={"Long description"}
-              collapsible={true}
-              multiline={true}
-            />
-          </div>
-          <div
-            style={{
-              marginTop: "1rem",
-              gap: "5rem",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <AsterButton type="submit">
-              {isEditing ? "Save" : "Edit"}
-            </AsterButton>
-            {isEditing ? (
-              <AsterButton
-                onClick={() => {
-                  setIsEditing(false);
-                  setFormData(getFormData(edition));
-                }}
-                type="button"
-                variant="secondary"
-              >
-                Discard
-              </AsterButton>
-            ) : (
+        <h1>{edition?.name}</h1>
+        <AsterButton
+          onClick={() => {
+            setPreviewItem(0);
+          }}
+          type="button"
+          variant="secondary"
+          style={{marginBottom: '4vh'}}
+        >
+          Preview
+        </AsterButton>
+        <EditionsForm
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          formData={formData}
+          isEditable={isEditing}
+          onCancel={() => setIsEditing(false)}
+        />
+        <div
+          style={{
+            marginTop: "1rem",
+            gap: "5rem",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {!isEditing && (
+            <>
+              <AsterButton onClick={() => setIsEditing(true)}>Edit</AsterButton>
               <EditionActionButton
                 type="button"
                 variant="secondary"
                 edition={edition}
               />
-            )}
-          </div>
-        </form>
+            </>
+          )}
+        </div>
         <hr />
         <EditionCollectionButtons editionId={edition?.id} />
       </div>

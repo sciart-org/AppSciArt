@@ -1,14 +1,14 @@
 import { useState } from "react";
-import AsterButton from "../../components/AsterButton";
+import AsterButton from "../../components/buttons/AsterButton";
 import { IoChevronBack } from "react-icons/io5";
-import HackathonCard from "../../components/HackathonCard";
+import HackathonCard from "../../components/cards/HackathonCard";
 
 import hackathonLogo from "../../assets/mockHackathonLogo.jpg";
 import CompleteRegistration from "./CompleteRegistration";
 import Register from "./Register";
 import { RegistrationContext } from "./context/RegistrationContext";
 import "./auth.css";
-import ClickableText from "../../components/ClickableText";
+import ClickableText from "../../components/buttons/ClickableText";
 
 const mockHackathon = {
   editionName: "GreenTech Berlin 2025",

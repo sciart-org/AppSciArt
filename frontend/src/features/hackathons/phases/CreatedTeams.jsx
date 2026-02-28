@@ -3,7 +3,7 @@ import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
 import { useParams } from "react-router";
 import ParticipantList from "../components/ParticipantList";
-import AsterButton from "../../../components/AsterButton";
+import AsterButton from "../../../components/buttons/AsterButton";
 import "./phases.css";
 import SeedResources from "../../products/components/SeedResources";
 import { DiagramGallery } from "../components/diagramming/DiagramGallery";

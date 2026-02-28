@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
-import EditionCard from "../../components/EditionCard";
-import AdminCreateButton from "../../components/AdminCreateButton";
+import EditionCard from "../../components/cards/EditionCard";
+import AdminCreateButton from "../../components/buttons/AdminCreateButton";
 
 export default function Editions() {
   const [editions, setEditions] = useState([]);

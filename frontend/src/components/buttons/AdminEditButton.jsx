@@ -1,5 +1,5 @@
-import { EditionActionButton } from "../features/editions/components/EditionActionButton";
-import tokenService from "../utils/token.service";
+import { EditionActionButton } from "../../features/editions/components/EditionActionButton";
+import tokenService from "../../utils/token.service";
 import AsterButton from "./AsterButton";
 
 export default function AdminEditButton({ entityName, entity }) {

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import AsterButton from "../../../components/AsterButton";
+import AsterButton from "../../../components/buttons/AsterButton";
 import useFetcher from "../../../utils/useFetcher";
 import Modal from "../../../components/Modal";
 import { useNavigate } from "react-router";

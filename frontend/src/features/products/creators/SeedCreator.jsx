@@ -2,13 +2,12 @@ import { useNavigate, useParams } from "react-router";
 import useFetcher from "../../../utils/useFetcher";
 import { useState } from "react";
 import FormInput from "../../../components/form/FormInput";
-import AsterButton from "../../../components/AsterButton";
 import { MdDelete } from "react-icons/md";
 import EditionPicker from "../collections/components/EditionPicker";
 import { useEffect } from "react";
 import "./creators.css";
 import ScientistEmailForm from "../components/ScientistEmailForm";
-import SubmitCancelButtons from "../../../components/SubmitCancelButtons";
+import SubmitCancelButtons from "../../../components/buttons/SubmitCancelButtons";
 
 export default function SeedCreator() {
   const [error, setError] = useState(null);

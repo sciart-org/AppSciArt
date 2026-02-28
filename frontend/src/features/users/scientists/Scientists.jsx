@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
-import AsterButton from "../../../components/AsterButton";
+import AsterButton from "../../../components/buttons/AsterButton";
 import { CiEdit } from "react-icons/ci";
 import "../users.css";
 import InvitationModal from "./InvitationModal";

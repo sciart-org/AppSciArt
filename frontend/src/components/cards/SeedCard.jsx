@@ -1,6 +1,6 @@
 import "./Card.css";
-import logoSeedBlack from "../assets/logoSeedBlack.png";
-import AsterButton from "./AsterButton";
+import logoSeedBlack from "../../assets/logoSeedBlack.png";
+import AsterButton from "../buttons/AsterButton";
 
 export default function SeedCard(props) {
   const seed = props.seed;

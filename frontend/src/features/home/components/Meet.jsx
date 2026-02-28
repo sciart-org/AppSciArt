@@ -1,4 +1,4 @@
-import AsterButton from "../../../components/AsterButton";
+import AsterButton from "../../../components/buttons/AsterButton";
 import meetSvg from "../../../assets/meet.svg";
 
 export default function Meet({ hackathon }) {

@@ -1,7 +1,7 @@
 import React from "react";
 import FormInput from "../../../components/form/FormInput.jsx";
 import FormSelect from "../../../components/form/FormSelect.jsx";
-import AsterButton from "../../../components/AsterButton.jsx";
+import AsterButton from "../../../components/buttons/AsterButton.jsx";
 
 export default function JoinForm(props) {
   const { onSubmit, formData, setFormData, showButton } = props;

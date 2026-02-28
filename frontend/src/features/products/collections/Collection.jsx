@@ -4,13 +4,13 @@ import CollectionsPagination from "../../../components/CollectionsPagination";
 import tokenService from "../../../utils/token.service";
 import "./css/collections.css";
 import useFetcher from "../../../utils/useFetcher";
-import AsterButton from "../../../components/AsterButton";
+import AsterButton from "../../../components/buttons/AsterButton";
 import FruitCard from "./components/FruitCard";
 import FlowerCard from "./components/FlowerCard";
-import SeedCard from "./components/SeedCard";
 import EditionPicker from "./components/EditionPicker";
 import Loading from "../../../components/messages/Loading";
-import AdminCreateButton from "../../../components/AdminCreateButton";
+import AdminCreateButton from "../../../components/buttons/AdminCreateButton";
+import SeedCard from "../../../components/cards/SeedCard";
 
 export default function Collection({ itemName: itemNameRaw }) {
   const jwt = tokenService.getLocalAccessToken();

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import AsterButton from "../../../components/AsterButton";
-import ClickableText from "../../../components/ClickableText";
+import AsterButton from "../../../components/buttons/AsterButton";
+import ClickableText from "../../../components/buttons/ClickableText";
 import useFetcher from "../../../utils/useFetcher";
 import Carousel from "../../home/components/Carousel";
 import Loading from "../../../components/messages/Loading";

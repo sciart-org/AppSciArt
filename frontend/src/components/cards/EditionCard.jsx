@@ -1,8 +1,8 @@
-import tokenService from "../utils/token.service";
-import AdminEditButton from "./AdminEditButton";
-import AsterButton from "./AsterButton";
+import tokenService from "../../utils/token.service";
+import AdminEditButton from "../buttons/AdminEditButton";
+import AsterButton from "../buttons/AsterButton";
 import "./Card.css";
-import ImageRenderer from "./ImageRenderer";
+import ImageRenderer from "../ImageRenderer";
 
 export default function EditionCard(props) {
   const edition = props.edition;

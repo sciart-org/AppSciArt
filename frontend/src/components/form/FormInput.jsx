@@ -1,5 +1,5 @@
 import "./form.css";
-import "../AsterButton.css";
+import "../buttons/AsterButton.css";
 import { toCamelCase } from "../../utils/commonUtils";
 import ImageRenderer from "../ImageRenderer";
 
@@ -8,10 +8,10 @@ const InputComponent = ({
   type,
   placeholder,
   value,
-  required,
   multiline,
   min,
   max,
+  style,
   ...props
 }) => {
   if (multiline) {
@@ -23,7 +23,7 @@ const InputComponent = ({
         value={value}
         minLength={min ?? undefined}
         maxLength={max ?? undefined}
-        style={{ resize: "vertical" }}
+        style={{ resize: "vertical", ...style }}
         {...props}
       />
     );
@@ -31,7 +31,7 @@ const InputComponent = ({
 
   if (type === "image") {
     return (
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", ...style }}>
         <label className="aster-button image-picker-label">
           {value instanceof File ? "Change file" : "Choose file"}
           <input
@@ -58,6 +58,7 @@ const InputComponent = ({
       value={value}
       min={min ?? undefined}
       max={max ?? undefined}
+      style={style}
       {...props}
     />
   );

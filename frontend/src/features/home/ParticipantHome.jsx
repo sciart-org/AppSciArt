@@ -1,4 +1,4 @@
-import AsterButton from "../../components/AsterButton";
+import AsterButton from "../../components/buttons/AsterButton";
 import HackathonAccess from "./components/HackathonAccess";
 
 export default function ParticipantHome({ hackathon }) {

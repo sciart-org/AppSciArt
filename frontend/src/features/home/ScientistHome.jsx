@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import AsterButton from "../../components/AsterButton";
+import AsterButton from "../../components/buttons/AsterButton";
 import useFetcher from "../../utils/useFetcher";
-import SeedCard from "../../components/SeedCard";
+import SeedCard from "../../components/cards/SeedCard.jsx";
 
 export default function ScientistHome({ edition }) {
   const [error, setError] = useState(null);
