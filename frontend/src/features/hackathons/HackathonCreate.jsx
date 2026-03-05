@@ -53,12 +53,21 @@ export default function HackathonCreate() {
   };
 
   const handleInputChange = async (e) => {
-    const { name, type, files, value } = e.target;
+    const { name, type, files, value, checked } = e.target;
+    let newValue;
 
-    setFormData({
-      ...formData,
-      [name]: type === "file" ? await fileToBase64(files[0]) : value,
-    });
+    if (type === "file") {
+      newValue = await fileToBase64(files[0]);
+    } else if (type === "checkbox") {
+      newValue = checked;
+    } else {
+      newValue = value;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
   };
 
   useEffect(() => {
@@ -113,14 +122,16 @@ export default function HackathonCreate() {
             onChange={handleInputChange}
             required={true}
           />
-          <FormInput
-            name={"Is it private?"}
-            type={"checkbox"}
-            value={formData.isPrivate}
-            onChange={handleInputChange}
-            style={{ width: "21vw" }}
-            required={true}
-          />
+          <div style={{ width: "21vw", display: "flex" }}>
+            <FormInput
+              name={"Is private?"}
+              type={"checkbox"}
+              value={formData.isPrivate}
+              onChange={handleInputChange}
+              required={true}
+              style={{ marginRight: "auto" }}
+            />
+          </div>
         </div>
         <div
           className="input-box-container"

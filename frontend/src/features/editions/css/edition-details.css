@@ -1,6 +1,7 @@
 .edition-details-container {
     width: fit-content;
     margin: auto;
+    width: 90vw;
 }
 
 .edition-logo {

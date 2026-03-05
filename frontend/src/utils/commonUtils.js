@@ -24,7 +24,8 @@ export function isValidUrl(string) {
 export function toCamelCase(str) {
     return str
         .replace(/[-_ ]+([a-zA-Z0-9])/g, (_, letter) => letter.toUpperCase())
-        .replace(/^[A-Z]/, (m) => m.toLowerCase());
+        .replace(/^[A-Z]/, (m) => m.toLowerCase())
+        .replace("?", "");
 }
 
 export function fileToBase64(file) {

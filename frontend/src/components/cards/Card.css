@@ -6,9 +6,15 @@
     min-width: 70vw;
 }
 
+.card img {
+    height: 20rem;
+    object-fit: contain;
+}
+
 .card > :first-child {
     flex: 0 0;
-    justify-content: center;    
+    justify-content: center;
+    margin: 1rem;
 }
 
 .card > * {
@@ -24,12 +30,6 @@
     align-items: center;
     margin-right: 1rem;
     margin-left: 1rem
-}
-
-.card img {
-    height: 20rem;
-    margin: 1rem;
-    object-fit: contain;
 }
 
 .card h3 {

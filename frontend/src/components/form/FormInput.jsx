@@ -50,6 +50,23 @@ const InputComponent = ({
     );
   }
 
+  if (type === "checkbox") {
+    return (
+      <div className="checkbox-container" style={style}>
+        <input
+          type={type}
+          name={toCamelCase(name)}
+          placeholder={placeholder ?? name + "..."}
+          checked={!!value}
+          min={min ?? undefined}
+          max={max ?? undefined}
+          style={style}
+          {...props}
+        />
+      </div>
+    );
+  }
+
   return (
     <input
       type={type}

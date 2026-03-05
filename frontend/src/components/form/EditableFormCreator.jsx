@@ -12,7 +12,7 @@ export default function EditableFormCreator({
     <FormContext value={{ handleInputChange, isEditable }}>
       <form onSubmit={handleSubmit} className="editable-form-creator">
         <div
-          className="edition-details-container"
+          className="details-container"
           style={{
             border: "1px solid rgb(200, 200, 200)",
             borderRadius: "1rem",

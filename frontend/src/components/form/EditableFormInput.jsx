@@ -23,17 +23,33 @@ export default function EditableFormInput({ style, ...props }) {
       </StyleWrapper>
     );
 
+  if (props.type === "checkbox") {
+    return (
+      <StyleWrapper>
+        <h3>{props.name}</h3>
+        <p className="long-text" style={{ margin: "0 0 0 1rem" }}>
+          {props.value ? "Yes" : "No"}
+        </p>
+      </StyleWrapper>
+    );
+  }
+
   if (props.type === "image")
     return (
       <StyleWrapper>
-        <h3 style={{ marginBottom: 0 }}>{props.name}</h3>
         {props.value ? (
-          <ImageRenderer
-            image={props.value}
-            style={{ width: 150, margin: 10 }}
-          />
+          <>
+            <h3 style={{ marginBottom: 0 }}>{props.name}</h3>
+            <ImageRenderer
+              image={props.value}
+              style={{ width: 150, margin: 10, marginBottom: "-1rem" }}
+            />
+          </>
         ) : (
-          <p style={{ margin: "0 0 0 1rem" }}>No content yet</p>
+          <>
+            <h3>{props.name}</h3>
+            <p style={{ margin: "0 0 0 1rem" }}>No content yet</p>
+          </>
         )}
       </StyleWrapper>
     );
