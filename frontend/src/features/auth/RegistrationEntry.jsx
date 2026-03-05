@@ -9,6 +9,7 @@ import Register from "./Register";
 import { RegistrationContext } from "./context/RegistrationContext";
 import "./auth.css";
 import ClickableText from "../../components/buttons/ClickableText";
+import { scrollToTop } from "../../utils/commonUtils";
 
 const mockHackathon = {
   editionName: "GreenTech Berlin 2025",
@@ -30,7 +31,7 @@ export default function RegistrationEntry(props) {
   const [maybeLater, setMaybeLater] = useState(false);
 
   if (justRegistered && maybeLater) {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    scrollToTop(0);
     return (
       <div>
         <h1>You registered successfully</h1>

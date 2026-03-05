@@ -3,7 +3,7 @@ import AsterButton from "../../components/buttons/AsterButton";
 import { useState } from "react";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
-import { fileToBase64 } from "../../utils/commonUtils";
+import { fileToBase64, scrollToTop } from "../../utils/commonUtils";
 import { EditionEditContext } from "./components/EditionEditContext";
 import "./css/edition-details.css";
 import EditionDetails from "./EditionDetails";
@@ -140,7 +140,7 @@ export default function EditionEdit({ edition: editingEdition }) {
           }}
           type="button"
           variant="secondary"
-          style={{marginBottom: '4vh'}}
+          style={{ marginBottom: "4vh" }}
         >
           Preview
         </AsterButton>
@@ -161,7 +161,14 @@ export default function EditionEdit({ edition: editingEdition }) {
         >
           {!isEditing && (
             <>
-              <AsterButton onClick={() => setIsEditing(true)}>Edit</AsterButton>
+              <AsterButton
+                onClick={() => {
+                  setIsEditing(true);
+                  scrollToTop(window.innerHeight * 0.3);
+                }}
+              >
+                Edit
+              </AsterButton>
               <EditionActionButton
                 type="button"
                 variant="secondary"

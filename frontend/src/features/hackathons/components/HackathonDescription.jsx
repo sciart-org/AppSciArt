@@ -1,4 +1,5 @@
 import SciArtProducts from "../../../components/sciartProducts/SciArtProducts";
+import { parseEnumValue } from "../../../utils/commonUtils";
 
 export default function HackathonDescription(props) {
   const mockedHackathon = {
@@ -29,10 +30,7 @@ A selection of this exhibition may be showcased during the Ars Electronica Festi
           {Object.entries(mockedHackathon?.descriptionParagraphs).map(
             ([key, value]) => (
               <>
-                <h3 style={{ textAlign: "start" }}>
-                  {key.charAt(0).toUpperCase() +
-                    key.slice(1).replaceAll("_", " ")}
-                </h3>
+                <h3 style={{ textAlign: "start" }}>{parseEnumValue(key)}</h3>
                 <p
                   style={{
                     whiteSpace: "pre-line",
@@ -43,7 +41,7 @@ A selection of this exhibition may be showcased during the Ars Electronica Festi
                   {value}
                 </p>
               </>
-            )
+            ),
           )}
         </div>
         <div style={{ justifyItems: "start", marginLeft: "2rem" }}>

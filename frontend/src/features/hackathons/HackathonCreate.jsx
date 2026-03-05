@@ -4,7 +4,7 @@ import useFetcher from "../../utils/useFetcher";
 import FormInput from "../../components/form/FormInput";
 import FormSelect from "../../components/form/FormSelect";
 import EditionPicker from "../products/collections/components/EditionPicker";
-import { fileToBase64, toEnumValue } from "../../utils/commonUtils";
+import { handleFormInputChange, toEnumValue } from "../../utils/commonUtils";
 import { useNavigate } from "react-router";
 import SubmitCancelButtons from "../../components/buttons/SubmitCancelButtons";
 
@@ -53,21 +53,7 @@ export default function HackathonCreate() {
   };
 
   const handleInputChange = async (e) => {
-    const { name, type, files, value, checked } = e.target;
-    let newValue;
-
-    if (type === "file") {
-      newValue = await fileToBase64(files[0]);
-    } else if (type === "checkbox") {
-      newValue = checked;
-    } else {
-      newValue = value;
-    }
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
+    return await handleFormInputChange(e, setFormData);
   };
 
   useEffect(() => {
@@ -115,13 +101,18 @@ export default function HackathonCreate() {
           />
         </div>
         <div className="input-box-container">
-          <FormInput
-            name={"Internal name"}
-            type={"text"}
-            value={formData.internalName}
-            onChange={handleInputChange}
-            required={true}
-          />
+          <div style={{ marginBottom: "0.5rem" }}>
+            <FormInput
+              name={"Internal name"}
+              type={"text"}
+              value={formData.internalName}
+              onChange={handleInputChange}
+              required={true}
+            />
+            <p style={{ margin: 0, fontSize: "0.75rem" }}>
+              This name will never be shown publicly
+            </p>
+          </div>
           <div style={{ width: "21vw", display: "flex" }}>
             <FormInput
               name={"Is private?"}
@@ -132,12 +123,6 @@ export default function HackathonCreate() {
               style={{ marginRight: "auto" }}
             />
           </div>
-        </div>
-        <div
-          className="input-box-container"
-          style={{ marginBottom: "1rem", fontSize: "0.75rem" }}
-        >
-          This name will never be shown publicly
         </div>
         <div className="input-box-container">
           <FormInput

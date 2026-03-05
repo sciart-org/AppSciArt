@@ -4,28 +4,17 @@ import AsterButton from "../buttons/AsterButton";
 import "./Card.css";
 import ImageRenderer from "../ImageRenderer";
 import AdminEditButton from "../buttons/AdminEditButton";
+import { formatReadableDate, parseEnumValue } from "../../utils/commonUtils";
 
-export default function HackathonCard(props) {
+export default function HackathonCard({ hackathon, hideButton, ...props }) {
   const jwt = tokenService.getLocalAccessToken();
-  const isAdmin = tokenService.getIsAdmin();
+  const forceNotAdmin = props.forceNotAdmin || false;
 
-  var options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-
-  const hackathon = props.hackathon;
-  const hideButton = props.hideButton;
+  const isAdmin = !forceNotAdmin && tokenService.getIsAdmin();
 
   if (!hackathon) {
     return <></>;
   }
-
-  const parseType = (type) => {
-    return type?.charAt(0) + type?.slice(1).toLowerCase().replace("_", " ");
-  };
 
   const JoinButton = () => {
     if (hackathon?.isEnrolled) {
@@ -45,10 +34,7 @@ export default function HackathonCard(props) {
           position: "relative",
         }}
       >
-        <AsterButton
-          to={jwt ? `/hackathons/${hackathon.id}/join` : undefined}
-          disabled={!jwt}
-        >
+        <AsterButton to={`/hackathons/${hackathon.id}/join`} disabled={!jwt}>
           <text>Join this hackathon!</text>
         </AsterButton>
         {!jwt && (
@@ -72,24 +58,24 @@ export default function HackathonCard(props) {
         <div style={{ width: "100%" }}>
           <h3>When?</h3>
           <text>
-            {new Date(hackathon?.startDate).toLocaleDateString(
-              "en-US",
-              options,
-            )}
+            {formatReadableDate(hackathon?.startDate)}
             {" - "}
-            {new Date(hackathon?.endDate).toLocaleDateString("en-US", options)}
+            {formatReadableDate(hackathon?.endDate)}
           </text>
           <h3>Where?</h3>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <text>{parseType(hackathon?.type)}</text>
+            <text>{parseEnumValue(hackathon?.type)}</text>
             <text>{hackathon?.location}</text>
           </div>
           <div style={{ marginTop: "3vh" }}>
             <text>{hackathon?.description}</text>
           </div>
         </div>
-        <AdminEditButton entityName="hackathons" entity={hackathon} />
-        {!isAdmin && <JoinButton />}
+        {isAdmin ? (
+          <AdminEditButton entityName="hackathons" entity={hackathon} />
+        ) : (
+          <JoinButton />
+        )}
       </div>
     </div>
   );

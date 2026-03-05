@@ -5,7 +5,7 @@ import HackathonDescription from "./components/HackathonDescription.jsx";
 import AsterButton from "../../components/buttons/AsterButton.jsx";
 import JoinSuccess from "./components/JoinSuccess.jsx";
 import useFetcher from "../../utils/useFetcher.js";
-import { itemsToUpperCase } from "../../utils/commonUtils.js";
+import { itemsToUpperCase, scrollToTop } from "../../utils/commonUtils.js";
 import Loading from "../../components/messages/Loading.jsx";
 import HackathonCard from "../../components/cards/HackathonCard.jsx";
 
@@ -71,7 +71,7 @@ export default function JoinHackathon() {
   }
 
   if (joined) {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    scrollToTop(0);
     return <JoinSuccess hackathonId={params.hackathonId} />;
   }
 

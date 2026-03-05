@@ -29,6 +29,7 @@ import Scientists from "./features/users/scientists/Scientists";
 import EditionCreate from "./features/editions/EditionCreate";
 import HackathonCreate from "./features/hackathons/HackathonCreate";
 import HackathonRouter from "./features/hackathons/HackathonRouter";
+import { scrollToTop } from "./utils/commonUtils";
 
 function App() {
   const [user, setUser] = useState(tokenService.getUser());
@@ -50,7 +51,7 @@ function App() {
     const location = useLocation();
 
     useLayoutEffect(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      scrollToTop(0);
     }, [location.pathname]);
 
     return children;

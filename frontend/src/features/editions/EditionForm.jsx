@@ -34,10 +34,6 @@ export default function EditionsForm({
           type={"text"}
           value={formData.shortDescription}
           multiline={true}
-          style={{
-            marginTop: isEditable ? undefined : "-1.5rem",
-            width: "100%",
-          }}
         />
       </div>
       <div className="long-input-box-container">
@@ -46,10 +42,7 @@ export default function EditionsForm({
           type={"text"}
           value={formData.longDescription}
           multiline={true}
-          style={{
-            marginBottom: isEditable ? "0.5rem" : "1rem",
-            width: "100%",
-          }}
+          collapsible={true}
         />
       </div>
     </EditableFormCreator>
