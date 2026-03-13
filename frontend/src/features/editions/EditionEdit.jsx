@@ -3,7 +3,11 @@ import AsterButton from "../../components/buttons/AsterButton";
 import { useState } from "react";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
-import { fileToBase64, scrollToTop } from "../../utils/commonUtils";
+import {
+  fileToBase64,
+  getFormData,
+  scrollToTop,
+} from "../../utils/commonUtils";
 import { EditionEditContext } from "./components/EditionEditContext";
 import "./css/edition-details.css";
 import EditionDetails from "./EditionDetails";
@@ -23,16 +27,6 @@ export default function EditionEdit({ edition: editingEdition }) {
   const showDetailsPreview = previewItem === 0;
 
   const { fetcher } = useFetcher(error, setError);
-
-  const getFormData = (edition) => {
-    return {
-      name: edition?.name || null,
-      year: edition?.year || null,
-      shortDescription: edition?.shortDescription || null,
-      longDescription: edition?.longDescription || null,
-      logo: edition?.logo || null,
-    };
-  };
 
   const filterNotChangedFields = () => {
     return Object.entries(formData).reduce((editedFields, [key, value]) => {
@@ -149,7 +143,10 @@ export default function EditionEdit({ edition: editingEdition }) {
           handleSubmit={handleSubmit}
           formData={formData}
           isEditable={isEditing}
-          onCancel={() => setIsEditing(false)}
+          onCancel={() => {
+            setIsEditing(false);
+            setFormData(getFormData(edition));
+          }}
         />
         <div
           style={{
