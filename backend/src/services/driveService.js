@@ -219,3 +219,20 @@ export const createDriveHackathon = async (editionDriveLink, internalName, logo)
   await uploadImg(logo, driveLink)
   return driveLink
 }
+
+export const moveDriveFolder = async (folderDriveLink, targetEditionDriveLink) => {
+  const folderId = extractDriveFolderId(folderDriveLink)
+  const targetEditionId = extractDriveFolderId(targetEditionDriveLink)
+
+  const currentFolder = await drive.files.get({ fileId: folderId, fields: 'parents' })
+  const targetParentId = await getOrCreateFolder(targetEditionId, 'hackathons')
+
+  const previousParents = currentFolder.data.parents?.join(',')
+
+  await drive.files.update({
+    fileId: folderId,
+    addParents: targetParentId,
+    removeParents: previousParents,
+    fields: 'id, parents'
+  })
+}

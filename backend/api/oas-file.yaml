@@ -334,6 +334,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Hackathon"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
     delete:
       tags: [Hackathons]
       summary: Delete a hackathon

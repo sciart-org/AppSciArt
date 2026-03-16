@@ -17,6 +17,12 @@ const validateHackathonExists = async (userId, hackathonId) => {
   return hackathon
 }
 
+const validateCanEditHackathon = async (userId, hackathonId) => {
+  const hackathon = await validateHackathonExists(userId, hackathonId)
+  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot edit this hackathon', 403)
+  return hackathon
+}
+
 const validateHackathonIsReadable = async (userId, hackathonId) => {
   const hackathon = await validateHackathonExists(userId, hackathonId)
   await validateIsVisibleOrStaff(userId, hackathon)
@@ -34,4 +40,4 @@ const validateHackathonNameUnique = async (internalName, editingHackathonId = nu
   errorThrower(alreadyExists && alreadyExists.id !== editingHackathonId, `Hackathon with name '${internalName}' already exists`, 409)
 }
 
-export { validateHackathonIsReadable, validateHackathonIsOpen, validateHackathonNameUnique }
+export { validateHackathonIsReadable, validateHackathonIsOpen, validateHackathonNameUnique, validateCanEditHackathon }

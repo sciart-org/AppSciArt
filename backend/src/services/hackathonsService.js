@@ -1,11 +1,11 @@
 import { Op } from 'sequelize'
 import { Hackathon } from '../models/Hackathon.js'
-import { validateHackathonIsReadable, validateHackathonNameUnique } from '../validators/hackathonValidators.js'
+import { validateCanEditHackathon, validateHackathonIsReadable, validateHackathonNameUnique } from '../validators/hackathonValidators.js'
 import { combineIncludes, includeEditionName, includeIsEnrolled, includeMyHackathons } from './includes/hackathonIncludes.js'
 import { errorThrower } from './errorThrower.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsActive } from '../validators/editionValidators.js'
-import { createDriveHackathon, getEntitiesWithLogo } from './driveService.js'
+import { createDriveHackathon, getEntitiesWithLogo, moveDriveFolder, parseFolderName, updateFolderName, uploadImg } from './driveService.js'
 
 export async function getClosestHackathon (userId) {
   const hackathon = await Hackathon.findOne({
@@ -79,12 +79,15 @@ export async function getHackathons (userId) {
 
 export async function createHackathon (userId, body) {
   errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create a hackathon', 403)
-  const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate } = body
+  const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink } = body
   const edition = await validateIsActive(editionId)
   await validateHackathonNameUnique(internalName)
+  if (type !== 'ON_SITE') {
+    errorThrower(!meetLink, 'A meet link is needed for online or hybrid hackathons', 400)
+  }
   const driveLink = await createDriveHackathon(edition?.driveLink, internalName, logo)
   const createdHackathon = await Hackathon.create({
-    startDate, endDate, type, location, description, editionId, internalName, isPrivate, driveLink
+    startDate, endDate, type, location, description, editionId, internalName, isPrivate, driveLink, meetLink
   })
   const hackathonsWithLogo = await getEntitiesWithLogo([createdHackathon])
   return hackathonsWithLogo[0]
@@ -96,10 +99,41 @@ export async function getHackathonDetails (hackathonId, userId) {
   return hackathonsWithLogo[0]
 }
 
-export function updateHackathon (req, res) {
-  res.send({
-    message: 'This is the mockup controller for updateHackathon'
-  })
+export async function updateHackathon (currentUserId, hackathonId, body) {
+  const hackathon = await validateCanEditHackathon(currentUserId, hackathonId)
+
+  const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink } = body
+  let edition
+
+  if (type !== 'ON_SITE') {
+    errorThrower(!meetLink && !hackathon.meetLink, 'A meet link is needed for online or hybrid hackathons', 400)
+  }
+
+  if (editionId) {
+    edition = await validateIsActive(editionId)
+    await moveDriveFolder(hackathon.driveLink, edition.driveLink)
+  }
+
+  if (internalName) {
+    await validateHackathonNameUnique(internalName, hackathonId)
+    const newFolderName = parseFolderName(internalName)
+    await updateFolderName(hackathon.driveLink, newFolderName)
+  }
+
+  if (logo) {
+    await uploadImg(logo, hackathon.driveLink)
+  }
+
+  const hackathonBody = { startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink }
+
+  if (Object.values(hackathonBody).some(v => v !== undefined)) {
+    await hackathon.update(hackathonBody)
+  }
+
+  const hackathonsWithLogo = await getEntitiesWithLogo([hackathon])
+  const result = hackathonsWithLogo[0]
+  if (editionId) result.editionName = edition.name
+  return result
 }
 
 export function deleteHackathon (req, res) {

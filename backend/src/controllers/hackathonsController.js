@@ -41,9 +41,16 @@ export const getHackathonDetails = withErrorHandler(async (req, res) => {
   return res.status(200).send(hackathon)
 })
 
-export function updateHackathon (req, res) {
-  service.updateHackathon(req, res)
-}
+export const updateHackathon = withErrorHandler(async (req, res) => {
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
+  const hackathonId = req.params.hackathonId
+  const hackathon = req.body
+
+  const updatedHackathon = await service.updateHackathon(currentUser?.id, hackathonId, hackathon)
+  return res.status(200).send(updatedHackathon)
+})
 
 export function deleteHackathon (req, res) {
   service.deleteHackathon(req, res)
