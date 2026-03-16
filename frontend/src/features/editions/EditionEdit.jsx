@@ -5,6 +5,7 @@ import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import {
   fileToBase64,
+  filterNotChangedFields,
   getFormData,
   scrollToTop,
 } from "../../utils/commonUtils";
@@ -27,14 +28,6 @@ export default function EditionEdit({ edition: editingEdition }) {
   const showDetailsPreview = previewItem === 0;
 
   const { fetcher } = useFetcher(error, setError);
-
-  const filterNotChangedFields = () => {
-    return Object.entries(formData).reduce((editedFields, [key, value]) => {
-      if (value === edition[key]) return editedFields;
-      editedFields[key] = key === "year" ? parseInt(value) : value;
-      return editedFields;
-    }, {});
-  };
 
   const [formData, setFormData] = useState(getFormData(edition));
 
@@ -60,7 +53,7 @@ export default function EditionEdit({ edition: editingEdition }) {
     }
 
     setLoading(true);
-    const body = filterNotChangedFields();
+    const body = filterNotChangedFields(formData, edition);
     if (Object.keys(body).length === 0) {
       setIsEditing(false);
       setLoading(false);

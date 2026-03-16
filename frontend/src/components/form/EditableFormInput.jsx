@@ -2,6 +2,11 @@ import { useContext, useState } from "react";
 import FormInput from "../../components/form/FormInput";
 import ImageRenderer from "../../components/ImageRenderer";
 import { FormContext } from "./FormContext";
+import {
+  formatReadableDate,
+  simulateInputChange,
+} from "../../utils/commonUtils";
+import FormSelect from "./FormSelect";
 
 const StyleWrapper = ({ children, style }) => {
   return (
@@ -15,6 +20,22 @@ const StyleWrapper = ({ children, style }) => {
 
 export default function EditableFormInput({ style, ...props }) {
   const { handleInputChange, isEditable } = useContext(FormContext);
+
+  if (isEditable && props.customEditable) {
+    return <StyleWrapper>{props.children}</StyleWrapper>;
+  }
+
+  if (isEditable && props.type === "select") {
+    return (
+      <StyleWrapper>
+        <FormSelect
+          {...props}
+          style={style}
+          setValue={(v) => simulateInputChange("type", v, handleInputChange)}
+        />
+      </StyleWrapper>
+    );
+  }
 
   if (isEditable)
     return (
@@ -53,6 +74,17 @@ export default function EditableFormInput({ style, ...props }) {
         )}
       </StyleWrapper>
     );
+
+  if (props.type === "date") {
+    return (
+      <StyleWrapper style={style}>
+        <h3>{props.name}</h3>
+        <p className="long-text" style={{ margin: "0 0 0 1rem" }}>
+          {props.value ? formatReadableDate(props.value) : "No content yet"}
+        </p>
+      </StyleWrapper>
+    );
+  }
 
   const [isOpen, setIsOpen] = useState(false);
   const showFullContent = !props.collapsible || isOpen;

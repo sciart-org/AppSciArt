@@ -35,7 +35,7 @@ export default function HackathonRouter() {
   }
 
   if (isAdmin) {
-    return <HackathonEdit/>
+    return <HackathonEdit hackathon={hackathon} />;
   }
 
   return <ActiveHackathon hackathon={hackathon} />;

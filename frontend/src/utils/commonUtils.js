@@ -42,22 +42,24 @@ export function fileToBase64(file) {
 }
 
 export function getFormData(obj, overrides = {}) {
-    const withNullDefaults = ([key, value]) => [key, value ?? null];
-    const entries = Object.entries(obj).map(withNullDefaults);
+  const withNullDefaults = ([key, value]) => [
+    key,
+    value === undefined || value === '' ? null : value
+  ];
 
-    return { ...Object.fromEntries(entries), ...overrides };
-};
+  const entries = Object.entries(obj).map(withNullDefaults);
+  return { ...Object.fromEntries(entries), ...overrides };
+}
 
-const resolveFormInputValue = async ({ type, files, value, checked }) => {
-    if (type === "file") return await fileToBase64(files[0]);
-    if (type === "checkbox") return checked;
-    return value;
+const resolveFormInputValue = async (input) => {
+    if (input.type === "file") return await fileToBase64(input.files[0]);
+    if (input.type === "checkbox") return input.checked;
+    return input.value;
 };
 
 export async function handleFormInputChange(e, setFormData) {
-    const { name, ...inputProps } = e.target;
-    const newValue = await resolveFormInputValue(inputProps);
-    setFormData((prev) => ({ ...prev, [name]: newValue }));
+    const newValue = await resolveFormInputValue(e.target);
+    setFormData((prev) => ({ ...prev, [e.target.name]: newValue }));
 };
 
 export function formatReadableDate(date) {
@@ -72,3 +74,26 @@ export function formatReadableDate(date) {
 export function scrollToTop(topValue) {
     return window.scrollTo({ top: topValue, left: 0, behavior: "instant" });
 }
+
+export function simulateInputChange(name, value, handleInputChange) {
+    return handleInputChange({
+        target: { name, type: "text", value },
+    });
+}
+
+export function filterNotChangedFields(newValues, previousValues) {
+    return Object.entries(newValues).reduce((editedFields, [key, value]) => {
+        const prevValue = previousValues[key];
+
+        if (key.toLowerCase().includes("date")) {
+            const valNormalized = new Date(value).toISOString().slice(0, 10);
+            const prevNormalized = new Date(prevValue).toISOString().slice(0, 10);
+            if (valNormalized === prevNormalized) return editedFields;
+        } else if (value === prevValue) {
+            return editedFields;
+        }
+
+        editedFields[key] = key === "year" ? parseInt(value) : value;
+        return editedFields;
+    }, {});
+};
