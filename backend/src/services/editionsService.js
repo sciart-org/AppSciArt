@@ -4,7 +4,7 @@ import { validateCanBeAnnounced, validateCanEditEdition, validateCanSeeEdition, 
 import { mapToEditionDetails } from './mappers/editionMapper.js'
 import { includeEditionFruits } from './includes/editionIncludes.js'
 import { errorThrower } from './errorThrower.js'
-import { createDriveEdition, getEntitiesWithLogo, updateFolderName, uploadImg } from './driveService.js'
+import { createDriveEdition, createEditionFolderName, getEntitiesWithLogo, updateFolderName, uploadImg } from './driveService.js'
 import { Op } from 'sequelize'
 
 export async function getEditions (userId, state) {
@@ -62,23 +62,25 @@ export async function updateEdition (currentUserId, editionId, body) {
   const edition = await validateCanEditEdition(currentUserId, editionId)
 
   const { name, year, logo, shortDescription, longDescription } = body
-  await validateEditionNameUnique(name || '', editionId)
+
+  if (name) {
+    await validateEditionNameUnique(name, editionId)
+  }
 
   const editionBody = { name, year, shortDescription, longDescription }
-  let updatedEdition
 
-  if (!Object.values(editionBody).every(v => v === undefined)) {
-    updatedEdition = await edition.update(editionBody)
+  if (Object.values(editionBody).some(v => v !== undefined)) {
+    await edition.update(editionBody)
   }
 
   if (name || year) {
-    const { driveLink, year, name } = updatedEdition
-    await updateFolderName(driveLink, year, name)
+    const { driveLink, year, name } = edition
+    const newFolderName = createEditionFolderName(year, name)
+    await updateFolderName(driveLink, newFolderName)
   }
 
   if (logo) {
-    const editionToUse = updatedEdition || (await Edition.findByPk(editionId, { attributes: ['driveLink'] }))
-    await uploadImg(logo, editionToUse.driveLink)
+    await uploadImg(logo, edition.driveLink)
   }
 
   return getEditionDetails(currentUserId, editionId)

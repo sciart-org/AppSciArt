@@ -1,5 +1,6 @@
 import { Hackathon } from '../models/Hackathon.js'
 import { errorThrower } from '../services/errorThrower.js'
+import { combineIncludes, includeEditionName, includeIsEnrolled } from '../services/includes/hackathonIncludes.js'
 import { checkExists } from './generalValidators.js'
 import { checkIsStaff } from './userValidators.js'
 
@@ -7,16 +8,23 @@ const validateIsVisibleOrStaff = async (userId, hackathon) => {
   return errorThrower(hackathon.state === 'PLANNED' && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this hackathon', 401)
 }
 
-const validateHackathonIsReadable = async (userId, hackathonId) => {
-  const hackathon = await Hackathon.findByPk(hackathonId)
+const validateHackathonExists = async (userId, hackathonId) => {
+  const hackathon = await Hackathon.findByPk(
+    hackathonId,
+    combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
+  )
   errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
+  return hackathon
+}
+
+const validateHackathonIsReadable = async (userId, hackathonId) => {
+  const hackathon = await validateHackathonExists(userId, hackathonId)
   await validateIsVisibleOrStaff(userId, hackathon)
   return hackathon
 }
 
 const validateHackathonIsOpen = async (userId, hackathonId) => {
-  const hackathon = await Hackathon.findByPk(hackathonId)
-  errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
+  const hackathon = await validateHackathonExists(userId, hackathonId)
   errorThrower(!(hackathon.state === 'OPEN'), 'Unauthorized: The hackathon is not open', 403)
   return hackathon
 }

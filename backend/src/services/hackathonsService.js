@@ -91,11 +91,7 @@ export async function createHackathon (userId, body) {
 }
 
 export async function getHackathonDetails (hackathonId, userId) {
-  await validateHackathonIsReadable(userId, hackathonId)
-  const hackathon = await Hackathon.findByPk(
-    hackathonId,
-    combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
-  )
+  const hackathon = await validateHackathonIsReadable(userId, hackathonId)
   const hackathonsWithLogo = await getEntitiesWithLogo([hackathon])
   return hackathonsWithLogo[0]
 }

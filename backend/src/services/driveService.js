@@ -116,7 +116,7 @@ export const uploadImg = async (imgB64, driveLink) => {
   return getImgUrl(newImgId)
 }
 
-const parseFolderName = (name) => {
+export const parseFolderName = (name) => {
   return name
     .toLowerCase()
     .normalize('NFD')
@@ -127,7 +127,7 @@ const parseFolderName = (name) => {
     .replace(/-+/g, '-')
 }
 
-const createEditionFolderName = (year, name) => {
+export const createEditionFolderName = (year, name) => {
   return `${year}-${parseFolderName(name)}`
 }
 
@@ -176,12 +176,12 @@ const createDriveFolderLink = (editionFolderId) => {
   return `https://drive.google.com/drive/folders/${editionFolderId}`
 }
 
-export const updateFolderName = async (driveLink, year, name) => {
+export const updateFolderName = async (driveLink, newName) => {
   const folderId = extractDriveFolderId(driveLink)
   await drive.files.update({
     fileId: folderId,
     requestBody: {
-      name: createEditionFolderName(year, name)
+      name: newName
     },
     fields: 'id, name'
   })
