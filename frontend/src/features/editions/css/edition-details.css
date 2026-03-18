@@ -1,52 +1,53 @@
 .edition-details-container {
-    width: fit-content;
-    margin: auto;
-    width: 90vw;
+  width: fit-content;
+  margin: auto;
+  width: 90vw;
 }
 
 .edition-logo {
-    height: auto;
-    max-width: 20rem;
-    max-height: 20rem;
-    object-fit: contain;
-    flex: 1
+  height: auto;
+  max-width: 20rem;
+  max-height: 20rem;
+  object-fit: contain;
+  flex: 1;
+  margin-bottom: 1rem;
 }
 
 .edition-logo-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .catalog-logo {
-    height: auto;
-    max-width: 25vw;
-    max-height: 25vh;
-    object-fit: contain;
+  height: auto;
+  max-width: 20rem;
+  max-height: 20rem;
+  object-fit: contain;
 }
 
 .catalog-logo-container {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .edition-collections-container {
-    margin-bottom: 5rem;
+  margin-bottom: 5rem;
 }
 
 .edition-collections-container > .aster-button {
-    margin-right: 5rem;
-    margin-left: 5rem;
-    width: 12rem;
-    height: 12rem
+  margin-right: 5rem;
+  margin-left: 5rem;
+  width: 12rem;
+  height: 12rem;
 }
 
 .edition-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex: 1;
 }
 
 .editor-preview {

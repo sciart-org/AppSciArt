@@ -4,6 +4,7 @@ import Carousel from "../home/components/Carousel";
 import "./css/edition-details.css";
 import EditionCollectionButtons from "./components/EditionCollectionButtons";
 import ImageRenderer from "../../components/ImageRenderer";
+import logoFlowerBlack from "../../assets/logoFlowerBlack.png";
 
 export default function EditionDetails({ edition }) {
   const navigate = useNavigate();
@@ -12,9 +13,12 @@ export default function EditionDetails({ edition }) {
     return (
       <div className="edition-details-container">
         <div className="edition-logo-container">
-          <ImageRenderer className="edition-logo" image={edition?.logo} />
+          <ImageRenderer
+            className="edition-logo"
+            image={edition?.logo ?? logoFlowerBlack}
+          />
           {edition?.catalogLink && (
-            <div style={{ textAlign: "center", flex: 1 }}>
+            <div style={{ textAlign: "center", marginLeft: "5rem" }}>
               <h2 style={{ marginBottom: 0 }}>
                 Interested in the whole story?
               </h2>
@@ -23,12 +27,17 @@ export default function EditionDetails({ edition }) {
                 className="catalog-logo-container"
                 onClick={() => window.open(edition?.catalogLink, "_blank")}
               >
-                <img className="catalog-logo" src={logoCatalog} />
+                <ImageRenderer image={logoCatalog} className="catalog-logo" />
               </div>
             </div>
           )}
         </div>
-        <p className="long-text">{edition?.longDescription}</p>
+        <p
+          className="long-text"
+          style={{ width: "70vw", marginInline: "auto" }}
+        >
+          {edition?.longDescription}
+        </p>
       </div>
     );
   };
