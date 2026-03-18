@@ -1,50 +1,49 @@
 'use strict'
-import { DataTypes } from 'sequelize'
 
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface, Sequelize) {
   // Create the hackathons table
   await queryInterface.createTable('hackathons', {
     id: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      defaultValue: Sequelize.UUIDV4
     },
     logo: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     startDate: {
-      type: DataTypes.DATE
+      type: Sequelize.DATE
     },
     endDate: {
-      type: DataTypes.DATE
+      type: Sequelize.DATE
     },
     type: {
-      type: DataTypes.ENUM('ON_SITE', 'ONLINE', 'HYBRID'),
+      type: Sequelize.ENUM('ON_SITE', 'ONLINE', 'HYBRID'),
       allowNull: false
     },
     location: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     description: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     state: {
-      type: DataTypes.ENUM('PLANNED', 'OPEN', 'CLOSED', 'FINISHED'),
+      type: Sequelize.ENUM('PLANNED', 'OPEN', 'CLOSED', 'FINISHED'),
       allowNull: false,
       defaultValue: 'PLANNED'
     },
     phase: {
-      type: DataTypes.ENUM('PREPARING', 'GROUP_CREATION', 'GROUP_WORK', 'GROUP_PRESENTATION', 'TEAM_CREATION', 'TEAM_WORK'),
+      type: Sequelize.ENUM('PREPARING', 'GROUP_CREATION', 'GROUP_WORK', 'GROUP_PRESENTATION', 'TEAM_CREATION', 'TEAM_WORK'),
       allowNull: false,
       defaultValue: 'PREPARING'
     },
     meetLink: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     editionId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       references: {
         model: 'editions',
@@ -54,12 +53,12 @@ export async function up (queryInterface, Sequelize) {
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     },
     updatedAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     }
   })

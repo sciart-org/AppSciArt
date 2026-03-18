@@ -1,49 +1,48 @@
 'use strict'
-import { DataTypes } from 'sequelize'
 
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface, Sequelize) {
   // Create the editions table
   await queryInterface.createTable('editions', {
     id: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      defaultValue: Sequelize.UUIDV4
     },
     name: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false
     },
     logo: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     year: {
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
       allowNull: false
     },
     shortDescription: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     longDescription: {
-      type: DataTypes.TEXT
+      type: Sequelize.TEXT
     },
     catalogLink: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     state: {
-      type: DataTypes.ENUM('PLANNED', 'ACTIVE', 'CLOSED', 'PUBLISHED'),
+      type: Sequelize.ENUM('PLANNED', 'ACTIVE', 'CLOSED', 'PUBLISHED'),
       allowNull: false,
       defaultValue: 'PLANNED'
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     },
     updatedAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     }
   })

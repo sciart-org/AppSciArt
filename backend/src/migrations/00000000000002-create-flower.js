@@ -1,41 +1,40 @@
 'use strict'
-import { DataTypes } from 'sequelize'
 
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface, Sequelize) {
   // Create the flowers table
   await queryInterface.createTable('flowers', {
     id: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      defaultValue: Sequelize.UUIDV4
     },
     title: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     template: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     mainImage: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     concept: {
-      type: DataTypes.TEXT
+      type: Sequelize.TEXT
     },
     conceptualMap: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     state: {
-      type: DataTypes.ENUM('IN_BLANK', 'IN_PROGRESS', 'IN_REVIEW', 'PUBLISHED'),
+      type: Sequelize.ENUM('IN_BLANK', 'IN_PROGRESS', 'IN_REVIEW', 'PUBLISHED'),
       allowNull: false,
       defaultValue: 'IN_BLANK'
     },
     driveLink: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     seedId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       references: {
         model: 'seeds',
@@ -45,12 +44,12 @@ export async function up (queryInterface, Sequelize) {
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     },
     updatedAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     }
   })

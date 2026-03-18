@@ -1,44 +1,43 @@
 'use strict'
-import { DataTypes } from 'sequelize'
 
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface, Sequelize) {
   await queryInterface.createTable('participations', {
     id: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      defaultValue: Sequelize.UUIDV4
     },
     clusterNumber: {
-      type: DataTypes.INTEGER
+      type: Sequelize.INTEGER
     },
     roles: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: Sequelize.ARRAY(Sequelize.STRING),
       allowNull: false
     },
     interests: {
-      type: DataTypes.TEXT
+      type: Sequelize.TEXT
     },
     isGroupVoice: {
-      type: DataTypes.BOOLEAN,
+      type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false
     },
     isTeamSpeaker: {
-      type: DataTypes.BOOLEAN,
+      type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false
     },
     groupId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       references: {
         model: 'conceptual_maps'
       },
       onDelete: 'SET NULL'
     },
     teamId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       references: {
         model: 'flowers',
         key: 'id'
@@ -46,7 +45,7 @@ export async function up (queryInterface, Sequelize) {
       onDelete: 'SET NULL'
     },
     fruitId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       references: {
         model: 'fruits',
         key: 'id'
@@ -54,7 +53,7 @@ export async function up (queryInterface, Sequelize) {
       onDelete: 'SET NULL'
     },
     userProfileId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       references: {
         model: { tableName: 'user_profiles', schema: 'profiles' },
@@ -63,7 +62,7 @@ export async function up (queryInterface, Sequelize) {
       onDelete: 'CASCADE'
     },
     hackathonId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       references: {
         model: 'hackathons',
@@ -73,12 +72,12 @@ export async function up (queryInterface, Sequelize) {
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     },
     updatedAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     }
   })

@@ -1,11 +1,10 @@
 'use strict'
-import { DataTypes } from 'sequelize'
 
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface, Sequelize) {
   await queryInterface.createTable('hackathon_seeds', {
     hackathonId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       primaryKey: true,
       references: {
@@ -15,7 +14,7 @@ export async function up (queryInterface, Sequelize) {
       onDelete: 'CASCADE'
     },
     seedId: {
-      type: DataTypes.UUID,
+      type: Sequelize.UUID,
       allowNull: false,
       primaryKey: true,
       references: {

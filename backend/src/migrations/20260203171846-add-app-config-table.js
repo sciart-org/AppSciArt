@@ -1,26 +1,25 @@
 'use strict'
-import { DataTypes } from 'sequelize'
 
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface, Sequelize) {
   await queryInterface.createTable('app_configs', {
     key: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false,
       primaryKey: true
     },
     value: {
-      type: DataTypes.TEXT,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     createdAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     },
     updatedAt: {
       allowNull: false,
-      type: DataTypes.DATE,
+      type: Sequelize.DATE,
       defaultValue: Sequelize.fn('NOW')
     }
   })

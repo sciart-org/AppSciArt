@@ -1,5 +1,4 @@
 'use strict'
-import { DataTypes } from 'sequelize'
 
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface, Sequelize) {
@@ -8,17 +7,17 @@ export async function up (queryInterface, Sequelize) {
     { tableName: 'scientist_invitations', schema: 'public' },
     {
       id: {
-        type: DataTypes.UUID,
+        type: Sequelize.UUID,
         allowNull: false,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        defaultValue: Sequelize.UUIDV4
       },
       email: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false
       },
       seedId: {
-        type: DataTypes.UUID,
+        type: Sequelize.UUID,
         references: {
           model: 'seeds',
           key: 'id'
@@ -26,7 +25,7 @@ export async function up (queryInterface, Sequelize) {
         onDelete: 'SET NULL'
       },
       editionId: {
-        type: DataTypes.UUID,
+        type: Sequelize.UUID,
         references: {
           model: 'editions',
           key: 'id'
@@ -35,12 +34,12 @@ export async function up (queryInterface, Sequelize) {
       },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW')
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW')
       }
     }

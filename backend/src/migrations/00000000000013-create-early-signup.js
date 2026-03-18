@@ -1,5 +1,4 @@
 'use strict'
-import { DataTypes } from 'sequelize'
 
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface, Sequelize) {
@@ -11,21 +10,21 @@ export async function up (queryInterface, Sequelize) {
     { tableName: 'early_signups', schema: 'profiles' },
     {
       id: {
-        type: DataTypes.UUID,
+        type: Sequelize.UUID,
         allowNull: false,
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+        defaultValue: Sequelize.UUIDV4
       },
       email: {
-        type: DataTypes.STRING
+        type: Sequelize.STRING
       },
       isProvider: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
       },
       createdAt: {
-        type: DataTypes.DATE,
+        type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.fn('NOW')
       }
