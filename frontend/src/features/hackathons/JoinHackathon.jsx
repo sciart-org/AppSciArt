@@ -24,7 +24,7 @@ export default function JoinHackathon() {
 
   useEffect(() => {
     fetcher({
-      url: `hackathons/${params.hackathonId}`,
+      url: `hackathons/${params.hackathonId}?view=full`,
       onSuccess: (data) => {
         setHackathon(data);
       },
