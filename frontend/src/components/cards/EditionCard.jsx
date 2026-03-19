@@ -3,8 +3,8 @@ import AdminEditButton from "../buttons/AdminEditButton";
 import AsterButton from "../buttons/AsterButton";
 import "./Card.css";
 import ImageRenderer from "../ImageRenderer";
-import logoFlowerBlack from "../../assets/logoFlowerBlack.png";
 import { parseEnumValue } from "../../utils/commonUtils";
+import logoFlowerBlack from "../../assets/logoFlowerBlack.png";
 
 export default function EditionCard(props) {
   const edition = props.edition;
@@ -19,7 +19,8 @@ export default function EditionCard(props) {
     <div className="card" style={{ ...props.style, ...includeAutoHeight }}>
       <div style={includeAutoHeight}>
         <ImageRenderer
-          image={edition?.logo ?? logoFlowerBlack}
+          image={edition?.logo}
+          placeholder={logoFlowerBlack}
           width={"15rem"}
         />
       </div>

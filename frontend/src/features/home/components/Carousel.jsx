@@ -1,78 +1,84 @@
 import { useState } from "react";
 import "../css/Carousel.css";
 import { GrCaretNext } from "react-icons/gr";
+import ImageRenderer from "../../../components/ImageRenderer";
+import logoFlowerBlack from "../../../assets/logoFlowerBlack.png";
+
+const IMAGE_HEIGHT = "40vh";
+
+const CarouselContainer = ({ children, small, animating, handleSlide }) => {
+  return (
+    <div
+      className={small ? "carousel-container small" : "carousel-container"}
+      style={{ height: IMAGE_HEIGHT }}
+    >
+      <div
+        className={
+          animating
+            ? small
+              ? "carousel animating " + animating + " small"
+              : "carousel animating " + animating
+            : small
+              ? "carousel small"
+              : "carousel"
+        }
+      >
+        {children}
+      </div>
+      <GrCaretNext
+        className={
+          small
+            ? "disable-select carousel-button left small"
+            : "disable-select carousel-button left"
+        }
+        size={"10vh"}
+        color="rgba(0,0,0,0.35)"
+        onClick={() => handleSlide("left")}
+      />
+      <GrCaretNext
+        className={
+          small
+            ? "disable-select carousel-button right small"
+            : "disable-select carousel-button right"
+        }
+        size={"10vh"}
+        color="rgba(0,0,0,0.35)"
+        onClick={() => handleSlide("right")}
+      />
+    </div>
+  );
+};
 
 export default function Carousel({
-  mocked,
   allItems,
   small = false,
   onClickItem = () => {},
+  loading,
 }) {
-  if ((!allItems || allItems.length === 0) && !mocked) {
-    return <p>No items to display</p>;
+  if (!loading && (!allItems || allItems.length === 0)) {
+    return (
+      <CarouselContainer
+        small={small}
+        animating={animating}
+        handleSlide={handleSlide}
+      >
+        <p>No items to display</p>
+      </CarouselContainer>
+    );
   }
 
   const [centerImage, setCenterImage] = useState(0);
   const [animating, setAnimating] = useState(null);
-  const mockObjects = [
-    {
-      id: 1,
-      text: "ASTER+S > ART ^ NEUROSCIENCE - 2025",
-      image:
-        "https://drive.google.com/thumbnail?id=1_DUOT1fdH2Osrnfx7Ua5-YMLaswmBGwh&sz=s512",
-    },
-    {
-      id: 2,
-      text: "ASTER+S > ART ^ SEALIFE - 2023",
-      image:
-        "https://drive.google.com/thumbnail?id=1csVlBreYkkey1NkDyxE0VnWZJToG7geP&sz=s512",
-    },
-    {
-      id: 3,
-      text: "ASTER+S > ART ^ ENVIRONMENT & AI - 2024",
-      image:
-        "https://drive.google.com/thumbnail?id=1nntzSuxqmzgW6-DCsHyp1FgqWpZH_MHX&sz=s512",
-    },
-    {
-      id: 4,
-      text: "Example title 1",
-      image: "https://i.imgur.com/6nPHtQJ.jpeg",
-    },
-    {
-      id: 5,
-      text: "Example title 2",
-      image: "https://i.imgur.com/DZ5Imb2.jpeg",
-    },
-    {
-      id: 6,
-      text: "Example title 3",
-      image: "https://i.imgur.com/0JG20Ii.jpeg",
-    },
+
+  const shownObjects = [
+    allItems[(centerImage - 2 + allItems.length) % allItems.length],
+    allItems[(centerImage - 1 + allItems.length) % allItems.length],
+    allItems[centerImage],
+    allItems[(centerImage + 1) % allItems.length],
+    allItems[(centerImage + 2) % allItems.length],
   ];
 
-  const shownObjects = mocked
-    ? [
-        mockObjects[
-          (centerImage - 2 + mockObjects.length) % mockObjects.length
-        ],
-        mockObjects[
-          (centerImage - 1 + mockObjects.length) % mockObjects.length
-        ],
-        mockObjects[centerImage],
-        mockObjects[(centerImage + 1) % mockObjects.length],
-        mockObjects[(centerImage + 2) % mockObjects.length],
-      ]
-    : [
-        allItems[(centerImage - 2 + allItems.length) % allItems.length],
-        allItems[(centerImage - 1 + allItems.length) % allItems.length],
-        allItems[centerImage],
-        allItems[(centerImage + 1) % allItems.length],
-        allItems[(centerImage + 2) % allItems.length],
-      ];
-
-  const currentEdition = mocked
-    ? mockObjects[centerImage]
-    : allItems[centerImage];
+  const currentEdition = allItems[centerImage];
 
   const handleSlide = (direction) => {
     if (animating) return;
@@ -80,11 +86,7 @@ export default function Carousel({
     const newImageIndexOffset = direction == "right" ? 1 : -1;
     setTimeout(() => {
       setCenterImage(
-        mocked
-          ? (centerImage + mockObjects.length + newImageIndexOffset) %
-              mockObjects.length
-          : (centerImage + allItems.length + newImageIndexOffset) %
-              allItems.length
+        (centerImage + allItems.length + newImageIndexOffset) % allItems.length,
       );
       setAnimating(false);
     }, 500);
@@ -92,47 +94,36 @@ export default function Carousel({
 
   return (
     <>
-      <div
-        className={small ? "carousel-container small" : "carousel-container"}
+      <CarouselContainer
+        small={small}
+        animating={animating}
+        handleSlide={handleSlide}
       >
-        <div
-          className={
-            animating
-              ? small
-                ? "carousel animating " + animating + " small"
-                : "carousel animating " + animating
-              : small
-              ? "carousel small"
-              : "carousel"
-          }
-        >
-          {shownObjects.map((o) => (
-            <div
-              className={small ? "image-container small" : "image-container"}
-              onClick={() => onClickItem(o)}
-            >
-              <img src={o.image} className="carousel-image" />
-            </div>
-          ))}
-        </div>
-        <GrCaretNext
-          className={
-            small ? "carousel-button left small" : "carousel-button left"
-          }
-          size={"10vh"}
-          color="white"
-          onClick={() => handleSlide("left")}
-        />
-        <GrCaretNext
-          className={
-            small ? "carousel-button right small" : "carousel-button right"
-          }
-          size={"10vh"}
-          color="white"
-          onClick={() => handleSlide("right")}
-        />
-      </div>
-      <h3>{currentEdition.text}</h3>
+        {shownObjects.map((o) => (
+          <div
+            className={small ? "image-container small" : "image-container"}
+            onClick={() => {
+              if (shownObjects[1] === o) {
+                handleSlide("left");
+              } else if (shownObjects[2] === o) {
+                onClickItem(o);
+              } else if (shownObjects[3] === o) {
+                handleSlide("right");
+              }
+            }}
+            style={{ cursor: "pointer" }}
+          >
+            <ImageRenderer
+              image={loading ? undefined : o?.logo}
+              placeholder={loading ? undefined : logoFlowerBlack}
+              height={IMAGE_HEIGHT}
+            />
+          </div>
+        ))}
+      </CarouselContainer>
+      <h3 style={{ marginBottom: "-1rem" }}>
+        {loading ? "Loading.." : currentEdition?.name}
+      </h3>
     </>
   );
 }

@@ -7,15 +7,32 @@ import Loading from "../../components/messages/Loading";
 import tokenService from "../../utils/token.service";
 import "./css/Home.css";
 import ScientistHome from "./ScientistHome";
+import { useNavigate } from "react-router";
 
 export default function HomeRouter() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeHackathon, setActiveHackathon] = useState(null);
   const [scientistEdition, setScientistEdition] = useState(null);
+  const [editions, setEditions] = useState([]);
+  const [loadingEditions, setLoadingEditions] = useState(true);
+
   const user = tokenService.getUser();
 
   const { fetcher } = useFetcher(error, setError);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetcher({
+      url: "editions",
+      onSuccess: (data) => {
+        setEditions(data);
+      },
+      onError: () => {
+        setEditions([]);
+      },
+    }).finally(() => setLoadingEditions(false));
+  }, []);
 
   useEffect(() => {
     fetcher({
@@ -47,7 +64,11 @@ export default function HomeRouter() {
 
   return (
     <div>
-      <Carousel mocked={true} />
+      <Carousel
+        allItems={editions}
+        loading={loadingEditions}
+        onClickItem={(o) => navigate(`editions/${o?.id}`)}
+      />
       {activeHackathon ? (
         <ParticipantHome hackathon={activeHackathon} />
       ) : scientistEdition ? (

@@ -66,7 +66,7 @@ export default function Home() {
   const jwt = tokenService.getLocalAccessToken();
   return (
     <>
-      <h1 style={{ marginTop: 0 }}>This is SciArt</h1>
+      <h1>This is SciArt</h1>
       <SciArtProducts fixed={true} />
       <Roles />
       <hr />

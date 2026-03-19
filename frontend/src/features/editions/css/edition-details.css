@@ -21,14 +21,13 @@
 }
 
 .catalog-logo {
-  height: auto;
-  max-width: 20rem;
-  max-height: 20rem;
   object-fit: contain;
 }
 
 .catalog-logo-container {
   cursor: pointer;
+  display: flex;
+  justify-content: center;
 }
 
 .edition-collections-container {

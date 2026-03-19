@@ -7,15 +7,12 @@ export default function ImageRenderer({
   width,
   height,
   reserveSpace = true,
+  placeholder,
 }) {
   const [loaded, setLoaded] = useState(false);
 
-  if (!image) return null;
-
   const bothSpecified = width && height;
   const noneSpecified = !width && !height;
-  const oneSpecified = !bothSpecified && !noneSpecified;
-
   const containerWidth = bothSpecified
     ? width
     : noneSpecified
@@ -27,17 +24,54 @@ export default function ImageRenderer({
       ? "20rem"
       : (height ?? width);
 
+  if (!image) {
+    if (placeholder) {
+      return (
+        <div
+          style={{
+            width: containerWidth,
+            height: containerHeight,
+            minWidth: containerWidth,
+            minHeight: containerHeight,
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={placeholder}
+            style={{ maxWidth: "100%", maxHeight: "100%" }}
+            className={"disable-select" + (className ? ` ${className}` : "")}
+          />
+        </div>
+      );
+    }
+    if (!reserveSpace) return null;
+    return (
+      <div
+        style={{
+          width: containerWidth,
+          height: containerHeight,
+          minWidth: containerWidth,
+          minHeight: containerHeight,
+          flexShrink: 0,
+          backgroundColor: "#f0f0f0",
+        }}
+      />
+    );
+  }
+
   const img = (
     <img
       src={image instanceof File ? URL.createObjectURL(image) : image}
       style={{
         display: "block",
-        maxWidth: noneSpecified ? "20rem" : (width ?? height),
-        maxHeight: noneSpecified ? "20rem" : (height ?? width),
+        maxWidth: width ?? (noneSpecified ? "20rem" : (height ?? "100%")),
+        maxHeight: height ?? (noneSpecified ? "20rem" : (width ?? "100%")),
         ...style,
-        ...(bothSpecified && { width, height }),
       }}
-      className={className}
+      className={"disable-select" + (className ? ` ${className}` : "")}
       referrerPolicy="no-referrer"
       onLoad={() => setLoaded(true)}
       onError={(e) => {

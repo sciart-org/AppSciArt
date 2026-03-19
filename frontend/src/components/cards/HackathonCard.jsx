@@ -5,6 +5,7 @@ import "./Card.css";
 import ImageRenderer from "../ImageRenderer";
 import AdminEditButton from "../buttons/AdminEditButton";
 import { formatReadableDate, parseEnumValue } from "../../utils/commonUtils";
+import logoFlowerBlack from "../../assets/logoFlowerBlack.png";
 
 export default function HackathonCard({ hackathon, hideButton, ...props }) {
   const jwt = tokenService.getLocalAccessToken();
@@ -51,7 +52,7 @@ export default function HackathonCard({ hackathon, hideButton, ...props }) {
 
   return (
     <div className="card" style={{ ...props.style }}>
-      <ImageRenderer image={hackathon?.logo} />
+      <ImageRenderer image={hackathon?.logo} placeholder={logoFlowerBlack} />
       <div>
         <div style={{ width: "100%" }}>
           <h3>When?</h3>

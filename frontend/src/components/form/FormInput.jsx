@@ -31,7 +31,7 @@ const InputComponent = ({
 
   if (type === "image") {
     return (
-      <div style={{ display: "flex", ...style }}>
+      <div style={{ display: "flex", margin: "1rem 0", ...style }}>
         <label className="aster-button image-picker-label">
           {value instanceof File ? "Change file" : "Choose file"}
           <input
@@ -44,7 +44,7 @@ const InputComponent = ({
         </label>
 
         {value && (
-          <ImageRenderer image={value} style={{ width: 150, margin: 10 }} />
+          <ImageRenderer image={value} style={{ width: "20rem", margin: 10 }} />
         )}
       </div>
     );

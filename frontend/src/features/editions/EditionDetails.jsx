@@ -15,7 +15,8 @@ export default function EditionDetails({ edition }) {
         <div className="edition-logo-container">
           <ImageRenderer
             className="edition-logo"
-            image={edition?.logo ?? logoFlowerBlack}
+            image={edition?.logo}
+            placeholder={logoFlowerBlack}
           />
           {edition?.catalogLink && (
             <div style={{ textAlign: "center", marginLeft: "5rem" }}>
@@ -27,7 +28,12 @@ export default function EditionDetails({ edition }) {
                 className="catalog-logo-container"
                 onClick={() => window.open(edition?.catalogLink, "_blank")}
               >
-                <ImageRenderer image={logoCatalog} className="catalog-logo" />
+                <ImageRenderer
+                  image={logoCatalog}
+                  className="catalog-logo"
+                  height={"auto"}
+                  width={"20rem"}
+                />
               </div>
             </div>
           )}
