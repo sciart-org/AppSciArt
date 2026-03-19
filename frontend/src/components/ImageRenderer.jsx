@@ -12,10 +12,31 @@ export default function ImageRenderer({
 
   if (!image) return null;
 
+  const bothSpecified = width && height;
+  const noneSpecified = !width && !height;
+  const oneSpecified = !bothSpecified && !noneSpecified;
+
+  const containerWidth = bothSpecified
+    ? width
+    : noneSpecified
+      ? "20rem"
+      : (width ?? height);
+  const containerHeight = bothSpecified
+    ? height
+    : noneSpecified
+      ? "20rem"
+      : (height ?? width);
+
   const img = (
     <img
       src={image instanceof File ? URL.createObjectURL(image) : image}
-      style={{ maxWidth: "20rem", maxHeight: "20rem", ...style, width, height }}
+      style={{
+        display: "block",
+        maxWidth: noneSpecified ? "20rem" : (width ?? height),
+        maxHeight: noneSpecified ? "20rem" : (height ?? width),
+        ...style,
+        ...(bothSpecified && { width, height }),
+      }}
       className={className}
       referrerPolicy="no-referrer"
       onLoad={() => setLoaded(true)}
@@ -25,18 +46,21 @@ export default function ImageRenderer({
     />
   );
 
-  if (!reserveSpace || loaded) return img;
+  if (!reserveSpace) return img;
 
   return (
     <div
       style={{
-        minWidth: width,
-        minHeight: height,
+        width: containerWidth,
+        height: containerHeight,
+        minWidth: containerWidth,
+        minHeight: containerHeight,
         flexShrink: 0,
         display: "flex",
         alignItems: "center",
-        backgroundColor: "#f0f0f0",
-        animation: "pulse 2s ease-in-out infinite",
+        justifyContent: "center",
+        backgroundColor: loaded ? "transparent" : "#f0f0f0",
+        animation: loaded ? "none" : "pulse 2s ease-in-out infinite",
       }}
     >
       <style>{`

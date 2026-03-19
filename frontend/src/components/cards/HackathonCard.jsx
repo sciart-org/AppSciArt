@@ -51,9 +51,7 @@ export default function HackathonCard({ hackathon, hideButton, ...props }) {
 
   return (
     <div className="card" style={{ ...props.style }}>
-      <div>
-        <ImageRenderer image={hackathon?.logo} />
-      </div>
+      <ImageRenderer image={hackathon?.logo} />
       <div>
         <div style={{ width: "100%" }}>
           <h3>When?</h3>

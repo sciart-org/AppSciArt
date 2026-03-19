@@ -146,7 +146,7 @@ export default function HackathonForm({
           type={"text"}
           value={formData.description}
           multiline={true}
-          collapsible={true}
+          style={isEditable ? {} : { marginBottom: "0.5rem" }}
         />
       </div>
     </EditableFormCreator>

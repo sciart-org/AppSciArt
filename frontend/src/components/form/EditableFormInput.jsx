@@ -61,10 +61,9 @@ export default function EditableFormInput({ style, ...props }) {
         {props.value ? (
           <>
             <h3 style={{ marginBottom: 0 }}>{props.name}</h3>
-            <ImageRenderer
-              image={props.value}
-              style={{ width: 150, margin: 10, marginBottom: "-1rem" }}
-            />
+            <div style={{ margin: 10, marginBottom: 0 }}>
+              <ImageRenderer image={props.value} />
+            </div>
           </>
         ) : (
           <>
