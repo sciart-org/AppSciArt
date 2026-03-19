@@ -48,7 +48,7 @@ export default function EditableFormInput({ style, ...props }) {
     return (
       <StyleWrapper>
         <h3>{props.name}</h3>
-        <p className="long-text" style={{ margin: "0 0 0 1rem" }}>
+        <p className="justified-text" style={{ margin: "0 0 0 1rem" }}>
           {props.value ? "Yes" : "No"}
         </p>
       </StyleWrapper>
@@ -78,7 +78,7 @@ export default function EditableFormInput({ style, ...props }) {
     return (
       <StyleWrapper style={style}>
         <h3>{props.name}</h3>
-        <p className="long-text" style={{ margin: "0 0 0 1rem" }}>
+        <p className="justified-text" style={{ margin: "0 0 0 1rem" }}>
           {props.value ? formatReadableDate(props.value) : "No content yet"}
         </p>
       </StyleWrapper>
@@ -110,7 +110,7 @@ export default function EditableFormInput({ style, ...props }) {
       <div
         className={`${!props.value || showFullContent ? "" : "editor-preview"}`}
       >
-        <p className="long-text" style={{ margin: "0 0 0 1rem" }}>
+        <p className="justified-text" style={{ margin: "0 0 0 1rem" }}>
           {props.value ?? "No content yet"}
         </p>
       </div>

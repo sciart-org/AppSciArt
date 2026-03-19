@@ -38,12 +38,7 @@ export default function EditionDetails({ edition }) {
             </div>
           )}
         </div>
-        <p
-          className="long-text"
-          style={{ width: "70vw", marginInline: "auto" }}
-        >
-          {edition?.longDescription}
-        </p>
+        <p className="long-text">{edition?.longDescription}</p>
       </div>
     );
   };

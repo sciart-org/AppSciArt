@@ -7,7 +7,7 @@ export default function Format() {
     <div className="format-container">
       <h1>ASTER+S Hackathons</h1>
       <h2>Hackathon objectives</h2>
-      <div className="text-container">
+      <div className="long-text">
         <text>
           The hackathon aims to bring together interdisciplinary teams to
           collaboratively create a SciArt artwork that merges scientific
@@ -27,7 +27,7 @@ export default function Format() {
       <h2>Our format</h2>
       <SciArtProducts />
       <h3>1. Pre-hackathon</h3>
-      <div className="text-container">
+      <div className="long-text">
         <text>
           In the pre-hackathon phase, participants pre-register and are
           introduced to the scientific seeds — the foundational scientific ideas
@@ -44,7 +44,7 @@ export default function Format() {
         </text>
       </div>
       <h3>2. During the hackathon</h3>
-      <div className="text-container">
+      <div className="long-text">
         <text>
           The hackathon begins with participants collaborating to create quick
           conceptual maps of the scientific seeds, brainstorming how these ideas
@@ -57,11 +57,12 @@ export default function Format() {
         </text>
         <text>
           Over several days, the teams refine their concepts, guided by mentors,
-          to produce innovative and impactful prototypes ready for presentation{" "}
+          to produce innovative and impactful prototypes ready for
+          presentation{" "}
         </text>
       </div>
       <h3>3. Post-hackathon</h3>
-      <div className="text-container">
+      <div className="long-text">
         <text>
           Following the hackathon, the completed flowers are evaluated, with the
           best prototypes selected for further development and funding to become

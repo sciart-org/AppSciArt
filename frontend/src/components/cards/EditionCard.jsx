@@ -43,7 +43,7 @@ export default function EditionCard(props) {
               </span>
             )}
           </div>
-          <p className="long-text" style={{ margin: "auto" }}>
+          <p className="justified-text" style={{ margin: "auto" }}>
             {edition?.shortDescription}
           </p>
         </div>
