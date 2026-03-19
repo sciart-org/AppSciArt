@@ -22,7 +22,7 @@ export default function HackathonDescription({ hackathon }) {
             </div>
           ))}
         </div>
-        <div style={{ justifyItems: "start", marginLeft: "2rem" }}>
+        <div style={{ justifyItems: "start", marginLeft: "auto" }}>
           <SciArtProducts style={{ flexDirection: "column", height: "100%" }} />
         </div>
       </div>

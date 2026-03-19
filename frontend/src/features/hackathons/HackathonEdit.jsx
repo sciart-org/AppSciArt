@@ -14,6 +14,7 @@ import { HackathonEditContext } from "./components/HackathonEditContext";
 import HackathonCard from "../../components/cards/HackathonCard";
 import SelectorBar from "../../components/buttons/SelectorBar";
 import HackathonForm from "./HackathonForm";
+import HackathonDescription from "./components/HackathonDescription";
 
 export default function HackathonEdit({ hackathon: editingHackathon }) {
   const [hackathon, setHackathon] = useState(editingHackathon);
@@ -68,7 +69,7 @@ export default function HackathonEdit({ hackathon: editingHackathon }) {
         ...body,
         meetLink: body?.type !== "On site" ? body?.meetLink : undefined,
         type: toEnumValue(body?.type),
-        editionName: undefined
+        editionName: undefined,
       },
       onSuccess: (data) => {
         setFormData(getHackathonFormData(data));
@@ -112,7 +113,7 @@ export default function HackathonEdit({ hackathon: editingHackathon }) {
         </SelectorBar>
         <hr />
         {previewItem === 0 ? (
-          <></>
+          <HackathonDescription hackathon={formData} />
         ) : (
           <HackathonCard
             forceNotAdmin={true}

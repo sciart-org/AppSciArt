@@ -90,6 +90,7 @@ export default function JoinHackathon() {
           hackathon={hackathon}
           style={{ border: "none" }}
           hideButton={true}
+          forceNotAdmin={true}
         />
         <HackathonDescription hackathon={hackathon} />
       </div>
