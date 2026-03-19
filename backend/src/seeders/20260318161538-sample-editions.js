@@ -4,7 +4,7 @@
 export async function up (queryInterface, Sequelize) {
   await queryInterface.bulkInsert('editions', [
     {
-      id: Sequelize.literal('gen_random_uuid()'),
+      id: '00000000-0000-0000-0000-000000000000',
       name: 'ASTER+S > ENVIRONMENT & AI',
       year: 2023,
       driveLink: 'https://drive.google.com/drive/folders/1KEs9C9GBUsjnDHFrGai8AZH80eGNVx2j',
@@ -30,7 +30,7 @@ Ultimately, ASTER 2023 establishes the conceptual and methodological foundations
       updatedAt: new Date()
     },
     {
-      id: Sequelize.literal('gen_random_uuid()'),
+      id: '00000000-0000-0000-0000-000000000001',
       name: 'ASTER+S > SEALIFE',
       year: 2024,
       driveLink: 'https://drive.google.com/drive/folders/12riWTse7StDAGs5g44EaZ0V1xBoPNLqM',
@@ -58,7 +58,7 @@ Ultimately, ASTER 2024 positions the ocean as a central subject for both scienti
       updatedAt: new Date()
     },
     {
-      id: Sequelize.literal('gen_random_uuid()'),
+      id: '00000000-0000-0000-0000-000000000002',
       name: 'ASTER+S > NEUROSCIENCE',
       year: 2025,
       driveLink: 'https://drive.google.com/drive/folders/1AdEMkK7YXptYwbLv2vfpDnE7jMSdIma0',
