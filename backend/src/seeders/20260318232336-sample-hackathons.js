@@ -96,7 +96,7 @@ export async function up (queryInterface, Sequelize) {
       startDate: new Date('2025-06-02'),
       endDate: new Date('2025-06-04'),
       type: 'HYBRID',
-      location: 'Linz',
+      location: 'University of Art and Design Linz, Domgasse 1, 4020 Linz, Austria',
       description: 'Private hackathon for the Neuroscience edition organising team.',
       state: 'FINISHED',
       phase: 'TEAM_WORK',
@@ -110,10 +110,14 @@ export async function up (queryInterface, Sequelize) {
 }
 
 export async function down (queryInterface, Sequelize) {
-  /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+  await queryInterface.bulkDelete('hackathons', {
+    id: [
+      '00000001-0000-0000-0000-000000000000',
+      '00000001-0000-0000-0000-000000000002',
+      '00000001-0000-0000-0000-000000000006',
+      '00000001-0000-0000-0000-000000000005',
+      '00000001-0000-0000-0000-000000000004',
+      '00000001-0000-0000-0000-000000000003'
+    ]
+  }, {})
 }

@@ -103,7 +103,8 @@ export async function down (queryInterface, Sequelize) {
     name: [
       'ASTER+S > ENVIRONMENT & AI',
       'ASTER+S > SEALIFE',
-      'ASTER+S > NEUROSCIENCE'
+      'ASTER+S > NEUROSCIENCE',
+      'ASTER+S > GENETICS'
     ]
   }, {})
 }
