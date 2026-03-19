@@ -15,7 +15,7 @@ export default function ImageRenderer({
   const img = (
     <img
       src={image instanceof File ? URL.createObjectURL(image) : image}
-      style={{ ...style, width, height }}
+      style={{ maxWidth: "20rem", maxHeight: "20rem", ...style, width, height }}
       className={className}
       referrerPolicy="no-referrer"
       onLoad={() => setLoaded(true)}
@@ -30,8 +30,8 @@ export default function ImageRenderer({
   return (
     <div
       style={{
-        minWidth: width ?? "20rem",
-        minHeight: height ?? "20rem",
+        minWidth: width,
+        minHeight: height,
         flexShrink: 0,
         display: "flex",
         alignItems: "center",
