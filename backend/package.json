@@ -1,0 +1,62 @@
+{
+  "name": "appsciart-backend",
+  "version": "1.0.0",
+  "description": "AppSciArt backend project",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "sync-db": "node scripts/sync-db.js",
+    "delete-db": "node scripts/delete-db.js",
+    "populate-db": "node scripts/populate-db.js",
+    "create-migration": "npx sequelize-cli migration:generate --name",
+    "migrate": "npx sequelize-cli db:migrate",
+    "create-seed": "npx sequelize-cli seed:generate --name",
+    "seed": "npx sequelize-cli db:seed:all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sciart-org/AppSciArt.git"
+  },
+  "keywords": [
+    "asters",
+    "sciart",
+    "art",
+    "science",
+    "appsciart",
+    "hackathon"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sciart-org/AppSciArt/issues"
+  },
+  "homepage": "https://github.com/sciart-org/AppSciArt#readme",
+  "devDependencies": {
+    "sequelize-cli": "^6.6.3",
+    "standard": "17.1.2"
+  },
+  "eslintConfig": {
+    "extends": "standard"
+  },
+  "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
+    "@oas-tools/auth": "^1.1.0",
+    "@oas-tools/core": "^3.1.0",
+    "@supabase/supabase-js": "^2.49.8",
+    "cors": "2.8.5",
+    "dotenv": "16.5.0",
+    "ejs": "^3.1.10",
+    "express": "5.1.0",
+    "googleapis": "^105.0.0",
+    "jwt-decode": "^4.0.0",
+    "pg": "8.14.1",
+    "pg-hstore": "2.3.4",
+    "resend": "^6.3.0",
+    "sequelize": "6.37.7",
+    "socket.io": "^4.8.1",
+    "zod": "3.24.3"
+  }
+}
