@@ -6,6 +6,7 @@ import { errorThrower } from './errorThrower.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsActive } from '../validators/editionValidators.js'
 import { createDriveHackathon, getEntitiesWithLogo, moveDriveFolder, parseFolderName, updateFolderName, uploadImg } from './driveService.js'
+import { toPlainObject } from './mappers/utils.js'
 
 export async function getClosestHackathon (userId) {
   const hackathon = await Hackathon.findOne({
@@ -95,10 +96,18 @@ export async function createHackathon (userId, body) {
 
 export async function getHackathonDetails (hackathonId, userId) {
   const hackathon = await validateHackathonIsReadable(userId, hackathonId)
-  const hackathonsWithLogo = await getEntitiesWithLogo([hackathon])
+
+  const descriptions = await hackathon.getDescriptions()
+  const descriptionsPlain = descriptions.map(d => toPlainObject(d))
+
+  const hackathonWithDescriptions = {
+    ...toPlainObject(hackathon),
+    descriptions: descriptionsPlain
+  }
+
+  const hackathonsWithLogo = await getEntitiesWithLogo([hackathonWithDescriptions])
   return hackathonsWithLogo[0]
 }
-
 export async function updateHackathon (currentUserId, hackathonId, body) {
   const hackathon = await validateCanEditHackathon(currentUserId, hackathonId)
 

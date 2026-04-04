@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
-import { Hackathon } from './Hackathon.js'
 import { notNull } from './modelUtils.js'
 
 export const HackathonDescription = sequelize.define(
@@ -34,14 +33,14 @@ export const HackathonDescription = sequelize.define(
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: Hackathon,
+        model: 'hackathons',
         key: 'id'
       }
     }
   },
   {
     defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      attributes: { exclude: ['createdAt', 'updatedAt', 'hackathonId', 'id'] },
       order: [['position', 'ASC']]
     }
   }
@@ -50,5 +49,5 @@ export const HackathonDescription = sequelize.define(
 HackathonDescription.associate = (db) => {
   const { Hackathon } = db
   HackathonDescription.belongsTo(Hackathon)
-  Hackathon.hasMany(HackathonDescription, notNull('hackathonId'))
+  Hackathon.hasMany(HackathonDescription, { as: 'descriptions', ...notNull('hackathonId') })
 }

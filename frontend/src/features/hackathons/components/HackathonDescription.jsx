@@ -7,9 +7,9 @@ export default function HackathonDescription({ hackathon }) {
       <h2 style={{ textAlign: "start" }}>What will we do?</h2>
       <div style={{ display: "flex" }}>
         <div>
-          {hackathon?.descriptionSections?.map((section, index) => (
+          {hackathon?.descriptions?.map((section, index) => (
             <div key={index}>
-              <h3 style={{ textAlign: "start" }}>{section.title}</h3>
+              <h3 style={{ textAlign: "start" }}>{section.sectionName}</h3>
               <p
                 style={{
                   whiteSpace: "pre-line",
@@ -22,7 +22,7 @@ export default function HackathonDescription({ hackathon }) {
             </div>
           ))}
         </div>
-        <div style={{ justifyItems: "start", marginLeft: "auto" }}>
+        <div style={{ justifyItems: "start", marginLeft: "2rem" }}>
           <SciArtProducts style={{ flexDirection: "column", height: "100%" }} />
         </div>
       </div>
