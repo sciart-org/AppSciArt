@@ -2,22 +2,27 @@ name: Keep Supabase Alive
 
 on:
   schedule:
-    - cron: '0 0 * * 0,5'
-  workflow_dispatch:
+    - cron: '0 0 * * 0,5' 
+  workflow_dispatch: 
 
 jobs:
   ping:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: npm install
+      - name: Install dependencies
+        working-directory: ./backend 
+        run: npm install
 
-      - run: node scripts/keep-supabase-alive.js
+      - name: Run Keep Alive Script
+        run: node backend/scripts/keep-supabase-alive.js
         env:
           DATABASE_URL_PRODUCTION: ${{ secrets.DATABASE_URL_PRODUCTION }}
