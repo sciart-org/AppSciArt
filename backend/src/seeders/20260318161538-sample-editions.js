@@ -84,7 +84,7 @@ Finally, ASTER 2025 consolidates the ASTER methodology as a robust, flexible fra
       updatedAt: new Date()
     },
     {
-      id: Sequelize.literal('gen_random_uuid()'),
+      id: '00000000-0000-0000-0000-000000000003',
       name: 'ASTER+S > GENETICS',
       year: 2026,
       driveLink: 'https://drive.google.com/drive/folders/1HnYFPeNnBnoqnm2kjPBjqFIbembFqpN7',

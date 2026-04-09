@@ -12,28 +12,28 @@ export async function up (queryInterface, Sequelize) {
 
 Participate in the live webinars with María PTQK, Paula Bruna, and Raquel Ajetes, experts in the field of SciArt. In these webinars, we will present the ASTER+S project and provide an introduction to the eco-SciArt methodology.`,
       position: 0,
-      hackathonId: '00000001-0000-0000-0000-000000000006'
+      hackathonId: '00000001-0000-0000-0000-000000000002'
     },
     {
       id: '00000002-0000-0000-0000-000000000001',
       sectionName: '1st day of hackathon',
       text: 'Meet the participants + Develop a common understanding of the "SciArt Seeds" + Create interdisciplinary teams.',
       position: 1,
-      hackathonId: '00000001-0000-0000-0000-000000000006'
+      hackathonId: '00000001-0000-0000-0000-000000000002'
     },
     {
       id: '00000002-0000-0000-0000-000000000002',
       sectionName: '2nd day of hackathon',
       text: 'Brainstorming to develop the artistic concept and create the SciArt proposal, which we call "SciArt Flowers."',
       position: 2,
-      hackathonId: '00000001-0000-0000-0000-000000000006'
+      hackathonId: '00000001-0000-0000-0000-000000000002'
     },
     {
       id: '00000002-0000-0000-0000-000000000003',
       sectionName: '3rd day of hackathon',
       text: 'Presentación de los proyectos «Flores SciArt» en formato de vídeo (de 3 min de duración).',
       position: 3,
-      hackathonId: '00000001-0000-0000-0000-000000000006'
+      hackathonId: '00000001-0000-0000-0000-000000000002'
     },
     {
       id: '00000002-0000-0000-0000-000000000004',
@@ -44,7 +44,7 @@ The selected "SciArt Flowers" will be part of a collective exhibition that will 
 
 A selection from this exhibition may be displayed during the Ars Electronica Festival in Linz, Austria.`,
       position: 4,
-      hackathonId: '00000001-0000-0000-0000-000000000006'
+      hackathonId: '00000001-0000-0000-0000-000000000002'
     }
   ])
 }

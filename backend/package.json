@@ -14,7 +14,8 @@
     "create-migration": "npx sequelize-cli migration:generate --name",
     "migrate": "npx sequelize-cli db:migrate",
     "create-seed": "npx sequelize-cli seed:generate --name",
-    "seed": "npx sequelize-cli db:seed:all"
+    "seed": "npx sequelize-cli db:seed:all",
+    "unseed": "npx sequelize-cli db:seed:undo:all"
   },
   "repository": {
     "type": "git",

@@ -21,7 +21,7 @@ export async function up (queryInterface, Sequelize) {
       updatedAt: new Date()
     },
     {
-      id: '00000001-0000-0000-0000-000000000002',
+      id: '00000001-0000-0000-0000-000000000001',
       internalName: 'On-site Sealife Sevilla Hackathon',
       isPrivate: false,
       driveLink: 'https://drive.google.com/drive/folders/1vxvwF0-EaarI7wX7BsxE7ySr-97TpYhy',
@@ -39,7 +39,7 @@ export async function up (queryInterface, Sequelize) {
     },
 
     {
-      id: '00000001-0000-0000-0000-000000000006',
+      id: '00000001-0000-0000-0000-000000000002',
       internalName: 'On-site Neuroscience Sevilla Hackathon',
       isPrivate: false,
       driveLink: 'https://drive.google.com/drive/folders/1vd5D6v1f53mY9OT4Q3F7V6Nm9DQjoc6a',
@@ -56,7 +56,7 @@ export async function up (queryInterface, Sequelize) {
       updatedAt: new Date()
     },
     {
-      id: '00000001-0000-0000-0000-000000000005',
+      id: '00000001-0000-0000-0000-000000000003',
       internalName: 'On-site Neuroscience Linz Hackathon',
       isPrivate: false,
       driveLink: 'https://drive.google.com/drive/folders/1E6f3VQk99GZKWW406b5rc4_YUR3yMEqf',
@@ -89,7 +89,7 @@ export async function up (queryInterface, Sequelize) {
       updatedAt: new Date()
     },
     {
-      id: '00000001-0000-0000-0000-000000000003',
+      id: '00000001-0000-0000-0000-000000000005',
       internalName: 'Dreamteam Neuroscience Hackathon',
       isPrivate: true,
       driveLink: 'https://drive.google.com/drive/folders/1J892QahTYDIrQ5P1TLPluyXwfouu-6GJ',
@@ -113,11 +113,11 @@ export async function down (queryInterface, Sequelize) {
   await queryInterface.bulkDelete('hackathons', {
     id: [
       '00000001-0000-0000-0000-000000000000',
+      '00000001-0000-0000-0000-000000000001',
       '00000001-0000-0000-0000-000000000002',
-      '00000001-0000-0000-0000-000000000006',
-      '00000001-0000-0000-0000-000000000005',
+      '00000001-0000-0000-0000-000000000003',
       '00000001-0000-0000-0000-000000000004',
-      '00000001-0000-0000-0000-000000000003'
+      '00000001-0000-0000-0000-000000000005'
     ]
   }, {})
 }
