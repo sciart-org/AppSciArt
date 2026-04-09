@@ -1,7 +1,11 @@
 import AsterButton from "../../../components/buttons/AsterButton";
 import meetSvg from "../../../assets/meet.svg";
+import { HackathonContext } from "../../hackathons/components/HackathonContext";
+import { useContext } from "react";
 
-export default function Meet({ hackathon }) {
+export default function Meet() {
+  const { hackathon } = useContext(HackathonContext);
+
   if (!hackathon.meetLink) {
     return <></>;
   }

@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AsterButton from "../../../components/buttons/AsterButton";
-import { useNavigate, useParams } from "react-router";
 import useFetcher from "../../../utils/useFetcher";
-import Loading from "../../../components/messages/Loading";
 import ParticipantList from "../components/ParticipantList";
 import SeedResources from "../../products/components/SeedResources";
 import Diagram from "../components/diagramming/Diagram";
@@ -11,6 +9,7 @@ import "./phases.css";
 import { DiagramContext } from "../components/diagramming/DiagramContext";
 import CreationProcessHeader from "../../../components/CreationProcessHeader";
 import RenderUrl from "../../../components/RenderUrl";
+import { HackathonContext } from "../components/HackathonContext";
 
 const GroupSeedResources = ({ pdf, seed }) => {
   return (
@@ -21,41 +20,17 @@ const GroupSeedResources = ({ pdf, seed }) => {
   );
 };
 
-export default function CreatedGroups(props) {
+export default function CreatedGroups({ socket }) {
+  const { hackathon, participation } = useContext(HackathonContext);
+  const isPhaseActive = hackathon.phase === "GROUP_WORK";
+
   const [justEntered, setJustEntered] = useState(true);
-  const [participation, setParticipation] = useState(props.participation);
-  const [isPhaseActive, setIsPhaseActive] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
 
   const { fetcher } = useFetcher(error, setError);
-  const navigate = useNavigate();
-  const params = useParams();
-
-  const socket = props.socket;
-
-  useEffect(() => {
-    fetcher({
-      url: `hackathons/${params.hackathonId}`,
-      onSuccess: (data) => {
-        if (!data.isEnrolled) {
-          navigate(`/unauthorized`);
-        }
-        setIsPhaseActive(data?.phase === "GROUP_WORK");
-      },
-    }).finally(() => setLoading(false));
-
-    if (!isPhaseActive || participation) return;
-    fetcher({
-      url: `hackathons/${params.hackathonId}/participants/me`,
-      onSuccess: (data) => {
-        setParticipation(data);
-      },
-    });
-  }, []);
 
   const groupRoom = `${participation?.hackathonId}/group/${participation?.conceptualMap.id}`;
   useEffect(() => {
@@ -70,10 +45,6 @@ export default function CreatedGroups(props) {
 
     socket.emit("join_room", groupRoom);
   }, [participation, socket, isPhaseActive]);
-
-  if (loading) {
-    return <Loading />;
-  }
 
   if (!isPhaseActive) {
     return <h2>This phase is not active</h2>;

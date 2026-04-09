@@ -5,12 +5,15 @@ import Loading from "../../components/messages/Loading";
 import { useNavigate, useParams } from "react-router";
 import useFetcher from "../../utils/useFetcher";
 import HackathonEdit from "./HackathonEdit";
+import HackathonManagement from "./HackathonManagement";
+import { HackathonContext } from "./components/HackathonContext";
 
 export default function HackathonRouter() {
   const isAdmin = tokenService.getIsAdmin();
 
   const [loading, setLoading] = useState(true);
   const [hackathon, setHackathon] = useState(null);
+  const [participation, setParticipation] = useState(null);
   const [error, setError] = useState(null);
 
   const { fetcher } = useFetcher(error, setError);
@@ -30,13 +33,44 @@ export default function HackathonRouter() {
     }).finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    if (!isAdmin) {
+      fetcher({
+        url: `hackathons/${params.hackathonId}/participants/me`,
+        onSuccess: (data) => {
+          setParticipation(data);
+        },
+      });
+    }
+  }, [isAdmin]);
+
   if (loading) {
     return <Loading />;
   }
 
-  if (isAdmin) {
-    return <HackathonEdit hackathon={hackathon} />;
+  if (!hackathon) {
+    return <h2>No hackathon found.</h2>;
   }
 
-  return <ActiveHackathon hackathon={hackathon} />;
+  if (hackathon.state === "FINISHED") {
+    return <h2>This hackathon has finished. Thanks for coming!</h2>;
+  }
+
+  if (!isAdmin) {
+    return (
+      <HackathonContext value={{ hackathon, participation }}>
+        <ActiveHackathon />
+      </HackathonContext>
+    );
+  }
+
+  if (hackathon.state === "CLOSED") {
+    return (
+      <HackathonContext value={{ hackathon }}>
+        <HackathonManagement />
+      </HackathonContext>
+    );
+  }
+
+  return <HackathonEdit hackathon={hackathon} />;
 }

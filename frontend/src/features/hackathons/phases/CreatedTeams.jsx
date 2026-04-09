@@ -1,51 +1,21 @@
-import { useEffect, useState } from "react";
-import useFetcher from "../../../utils/useFetcher";
-import Loading from "../../../components/messages/Loading";
-import { useParams } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import ParticipantList from "../components/ParticipantList";
 import AsterButton from "../../../components/buttons/AsterButton";
 import "./phases.css";
 import SeedResources from "../../products/components/SeedResources";
 import { DiagramGallery } from "../components/diagramming/DiagramGallery";
 import CreationProcessHeader from "../../../components/CreationProcessHeader";
+import { HackathonContext } from "../components/HackathonContext";
 
-export default function CreatedTeams(props) {
+export default function CreatedTeams() {
+  const { hackathon, participation } = useContext(HackathonContext);
+
+  const isPhaseActive = hackathon?.phase === "TEAM_WORK";
+
   const [justEntered, setJustEntered] = useState(true);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isPhaseActive, setIsPhaseActive] = useState(true);
-  const [participation, setParticipation] = useState(props.participation);
   const [showMap, setShowMap] = useState(false);
 
-  const params = useParams();
-
-  const { fetcher } = useFetcher(error, setError);
-
   const seed = participation?.teamFlower?.seed;
-
-  useEffect(() => {
-    fetcher({
-      url: `hackathons/${params.hackathonId}`,
-      onSuccess: (data) => {
-        if (!data.isEnrolled) {
-          navigate(`/unauthorized`);
-        }
-        setIsPhaseActive(data?.phase === "TEAM_WORK");
-      },
-    }).finally(() => setLoading(false));
-
-    if (!isPhaseActive || participation) return;
-    fetcher({
-      url: `hackathons/${params.hackathonId}/participants/me`,
-      onSuccess: (data) => {
-        setParticipation(data);
-      },
-    });
-  }, []);
-
-  if (loading) {
-    return <Loading />;
-  }
 
   if (!isPhaseActive) {
     return <h2>This phase is not active</h2>;

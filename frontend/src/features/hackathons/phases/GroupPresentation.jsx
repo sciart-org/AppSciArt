@@ -11,14 +11,13 @@ import StarRating from "../../../components/buttons/StarRating";
 import "./phases.css";
 import "../../products/collections/css/collections.css";
 import CreatingTeams from "./CreatingTeams";
+import ImageRenderer from "../../../components/ImageRenderer";
+import logoSeedBlack from '../../../assets/logoSeedBlack.png';
 
 const RatingCard = ({ item, setRatingItems }) => {
   return (
     <div>
-      <img
-        src={item.mainImage}
-        style={{ justifySelf: "center", maxHeight: "30vh" }}
-      />
+      <ImageRenderer image={item.mainImage} style={{ justifySelf: "center", maxHeight: "30vh" }} placeholder={logoSeedBlack} />
       <div className="rating-card-content">
         <div
           onClick={() => window.open(`/seeds/${item.id}`, "_blank")}
