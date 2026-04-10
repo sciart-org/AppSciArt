@@ -4,93 +4,100 @@ import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import AdminCreateButton from "../../components/buttons/AdminCreateButton";
 import tokenService from "../../utils/token.service";
+import "./css/hackathons.css";
 
 export default function Hackathons() {
   const [hackathons, setHackathons] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const { fetcher } = useFetcher(error, setError);
 
   const fetchHackathons = async () => {
     const isAdmin = tokenService.getIsAdmin();
-
     await fetcher({
       url: `hackathons${isAdmin ? "" : "?filter=incoming"}`,
-      onSuccess: (data) => {
-        setHackathons(data);
-      },
-    }).finally(() => {
-      setLoading(false);
-    });
+      onSuccess: (data) => setHackathons(data),
+    }).finally(() => setLoading(false));
   };
 
   useEffect(() => {
     fetchHackathons();
   }, []);
 
-  const hackathonsByEdition = hackathons?.reduce(
-    (groupedHackathons, hackathon) => {
-      if (!groupedHackathons[hackathon.editionName]) {
-        groupedHackathons[hackathon.editionName] = [];
-      }
-      groupedHackathons[hackathon.editionName].push(hackathon);
-      return groupedHackathons;
-    },
-    {},
-  );
+  const groupByEdition = (list) =>
+    list?.reduce((groups, hackathon) => {
+      if (!groups[hackathon.editionName]) groups[hackathon.editionName] = [];
+      groups[hackathon.editionName].push(hackathon);
+      return groups;
+    }, {});
 
-  const Header = () => <h1>Next hackathons</h1>;
+  const now = new Date();
+  const hackathonSections = [
+    {
+      title: "Ongoing Hackathons",
+      hackathons: groupByEdition(
+        hackathons.filter(
+          (h) => new Date(h.startDate) <= now && new Date(h.endDate) >= now,
+        ),
+      ),
+    },
+    {
+      title: "Upcoming Hackathons",
+      hackathons: groupByEdition(
+        hackathons.filter((h) => new Date(h.startDate) > now),
+      ),
+    },
+    {
+      title: "Past Hackathons",
+      hackathons: groupByEdition(
+        hackathons.filter((h) => new Date(h.endDate) < now),
+      ),
+    },
+  ];
 
   if (loading) {
     return (
       <>
-        <Header />
+        <h1>Hackathons</h1>
         <Loading />
       </>
     );
   }
 
-  if (hackathons.length === 0) {
+  if (hackathons.length === 0)
     return (
       <>
-        <Header />
+        <h1>Hackathons</h1>
         <AdminCreateButton entity="Hackathon" />
-        <h2 style={{ fontWeight: "normal" }}>No incoming hackthons</h2>
+        <p className="hackathon-empty">No hackathons found.</p>
       </>
     );
-  }
 
   return (
     <div>
-      <Header />
+      <h1>Hackathons</h1>
       <AdminCreateButton entity="Hackathon" />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        {Object.entries(hackathonsByEdition).map(
-          ([editionName, hackathons]) => (
-            <>
-              <h2
-                style={{
-                  textAlign: "start",
-                  justifySelf: "center",
-                  width: "70vw",
-                }}
-              >
-                {editionName.toUpperCase()}
-              </h2>
-              {hackathons.map((h) => (
-                <HackathonCard hackathon={h} style={{ marginBottom: "5vh" }} />
-              ))}
-            </>
-          ),
-        )}
-      </div>
+      {hackathonSections.map(({ title, hackathons }) => (
+        <div key={title} className="hackathon-list-group">
+          <h2>{title}</h2>
+          {Object.keys(hackathons).length === 0 ? (
+            <p className="hackathon-empty">No hackathons found.</p>
+          ) : (
+            Object.entries(hackathons).map(([editionName, hackathonList]) => (
+              <div key={editionName} className="hackathon-edition-group">
+                <h3>{editionName.toUpperCase()}</h3>
+                {hackathonList.map((h) => (
+                  <HackathonCard
+                    key={h.id}
+                    hackathon={h}
+                    style={{ marginBottom: "1rem" }}
+                  />
+                ))}
+              </div>
+            ))
+          )}
+        </div>
+      ))}
     </div>
   );
 }
