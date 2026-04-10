@@ -1,30 +1,23 @@
-import AsterButton from "../../../components/buttons/AsterButton";
 import meetSvg from "../../../assets/meet.svg";
+import AsterButton from "../../../components/buttons/AsterButton";
 import { HackathonContext } from "../../hackathons/components/HackathonContext";
 import { useContext } from "react";
+import "../css/Meet.css";
 
 export default function Meet() {
   const { hackathon } = useContext(HackathonContext);
 
-  if (!hackathon.meetLink) {
-    return <></>;
-  }
-
-  const MeetButton = () => {
-    return (
-      <AsterButton onClick={() => window.open(hackathon.meetLink, "_blank")}>
-        <img
-          src={meetSvg}
-          style={{ width: "15rem", height: "15rem", margin: "auto" }}
-        />
-      </AsterButton>
-    );
-  };
+  if (!hackathon.meetLink) return null;
 
   return (
     <>
-      <h3>Join the meeting here</h3>
-      <MeetButton />
+      <AsterButton
+        className="meet-button"
+        onClick={() => window.open(hackathon.meetLink, "_blank")}
+      >
+        <img src={meetSvg} className="meet-button__icon" alt="Google Meet" />
+        <span>Join with Google Meet</span>
+      </AsterButton>
     </>
   );
 }

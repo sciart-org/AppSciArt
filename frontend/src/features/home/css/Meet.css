@@ -1,0 +1,15 @@
+.meet-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 1.25rem 0.6rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.meet-button__icon {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+}
