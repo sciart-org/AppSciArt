@@ -1,0 +1,33 @@
+.aster-table {
+  width: 70vw;
+  margin-inline: auto;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  font-size: 0.9rem;
+}
+
+.aster-table th,
+.aster-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+}
+
+.aster-table tr:last-child td {
+  border-bottom: none;
+}
+
+.aster-table th {
+  background: #f9f9f9;
+  font-weight: 600;
+}
+
+.table-empty {
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
+}

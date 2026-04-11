@@ -1,13 +1,14 @@
 import { useContext } from "react";
 import useWebSockets from "../../utils/useWebSockets";
 import { HackathonContext } from "./components/HackathonContext";
+import PrepareHackathon from "./adminPhases/PrepareHackathon";
 
 export default function HackathonManagement() {
   const { hackathon } = useContext(HackathonContext);
   const { socket } = useWebSockets(!!hackathon, hackathon.id);
 
   if (hackathon.phase === "PREPARING") {
-    return "Under development";
+    return <PrepareHackathon />;
   } else if (hackathon.phase === "GROUP_CREATION") {
     return "Under development";
   } else if (hackathon.phase === "GROUP_WORK") {
