@@ -1,7 +1,15 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, literal, Op } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { Edition } from './Edition.js'
 import { notNull } from './modelUtils.js'
+
+const publicScope = {
+  attributes: {
+    exclude: ['createdAt', 'updatedAt', 'isPrivate', 'internalName']
+  },
+  where: { isPrivate: false, state: { [Op.ne]: 'PLANNED' } },
+  order: [['startDate', 'ASC']]
+}
 
 export const Hackathon = sequelize.define(
   'hackathons',
@@ -66,16 +74,72 @@ export const Hackathon = sequelize.define(
     }
   },
   {
-    defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    defaultScope: publicScope,
+    scopes: {
+      public: publicScope,
+      admin: {
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        order: [['startDate', 'ASC']]
+      },
+      withEdition: {
+        attributes: {
+          exclude: ['editionId'],
+          include: [
+            [sequelize.col('edition.name'), 'editionName']
+          ]
+        },
+        include: [
+          {
+            model: Edition,
+            attributes: []
+          }
+        ]
+      },
+      withEnrollment: (userId) => ({
+        attributes: {
+          include: [
+            [
+              userId
+                ? literal(`EXISTS (
+                SELECT 1 FROM "participations" AS p
+                WHERE p."hackathonId" = "hackathons"."id"
+                AND p."userProfileId" = '${userId}'
+              )`)
+                : literal('false'),
+              'isEnrolled'
+            ]
+          ]
+        }
+      })
     }
   }
 )
 
 Hackathon.associate = (db) => {
-  const { Edition, Seed, HackathonSeeds } = db
+  const { Edition, Seed, HackathonSeeds, Participation } = db
   Hackathon.belongsTo(Edition)
   Edition.hasMany(Hackathon, notNull('editionId'))
 
   Hackathon.belongsToMany(Seed, { through: HackathonSeeds })
+
+  Hackathon.addScope('withAllParticipations', {
+    include: [
+      {
+        model: Participation
+      }
+    ]
+  })
+
+  Hackathon.addScope('withUserParticipation', (userId) => ({
+    include: [
+      {
+        model: Participation,
+        attributes: [],
+        required: true,
+        where: { userProfileId: userId }
+      }
+    ]
+  }))
 }

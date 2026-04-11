@@ -1,39 +1,20 @@
-import { Op } from 'sequelize'
-import { Hackathon } from '../models/Hackathon.js'
 import { validateCanEditHackathon, validateHackathonIsReadable, validateHackathonNameUnique } from '../validators/hackathonValidators.js'
-import { combineIncludes, includeEditionName, includeIsEnrolled, includeMyHackathons } from './includes/hackathonIncludes.js'
 import { errorThrower } from './errorThrower.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsActive } from '../validators/editionValidators.js'
 import { createDriveHackathon, getEntitiesWithLogo, moveDriveFolder, parseFolderName, updateFolderName, uploadImg } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
+import * as HackathonRepository from '../repositories/hackathonsRepository.js'
 
 export async function getClosestHackathon (userId) {
-  const hackathon = await Hackathon.findOne({
-    where: {
-      state: { [Op.ne]: 'PLANNED' },
-      startDate: {
-        [Op.gte]: new Date()
-      }
-    },
-    order: [['startDate', 'ASC']],
-    ...combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
-  })
+  const hackathon = await HackathonRepository.getClosestHackathon(userId)
 
-  const hackathonsWithLogo = await getEntitiesWithLogo([hackathon])
-  return hackathonsWithLogo[0]
+  const [hackathonWithLogo] = await getEntitiesWithLogo([hackathon])
+  return hackathonWithLogo
 }
 
 export async function getIncomingHackathons (userId) {
-  const hackathons = await Hackathon.findAll({
-    where: {
-      state: { [Op.ne]: 'PLANNED' },
-      startDate: {
-        [Op.gte]: new Date()
-      }
-    },
-    ...combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
-  })
+  const hackathons = await HackathonRepository.getIncomingHackathons(userId)
 
   const hackathonsWithLogo = await getEntitiesWithLogo(hackathons)
   return hackathonsWithLogo
@@ -44,35 +25,16 @@ export async function getActiveHackathon (userId) {
     return null
   }
 
-  const now = new Date()
+  const hackathon = await HackathonRepository.getActiveHackathon(userId, await checkIsStaff(userId))
 
-  const hackathon = await Hackathon.findOne({
-    subQuery: false,
-    ...combineIncludes([includeEditionName(), includeMyHackathons(userId)]),
-    where: {
-      startDate: { [Op.lte]: now },
-      endDate: { [Op.gte]: now }
-    }
-  })
-
-  const hackathonsWithLogo = await getEntitiesWithLogo([hackathon])
-  return hackathonsWithLogo[0]
+  const [hackathonWithLogo] = await getEntitiesWithLogo([hackathon])
+  return hackathonWithLogo
 }
 
 export async function getHackathons (userId) {
-  const showAdminHackathons = await checkIsStaff(userId)
+  const isAdmin = await checkIsStaff(userId)
 
-  const whereClause = {}
-
-  if (!showAdminHackathons) {
-    whereClause.state = { [Op.ne]: 'PLANNED' }
-    whereClause.where = { isPrivate: false }
-  }
-
-  const hackathons = await Hackathon.findAll({
-    where: whereClause,
-    ...combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
-  })
+  const hackathons = await HackathonRepository.getHackathons(userId, isAdmin)
 
   const hackathonsWithLogo = await getEntitiesWithLogo(hackathons)
   return hackathonsWithLogo
@@ -87,7 +49,7 @@ export async function createHackathon (userId, body) {
     errorThrower(!meetLink, 'A meet link is needed for online or hybrid hackathons', 400)
   }
   const driveLink = await createDriveHackathon(edition?.driveLink, internalName, logo)
-  const createdHackathon = await Hackathon.create({
+  const createdHackathon = await HackathonRepository.createHackathon({
     startDate, endDate, type, location, description, editionId, internalName, isPrivate, driveLink, meetLink
   })
   const hackathonsWithLogo = await getEntitiesWithLogo([createdHackathon])

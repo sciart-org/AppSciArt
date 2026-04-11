@@ -1,18 +1,15 @@
-import { Hackathon } from '../models/Hackathon.js'
 import { errorThrower } from '../services/errorThrower.js'
-import { combineIncludes, includeEditionName, includeIsEnrolled } from '../services/includes/hackathonIncludes.js'
 import { checkExists } from './generalValidators.js'
 import { checkIsStaff } from './userValidators.js'
+import * as HackathonRepository from '../repositories/hackathonsRepository.js'
+import { Op } from 'sequelize'
 
 const validateIsVisibleOrStaff = async (userId, hackathon) => {
   return errorThrower(hackathon.state === 'PLANNED' && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this hackathon', 401)
 }
 
 const validateHackathonExists = async (userId, hackathonId) => {
-  const hackathon = await Hackathon.findByPk(
-    hackathonId,
-    combineIncludes([includeEditionName(), includeIsEnrolled(userId)])
-  )
+  const hackathon = await HackathonRepository.getHackathonById(userId, hackathonId, await checkIsStaff(userId))
   errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
   return hackathon
 }
@@ -36,8 +33,12 @@ const validateHackathonIsOpen = async (userId, hackathonId) => {
 }
 
 const validateHackathonNameUnique = async (internalName, editingHackathonId = null) => {
-  const alreadyExists = await Hackathon.findOne({ where: { internalName }, attributes: ['id'] })
-  errorThrower(alreadyExists && alreadyExists.id !== editingHackathonId, `Hackathon with name '${internalName}' already exists`, 409)
+  const count = await HackathonRepository.countExistingHackathonsWithAttributes({
+    internalName,
+    ...(editingHackathonId && { id: { [Op.ne]: editingHackathonId } })
+  })
+
+  errorThrower(count > 0, `Hackathon with name '${internalName}' already exists`, 409)
 }
 
 export { validateHackathonIsReadable, validateHackathonIsOpen, validateHackathonNameUnique, validateCanEditHackathon }
