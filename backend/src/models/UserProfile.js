@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
-import { Seed } from './Seed.js'
 
 export const UserProfile = sequelize.define(
   'user_profiles',
@@ -69,7 +68,7 @@ export const UserProfile = sequelize.define(
 )
 
 UserProfile.associate = (db) => {
-  const { Edition, UserProfile, SeedLikes, SeedScientists, ScientistEditions } = db
+  const { Edition, UserProfile, SeedLikes, SeedScientists, ScientistEditions, Seed } = db
   UserProfile.belongsToMany(Seed, {
     through: SeedLikes,
     as: 'LikedSeeds'

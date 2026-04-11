@@ -34,6 +34,11 @@ export const Participation = sequelize.define(
       allowNull: false,
       defaultValue: false
     },
+    hasConfirmedAssistance: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     groupId: {
       type: DataTypes.UUID,
       references: {

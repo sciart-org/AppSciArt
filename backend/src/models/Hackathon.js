@@ -118,7 +118,7 @@ export const Hackathon = sequelize.define(
 )
 
 Hackathon.associate = (db) => {
-  const { Edition, Seed, HackathonSeeds, Participation } = db
+  const { Edition, Seed, HackathonSeeds, Participation, UserProfile } = db
   Hackathon.belongsTo(Edition)
   Edition.hasMany(Hackathon, notNull('editionId'))
 
@@ -127,7 +127,11 @@ Hackathon.associate = (db) => {
   Hackathon.addScope('withAllParticipations', {
     include: [
       {
-        model: Participation
+        model: Participation,
+        include: [{
+          model: UserProfile,
+          attributes: ['id', 'name', 'surname', 'email']
+        }]
       }
     ]
   })
