@@ -3,6 +3,7 @@ import { checkExists } from './generalValidators.js'
 import { checkIsStaff } from './userValidators.js'
 import * as HackathonRepository from '../repositories/hackathonsRepository.js'
 import { Op } from 'sequelize'
+import { Participation } from '../models/Participation.js'
 
 const validateIsVisibleOrStaff = async (userId, hackathon) => {
   return errorThrower(hackathon.state === 'PLANNED' && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this hackathon', 401)
@@ -41,4 +42,16 @@ const validateHackathonNameUnique = async (internalName, editingHackathonId = nu
   errorThrower(count > 0, `Hackathon with name '${internalName}' already exists`, 409)
 }
 
-export { validateHackathonIsReadable, validateHackathonIsOpen, validateHackathonNameUnique, validateCanEditHackathon }
+const validateParticipantExists = async (userId, hackathonId) => {
+  const participation = await Participation.findOne({
+    attributes: ['id'],
+    where: {
+      userProfileId: userId,
+      hackathonId
+    }
+  })
+  errorThrower(!checkExists(participation), 'Participation not found.', 404)
+  return participation.id
+}
+
+export { validateHackathonIsReadable, validateHackathonIsOpen, validateHackathonNameUnique, validateCanEditHackathon, validateParticipantExists }

@@ -1,47 +1,66 @@
+import { ConceptualMap } from '../models/ConceptualMap.js'
+import { Flower } from '../models/Flower.js'
+import { Fruit } from '../models/Fruit.js'
+import { Hackathon } from '../models/Hackathon.js'
 import { Seed } from '../models/Seed.js'
-import { UserProfile } from '../models/UserProfile.js'
 import { errorThrower } from '../services/errorThrower.js'
-import { checkIsInspiringScientist, checkIsStaff } from './userValidators.js'
+import { checkExists } from './generalValidators.js'
+import { checkIsStaff } from './userValidators.js'
 
 const validateIsPublicOrStaff = async (userId, product) => {
   return errorThrower(product.state !== 'PUBLISHED' && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this resource', 403)
 }
 
-const checkSeedIsFromScientist = async (seedId, userId) => {
-  if (!userId || !seedId) return false
-  const count = await Seed.count({
-    where: {
-      id: seedId
-    },
+const hackathonInclude = (hackathonId) => ({
+  model: Hackathon,
+  required: true,
+  attributes: [],
+  where: { id: hackathonId },
+  through: { attributes: [] }
+})
+
+const seedWithHackathonInclude = (hackathonId) => ({
+  model: Seed,
+  required: true,
+  attributes: [],
+  include: [hackathonInclude(hackathonId)]
+})
+
+export const validateConceptualMapIsFromHackathon = async (conceptualMapId, hackathonId) => {
+  const conceptualMap = await ConceptualMap.findOne({
+    where: { id: conceptualMapId },
+    attributes: ['id'],
+    limit: 1,
+    include: [seedWithHackathonInclude(hackathonId)]
+  })
+  errorThrower(!checkExists(conceptualMap), 'This conceptual map does not belong to the current hackathon', 403)
+}
+
+export const validateFlowerIsFromHackathon = async (flowerId, hackathonId) => {
+  const flower = await Flower.findOne({
+    where: { id: flowerId },
+    attributes: ['id'],
+    limit: 1,
+    include: [seedWithHackathonInclude(hackathonId)]
+  })
+  errorThrower(!checkExists(flower), 'This flower does not belong to the current hackathon', 403)
+}
+
+export const validateFruitIsFromHackathon = async (fruitId, hackathonId) => {
+  const fruit = await Fruit.findOne({
+    where: { id: fruitId },
+    attributes: ['id'],
+    limit: 1,
     include: [
       {
-        model: UserProfile,
-        where: { id: userId },
+        model: Flower,
+        required: true,
         attributes: [],
-        required: true
+        include: [seedWithHackathonInclude(hackathonId)]
       }
     ]
   })
-  return (count > 0)
+  errorThrower(!checkExists(fruit), 'This fruit does not belong to the current hackathon', 403)
 }
 
-const validateCanGetSeed = async (userId, seed) => {
-  errorThrower(!userId && seed.state !== 'PUBLISHED', 'Authentication required', 401)
-
-  const errorMessage = 'You cannot access this seed'
-  const isStaff = await checkIsStaff(userId)
-  const isSeedOwner = await checkSeedIsFromScientist(seed?.id, userId)
-
-  if (seed.state === 'IN_REVIEW') {
-    errorThrower(!isStaff, errorMessage, 403)
-  } else if (seed.state !== 'PUBLISHED') {
-    const isScientist = await checkIsInspiringScientist(userId)
-    errorThrower(!(isScientist || isStaff) && !isSeedOwner, errorMessage, 403)
-  }
-
-  if (!(isStaff || isSeedOwner)) {
-    seed.template = undefined
-  }
-}
-
-export { validateIsPublicOrStaff, validateCanGetSeed }
+export { validateIsPublicOrStaff }

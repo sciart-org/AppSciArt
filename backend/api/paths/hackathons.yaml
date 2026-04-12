@@ -255,6 +255,11 @@ participantsByUser:
         schema:
           type: string
           format: uuid
+      - name: broadcast
+        in: query
+        required: false
+        schema:
+          type: boolean
     requestBody:
       required: true
       content:

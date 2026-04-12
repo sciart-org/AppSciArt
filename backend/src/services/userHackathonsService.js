@@ -1,6 +1,9 @@
 import { Participation } from '../models/Participation.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { checkExists } from '../validators/generalValidators.js'
+import { validateParticipantExists } from '../validators/hackathonValidators.js'
+import { validateConceptualMapIsFromHackathon, validateFlowerIsFromHackathon, validateFruitIsFromHackathon } from '../validators/productValidators.js'
+import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { includeParticipationItems, searchParticipantsOf } from './includes/participationIncludes.js'
 import { mapHackathonParticipation } from './mappers/hackathonMapper.js'
@@ -65,21 +68,13 @@ export const getMembers = async (participation) => {
   }
 }
 
-export async function getParticipation (userId, hackathonId) {
-  const user = await UserProfile.findByPk(userId)
-  errorThrower(!checkExists(user), 'User not found.', 404)
-
-  const participation = await Participation.findOne({
+async function getParticipationById (participationId) {
+  const participation = await Participation.findByPk(participationId, {
     attributes: {
       exclude: ['interests', 'roles', 'userProfileId']
     },
-    where: {
-      userProfileId: userId,
-      hackathonId
-    },
     include: includeParticipationItems()
   })
-  errorThrower(!checkExists(participation), 'Participation not found.', 404)
 
   const members = await getMembers(participation)
 
@@ -87,4 +82,38 @@ export async function getParticipation (userId, hackathonId) {
     ...participation.toJSON(),
     ...members
   })
+}
+
+export async function getParticipation (userId, hackathonId) {
+  const user = await UserProfile.findByPk(userId)
+  errorThrower(!checkExists(user), 'User not found.', 404)
+
+  const participationId = await validateParticipantExists(userId, hackathonId)
+  return await getParticipationById(participationId)
+}
+
+export async function updateParticipation (currentUserId, userId, hackathonId, body) {
+  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot edit participations', 403)
+  const participationId = await validateParticipantExists(userId, hackathonId)
+
+  const { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId } = body
+  const participationBody = { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId }
+
+  if (groupId) {
+    await validateConceptualMapIsFromHackathon(groupId, hackathonId)
+  }
+
+  if (teamId) {
+    await validateFlowerIsFromHackathon(teamId, hackathonId)
+  }
+
+  if (fruitId) {
+    await validateFruitIsFromHackathon(fruitId, hackathonId)
+  }
+
+  if (Object.values(participationBody).some(v => v !== undefined)) {
+    await Participation.update(participationBody, { where: { id: participationId } })
+  }
+
+  return await getParticipationById(participationId)
 }

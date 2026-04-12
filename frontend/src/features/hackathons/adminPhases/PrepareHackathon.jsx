@@ -15,11 +15,6 @@ export default function PrepareHackathon() {
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [meetLink, setMeetLink] = useState(hackathon.meetLink ?? "");
-  const [confirmed, setConfirmed] = useState(() =>
-    Object.fromEntries(
-      hackathon.participations.map((p) => [p.id, p.hasConfirmedAssistance]),
-    ),
-  );
 
   useEffect(() => {
     if (meetLink === hackathon.meetLink) return;
@@ -43,8 +38,20 @@ export default function PrepareHackathon() {
     });
   };
 
-  const handleToggleConfirmed = (participationId) => {
-    // TODO
+  const handleToggleConfirmed = (participant) => {
+    fetcher({
+      url: `hackathons/${hackathon.id}/participants/${participant.user_profile.id}?broadcast=true`,
+      method: "PUT",
+      body: { hasConfirmedAssistance: !participant.hasConfirmedAssistance },
+      onSuccess: (updatedParticipation) => {
+        setHackathon((prev) => ({
+          ...prev,
+          participations: prev.participations.map((p) =>
+            p.id === updatedParticipation.id ? updatedParticipation : p,
+          ),
+        }));
+      },
+    });
   };
 
   const handleCreateGroups = () => {
@@ -65,8 +72,8 @@ export default function PrepareHackathon() {
       render: (p) => (
         <input
           type="checkbox"
-          checked={confirmed[p.id] ?? false}
-          onChange={() => handleToggleConfirmed(p.id)}
+          checked={p.hasConfirmedAssistance}
+          onChange={() => handleToggleConfirmed(p)}
         />
       ),
     },
