@@ -1,0 +1,206 @@
+editions:
+  x-router-controller: editionsController
+  get:
+    security: [{}]
+    tags: [Editions]
+    summary: Get editions
+    operationId: getEditions
+    parameters:
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+    responses:
+      "200":
+        description: A list of editions
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/edition.yaml#/EditionList"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  post:
+    tags: [Editions]
+    summary: Create an edition
+    operationId: createEdition
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/edition.yaml#/EditionDetails"
+    responses:
+      "201":
+        description: Edition created
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/edition.yaml#/EditionDetails"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+
+editionById:
+  x-router-controller: editionsController
+  get:
+    security: [{}]
+    tags: [Editions]
+    summary: Get details of an edition
+    operationId: getEditionDetails
+    parameters:
+      - name: editionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Edition details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/edition.yaml#/EditionDetails"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  put:
+    tags: [Editions]
+    summary: Update an edition
+    operationId: updateEdition
+    parameters:
+      - name: editionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/edition.yaml#/EditionDetails"
+    responses:
+      "200":
+        description: Edition updated
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/edition.yaml#/EditionDetails"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  delete:
+    tags: [Editions]
+    summary: Delete an edition
+    operationId: deleteEdition
+    parameters:
+      - name: editionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "204":
+        description: Edition deleted
+
+editionAnnounce:
+  x-router-controller: editionsController
+  post:
+    tags: [Editions]
+    summary: Announce a (planned) edition
+    operationId: announceEdition
+    parameters:
+      - name: editionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Edition announced
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/edition.yaml#/EditionDetails"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+
+editionPublish:
+  x-router-controller: editionsController
+  patch:
+    tags: [Editions]
+    summary: Publish an edition
+    operationId: publishEdition
+    parameters:
+      - name: editionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Edition published
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/edition.yaml#/EditionDetails"
+
+editionMethodology:
+  x-router-controller: editionsController
+  get:
+    tags: [Editions]
+    summary: Get methodology format of an edition
+    operationId: getEditionMethodology
+    parameters:
+      - name: editionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Edition methodology
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/edition.yaml#/Methodology"
+
+editionScientists:
+  x-router-controller: editionsController
+  post:
+    tags: [Editions]
+    summary: Invite scientist to edition
+    operationId: inviteScientistToEdition
+    parameters:
+      - name: editionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+                nullable: false
+    responses:
+      "200":
+        description: Invitation sent

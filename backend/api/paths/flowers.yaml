@@ -1,0 +1,125 @@
+flowers:
+  x-router-controller: flowersController
+  get:
+    security: [{}]
+    tags: [SciArt flowers]
+    summary: Get flowers
+    operationId: getFlowersByEdition
+    parameters:
+      - name: editionId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: List of flowers
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/flower.yaml#/FlowerList"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  post:
+    tags: [SciArt flowers]
+    summary: Create a new flower
+    operationId: createFlower
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/flower.yaml#/FlowerDetails"
+    responses:
+      "201":
+        description: Flower created
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/flower.yaml#/FlowerDetails"
+
+flowerById:
+  x-router-controller: flowersController
+  get:
+    security: [{}]
+    tags: [SciArt flowers]
+    summary: Get flower details
+    operationId: getFlowerDetails
+    parameters:
+      - name: flowerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Flower details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/flower.yaml#/FlowerDetails"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  put:
+    tags: [SciArt flowers]
+    summary: Update a flower
+    operationId: updateFlower
+    parameters:
+      - name: flowerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/flower.yaml#/FlowerDetails"
+    responses:
+      "200":
+        description: Flower updated
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/flower.yaml#/FlowerDetails"
+  delete:
+    tags: [SciArt flowers]
+    summary: Delete a flower
+    operationId: deleteFlower
+    parameters:
+      - name: flowerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "204":
+        description: Flower deleted
+
+flowerPublish:
+  x-router-controller: flowersController
+  patch:
+    tags: [SciArt flowers]
+    summary: Publish a flower
+    operationId: publishFlower
+    parameters:
+      - name: flowerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Flower published
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/flower.yaml#/FlowerDetails"

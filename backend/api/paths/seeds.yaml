@@ -1,0 +1,151 @@
+seeds:
+  x-router-controller: seedsController
+  get:
+    security: [{}]
+    tags: [SciArt seeds]
+    summary: Get seeds
+    operationId: getSeeds
+    parameters:
+      - name: editionId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: hackathonId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: List of seeds
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seed.yaml#/SeedList"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  post:
+    tags: [SciArt seeds]
+    summary: Create a new seed
+    operationId: createSeed
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+    responses:
+      "201":
+        description: Seed created
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seed.yaml#/SeedDetails"
+
+seedById:
+  x-router-controller: seedsController
+  get:
+    security: [{}]
+    tags: [SciArt seeds]
+    summary: Get seed details
+    operationId: getSeedDetails
+    parameters:
+      - name: seedId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Seed details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seed.yaml#/SeedDetails"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  put:
+    tags: [SciArt seeds]
+    summary: Update a seed
+    operationId: updateSeed
+    parameters:
+      - name: seedId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/seed.yaml#/SeedDetails"
+    responses:
+      "200":
+        description: Seed updated
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seed.yaml#/SeedDetails"
+  delete:
+    tags: [SciArt seeds]
+    summary: Delete a seed
+    operationId: deleteSeed
+    parameters:
+      - name: seedId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "204":
+        description: Seed deleted
+
+seedPublish:
+  x-router-controller: seedsController
+  patch:
+    tags: [SciArt seeds]
+    summary: Publish a seed
+    operationId: publishSeed
+    parameters:
+      - name: seedId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Seed published
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seed.yaml#/SeedDetails"
+
+seedConceptualMaps:
+  x-router-controller: seedsController
+  get:
+    security: [{}]
+    tags: [SciArt seeds]
+    summary: Get conceptual map list of a seed
+    operationId: getSeedConceptualMapsIds
+    parameters:
+      - name: seedId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Seed conceptual maps
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"

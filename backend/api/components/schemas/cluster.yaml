@@ -1,0 +1,11 @@
+Cluster:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+
+ClusterList:
+  type: array
+  items:
+    $ref: "#/Cluster"

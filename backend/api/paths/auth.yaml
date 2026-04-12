@@ -1,0 +1,95 @@
+login:
+  x-router-controller: authController
+  post:
+    security: [{}]
+    tags: [Auth]
+    summary: Login
+    operationId: login
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/auth.yaml#/SignInRequest"
+    responses:
+      "200":
+        description: Login successful
+      default:
+        description: Unexpected error
+
+register:
+  x-router-controller: authController
+  get:
+    security: [{}]
+    tags: [Auth]
+    summary: Register a new user (using provider)
+    operationId: registerProvider
+    parameters:
+      - name: provider
+        in: query
+        required: true
+        schema:
+          type: string
+          enum: [google]
+    responses:
+      "201":
+        description: User registered
+      default:
+        description: Unexpected error
+  post:
+    security: [{}]
+    tags: [Auth]
+    summary: Register a new user
+    operationId: register
+    parameters:
+      - name: method
+        in: query
+        required: true
+        schema:
+          type: string
+          enum: [direct, quick]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            anyOf:
+              - $ref: "../components/schemas/auth.yaml#/SignUpRequest"
+              - $ref: "../components/schemas/auth.yaml#/QuickSignUpRequest"
+    responses:
+      "201":
+        description: User registered
+      default:
+        description: Unexpected error
+
+registerComplete:
+  x-router-controller: authController
+  post:
+    security: [{}]
+    tags: [Auth]
+    summary: Complete registration
+    operationId: completeRegistration
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/auth.yaml#/CompleteSignUpRequest"
+    responses:
+      "201":
+        description: Registration completed successfully
+      default:
+        description: Unexpected error
+
+earlySignup:
+  x-router-controller: authController
+  get:
+    security: [{}]
+    tags: [Auth]
+    summary: Get pre-registration details
+    operationId: getEarlySignup
+    responses:
+      "200":
+        description: Pre-registration details
+      default:
+        description: Unexpected error

@@ -1,0 +1,698 @@
+hackathons:
+  x-router-controller: hackathonsController
+  get:
+    security: [{}]
+    tags: [Hackathons]
+    summary: Get hackathons
+    operationId: getHackathons
+    parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [closest, incoming, previous, active]
+    responses:
+      "200":
+        description: List of hackathons
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - $ref: "../components/schemas/hackathon.yaml#/HackathonList"
+                - $ref: "../components/schemas/hackathon.yaml#/Hackathon"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  post:
+    tags: [Hackathons]
+    summary: Create a new hackathon
+    operationId: createHackathon
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/hackathon.yaml#/Hackathon"
+    responses:
+      "201":
+        description: Hackathon created
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/hackathon.yaml#/Hackathon"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+
+hackathonById:
+  x-router-controller: hackathonsController
+  get:
+    tags: [Hackathons]
+    summary: Get details of a hackathon
+    operationId: getHackathonDetails
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: view
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [full]
+    responses:
+      "200":
+        description: Hackathon details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/hackathon.yaml#/Hackathon"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  put:
+    tags: [Hackathons]
+    summary: Update a hackathon
+    operationId: updateHackathon
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: broadcast
+        in: query
+        required: false
+        schema:
+          type: boolean
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/hackathon.yaml#/Hackathon"
+    responses:
+      "200":
+        description: Hackathon updated
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/hackathon.yaml#/Hackathon"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  delete:
+    tags: [Hackathons]
+    summary: Delete a hackathon
+    operationId: deleteHackathon
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "204":
+        description: Hackathon deleted
+
+hackathonPublish:
+  x-router-controller: hackathonsController
+  patch:
+    tags: [Hackathons]
+    summary: Publish a hackathon
+    operationId: publishHackathon
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Hackathon published
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/hackathon.yaml#/Hackathon"
+
+hackathonUsers:
+  x-router-controller: hackathonsController
+  get:
+    tags: [Hackathons]
+    summary: Get users of a hackathon
+    operationId: getHackathonUsers
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: List of users
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/user.yaml#/UserList"
+
+participantsMe:
+  x-router-controller: userHackathonsController
+  get:
+    tags: [User Hackathons]
+    summary: Get current user's participation in a hackathon
+    operationId: getMyHackathonParticipation
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Participation details
+      "404":
+        description: Resource not found
+      default:
+        description: Unexpected error
+  post:
+    tags: [User Hackathons]
+    summary: Join the current user to a hackathon
+    operationId: joinMeHackathon
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/hackathon.yaml#/HackathonJoinRequest"
+    responses:
+      "201":
+        description: Participation created
+      "404":
+        description: Resource not found
+      default:
+        description: Unexpected error
+
+participantsByUser:
+  x-router-controller: userHackathonsController
+  post:
+    tags: [User Hackathons]
+    summary: Join a user to a hackathon
+    operationId: joinHackathon
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/hackathon.yaml#/HackathonJoinRequest"
+    responses:
+      "201":
+        description: Participation created
+  put:
+    tags: [User Hackathons]
+    summary: Update a participation
+    operationId: updateParticipation
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/hackathon.yaml#/ParticipationPut"
+    responses:
+      "200":
+        description: Participation updated
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+
+hackathonClusters:
+  x-router-controller: clustersController
+  get:
+    tags: [Clusters]
+    summary: Get clusters of a hackathon
+    operationId: getHackathonClusters
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: List of clusters
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/cluster.yaml#/ClusterList"
+  post:
+    tags: [Clusters]
+    summary: Create a new cluster
+    operationId: createCluster
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "201":
+        description: Cluster created
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/cluster.yaml#/Cluster"
+
+hackathonClusterByNumber:
+  x-router-controller: clustersController
+  get:
+    tags: [Clusters]
+    summary: Get details of a cluster
+    operationId: getClusterDetails
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+    responses:
+      "200":
+        description: Cluster details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/cluster.yaml#/Cluster"
+  delete:
+    tags: [Clusters]
+    summary: Delete a cluster
+    operationId: deleteCluster
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+    responses:
+      "204":
+        description: Cluster deleted
+
+exploringGroups:
+  x-router-controller: groupsAndTeamsController
+  get:
+    tags: [Groups & Teams]
+    summary: Get exploring groups of a cluster
+    operationId: getClusterExploringGroups
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+    responses:
+      "200":
+        description: List of exploring groups
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/group.yaml#/GroupList"
+  post:
+    tags: [Groups & Teams]
+    summary: Create a new exploring group
+    operationId: createExploringGroup
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+    responses:
+      "201":
+        description: Exploring group created
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/group.yaml#/GroupDetails"
+
+exploringGroupByNumber:
+  x-router-controller: groupsAndTeamsController
+  get:
+    tags: [Groups & Teams]
+    summary: Get details of an exploring group
+    operationId: getExploringGroupDetails
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+      - name: groupNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    responses:
+      "200":
+        description: Exploring group details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/group.yaml#/GroupDetails"
+  put:
+    tags: [Groups & Teams]
+    summary: Update an exploring group
+    operationId: updateExploringGroup
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+      - name: groupNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/group.yaml#/GroupDetails"
+    responses:
+      "200":
+        description: Exploring group updated
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/group.yaml#/GroupDetails"
+  delete:
+    tags: [Groups & Teams]
+    summary: Delete an exploring group
+    operationId: deleteExploringGroup
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+      - name: groupNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    responses:
+      "204":
+        description: Exploring group deleted
+
+coCreationTeams:
+  x-router-controller: groupsAndTeamsController
+  get:
+    tags: [Groups & Teams]
+    summary: Get co-creation teams of a cluster
+    operationId: getClusterCoCreationTeams
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+    responses:
+      "200":
+        description: List of co-creation teams
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/group.yaml#/TeamList"
+  post:
+    tags: [Groups & Teams]
+    summary: Create a new co-creation team
+    operationId: createCoCreationTeam
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+    responses:
+      "201":
+        description: Co-creation team created
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/group.yaml#/TeamDetails"
+
+coCreationTeamByNumber:
+  x-router-controller: groupsAndTeamsController
+  get:
+    tags: [Groups & Teams]
+    summary: Get details of a co-creation team
+    operationId: getCoCreationTeamDetails
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+      - name: teamNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    responses:
+      "200":
+        description: Co-creation team details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/group.yaml#/TeamDetails"
+  put:
+    tags: [Groups & Teams]
+    summary: Update a co-creation team
+    operationId: updateCoCreationTeam
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+      - name: teamNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/group.yaml#/TeamDetails"
+    responses:
+      "200":
+        description: Co-creation team updated
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/group.yaml#/TeamDetails"
+  delete:
+    tags: [Groups & Teams]
+    summary: Delete a co-creation team
+    operationId: deleteCoCreationTeam
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+      - name: teamNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    responses:
+      "204":
+        description: Co-creation team deleted
+
+conceptualMap:
+  x-router-controller: groupsAndTeamsController
+  get:
+    tags: [Groups & Teams]
+    summary: Get conceptual map of an exploring group
+    operationId: getConceptualMap
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Conceptual map details
+      "403":
+        description: Forbidden
+      "404":
+        description: Resource not found
+
+conceptualMapSubmit:
+  x-router-controller: groupsAndTeamsController
+  patch:
+    tags: [Groups & Teams]
+    summary: Submit conceptual map of an exploring group
+    operationId: submitConceptualMap
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+    responses:
+      "200":
+        description: Conceptual map submitted
+      "403":
+        description: Forbidden
+      "404":
+        description: Resource not found
+      "409":
+        description: Conceptual map already delivered

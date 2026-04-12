@@ -1,0 +1,13 @@
+UnexpectedError:
+  description: Unexpected error
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas/common.yaml#/ErrorResponse"
+
+UnauthorisedError:
+  description: Unauthorised
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas/common.yaml#/ErrorResponse"

@@ -1,0 +1,63 @@
+Hackathon:
+  type: object
+  nullable: true
+  properties:
+    id:
+      type: string
+      format: uuid
+    logo:
+      type: string
+      format: uri
+      nullable: true
+    type:
+      type: string
+      enum: [ON_SITE, ONLINE, HYBRID]
+    location:
+      type: string
+      maxLength: 255
+      nullable: true
+    description:
+      type: string
+      maxLength: 500
+      nullable: true
+    editionId:
+      type: string
+      format: uuid
+    isVisible:
+      type: boolean
+    meetLink:
+      type: string
+      format: uri
+      nullable: true
+
+HackathonList:
+  type: array
+  items:
+    $ref: "#/Hackathon"
+
+HackathonJoinRequest:
+  type: object
+  required: [roles]
+  properties:
+    roles:
+      type: array
+      items:
+        type: string
+        enum: [ARTIST, TECHNOLOGIST, SCIENTIST, OTHER]
+    interests:
+      type: string
+      nullable: true
+
+ParticipationPut:
+  type: object
+  properties:
+    hasConfirmedAssistance:
+      type: boolean
+    roles:
+      type: array
+      items:
+        type: string
+        enum: [ARTIST, TECHNOLOGIST, SCIENTIST, OTHER]
+    interests:
+      type: string
+      nullable: true

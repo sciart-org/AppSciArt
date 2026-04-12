@@ -1,0 +1,54 @@
+ErrorResponse:
+  type: object
+  properties:
+    error:
+      type: string
+      example: Internal Server Error
+
+DomainItem:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    name:
+      type: string
+      maxLength: 50
+
+DomainItemList:
+  type: array
+  items:
+    $ref: "#/DomainItem"
+
+Contribution:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    conceptualMapId:
+      type: string
+      format: uuid
+    flower:
+      $ref: "flower.yaml#/FlowerDetails"
+    fruit:
+      $ref: "fruit.yaml#/FruitDetails"
+
+ConceptualMap:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+      minimum: 1
+    link:
+      type: string
+      format: uri
+    seedId:
+      type: string
+      format: uuid
+      minimum: 1
+    authors:
+      type: array
+      items:
+        $ref: "./user.yaml#/UserDetails"

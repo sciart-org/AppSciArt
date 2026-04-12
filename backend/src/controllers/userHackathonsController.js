@@ -37,3 +37,7 @@ export const getMyHackathonParticipation = withErrorHandler(async (req, res) => 
   const participation = await service.getParticipation(user.id, hackathonId)
   return res.status(200).send(participation)
 })
+
+export const updateParticipation = withErrorHandler(async (req, res) => {
+  return res.status(500)
+})

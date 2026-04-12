@@ -1,0 +1,59 @@
+SeedDetails:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    name:
+      type: string
+      maxLength: 255
+    templateLink:
+      type: string
+      format: uri
+      nullable: true
+    imageLink:
+      type: string
+      format: uri
+      nullable: true
+    state:
+      type: string
+      enum: [IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED]
+    branchesOfKnowledge:
+      type: array
+      nullable: true
+      items:
+        type: string
+        maxLength: 50
+    videoLink:
+      type: string
+      format: uri
+      nullable: true
+    presentationLink:
+      type: string
+      format: uri
+      nullable: true
+    podcastLink:
+      type: string
+      format: uri
+      nullable: true
+    resourcesLink:
+      type: string
+      format: uri
+      nullable: true
+    authors:
+      type: array
+      nullable: true
+      items:
+        $ref: "./user.yaml#/UserDetails"
+    editionId:
+      type: string
+      format: uuid
+    likeCount:
+      type: integer
+      minimum: 0
+      nullable: true
+
+SeedList:
+  type: array
+  items:
+    $ref: "#/SeedDetails"

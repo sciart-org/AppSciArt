@@ -1,0 +1,116 @@
+SignUpRequest:
+  type: object
+  required: [email, name, surname, password]
+  properties:
+    email:
+      type: string
+      format: email
+    name:
+      type: string
+      maxLength: 50
+    surname:
+      type: string
+      maxLength: 50
+    password:
+      type: string
+      format: password
+    gender:
+      type: string
+      nullable: true
+    ageRange:
+      type: string
+      nullable: true
+    affiliations:
+      type: array
+      nullable: true
+      items:
+        type: string
+        maxLength: 50
+    areasOfInterest:
+      type: array
+      nullable: true
+      items:
+        type: string
+        maxLength: 50
+
+QuickSignUpRequest:
+  type: object
+  required: [email]
+  properties:
+    email:
+      type: string
+      format: email
+    name:
+      type: string
+      maxLength: 50
+    surname:
+      type: string
+      maxLength: 50
+    password:
+      type: string
+      format: password
+    gender:
+      type: string
+      nullable: true
+    ageRange:
+      type: string
+      nullable: true
+    affiliations:
+      type: array
+      nullable: true
+      items:
+        type: string
+        maxLength: 50
+    areasOfInterest:
+      type: array
+      nullable: true
+      items:
+        type: string
+        maxLength: 50
+
+CompleteSignUpRequest:
+  type: object
+  required: [email, name, surname]
+  properties:
+    email:
+      type: string
+      format: email
+    name:
+      type: string
+      maxLength: 50
+    surname:
+      type: string
+      maxLength: 50
+    password:
+      type: string
+      format: password
+      nullable: true
+    gender:
+      type: string
+      nullable: true
+    ageRange:
+      type: string
+      nullable: true
+    affiliations:
+      type: array
+      nullable: true
+      items:
+        type: string
+        maxLength: 50
+    areasOfInterest:
+      type: array
+      nullable: true
+      items:
+        type: string
+        maxLength: 50
+
+SignInRequest:
+  type: object
+  required: [email, password]
+  properties:
+    email:
+      type: string
+      format: email
+    password:
+      type: string
+      format: password

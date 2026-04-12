@@ -1,0 +1,29 @@
+UserDetails:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    email:
+      type: string
+      format: email
+    name:
+      type: string
+      maxLength: 50
+    surname:
+      type: string
+      maxLength: 50
+    password:
+      type: string
+      format: password
+    gender:
+      type: string
+      nullable: true
+    birthDate:
+      type: string
+      format: date
+
+UserList:
+  type: array
+  items:
+    $ref: "#/UserDetails"

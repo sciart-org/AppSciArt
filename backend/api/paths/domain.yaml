@@ -1,0 +1,41 @@
+areasOfInterest:
+  x-router-controller: domainController
+  get:
+    tags: [Static data]
+    summary: Get set of areas of interest
+    operationId: getAreasOfInterest
+    responses:
+      "200":
+        description: A list of areas of interest
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common.yaml#/DomainItemList"
+
+affiliations:
+  x-router-controller: domainController
+  get:
+    tags: [Static data]
+    summary: Get set of possible affiliations
+    operationId: getAffiliations
+    responses:
+      "200":
+        description: A list of possible affiliations
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common.yaml#/DomainItemList"
+
+hackathonRoles:
+  x-router-controller: domainController
+  get:
+    tags: [Static data]
+    summary: Get set of hackathon roles
+    operationId: getHackathonRoles
+    responses:
+      "200":
+        description: A list of hackathon roles
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common.yaml#/DomainItemList"

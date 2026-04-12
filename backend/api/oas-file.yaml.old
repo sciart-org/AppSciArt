@@ -1,0 +1,2381 @@
+openapi: 3.0.3
+info:
+  title: AppSciArt API
+  version: 1.0.0
+  description: API interactions required by AppSciArt platform.
+security:
+  - bearerAuth: []
+tags:
+  - name: Editions
+    description: Edition-related endpoints
+  - name: Hackathons
+    description: Hackathon discovery, enrollment, and user participation
+  - name: User Profile
+    description: User info and settings
+  - name: User Hackathons
+    description: User participation and contributions in hackathons
+  - name: User Preferences
+    description: Liked items and personalized content
+  - name: SciArt seeds
+    description: Seed-related
+  - name: SciArt flowers
+    description: Flower-related
+  - name: SciArt fruits
+    description: Fruit-related
+  - name: Auth
+    description: Authentication endpoints
+  - name: Groups & Teams
+    description: Group and team management
+  - name: Clusters
+    description: Cluster management
+  - name: Scientists
+    description: Scientist-related endpoints
+
+paths:
+  /editions:
+    x-router-controller: editionsController
+    get:
+      security: [{}]
+      tags: [Editions]
+      summary: Get editions
+      operationId: getEditions
+      parameters:
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of editions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditionList"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    post:
+      tags: [Editions]
+      summary: Create an edition
+      operationId: createEdition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditionDetails"
+      responses:
+        "201":
+          description: Edition created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditionDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /editions/{editionId}:
+    x-router-controller: editionsController
+    get:
+      security: [{}]
+      tags: [Editions]
+      summary: Get details of an edition
+      operationId: getEditionDetails
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Edition details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditionDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    put:
+      tags: [Editions]
+      summary: Update an edition
+      operationId: updateEdition
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditionDetails"
+      responses:
+        "200":
+          description: Edition updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditionDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    delete:
+      tags: [Editions]
+      summary: Delete an edition
+      operationId: deleteEdition
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Edition deleted
+
+  /editions/{editionId}/announce:
+    x-router-controller: editionsController
+    post:
+      tags: [Editions]
+      summary: Announce a (planned) edition
+      operationId: announceEdition
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Edition announced
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditionDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /editions/{editionId}/scientists:
+    x-router-controller: editionsController
+    post:
+      tags: [Editions]
+      summary: Invite scientist to edition
+      operationId: inviteScientistToEdition
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  nullable: false
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Invitation to edition
+
+  /editions/{editionId}/publish:
+    x-router-controller: editionsController
+    patch:
+      tags: [Editions]
+      summary: Publish an edition
+      operationId: publishEdition
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Edition published
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditionDetails"
+
+  /editions/{editionId}/methodology:
+    x-router-controller: editionsController
+    get:
+      tags: [Editions]
+      summary: Get methodology format of an edition
+      operationId: getEditionMethodology
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Edition methodology
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Methodology"
+
+  /hackathons:
+    x-router-controller: hackathonsController
+    get:
+      security: [{}]
+      tags: [Hackathons]
+      summary: Get hackathons
+      operationId: getHackathons
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [closest, incoming, previous, active]
+      responses:
+        "200":
+          description: List of hackathons
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/HackathonList"
+                  - $ref: "#/components/schemas/Hackathon"
+        default:
+          description: Unexpected error
+    post:
+      tags: [Hackathons]
+      summary: Create a new hackathon
+      operationId: createHackathon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Hackathon"
+      responses:
+        "201":
+          description: Hackathon created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hackathon"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /hackathons/{hackathonId}:
+    x-router-controller: hackathonsController
+    get:
+      tags: [Hackathons]
+      summary: Get details of a hackathon
+      operationId: getHackathonDetails
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: view
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [full]
+      responses:
+        "200":
+          description: Hackathon details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hackathon"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    put:
+      tags: [Hackathons]
+      summary: Update a hackathon
+      operationId: updateHackathon
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: broadcast
+          in: query
+          required: false
+          schema:
+            type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Hackathon"
+      responses:
+        "200":
+          description: Hackathon updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hackathon"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    delete:
+      tags: [Hackathons]
+      summary: Delete a hackathon
+      operationId: deleteHackathon
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Hackathon deleted
+
+  /hackathons/{hackathonId}/publish:
+    x-router-controller: hackathonsController
+    patch:
+      tags: [Hackathons]
+      summary: Publish a hackathon
+      operationId: publishHackathon
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Hackathon published
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hackathon"
+
+  /hackathons/{hackathonId}/users:
+    x-router-controller: hackathonsController
+    get:
+      tags: [Hackathons]
+      summary: Get users of a hackathon
+      operationId: getHackathonUsers
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserList"
+
+  /hackathons/{hackathonId}/clusters:
+    x-router-controller: clustersController
+    get:
+      tags: [Clusters]
+      summary: Get clusters of a hackathon
+      operationId: getHackathonClusters
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: List of clusters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClusterList"
+    post:
+      tags: [Clusters]
+      summary: Create a new cluster
+      operationId: createCluster
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "201":
+          description: Cluster created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cluster"
+
+  /hackathons/{hackathonId}/clusters/{clusterNumber}:
+    x-router-controller: clustersController
+    get:
+      tags: [Clusters]
+      summary: Get details of a cluster
+      operationId: getClusterDetails
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Cluster details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cluster"
+    delete:
+      tags: [Clusters]
+      summary: Delete a cluster
+      operationId: deleteCluster
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "204":
+          description: Cluster deleted
+
+  /hackathons/{hackathonId}/clusters/{clusterNumber}/exploring-groups:
+    x-router-controller: groupsAndTeamsController
+    get:
+      tags: [Groups & Teams]
+      summary: Get exploring groups of a cluster
+      operationId: getClusterExploringGroups
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: List of exploring groups
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupList"
+    post:
+      tags: [Groups & Teams]
+      summary: Create a new exploring group
+      operationId: createExploringGroup
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "201":
+          description: Exploring group created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupDetails"
+
+  /hackathons/{hackathonId}/clusters/{clusterNumber}/exploring-groups/{groupNumber}:
+    x-router-controller: groupsAndTeamsController
+    get:
+      tags: [Groups & Teams]
+      summary: Get details of an exploring group
+      operationId: getExploringGroupDetails
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: groupNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Exploring group details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupDetails"
+    delete:
+      tags: [Groups & Teams]
+      summary: Delete an exploring group
+      operationId: deleteExploringGroup
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: groupNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "204":
+          description: Exploring group deleted
+    put:
+      tags: [Groups & Teams]
+      summary: Update an exploring group
+      operationId: updateExploringGroup
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: groupNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupDetails"
+      responses:
+        "200":
+          description: Exploring group updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupDetails"
+
+  /hackathons/{hackathonId}/clusters/{clusterNumber}/co-creation-teams:
+    x-router-controller: groupsAndTeamsController
+    get:
+      tags: [Groups & Teams]
+      summary: Get co-creation teams of a cluster
+      operationId: getClusterCoCreationTeams
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: List of co-creation teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TeamList"
+    post:
+      tags: [Groups & Teams]
+      summary: Create a new co-creation team
+      operationId: createCoCreationTeam
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "201":
+          description: Co-creation team created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamDetails"
+
+  /hackathons/{hackathonId}/clusters/{clusterNumber}/co-creation-teams/{teamNumber}:
+    x-router-controller: groupsAndTeamsController
+    get:
+      tags: [Groups & Teams]
+      summary: Get details of a co-creation team
+      operationId: getCoCreationTeamDetails
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: teamNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Co-creation team details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamDetails"
+    delete:
+      tags: [Groups & Teams]
+      summary: Delete a co-creation team
+      operationId: deleteCoCreationTeam
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: teamNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "204":
+          description: Co-creation team deleted
+    put:
+      tags: [Groups & Teams]
+      summary: Update a co-creation team
+      operationId: updateCoCreationTeam
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: teamNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamDetails"
+      responses:
+        "200":
+          description: Co-creation team updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamDetails"
+
+  /exploring-groups/{groupId}/conceptual-map:
+    x-router-controller: groupsAndTeamsController
+    get:
+      tags: [Groups & Teams]
+      summary: Get conceptual map of an exploring group
+      operationId: getConceptualMap
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Conceptual map submitted
+        "403":
+          description: Forbidden
+        "404":
+          description: Resource not found
+
+  /exploring-groups/{groupId}/conceptual-map/submit:
+    x-router-controller: groupsAndTeamsController
+    patch:
+      tags: [Groups & Teams]
+      summary: Submit conceptual map of an exploring group
+      operationId: submitConceptualMap
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Conceptual map submitted
+        "403":
+          description: Forbidden
+        "404":
+          description: Resource not found
+        "409":
+          description: Conceptual map already delivered
+
+  /users/{userId}/hackathons:
+    x-router-controller: userHackathonsController
+    get:
+      tags: [User Hackathons]
+      summary: Get hackathons in which a user is enrolled
+      operationId: getUserEnrolledHackathons
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: List of hackathons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HackathonList"
+
+  /hackathons/{hackathonId}/participants/me:
+    x-router-controller: userHackathonsController
+    get:
+      tags: [User Hackathons]
+      summary: Get current user's participation in a hackathon
+      operationId: getMyHackathonParticipation
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Participation created
+        "404":
+          description: Resource not found
+        default:
+          description: Unexpected error
+    post:
+      tags: [User Hackathons]
+      summary: Join the current user to a hackathon
+      operationId: joinMeHackathon
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HackathonJoinRequest"
+      responses:
+        "201":
+          description: Participation created
+        "404":
+          description: Resource not found
+        default:
+          description: Unexpected error
+
+  /hackathons/{hackathonId}/participants/{userId}:
+    x-router-controller: userHackathonsController
+    post:
+      tags: [User Hackathons]
+      summary: Join a user to a hackathon
+      operationId: joinHackathon
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HackathonJoinRequest"
+      responses:
+        "201":
+          description: Participation created
+    put:
+      tags: [User Hackathons]
+      summary: Update a participation
+      operationId: updateParticipation
+      parameters:
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+      responses:
+        "200":
+          description: Participation updated
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /users/{userId}/hackathons/{hackathonId}/contributions:
+    x-router-controller: userHackathonsController
+    get:
+      tags: [User Hackathons]
+      summary: Get user's contributions in a hackathon
+      operationId: getUserHackathonContributions
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: User's contributions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contribution"
+
+  /users/{userId}/hackathons/{hackathonId}/clusters/{clusterNumber}:
+    x-router-controller: userHackathonsController
+    post:
+      tags: [User Hackathons]
+      summary: Join a cluster
+      operationId: joinCluster
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: hackathonId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clusterNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "201":
+          description: Cluster enrollment created
+
+  /login:
+    x-router-controller: authController
+    post:
+      security: [{}]
+      tags: [Auth]
+      summary: Login
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInRequest"
+      responses:
+        "200":
+          description: Login successful
+        default:
+          description: Unexpected error
+
+  /register:
+    x-router-controller: authController
+    get:
+      security: [{}]
+      tags: [Auth]
+      summary: Register a new user (using provider)
+      operationId: registerProvider
+      parameters:
+        - name: provider
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [google]
+      responses:
+        "201":
+          description: User registered
+        default:
+          description: Unexpected error
+    post:
+      security: [{}]
+      tags: [Auth]
+      summary: Register a new user
+      operationId: register
+      parameters:
+        - name: method
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [direct, quick]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - $ref: "#/components/schemas/SignUpRequest"
+                - $ref: "#/components/schemas/QuickSignUpRequest"
+      responses:
+        "201":
+          description: User registered
+        default:
+          description: Unexpected error
+
+  /register/complete:
+    x-router-controller: authController
+    post:
+      security: [{}]
+      tags: [Auth]
+      summary: Complete registration
+      operationId: completeRegistration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompleteSignUpRequest"
+      responses:
+        "201":
+          description: Registration completed successfully
+        default:
+          description: Unexpected error
+
+  /early-signups/{earlySignupId}:
+    x-router-controller: authController
+    get:
+      security: [{}]
+      tags: [Auth]
+      summary: Get pre-registration details
+      operationId: getEarlySignup
+      responses:
+        "200":
+          description: Pre-registration details
+        default:
+          description: Unexpected error
+
+  /users:
+    x-router-controller: usersController
+    get:
+      tags: [User Profile]
+      summary: Get list of users
+      operationId: getUsers
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserList"
+    post:
+      tags: [User Profile]
+      summary: Create a new user
+      operationId: createUser
+      parameters:
+        - name: roles
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                [
+                  participant,
+                  designer,
+                  facilitator,
+                  inspiring-scientist,
+                  evaluator,
+                  admin,
+                ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserDetails"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+
+  /users/{userId}:
+    x-router-controller: usersController
+    get:
+      tags: [User Profile]
+      summary: Get user information
+      operationId: getUserInfo
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Public info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+    put:
+      tags: [User Profile]
+      summary: Edit user profile
+      operationId: editUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserDetails"
+      responses:
+        "200":
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+
+  /users/{userId}/liked-seeds:
+    x-router-controller: userPreferencesController
+    get:
+      tags: [User Preferences]
+      summary: Get liked seeds by edition
+      operationId: getLikedSeedsOfUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: edition
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of liked seeds
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedList"
+
+    post:
+      tags: [User Preferences]
+      summary: Like a seed
+      operationId: likeSeed
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                seedId:
+                  type: integer
+      responses:
+        "201":
+          description: Seed liked
+
+  /users/{userId}/liked-seeds/{seedId}:
+    x-router-controller: userPreferencesController
+    delete:
+      tags: [User Preferences]
+      summary: Unlike a seed
+      operationId: unlikeSeed
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: seedId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Seed unliked
+
+  /me:
+    x-router-controller: usersController
+    get:
+      tags: [User Profile]
+      summary: Get authenticated user
+      operationId: getCurrentUser
+      responses:
+        "200":
+          description: My user details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetails"
+
+  /seeds:
+    x-router-controller: seedsController
+    get:
+      security: [{}]
+      tags: [SciArt seeds]
+      summary: Get seeds
+      operationId: getSeeds
+      parameters:
+        - name: editionId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: hackathonId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: List of seeds
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedList"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    post:
+      tags: [SciArt seeds]
+      summary: Create a new seed
+      operationId: createSeed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "201":
+          description: Seed created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedDetails"
+
+  /flowers:
+    x-router-controller: flowersController
+    get:
+      security: [{}]
+      tags: [SciArt flowers]
+      summary: Get flowers
+      operationId: getFlowersByEdition
+      parameters:
+        - name: editionId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: List of flowers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowerList"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    post:
+      tags: [SciArt flowers]
+      summary: Create a new flower
+      operationId: createFlower
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlowerDetails"
+      responses:
+        "201":
+          description: Flower created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowerDetails"
+
+  /fruits:
+    x-router-controller: fruitsController
+    get:
+      security: [{}]
+      tags: [SciArt fruits]
+      summary: Get fruits
+      operationId: getFruitsByEdition
+      parameters:
+        - name: editionId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: List of fruits
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FruitList"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    post:
+      tags: [SciArt fruits]
+      summary: Create a new fruit
+      operationId: createFruit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FruitDetails"
+      responses:
+        "201":
+          description: Fruit created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FruitDetails"
+
+  /seeds/{seedId}:
+    x-router-controller: seedsController
+    get:
+      security: [{}]
+      tags: [SciArt seeds]
+      summary: Get seed details
+      operationId: getSeedDetails
+      parameters:
+        - name: seedId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Seed details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    put:
+      tags: [SciArt seeds]
+      summary: Update a seed
+      operationId: updateSeed
+      parameters:
+        - name: seedId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SeedDetails"
+      responses:
+        "200":
+          description: Seed updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedDetails"
+    delete:
+      tags: [SciArt seeds]
+      summary: Delete a seed
+      operationId: deleteSeed
+      parameters:
+        - name: seedId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Seed deleted
+
+  /seeds/{seedId}/conceptual-maps:
+    x-router-controller: seedsController
+    get:
+      security: [{}]
+      tags: [SciArt seeds]
+      summary: Get conceptual map list of a seed
+      operationId: getSeedConceptualMapsIds
+      parameters:
+        - name: seedId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Seed details
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /flowers/{flowerId}:
+    x-router-controller: flowersController
+    get:
+      security: [{}]
+      tags: [SciArt flowers]
+      summary: Get flower details
+      operationId: getFlowerDetails
+      parameters:
+        - name: flowerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Flower details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowerDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    put:
+      tags: [SciArt flowers]
+      summary: Update a flower
+      operationId: updateFlower
+      parameters:
+        - name: flowerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlowerDetails"
+      responses:
+        "200":
+          description: Flower updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowerDetails"
+    delete:
+      tags: [SciArt flowers]
+      summary: Delete a flower
+      operationId: deleteFlower
+      parameters:
+        - name: flowerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Flower deleted
+
+  /flowers/{flowerId}/publish:
+    x-router-controller: flowersController
+    patch:
+      tags: [SciArt flowers]
+      summary: Publish a flower
+      operationId: publishFlower
+      parameters:
+        - name: flowerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Flower published
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowerDetails"
+
+  /seeds/{seedId}/publish:
+    x-router-controller: seedsController
+    patch:
+      tags: [SciArt seeds]
+      summary: Publish a seed
+      operationId: publishSeed
+      parameters:
+        - name: seedId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Seed published
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SeedDetails"
+
+  /fruits/{fruitId}:
+    x-router-controller: fruitsController
+    get:
+      security: [{}]
+      tags: [SciArt fruits]
+      summary: Get fruit details
+      operationId: getFruitDetails
+      parameters:
+        - name: fruitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Fruit details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FruitDetails"
+        "401":
+          $ref: "#/components/responses/UnauthorisedError"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+    put:
+      tags: [SciArt fruits]
+      summary: Update a fruit
+      operationId: updateFruit
+      parameters:
+        - name: fruitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FruitDetails"
+      responses:
+        "200":
+          description: Fruit updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FruitDetails"
+    delete:
+      tags: [SciArt fruits]
+      summary: Delete a fruit
+      operationId: deleteFruit
+      parameters:
+        - name: fruitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Fruit deleted
+
+  /fruits/{fruitId}/publish:
+    x-router-controller: fruitsController
+    patch:
+      tags: [SciArt fruits]
+      summary: Publish a fruit
+      operationId: publishFruit
+      parameters:
+        - name: fruitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Fruit published
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FruitDetails"
+
+  /areas-of-interest:
+    x-router-controller: domainController
+    get:
+      tags: [Static data]
+      summary: Get set of areas of interest
+      operationId: getAreasOfInterest
+      responses:
+        "200":
+          description: A list of areas of interest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DomainItemList"
+
+  /affiliations:
+    x-router-controller: domainController
+    get:
+      tags: [Static data]
+      summary: Get set of possible affiliations
+      operationId: getAffiliations
+      responses:
+        "200":
+          description: A list of possible affiliations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DomainItemList"
+
+  /hackathon-roles:
+    x-router-controller: domainController
+    get:
+      tags: [Static data]
+      summary: Get set of hackathon roles
+      operationId: getHackathonRoles
+      responses:
+        "200":
+          description: A list of hackathon roles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DomainItemList"
+
+  /scientists:
+    x-router-controller: scientistsController
+    get:
+      tags: [Scientists]
+      summary: Get scientists profiles
+      operationId: getScientists
+      parameters:
+        - name: editionId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: A list of scientists
+
+  /scientists/me/editions:
+    x-router-controller: scientistsController
+    get:
+      tags: [Scientists]
+      summary: Get editions in which I can create seeds
+      operationId: getMyScientistEditions
+      responses:
+        "200":
+          description: A list of editions
+
+  /scientists/{scientistId}/editions:
+    x-router-controller: scientistsController
+    patch:
+      tags: [Scientists]
+      summary: Modify editions in which a scientist is enrolled
+      operationId: modifyScientistEditions
+      parameters:
+        - name: scientistId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: boolean
+      responses:
+        "200":
+          description: New scientist editions
+
+  /scientists/me/editions/{editionId}/seeds:
+    x-router-controller: scientistsController
+    get:
+      tags: [Scientists]
+      summary: Get my seeds of an edition
+      operationId: getMyEditionSeeds
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: A list of seeds
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnexpectedError:
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    UnauthorisedError:
+      description: Unauthorised
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    EditionDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        name:
+          type: string
+          maxLength: 50
+        logo:
+          nullable: true
+          type: string
+          format: uri
+        year:
+          type: integer
+          minimum: 1900
+          maximum: 2200
+        longDescription:
+          nullable: true
+          type: string
+        catalogLink:
+          nullable: true
+          type: string
+          format: uri
+        state:
+          type: string
+          enum: [PLANNED, ACTIVE, CLOSED, PUBLISHED]
+
+    EditionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        name:
+          type: string
+          maxLength: 50
+        logo:
+          nullable: true
+          type: string
+          format: uri
+        fruitLogo:
+          type: string
+          format: uri
+        year:
+          type: integer
+          minimum: 1900
+          maximum: 2200
+        shortDescription:
+          type: string
+          maxLength: 255
+          nullable: true
+        state:
+          type: string
+          enum: [PLANNED, ACTIVE, CLOSED, PUBLISHED]
+
+    EditionList:
+      type: array
+      items:
+        $ref: "#/components/schemas/EditionSummary"
+
+    Methodology:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        objective:
+          type: string
+          maxLength: 1000
+        mainImg:
+          type: string
+          format: uri
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                maxLength: 50
+              content:
+                type: string
+                maxLength: 500
+              img:
+                type: string
+                format: uri
+
+    SeedDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        name:
+          type: string
+          maxLength: 255
+        templateLink:
+          type: string
+          format: uri
+          nullable: true
+        imageLink:
+          type: string
+          format: uri
+          nullable: true
+        state:
+          type: string
+          enum: [IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED]
+        branchesOfKnowledge:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+          nullable: true
+        videoLink:
+          type: string
+          format: uri
+          nullable: true
+        presentationLink:
+          type: string
+          format: uri
+          nullable: true
+        podcastLink:
+          type: string
+          format: uri
+          nullable: true
+        resourcesLink:
+          type: string
+          format: uri
+          nullable: true
+        authors:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserDetails"
+          nullable: true
+        editionId:
+          type: string
+          format: uuid
+          minimum: 1
+        likeCount:
+          type: integer
+          minimum: 0
+          nullable: true
+
+    FlowerDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        name:
+          type: string
+          maxLength: 255
+        templateLink:
+          type: string
+          format: uri
+        state:
+          type: string
+          enum: [IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED]
+        concept:
+          type: string
+          maxLength: 1500
+          nullable: true
+        resourcesLink:
+          type: string
+          format: uri
+        seedId:
+          type: string
+          format: uuid
+          minimum: 1
+        authors:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserDetails"
+        hackathonId:
+          type: string
+          format: uuid
+          minimum: 1
+
+    FruitDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        title:
+          type: string
+          maxLength: 255
+        mainImage:
+          type: string
+          format: uri
+          nullable: true
+        state:
+          type: string
+          enum: [IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED]
+        authorVision:
+          type: string
+          maxLength: 1500
+          nullable: true
+        curatorVision:
+          type: string
+          maxLength: 1500
+          nullable: true
+        driveLink:
+          type: string
+          format: uri
+          nullable: true
+        flowerId:
+          type: string
+          format: uuid
+          nullable: true
+
+    UserDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+          maxLength: 50
+        surname:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          format: password
+        gender:
+          type: string
+          nullable: true
+        birthDate:
+          type: string
+          format: date
+
+    UserList:
+      type: array
+      items:
+        $ref: "#/components/schemas/UserDetails"
+
+    SeedList:
+      type: array
+      items:
+        $ref: "#/components/schemas/SeedDetails"
+
+    FlowerList:
+      type: array
+      items:
+        $ref: "#/components/schemas/FlowerDetails"
+
+    FruitList:
+      type: array
+      items:
+        $ref: "#/components/schemas/FruitDetails"
+
+    Hackathon:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        logo:
+          type: string
+          format: uri
+          nullable: true
+        type:
+          type: string
+          enum: [ON_SITE, ONLINE, HYBRID]
+        location:
+          type: string
+          maxLength: 255
+          nullable: true
+        description:
+          type: string
+          maxLength: 500
+          nullable: true
+        editionId:
+          type: string
+          format: uuid
+          minimum: 1
+        isVisible:
+          type: boolean
+        meetLink:
+          type: string
+          format: uri
+          nullable: true
+
+    HackathonList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Hackathon"
+
+    Contribution:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        conceptualMapId:
+          type: string
+          format: uuid
+          minimum: 1
+        flower:
+          $ref: "#/components/schemas/FlowerDetails"
+        fruit:
+          $ref: "#/components/schemas/FruitDetails"
+
+    ConceptualMap:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        link:
+          type: string
+          format: uri
+        seedId:
+          type: string
+          format: uuid
+          minimum: 1
+        authors:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserDetails"
+
+    DomainItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        name:
+          type: string
+          maxLength: 50
+
+    DomainItemList:
+      type: array
+      items:
+        $ref: "#/components/schemas/DomainItem"
+
+    Cluster:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+
+    ClusterList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Cluster"
+
+    GroupDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        clusterNumber:
+          type: integer
+          minimum: 1
+        seedId:
+          type: string
+          format: uuid
+          minimum: 1
+        conceptualMapId:
+          type: string
+          format: uuid
+          minimum: 1
+
+    GroupList:
+      type: array
+      items:
+        $ref: "#/components/schemas/GroupDetails"
+
+    TeamDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          minimum: 1
+        clusterNumber:
+          type: integer
+          minimum: 1
+        seedId:
+          type: string
+          format: uuid
+          minimum: 1
+
+    TeamList:
+      type: array
+      items:
+        $ref: "#/components/schemas/TeamDetails"
+
+    SignUpRequest:
+      type: object
+      required: [email, name, surname, password]
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+          maxLength: 50
+        surname:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          format: password
+        gender:
+          type: string
+          nullable: true
+        ageRange:
+          type: string
+          nullable: true
+        affiliations:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+        areasOfInterest:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+
+    CompleteSignUpRequest:
+      type: object
+      required: [email, name, surname]
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+          maxLength: 50
+        surname:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          format: password
+          nullable: true
+        gender:
+          type: string
+          nullable: true
+        ageRange:
+          type: string
+          nullable: true
+        affiliations:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+        areasOfInterest:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+
+    QuickSignUpRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+          maxLength: 50
+        surname:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          format: password
+        gender:
+          type: string
+          nullable: true
+        ageRange:
+          type: string
+          nullable: true
+        affiliations:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+        areasOfInterest:
+          type: array
+          nullable: true
+          items:
+            type: string
+            maxLength: 50
+
+    SignInRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    HackathonJoinRequest:
+      type: object
+      required: [roles]
+      properties:
+        roles:
+          type: array
+          items:
+            type: string
+            enum: ["ARTIST", "TECHNOLOGIST", "SCIENTIST", "OTHER"]
+        interests:
+          type: string
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Internal Server Error

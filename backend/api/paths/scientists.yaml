@@ -1,0 +1,84 @@
+scientists:
+  x-router-controller: scientistsController
+  get:
+    tags: [Scientists]
+    summary: Get scientists profiles
+    operationId: getScientists
+    parameters:
+      - name: editionId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: A list of scientists
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/user.yaml#/UserList"
+
+scientistMeEditions:
+  x-router-controller: scientistsController
+  get:
+    tags: [Scientists]
+    summary: Get editions in which I can create seeds
+    operationId: getMyScientistEditions
+    responses:
+      "200":
+        description: A list of editions
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/edition.yaml#/EditionList"
+
+scientistEditions:
+  x-router-controller: scientistsController
+  patch:
+    tags: [Scientists]
+    summary: Modify editions in which a scientist is enrolled
+    operationId: modifyScientistEditions
+    parameters:
+      - name: scientistId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties:
+              type: boolean
+    responses:
+      "200":
+        description: New scientist editions
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/edition.yaml#/EditionList"
+
+scientistMeEditionSeeds:
+  x-router-controller: scientistsController
+  get:
+    tags: [Scientists]
+    summary: Get my seeds of an edition
+    operationId: getMyEditionSeeds
+    parameters:
+      - name: editionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: A list of seeds
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seed.yaml#/SeedList"

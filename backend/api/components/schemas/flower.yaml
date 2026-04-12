@@ -1,0 +1,37 @@
+FlowerDetails:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    name:
+      type: string
+      maxLength: 255
+    templateLink:
+      type: string
+      format: uri
+    state:
+      type: string
+      enum: [IN_BLANK, IN_PROGRESS, IN_REVIEW, PUBLISHED]
+    concept:
+      type: string
+      maxLength: 1500
+      nullable: true
+    resourcesLink:
+      type: string
+      format: uri
+    seedId:
+      type: string
+      format: uuid
+    authors:
+      type: array
+      items:
+        $ref: "./user.yaml#/UserDetails"
+    hackathonId:
+      type: string
+      format: uuid
+
+FlowerList:
+  type: array
+  items:
+    $ref: "#/FlowerDetails"

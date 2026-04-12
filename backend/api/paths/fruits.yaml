@@ -1,0 +1,125 @@
+fruits:
+  x-router-controller: fruitsController
+  get:
+    security: [{}]
+    tags: [SciArt fruits]
+    summary: Get fruits
+    operationId: getFruitsByEdition
+    parameters:
+      - name: editionId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: List of fruits
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/fruit.yaml#/FruitList"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  post:
+    tags: [SciArt fruits]
+    summary: Create a new fruit
+    operationId: createFruit
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/fruit.yaml#/FruitDetails"
+    responses:
+      "201":
+        description: Fruit created
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/fruit.yaml#/FruitDetails"
+
+fruitById:
+  x-router-controller: fruitsController
+  get:
+    security: [{}]
+    tags: [SciArt fruits]
+    summary: Get fruit details
+    operationId: getFruitDetails
+    parameters:
+      - name: fruitId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Fruit details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/fruit.yaml#/FruitDetails"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
+  put:
+    tags: [SciArt fruits]
+    summary: Update a fruit
+    operationId: updateFruit
+    parameters:
+      - name: fruitId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/fruit.yaml#/FruitDetails"
+    responses:
+      "200":
+        description: Fruit updated
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/fruit.yaml#/FruitDetails"
+  delete:
+    tags: [SciArt fruits]
+    summary: Delete a fruit
+    operationId: deleteFruit
+    parameters:
+      - name: fruitId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "204":
+        description: Fruit deleted
+
+fruitPublish:
+  x-router-controller: fruitsController
+  patch:
+    tags: [SciArt fruits]
+    summary: Publish a fruit
+    operationId: publishFruit
+    parameters:
+      - name: fruitId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Fruit published
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/fruit.yaml#/FruitDetails"

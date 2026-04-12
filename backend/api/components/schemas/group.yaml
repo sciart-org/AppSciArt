@@ -1,0 +1,38 @@
+GroupDetails:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    clusterNumber:
+      type: integer
+      minimum: 1
+    seedId:
+      type: string
+      format: uuid
+    conceptualMapId:
+      type: string
+      format: uuid
+
+GroupList:
+  type: array
+  items:
+    $ref: "#/GroupDetails"
+
+TeamDetails:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    clusterNumber:
+      type: integer
+      minimum: 1
+    seedId:
+      type: string
+      format: uuid
+
+TeamList:
+  type: array
+  items:
+    $ref: "#/TeamDetails"

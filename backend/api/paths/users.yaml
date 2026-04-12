@@ -1,0 +1,257 @@
+users:
+  x-router-controller: usersController
+  get:
+    tags: [User Profile]
+    summary: Get list of users
+    operationId: getUsers
+    responses:
+      "200":
+        description: List of users
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/user.yaml#/UserList"
+  post:
+    tags: [User Profile]
+    summary: Create a new user
+    operationId: createUser
+    parameters:
+      - name: roles
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+              [
+                participant,
+                designer,
+                facilitator,
+                inspiring-scientist,
+                evaluator,
+                admin,
+              ]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/user.yaml#/UserDetails"
+    responses:
+      "201":
+        description: User created
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/user.yaml#/UserDetails"
+
+userById:
+  x-router-controller: usersController
+  get:
+    tags: [User Profile]
+    summary: Get user information
+    operationId: getUserInfo
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: User details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/user.yaml#/UserDetails"
+  put:
+    tags: [User Profile]
+    summary: Edit user profile
+    operationId: editUser
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/user.yaml#/UserDetails"
+    responses:
+      "200":
+        description: Profile updated
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/user.yaml#/UserDetails"
+
+me:
+  x-router-controller: usersController
+  get:
+    tags: [User Profile]
+    summary: Get authenticated user
+    operationId: getCurrentUser
+    responses:
+      "200":
+        description: My user details
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/user.yaml#/UserDetails"
+
+userLikedSeeds:
+  x-router-controller: userPreferencesController
+  get:
+    tags: [User Preferences]
+    summary: Get liked seeds by edition
+    operationId: getLikedSeedsOfUser
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: edition
+        in: query
+        required: true
+        schema:
+          type: integer
+    responses:
+      "200":
+        description: List of liked seeds
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seed.yaml#/SeedList"
+  post:
+    tags: [User Preferences]
+    summary: Like a seed
+    operationId: likeSeed
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              seedId:
+                type: integer
+    responses:
+      "201":
+        description: Seed liked
+
+userLikedSeedById:
+  x-router-controller: userPreferencesController
+  delete:
+    tags: [User Preferences]
+    summary: Unlike a seed
+    operationId: unlikeSeed
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: seedId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Seed unliked
+
+userHackathons:
+  x-router-controller: userHackathonsController
+  get:
+    tags: [User Hackathons]
+    summary: Get hackathons in which a user is enrolled
+    operationId: getUserEnrolledHackathons
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: List of hackathons
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/hackathon.yaml#/HackathonList"
+
+userHackathonContributions:
+  x-router-controller: userHackathonsController
+  get:
+    tags: [User Hackathons]
+    summary: Get user's contributions in a hackathon
+    operationId: getUserHackathonContributions
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: User's contributions
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "../components/schemas/common.yaml#/Contribution"
+
+userHackathonCluster:
+  x-router-controller: userHackathonsController
+  post:
+    tags: [User Hackathons]
+    summary: Join a cluster
+    operationId: joinCluster
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: clusterNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+    responses:
+      "201":
+        description: Cluster enrollment created
