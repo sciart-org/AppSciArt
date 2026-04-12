@@ -2,10 +2,19 @@ import { useContext } from "react";
 import useWebSockets from "../../utils/useWebSockets";
 import { HackathonContext } from "./components/HackathonContext";
 import PrepareHackathon from "./adminPhases/PrepareHackathon";
+import { useEffect } from "react";
 
 export default function HackathonManagement() {
-  const { hackathon } = useContext(HackathonContext);
+  const { hackathon, setHackathon } = useContext(HackathonContext);
   const { socket } = useWebSockets(!!hackathon, hackathon.id);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("hackathon:updated", (hackathonChanges) => {
+      if (hackathonChanges.id !== hackathon.id) return;
+      setHackathon((prev) => ({ ...prev, ...hackathonChanges }));
+    });
+  }, [socket]);
 
   if (hackathon.phase === "PREPARING") {
     return <PrepareHackathon />;

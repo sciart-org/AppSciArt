@@ -1,22 +1,46 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { HackathonContext } from "../components/HackathonContext";
 import "./adminPhases.css";
 import AsterButton from "../../../components/buttons/AsterButton";
 import FormInput from "../../../components/form/FormInput";
 import Participant from "../../../components/roles/Participant";
 import AsterTable from "../../../components/AsterTable";
+import useFetcher from "../../../utils/useFetcher";
+import { showSuccessMessage } from "../../../components/messages/Message";
+import ConfirmPhaseChangeModal from "./ConfirmPhaseChangeModal";
 
 export default function PrepareHackathon() {
-  const { hackathon } = useContext(HackathonContext);
+  const { hackathon, setHackathon } = useContext(HackathonContext);
+
+  const [error, setError] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
   const [meetLink, setMeetLink] = useState(hackathon.meetLink ?? "");
   const [confirmed, setConfirmed] = useState(() =>
     Object.fromEntries(
-      hackathon.participations.map((p) => [p.id, p.hasConfirmedAssistance]), // ← use persisted value
+      hackathon.participations.map((p) => [p.id, p.hasConfirmedAssistance]),
     ),
   );
 
-  const handleSubmitLink = () => {
-    // TODO
+  useEffect(() => {
+    if (meetLink === hackathon.meetLink) return;
+    setMeetLink(hackathon.meetLink);
+  }, [hackathon.meetLink]);
+
+  const { fetcher } = useFetcher(error, setError);
+
+  const handleSubmitLink = (e) => {
+    e.preventDefault();
+    if (hackathon.meetLink === meetLink) return;
+    fetcher({
+      url: `hackathons/${hackathon.id}?broadcast=true`,
+      method: "PUT",
+      body: { meetLink },
+      onSuccess: (updatedHackathon) => {
+        showSuccessMessage("Meet link updated successfully");
+        setHackathon(updatedHackathon);
+        setMeetLink(updatedHackathon.meetLink);
+      },
+    });
   };
 
   const handleToggleConfirmed = (participationId) => {
@@ -52,6 +76,12 @@ export default function PrepareHackathon() {
     <div className="prepare-page">
       <h1>{hackathon.internalName}</h1>
 
+      <ConfirmPhaseChangeModal
+        openCondition={openModal}
+        onConfirm={handleCreateGroups}
+        onCancel={() => setOpenModal(false)}
+      />
+
       <form onSubmit={handleSubmitLink} className="meet-link-form">
         <FormInput
           name="Meet Link"
@@ -78,7 +108,7 @@ export default function PrepareHackathon() {
 
       <div className="create-groups-section">
         <p>Is everybody here?</p>
-        <AsterButton onClick={handleCreateGroups}>
+        <AsterButton onClick={() => setOpenModal(true)}>
           Create Exploring Groups
         </AsterButton>
       </div>

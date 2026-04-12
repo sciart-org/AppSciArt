@@ -1,5 +1,5 @@
 import { getClusterExploringGroups, getConceptualMap } from '../services/groupsAndTeamsService.js'
-import { getUserIdFromSocket } from './index.js'
+import { getUserIdFromSocket } from './socketUtils.js'
 
 const presentingGroups = {}
 const ratings = {}

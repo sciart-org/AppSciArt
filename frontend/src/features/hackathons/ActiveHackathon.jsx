@@ -9,7 +9,8 @@ import CreatedTeams from "./phases/CreatedTeams";
 import { HackathonContext } from "./components/HackathonContext";
 
 export default function ActiveHackathon() {
-  const { hackathon, participation } = useContext(HackathonContext);
+  const { hackathon, setHackathon, participation } =
+    useContext(HackathonContext);
 
   const date = new Date(hackathon?.startDate);
   const rawDays = new Date() - date;
@@ -31,6 +32,14 @@ export default function ActiveHackathon() {
     const clusterRoom = `${participation?.hackathonId}/cluster/${participation?.clusterNumber}`;
     socket.emit("join_room", clusterRoom);
   }, [participation, socket]);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("hackathon:updated", (hackathonChanges) => {
+      if (hackathonChanges.id !== hackathon.id) return;
+      setHackathon((prev) => ({ ...prev, ...hackathonChanges }));
+    });
+  }, [socket]);
 
   if (rawDays < 0) {
     return <h2>This hackathon has not started yet.</h2>;

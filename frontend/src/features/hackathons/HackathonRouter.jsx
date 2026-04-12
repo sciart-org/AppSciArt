@@ -58,7 +58,7 @@ export default function HackathonRouter() {
 
   if (!isAdmin) {
     return (
-      <HackathonContext value={{ hackathon, participation }}>
+      <HackathonContext value={{ hackathon, setHackathon, participation }}>
         <ActiveHackathon />
       </HackathonContext>
     );
@@ -66,7 +66,7 @@ export default function HackathonRouter() {
 
   if (hackathon.state === "CLOSED") {
     return (
-      <HackathonContext value={{ hackathon }}>
+      <HackathonContext value={{ hackathon, setHackathon }}>
         <HackathonManagement />
       </HackathonContext>
     );
