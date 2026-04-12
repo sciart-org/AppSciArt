@@ -1,5 +1,13 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Op } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
+import { UserProfile } from './UserProfile.js'
+
+const publicScope = {
+  attributes: {
+    exclude: ['createdAt', 'updatedAt', 'template', 'state']
+  },
+  where: { state: 'PUBLISHED' }
+}
 
 export const Seed = sequelize.define(
   'seeds',
@@ -42,8 +50,23 @@ export const Seed = sequelize.define(
       type: DataTypes.STRING
     }
   }, {
-    defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    defaultScope: publicScope,
+    scopes: {
+      public: publicScope,
+      admin: {
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
+      },
+      withAuthors: {
+        include: [
+          {
+            model: UserProfile,
+            attributes: ['name', 'surname'],
+            through: { attributes: [] }
+          }
+        ]
+      }
     },
     indexes: [
       {
@@ -53,6 +76,13 @@ export const Seed = sequelize.define(
     ]
   }
 )
+
+Seed.prototype.toJSON = function () {
+  const values = Object.assign({}, this.get())
+  values.authors = values.user_profiles
+  delete values.user_profiles
+  return values
+}
 
 Seed.associate = (db) => {
   const { Edition, SeedEditions, Hackathon, HackathonSeeds, UserProfile, SeedLikes, SeedScientists } = db
@@ -66,4 +96,46 @@ Seed.associate = (db) => {
   })
 
   Seed.belongsToMany(UserProfile, { through: SeedScientists })
+
+  Seed.addScope('withEdition', (editionId) => ({
+    include: [
+      {
+        model: Edition,
+        where: editionId ? { id: editionId } : undefined,
+        attributes: [],
+        through: { attributes: [] }
+      }
+    ]
+  }))
+
+  Seed.addScope('withHackathon', (hackathonId) => ({
+    include: [
+      {
+        model: Hackathon,
+        where: hackathonId ? { id: hackathonId } : undefined,
+        attributes: [],
+        through: { attributes: [] }
+      }
+    ]
+  }))
+
+  Seed.addScope('scientist', (scientistId) => ({
+    where: {
+      [Op.or]: [
+        { state: 'PUBLISHED' },
+        { '$user_profiles.id$': scientistId }
+      ]
+    },
+    include: [
+      {
+        model: UserProfile,
+        attributes: [],
+        required: false,
+        through: {
+          model: SeedScientists,
+          attributes: []
+        }
+      }
+    ]
+  }))
 }

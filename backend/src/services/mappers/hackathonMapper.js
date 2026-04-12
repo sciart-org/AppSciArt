@@ -1,4 +1,4 @@
-import { mapFruitAuthors, mapSeedAuthors } from './productMapper.js'
+import { mapFruitAuthors } from './productMapper.js'
 import { toPlainObject } from './utils.js'
 
 export const mapHackathonParticipation = (rawParticipation) => {
@@ -12,7 +12,7 @@ export const mapHackathonParticipation = (rawParticipation) => {
     groupSeed: participation?.conceptual_map?.seed,
     flower: undefined,
     teamId: undefined,
-    teamFlower: { ...participation?.flower, seed: mapSeedAuthors(participation?.flower?.seed) },
+    teamFlower: { ...participation?.flower, seed: participation?.flower?.seed },
     fruit: undefined,
     fruitId: undefined,
     teamFruit: { ...mapFruitAuthors(participation?.fruit), flower: undefined, seed: undefined }

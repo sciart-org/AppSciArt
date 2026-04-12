@@ -1,49 +1,29 @@
-import { mapSeedAuthors } from './mappers/productMapper.js'
-import { Hackathon } from '../models/Hackathon.js'
 import { Seed } from '../models/Seed.js'
 import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
-import { validateCanGetSeed, validateIsPublicOrStaff } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { filterPublished, includeEdition, includeSeedAuthors } from './includes/productIncludes.js'
 import { ConceptualMap } from '../models/ConceptualMap.js'
 import { Edition } from '../models/Edition.js'
+import * as ProductsRepository from '../repositories/productsRepository.js'
+
+const checkSeedExists = async (seedId) => {
+  const exists = await ProductsRepository.getMinimalSeedUnrestricted(seedId)
+  errorThrower(checkExists(exists), 'Unauthorized: You cannot access this seed', 403)
+  errorThrower(true, 'Seed not found', 404)
+}
 
 export async function getSeedsByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
-  const showUnpublished = await checkIsStaff(userId)
-  const rawResponse = await Seed.findAll({
-    where: showUnpublished ? {} : filterPublished,
-    attributes: ['id', 'title', 'mainImage', 'branchesOfKnowledge'],
-    include: [
-      {
-        ...includeEdition(editionId),
-        through: { attributes: [] }
-      },
-      includeSeedAuthors
-    ]
-  })
-  return rawResponse.map(s => mapSeedAuthors(s))
+  const isAdmin = await checkIsStaff(userId)
+  return await ProductsRepository.getSeedsOfEdition(editionId, isAdmin)
 }
 
 export async function getSeedsByHackathon (userId, hackathonId) {
   await validateHackathonIsReadable(userId, hackathonId)
-  const showUnpublished = await checkIsStaff(userId)
-  const seeds = await Seed.findAll({
-    where: showUnpublished ? {} : filterPublished,
-    attributes: ['id', 'title', 'mainImage'],
-    include: [
-      {
-        model: Hackathon,
-        where: { id: hackathonId },
-        attributes: [],
-        through: { attributes: [] }
-      }
-    ]
-  })
-  return seeds
+  const isAdmin = await checkIsStaff(userId)
+  return await ProductsRepository.getSeedsOfHackathon(hackathonId, isAdmin)
 }
 
 export async function createSeed (userId, title, editionId, template) {
@@ -63,16 +43,24 @@ export async function createSeed (userId, title, editionId, template) {
 }
 
 export async function getSeedDetails (userId, seedId) {
-  const seed = await Seed.findByPk(seedId)
-  errorThrower(!checkExists(seed), 'Seed not found', 404)
-  await validateCanGetSeed(userId, seed)
+  const isAdmin = await checkIsStaff(userId)
+  const seed = await ProductsRepository.getSeedById(seedId, userId, isAdmin)
+
+  if (!checkExists(seed)) {
+    await checkSeedExists(seedId)
+  }
+
   return seed
 }
 
 export async function getSeedConceptualMapIds (userId, seedId) {
-  const seed = await Seed.findByPk(seedId, { attributes: ['id', 'state'] })
-  errorThrower(!checkExists(seed), 'Seed not found', 404)
-  await validateIsPublicOrStaff(userId, seed)
+  const isAdmin = await checkIsStaff(userId)
+  const seed = await ProductsRepository.getMinimalSeedById(seedId, userId, isAdmin)
+
+  if (!checkExists(seed)) {
+    await checkSeedExists(seedId)
+  }
+
   const conceptualMapsIds = await ConceptualMap.findAll({
     where: {
       seedId,
@@ -80,6 +68,7 @@ export async function getSeedConceptualMapIds (userId, seedId) {
     },
     attributes: ['id']
   })
+
   return conceptualMapsIds
 }
 
