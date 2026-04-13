@@ -4,13 +4,14 @@ import { Seed } from '../models/Seed.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { checkUserIsGroupVoice, checkUserIsInHackathon } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { includeParticipationItems, searchParticipantsOf } from './includes/participationIncludes.js'
-import { mapHackathonParticipation } from './mappers/hackathonMapper.js'
+import { includeParticipationItems } from './includes/participationIncludes.js'
 import { mapGroupMember } from './mappers/participationMapper.js'
 import { getMembers } from './userHackathonsService.js'
 
 export async function getClusterExploringGroups (hackathonId, clusterNumber) {
-  const allGroupsMembers = await Participation.findAll(searchParticipantsOf({ hackathonId, clusterNumber }))
+  const allGroupsMembers = await Participation.scope({
+    method: ['inHackathon', { hackathonId, clusterNumber }]
+  }).findAll()
 
   const groupIds = [...new Set(allGroupsMembers.map(m => m.groupId))].sort()
   const groups = []
@@ -90,15 +91,15 @@ const updateConceptualMap = async (conceptualMapId, map) => {
 }
 
 export async function submitConceptualMap (userId, groupId, map) {
-  const userParticipationId = await checkUserIsGroupVoice(userId, groupId)
+  const userParticipation = await checkUserIsGroupVoice(userId, groupId)
   await updateConceptualMap(groupId, map)
-  const updatedParticipation = await Participation.findByPk(userParticipationId, {
+  const updatedParticipation = await Participation.findByPk(userParticipation.id, {
     include: includeParticipationItems()
   })
-  return mapHackathonParticipation({
+  return {
     ...updatedParticipation.toJSON(),
     ...(await getMembers(updatedParticipation))
-  })
+  }
 }
 
 export async function getConceptualMap (userId, groupId) {

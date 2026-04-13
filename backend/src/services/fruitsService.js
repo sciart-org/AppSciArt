@@ -6,13 +6,12 @@ import { checkExists } from '../validators/generalValidators.js'
 import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsPublicOrStaff } from '../validators/productValidators.js'
-import { mapFruitAuthors } from './mappers/productMapper.js'
 import { filterPublished, includeFruitAuthors, includeSeedAuthors, includeSeedsOfEdition } from './includes/productIncludes.js'
 
 export async function getFruitsByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
   const showUnpublished = await checkIsStaff(userId)
-  const rawResponse = await Fruit.findAll({
+  return await Fruit.findAll({
     where: showUnpublished ? {} : filterPublished,
     attributes: ['id', 'title', 'mainImage', 'state'],
     include: [
@@ -25,7 +24,6 @@ export async function getFruitsByEdition (userId, editionId) {
       includeFruitAuthors
     ]
   })
-  return rawResponse.map(f => mapFruitAuthors(f))
 }
 
 export function createFruit (req, res) {
@@ -35,7 +33,7 @@ export function createFruit (req, res) {
 }
 
 export async function getFruitDetails (userId, fruitId) {
-  const rawResponse = await Fruit.findByPk(fruitId, {
+  const fruit = await Fruit.findByPk(fruitId, {
     attributes: {
       exclude: ['driveLink', 'flowerId']
     },
@@ -56,8 +54,7 @@ export async function getFruitDetails (userId, fruitId) {
       includeFruitAuthors
     ]
   })
-  errorThrower(!checkExists(rawResponse), 'Fruit not found', 404)
-  const fruit = mapFruitAuthors(rawResponse)
+  errorThrower(!checkExists(fruit), 'Fruit not found', 404)
   await validateIsPublicOrStaff(userId, fruit)
   return fruit
 }

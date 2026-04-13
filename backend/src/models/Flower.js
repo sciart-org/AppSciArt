@@ -55,6 +55,16 @@ export const Flower = sequelize.define(
   }
 )
 
+Flower.prototype.toJSON = function () {
+  const values = this.get({ plain: true })
+  return {
+    ...values,
+    authors: values?.participations?.map(p => p.user_profile),
+    participations: undefined,
+    seed: values?.seed
+  }
+}
+
 Flower.associate = (db) => {
   const { Seed } = db
   Flower.belongsTo(Seed)

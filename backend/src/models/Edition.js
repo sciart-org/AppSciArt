@@ -46,6 +46,19 @@ export const Edition = sequelize.define(
   }
 )
 
+Edition.prototype.toJSON = function () {
+  const values = this.get({ plain: true })
+  return {
+    ...values,
+    fruits: values?.seeds?.flatMap(
+      seed => seed.flowers?.flatMap(
+        flower => flower.fruits
+      )
+    ),
+    seeds: undefined
+  }
+}
+
 Edition.associate = (db) => {
   const { UserProfile, ScientistEditions, Seed, SeedEditions } = db
   Edition.belongsToMany(UserProfile, { through: ScientistEditions })

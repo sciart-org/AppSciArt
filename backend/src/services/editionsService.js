@@ -1,7 +1,6 @@
 import { Edition } from '../models/Edition.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateCanBeAnnounced, validateCanEditEdition, validateCanSeeEdition, validateEditionNameUnique } from '../validators/editionValidators.js'
-import { mapToEditionDetails } from './mappers/editionMapper.js'
 import { includeEditionFruits } from './includes/editionIncludes.js'
 import { errorThrower } from './errorThrower.js'
 import { createDriveEdition, createEditionFolderName, getEntitiesWithLogo, updateFolderName, uploadImg } from './driveService.js'
@@ -52,9 +51,7 @@ export async function getEditionDetails (userId, editionId) {
   const edition = await Edition.findByPk(editionId, {
     include: includeEditionFruits
   })
-  const editionDetails = mapToEditionDetails(edition)
-
-  const editionsWithLogo = await getEntitiesWithLogo([editionDetails])
+  const editionsWithLogo = await getEntitiesWithLogo([edition])
   return editionsWithLogo[0]
 }
 

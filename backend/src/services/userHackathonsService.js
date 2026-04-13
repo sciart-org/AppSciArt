@@ -5,9 +5,8 @@ import { validateParticipantExists } from '../validators/hackathonValidators.js'
 import { validateConceptualMapIsFromHackathon, validateFlowerIsFromHackathon, validateFruitIsFromHackathon } from '../validators/productValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { includeParticipationItems, searchParticipantsOf } from './includes/participationIncludes.js'
-import { mapHackathonParticipation } from './mappers/hackathonMapper.js'
 import { mapGroupMember, mapTeamMember } from './mappers/participationMapper.js'
+import * as ProductsRepository from '../repositories/productsRepository.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
@@ -44,57 +43,53 @@ export const getMembers = async (participation) => {
   let teamMembers = []
 
   if (checkExists(participation.groupId)) {
-    groupMembers = await Participation.findAll(searchParticipantsOf({
-      hackathonId: participation.hackathonId,
-      clusterNumber: participation.clusterNumber,
-      groupId: participation.groupId
-    }))
-    groupMembers = groupMembers.map(m => mapGroupMember(m))
+    const members = await Participation.scope({
+      method: ['inHackathon', {
+        hackathonId: participation.hackathonId,
+        clusterNumber: participation.clusterNumber,
+        groupId: participation.groupId
+      }]
+    }).findAll()
+    groupMembers = members.map(mapGroupMember)
   }
 
   if (checkExists(participation.teamId) || checkExists(participation.fruitId)) {
     const teamSearchCondition = checkExists(participation.fruitId) ? { fruitId: participation.fruitId } : { teamId: participation.teamId }
-    teamMembers = await Participation.findAll(searchParticipantsOf({
-      hackathonId: participation.hackathonId,
-      clusterNumber: participation.clusterNumber,
-      ...teamSearchCondition
-    }))
-    teamMembers = teamMembers.map(m => mapTeamMember(m))
+    const members = await Participation.scope({
+      method: ['inHackathon', {
+        hackathonId: participation.hackathonId,
+        clusterNumber: participation.clusterNumber,
+        ...teamSearchCondition
+      }]
+    }).findAll()
+    teamMembers = members.map(mapTeamMember)
   }
 
-  return {
-    groupMembers,
-    teamMembers
-  }
+  return { groupMembers, teamMembers }
 }
 
 async function getParticipationById (participationId) {
-  const participation = await Participation.findByPk(participationId, {
-    attributes: {
-      exclude: ['interests', 'roles', 'userProfileId']
-    },
-    include: includeParticipationItems()
-  })
+  const participation = await ProductsRepository.getParticipationById(participationId)
 
   const members = await getMembers(participation)
 
-  return mapHackathonParticipation({
+  return {
     ...participation.toJSON(),
     ...members
-  })
+  }
 }
 
 export async function getParticipation (userId, hackathonId) {
   const user = await UserProfile.findByPk(userId)
   errorThrower(!checkExists(user), 'User not found.', 404)
 
-  const participationId = await validateParticipantExists(userId, hackathonId)
-  return await getParticipationById(participationId)
+  const participation = await validateParticipantExists(userId, hackathonId)
+  return await getParticipationById(participation.id)
 }
 
 export async function updateParticipation (currentUserId, userId, hackathonId, body) {
   errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot edit participations', 403)
-  const participationId = await validateParticipantExists(userId, hackathonId)
+  const participation = await validateParticipantExists(userId, hackathonId)
 
   const { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId } = body
   const participationBody = { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId }
@@ -112,8 +107,8 @@ export async function updateParticipation (currentUserId, userId, hackathonId, b
   }
 
   if (Object.values(participationBody).some(v => v !== undefined)) {
-    await Participation.update(participationBody, { where: { id: participationId } })
+    await Participation.update(participationBody, { where: { id: participation.id } })
   }
 
-  return await getParticipationById(participationId)
+  return await getParticipationById(participation.id)
 }

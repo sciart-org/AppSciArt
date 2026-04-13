@@ -80,6 +80,23 @@ export const Participation = sequelize.define(
     defaultScope: {
       attributes: { exclude: ['createdAt', 'updatedAt'] }
     },
+    scopes: {
+      inHackathon: ({ hackathonId, clusterNumber, groupId, teamId, fruitId } = {}) => ({
+        where: {
+          ...(hackathonId ? { hackathonId } : {}),
+          ...(clusterNumber !== undefined ? { clusterNumber } : {}),
+          ...(groupId ? { groupId } : {}),
+          ...(fruitId ? { fruitId } : teamId ? { teamId } : {})
+        },
+        attributes: ['id', 'isGroupVoice', 'isTeamSpeaker', 'groupId', 'teamId', 'fruitId'],
+        include: [
+          {
+            model: UserProfile,
+            attributes: ['id', 'name', 'surname']
+          }
+        ]
+      })
+    },
     indexes: [
       {
         unique: true,
@@ -90,9 +107,28 @@ export const Participation = sequelize.define(
 
 Participation.prototype.toJSON = function () {
   const values = this.get({ plain: true })
-  values.userProfile = values.user_profile
-  delete values.user_profile
-  return values
+
+  return {
+    ...values,
+    userProfile: values.user_profile,
+    user_profile: undefined,
+    conceptual_map: undefined,
+    conceptualMap: { ...values?.conceptual_map, seed: undefined, map: undefined },
+    groupId: undefined,
+    groupSeed: values?.conceptual_map?.seed,
+    flower: undefined,
+    teamId: undefined,
+    teamFlower: { ...values?.flower, seed: values?.flower?.seed },
+    fruit: undefined,
+    fruitId: undefined,
+    teamFruit: values?.fruit
+      ? {
+          ...values.fruit,
+          flower: undefined,
+          seed: undefined
+        }
+      : undefined
+  }
 }
 
 Participation.associate = (db) => {
