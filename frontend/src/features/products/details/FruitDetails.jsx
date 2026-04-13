@@ -37,7 +37,7 @@ export default function FruitDetails() {
 
   return (
     <div>
-      <h1>{fruit?.title}</h1>
+      <h1 style={{ width: "70vw", marginInline: "auto" }}>{fruit?.title}</h1>
       <div className="fruit-details-container">
         <img src={fruit?.mainImage} />
         <h3>Authors</h3>

@@ -5,6 +5,8 @@ import tokenService from "../../../utils/token.service";
 import SeedResources from "../components/SeedResources";
 import "./css/details.css";
 import RenderUrl from "../../../components/RenderUrl";
+import ImageRenderer from "../../../components/ImageRenderer";
+import logoSeedBlack from "../../../assets/logoSeedBlack.png";
 
 export default function SeedDetails({ seed, setSeed }) {
   const navigate = useNavigate();
@@ -52,10 +54,15 @@ export default function SeedDetails({ seed, setSeed }) {
 
   return (
     <div>
-      <h1>{seed?.title}</h1>
+      <h1 style={{ width: "70vw", marginInline: "auto" }}>{seed?.title}</h1>
       <div className="seed-details-container">
         <div>
-          <img src={seed?.mainImage} />
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <ImageRenderer
+              image={seed?.mainImage}
+              placeholder={logoSeedBlack}
+            />
+          </div>
           <div>
             <LikeComponent />
             <SeedResources seed={seed} />

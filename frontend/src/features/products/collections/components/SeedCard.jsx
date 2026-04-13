@@ -1,11 +1,17 @@
 import AsterButton from "../../../../components/buttons/AsterButton";
+import ImageRenderer from "../../../../components/ImageRenderer";
+import logoSeedBlack from "../../../../assets/logoSeedBlack.png";
 
 export default function SeedCard({ item: seed }) {
   return (
     <div className="collection-item">
       <h2>{seed?.title}</h2>
       <div>
-        <img src={seed?.mainImage} />
+        <ImageRenderer
+          image={seed?.mainImage}
+          placeholder={logoSeedBlack}
+          height={"18rem"}
+        />
       </div>
       <div className="collection-item-details">
         <h4>Inspiring Scientists</h4>

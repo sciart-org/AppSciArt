@@ -37,7 +37,7 @@ export default function FlowerDetails() {
 
   return (
     <div>
-      <h1>{flower?.title}</h1>
+      <h1 style={{ width: "70vw", marginInline: "auto" }}>{flower?.title}</h1>
       <div className="flower-details-container">
         <img src={flower?.mainImage} />
         <h3>Authors</h3>

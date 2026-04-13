@@ -10,7 +10,7 @@ import FlowerCard from "./components/FlowerCard";
 import EditionPicker from "./components/EditionPicker";
 import Loading from "../../../components/messages/Loading";
 import AdminCreateButton from "../../../components/buttons/AdminCreateButton";
-import SeedCard from "../../../components/cards/SeedCard";
+import SeedCard from "./components/SeedCard";
 
 export default function Collection({ itemName: itemNameRaw }) {
   const jwt = tokenService.getLocalAccessToken();
