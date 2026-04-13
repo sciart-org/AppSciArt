@@ -40,7 +40,7 @@ export default function PrepareHackathon() {
 
   const handleToggleConfirmed = (participant) => {
     fetcher({
-      url: `hackathons/${hackathon.id}/participants/${participant.user_profile.id}?broadcast=true`,
+      url: `hackathons/${hackathon.id}/participants/${participant.userProfile.id}?broadcast=true`,
       method: "PUT",
       body: { hasConfirmedAssistance: !participant.hasConfirmedAssistance },
       onSuccess: (updatedParticipation) => {
@@ -62,9 +62,9 @@ export default function PrepareHackathon() {
     {
       key: "name",
       label: "Name",
-      render: (p) => `${p.user_profile?.name} ${p.user_profile?.surname}`,
+      render: (p) => `${p.userProfile?.name} ${p.userProfile?.surname}`,
     },
-    { key: "email", label: "Email", render: (p) => p.user_profile?.email },
+    { key: "email", label: "Email", render: (p) => p.userProfile?.email },
     {
       key: "confirmed",
       label: "",

@@ -88,6 +88,13 @@ export const Participation = sequelize.define(
     ]
   })
 
+Participation.prototype.toJSON = function () {
+  const values = this.get({ plain: true })
+  values.userProfile = values.user_profile
+  delete values.user_profile
+  return values
+}
+
 Participation.associate = (db) => {
   const { ConceptualMap, Flower, Fruit, UserProfile, Hackathon } = db
   ConceptualMap.hasMany(Participation, { foreignKey: 'groupId' })
