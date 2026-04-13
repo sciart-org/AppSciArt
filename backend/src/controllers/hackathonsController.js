@@ -4,6 +4,7 @@ import * as UsersService from '../services/usersService.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { emitHackathonUpdate } from '../sockets/hackathonPhases.js'
+import { toPlainObject } from '../services/mappers/utils.js'
 
 export const getHackathons = withErrorHandler(async (req, res) => {
   const { filter } = req.query
@@ -70,3 +71,19 @@ export function publishHackathon (req, res) {
 export function getHackathonUsers (req, res) {
   service.getHackathonUsers(req, res)
 }
+
+export const nextHackathonPhase = withErrorHandler(async (req, res) => {
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
+  const hackathonId = req.params.hackathonId
+  const { broadcast } = req.query
+
+  const updatedHackathon = await service.nextHackathonPhase(currentUser?.id, hackathonId)
+
+  if (broadcast && broadcast === 'true') {
+    emitHackathonUpdate(hackathonId, toPlainObject(updatedHackathon))
+  }
+
+  return res.status(200).send(updatedHackathon)
+})

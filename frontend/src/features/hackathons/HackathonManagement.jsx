@@ -5,11 +5,15 @@ import PrepareHackathon from "./adminPhases/PrepareHackathon";
 import { useEffect } from "react";
 
 export default function HackathonManagement() {
-  const { hackathon, setHackathon } = useContext(HackathonContext);
+  const { hackathon, setHackathon, setSocket } = useContext(HackathonContext);
   const { socket } = useWebSockets(!!hackathon, hackathon.id);
 
   useEffect(() => {
     if (!socket) return;
+    setSocket(socket);
+    const adminRoom = `${hackathon.id}/staff`;
+    socket.emit("join_room", adminRoom);
+
     socket.on("hackathon:updated", (hackathonChanges) => {
       if (hackathonChanges.id !== hackathon.id) return;
       setHackathon((prev) => ({ ...prev, ...hackathonChanges }));

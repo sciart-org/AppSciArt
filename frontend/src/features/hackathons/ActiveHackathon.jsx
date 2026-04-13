@@ -9,7 +9,7 @@ import CreatedTeams from "./phases/CreatedTeams";
 import { HackathonContext } from "./components/HackathonContext";
 
 export default function ActiveHackathon() {
-  const { hackathon, setHackathon, participation } =
+  const { hackathon, setHackathon, participation, setSocket } =
     useContext(HackathonContext);
 
   const date = new Date(hackathon?.startDate);
@@ -35,6 +35,7 @@ export default function ActiveHackathon() {
 
   useEffect(() => {
     if (!socket) return;
+    setSocket(socket);
     socket.on("hackathon:updated", (hackathonChanges) => {
       if (hackathonChanges.id !== hackathon.id) return;
       setHackathon((prev) => ({ ...prev, ...hackathonChanges }));
@@ -50,7 +51,7 @@ export default function ActiveHackathon() {
   } else if (hackathon.phase === "GROUP_CREATION") {
     return <CreatingGroups />;
   } else if (hackathon.phase === "GROUP_WORK") {
-    return <CreatedGroups socket={socket} />;
+    return <CreatedGroups />;
   } else if (hackathon.phase === "GROUP_PRESENTATION") {
     return (
       <GroupPresentation

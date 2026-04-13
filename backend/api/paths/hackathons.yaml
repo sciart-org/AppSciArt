@@ -701,3 +701,37 @@ conceptualMapSubmit:
         description: Resource not found
       "409":
         description: Conceptual map already delivered
+
+hackathonNextPhase:
+  x-router-controller: hackathonsController
+  post:
+    tags: [Hackathons]
+    summary: Continue to next hackathon phase
+    operationId: nextHackathonPhase
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: broadcast
+        in: query
+        required: false
+        schema:
+          type: boolean
+    responses:
+      "201":
+        description: Continued to next phase
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/hackathon.yaml#/Hackathon"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      "403":
+        description: Forbidden
+      "404":
+        description: Resource not found
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"

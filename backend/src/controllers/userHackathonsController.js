@@ -4,6 +4,7 @@ import * as UsersService from '../services/usersService.js'
 import { validateHackathonIsOpen } from '../validators/hackathonValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { errorThrower } from '../services/errorThrower.js'
+import { emitParticipationUpdateToStaff } from '../sockets/hackathonPhases.js'
 
 export function getUserEnrolledHackathons (req, res) {
   service.getUserEnrolledHackathons(req, res)
@@ -55,7 +56,7 @@ export const updateParticipation = withErrorHandler(async (req, res) => {
   const updatedParticipation = await service.updateParticipation(currentUser.id, userId, hackathonId, participation)
 
   if (broadcast && broadcast === 'true') {
-    // todo
+    emitParticipationUpdateToStaff(hackathonId, participation.id, updatedParticipation)
   }
 
   return res.status(200).send(updatedParticipation)

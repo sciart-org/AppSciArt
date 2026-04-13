@@ -15,6 +15,7 @@ export default function HackathonRouter() {
   const [hackathon, setHackathon] = useState(null);
   const [participation, setParticipation] = useState(null);
   const [error, setError] = useState(null);
+  const [socket, setSocket] = useState(null);
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -58,7 +59,9 @@ export default function HackathonRouter() {
 
   if (!isAdmin) {
     return (
-      <HackathonContext value={{ hackathon, setHackathon, participation }}>
+      <HackathonContext
+        value={{ hackathon, setHackathon, participation, socket, setSocket }}
+      >
         <ActiveHackathon />
       </HackathonContext>
     );
@@ -66,7 +69,7 @@ export default function HackathonRouter() {
 
   if (hackathon.state === "CLOSED") {
     return (
-      <HackathonContext value={{ hackathon, setHackathon }}>
+      <HackathonContext value={{ hackathon, setHackathon, socket, setSocket }}>
         <HackathonManagement />
       </HackathonContext>
     );

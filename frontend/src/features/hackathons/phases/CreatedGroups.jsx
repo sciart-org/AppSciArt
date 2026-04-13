@@ -20,8 +20,8 @@ const GroupSeedResources = ({ pdf, seed }) => {
   );
 };
 
-export default function CreatedGroups({ socket }) {
-  const { hackathon, participation } = useContext(HackathonContext);
+export default function CreatedGroups() {
+  const { hackathon, participation, socket } = useContext(HackathonContext);
   const isPhaseActive = hackathon.phase === "GROUP_WORK";
 
   const [justEntered, setJustEntered] = useState(true);

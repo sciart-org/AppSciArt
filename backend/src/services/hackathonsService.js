@@ -5,6 +5,7 @@ import { validateIsActive } from '../validators/editionValidators.js'
 import { createDriveHackathon, getEntitiesWithLogo, moveDriveFolder, parseFolderName, updateFolderName, uploadImg } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
 import * as HackathonRepository from '../repositories/hackathonsRepository.js'
+import { HackathonStates } from '../states/HackathonStates.js'
 
 export async function getClosestHackathon (userId) {
   const hackathon = await HackathonRepository.getClosestHackathon(userId)
@@ -70,6 +71,7 @@ export async function getHackathonDetails (hackathonId, userId) {
   const hackathonsWithLogo = await getEntitiesWithLogo([hackathonWithDescriptions])
   return hackathonsWithLogo[0]
 }
+
 export async function updateHackathon (currentUserId, hackathonId, body) {
   const hackathon = await validateCanEditHackathon(currentUserId, hackathonId)
 
@@ -123,4 +125,13 @@ export function getHackathonUsers (req, res) {
   res.send({
     message: 'This is the mockup controller for getHackathonUsers'
   })
+}
+
+export async function nextHackathonPhase (currentUserId, hackathonId) {
+  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot alter the state of a hackathon', 403)
+  const hackathon = await HackathonRepository.getHackathonById(currentUserId, hackathonId, true)
+
+  await HackathonStates.advancePhase(hackathon)
+
+  return hackathon
 }

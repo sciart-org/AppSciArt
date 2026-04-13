@@ -53,6 +53,8 @@ paths:
     $ref: "./paths/hackathons.yaml#/hackathons"
   /hackathons/{hackathonId}:
     $ref: "./paths/hackathons.yaml#/hackathonById"
+  /hackathons/{hackathonId}/next-phase:
+    $ref: "./paths/hackathons.yaml#/hackathonNextPhase"
   /hackathons/{hackathonId}/publish:
     $ref: "./paths/hackathons.yaml#/hackathonPublish"
   /hackathons/{hackathonId}/users:
