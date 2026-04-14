@@ -1,6 +1,5 @@
 import { jwtDecode } from 'jwt-decode'
 import { getUserFromJwt } from '../auth/signin.js'
-import { UserProfile } from '../models/UserProfile.js'
 import { errorThrower } from './errorThrower.js'
 import { getJwt } from './authService.js'
 import { Administrator } from '../models/roles/Administrator.js'
@@ -8,6 +7,8 @@ import { checkHasRoleById, checkIsInspiringScientist } from '../validators/userV
 import { Designer } from '../models/roles/Designer.js'
 import { Evaluator } from '../models/roles/Evaluator.js'
 import { Facilitator } from '../models/roles/Facilitator.js'
+import * as UsersRepository from '../repositories/usersRepository.js'
+import { checkExists } from '../validators/generalValidators.js'
 
 export function getUsers (req, res) {
   res.send({
@@ -33,14 +34,15 @@ export function editUser (req, res) {
   })
 }
 
+export async function getUserProfileByEmail (email) {
+  const userProfile = await UsersRepository.getUserProfileByEmail(email)
+  errorThrower(!checkExists(userProfile), `User with email ${email} not found`, 404)
+  return userProfile
+}
+
 export async function getCurrentUserProfileFromJwt (jwt) {
   const userEmail = jwtDecode(jwt).email
-  const user = await UserProfile.findOne({
-    where: {
-      email: userEmail
-    }
-  })
-  errorThrower(!user, 'User not found', 404)
+  const user = await getUserProfileByEmail(userEmail)
   return user
 }
 
@@ -55,6 +57,11 @@ export async function getCurrentUser (req) {
   const { data, error } = await getUserFromJwt(jwt)
   errorThrower(error?.status, error?.message, error?.status)
   return { ...data, jwt }
+}
+
+export async function getUserRolesByAuthId (authId) {
+  const userProfile = await UsersRepository.getMinimalUserProfileByAuthId(authId)
+  return await getUserRoles(userProfile.id)
 }
 
 export async function getUserRoles (userId) {

@@ -6,8 +6,15 @@ export const UserProfile = sequelize.define(
   {
     id: {
       type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
+      onDelete: 'CASCADE'
+    },
+    authId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      unique: true,
       references: {
         model: {
           tableName: 'users',

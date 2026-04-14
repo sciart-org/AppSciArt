@@ -1,4 +1,3 @@
-import { UserProfile } from '../models/UserProfile.js'
 import * as service from '../services/authService.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { authBodyValidator } from '../validators/authValidators.js'
@@ -59,12 +58,12 @@ export const completeRegistration = withErrorHandler(async (req, res) => {
 
   const result = await service.completeRegistration(getBodyAttributes(req))
   await service.removeEarlySignupByEmail(req.body.email)
-  const createdUser = await UserProfile.findOne({ where: { email: req.body.email }, attributes: ['id', 'email', 'name'] })
+  const createdUser = await usersService.getUserProfileByEmail(req.body.email)
   const hasBeenInvited = await scientistsService.completeScientistInvitationIfPresent(createdUser)
   if (hasBeenInvited) {
     result.roles = await usersService.getUserRoles(createdUser.id)
   }
-  emailService.sendCompleteRegistrationEmail(req.body.email, createdUser?.name)
+  emailService.sendCompleteRegistrationEmail(req.body.email, createdUser.name)
   return res.status(201).send(result)
 })
 

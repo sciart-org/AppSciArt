@@ -1,5 +1,4 @@
 import { Participation } from '../models/Participation.js'
-import { UserProfile } from '../models/UserProfile.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateParticipantExists } from '../validators/hackathonValidators.js'
 import { validateConceptualMapIsFromHackathon, validateFlowerIsFromHackathon, validateFruitIsFromHackathon } from '../validators/productValidators.js'
@@ -7,6 +6,7 @@ import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { mapGroupMember, mapTeamMember } from './mappers/participationMapper.js'
 import * as ProductsRepository from '../repositories/productsRepository.js'
+import * as UsersRepository from '../repositories/usersRepository.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
@@ -15,7 +15,7 @@ export function getUserEnrolledHackathons (req, res) {
 }
 
 export async function joinHackathon (userId, hackathonId, roles, interests) {
-  const user = await UserProfile.findByPk(userId)
+  const user = await UsersRepository.getUserProfileById(userId)
   errorThrower(!checkExists(user), 'User not found.', 404)
 
   return await Participation.create({
@@ -80,7 +80,7 @@ async function getParticipationById (participationId) {
 }
 
 export async function getParticipation (userId, hackathonId) {
-  const user = await UserProfile.findByPk(userId)
+  const user = await UsersRepository.getUserProfileById(userId)
   errorThrower(!checkExists(user), 'User not found.', 404)
 
   const participation = await validateParticipantExists(userId, hackathonId)

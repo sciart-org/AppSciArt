@@ -4,15 +4,16 @@ import { UserProfile } from '../models/UserProfile.js'
 import { EarlySignup } from '../models/EarlySignup.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { getUserRoles } from './usersService.js'
+import { getUserRoles, getUserRolesByAuthId } from './usersService.js'
 import { sendQuickRegisterEmail } from '../emails/emailService.js'
+import * as UsersRepository from '../repositories/usersRepository.js'
 
 export async function login ({ email, password }) {
   const { data, error } = await signInEmail(email, password)
 
   errorThrower(error?.status, error?.message, error?.status)
 
-  const roles = await getUserRoles(data.user.id)
+  const roles = await getUserRolesByAuthId(data.user.id)
 
   return {
     jwt: data.session.access_token,
@@ -28,8 +29,8 @@ export async function directRegister (body) {
   errorThrower(error?.status, error?.message, error?.status)
 
   const id = data.user.id
-  await createUserProfile({ id, ...body })
-  const roles = await getUserRoles(data.user.id)
+  const createdUserProfile = await createUserProfile({ authId: id, ...body })
+  const roles = await getUserRoles(createdUserProfile.id)
 
   return {
     jwt: data.session.access_token,
@@ -50,7 +51,7 @@ export async function googleRegister () {
 }
 
 export async function quickRegister (email) {
-  const existingUser = await UserProfile.findOne({ where: { email } })
+  const existingUser = await UsersRepository.getUserProfileByEmail(email)
   const existingEarlySignup = await EarlySignup.findOne({ where: { email } })
 
   const alreadyRegistered = existingUser !== null || existingEarlySignup !== null
@@ -90,22 +91,31 @@ async function getEarlySignupByEmail (email) {
 
 async function completeProviderRegistration (body) {
   const { email } = body
-  const existingUser = await UserProfile.findOne({ where: { email } })
-  await createUserProfile({ ...body, id: existingUser.id, password: null })
+  const existingUser = await UsersRepository.getUserProfileByEmail(email)
+  await createUserProfile({ ...body, authId: existingUser.authId, password: null })
 
   return await googleRegister()
 }
 
 async function createUserProfile (body) {
-  const createdUserProfile = await UserProfile.findByPk(body.id)
-  if (checkExists(createdUserProfile)) {
-    createdUserProfile.set(body)
-    if (checkExists(createdUserProfile.ageRange)) {
-      createdUserProfile.rangeSetAt = Date.now()
-    }
-    await createdUserProfile.save()
+  const data = {
+    ...body,
+    ...(checkExists(body.ageRange) && { rangeSetAt: Date.now() })
   }
-  return createdUserProfile
+
+  const existingAuth = await UsersRepository.getMinimalUserProfileByAuthId(body.authId)
+
+  if (checkExists(existingAuth)) {
+    return await existingAuth.set(data).save()
+  }
+
+  const existingEmail = await UsersRepository.getUserProfileByEmail(body.email)
+
+  if (checkExists(existingEmail)) {
+    return await existingEmail.set(data).save()
+  }
+
+  return await UserProfile.create(data)
 }
 
 export function getJwt (req) {
