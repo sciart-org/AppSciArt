@@ -4,12 +4,16 @@ import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
 import SeedCreation from "./SeedCreation";
 import SeedDetails from "./SeedDetails";
+import tokenService from "../../../utils/token.service";
 
 export default function SeedRouter() {
   const params = useParams();
   const [error, setError] = useState(null);
   const [seed, setSeed] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const isAdmin = tokenService.getIsAdmin()
+  const isAuthor = seed?.authors?.some(author => author.id === userId)
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -32,7 +36,7 @@ export default function SeedRouter() {
     return <Loading />;
   }
 
-  if (seed?.state !== "PUBLISHED") {
+  if (seed?.state !== "PUBLISHED" && (isAdmin || isAuthor)) {
     return <SeedCreation seed={seed} />;
   }
 

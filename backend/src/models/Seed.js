@@ -62,7 +62,7 @@ export const Seed = sequelize.define(
         include: [
           {
             model: UserProfile,
-            attributes: ['name', 'surname'],
+            attributes: ['id', 'name', 'surname'],
             through: { attributes: [] }
           }
         ]
