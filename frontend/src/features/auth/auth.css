@@ -5,6 +5,10 @@
     align-items: center;
 }
 
+.register-form .input-box-container > * {
+  width: 24vw;
+}
+
 .register-form > .aster-button {
     margin-top: 2.5rem;
 }
