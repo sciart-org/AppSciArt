@@ -1,80 +1,80 @@
 .seed-details-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 
 .seed-details-container > * {
-    flex: 2;
+  flex: 2;
 }
 
 .seed-details-container > *:last-child {
-    flex: 3;
+  flex: 3;
 }
 
-.seed-details-container img, .flower-details-container img, .fruit-details-container img {
-    height: auto;
-    max-width: 50vw;
-    max-height: 50vh;
-    object-fit: contain;
-}
-
-.seed-details-container img {
-    width: 25vw;
+.seed-details-container img,
+.flower-details-container img,
+.fruit-details-container img {
+  height: auto;
+  max-width: 50vw;
+  max-height: 50vh;
+  object-fit: contain;
 }
 
 .seed-details-container .image-text {
-    display: flex;
-    font-size: 1.5rem;
-    align-items: center;
-    cursor: pointer;
+  display: flex;
+  font-size: 1.5rem;
+  align-items: center;
+  cursor: pointer;
 }
 
 .seed-details-container p {
-    text-align: start;
+  text-align: start;
 }
 
 .seed-details-container .image-text p {
-    margin-left: 1rem;
+  margin-left: 1rem;
 }
 
 .seed-details-container .image-text > *:first-child {
-    width: 2rem;
-    height: 2rem;
+  width: 2rem;
+  height: 2rem;
 }
 
-.fruit-details-container, .flower-details-container {
-    width: 70vw;
-    margin: auto;
+.fruit-details-container,
+.flower-details-container {
+  width: 70vw;
+  margin: auto;
 }
 
-.fruit-details-container *, .flower-details-container * {
-    text-align: start;
+.fruit-details-container *,
+.flower-details-container * {
+  text-align: start;
 }
 
 .product-buttons-container > * {
-    flex: 1;
-    width: 30rem;
-    margin-left: 5rem;
-    margin-right: 5rem;
+  flex: 1;
+  width: 30rem;
+  margin-left: 5rem;
+  margin-right: 5rem;
 }
 
 .button-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .button-container .seed {
-    width: 10rem;
-    height: 10rem;
+  width: 10rem;
+  height: 10rem;
 }
 
 .button-container > *:last-child {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .button-container p {
-    margin: 0;
+  margin: 0;
 }

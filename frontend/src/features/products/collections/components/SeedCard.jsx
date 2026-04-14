@@ -5,7 +5,7 @@ import logoSeedBlack from "../../../../assets/logoSeedBlack.png";
 export default function SeedCard({ item: seed }) {
   return (
     <div className="collection-item">
-      <h2>{seed?.title}</h2>
+      <h2 style={{ marginInline: "1rem" }}>{seed?.title}</h2>
       <div>
         <ImageRenderer
           image={seed?.mainImage}

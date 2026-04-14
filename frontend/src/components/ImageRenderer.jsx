@@ -13,16 +13,23 @@ export default function ImageRenderer({
 
   const bothSpecified = width && height;
   const noneSpecified = !width && !height;
+  const onlyWidth = width && !height;
+
   const containerWidth = bothSpecified
     ? width
     : noneSpecified
       ? "20rem"
       : (width ?? height);
+
   const containerHeight = bothSpecified
     ? height
     : noneSpecified
       ? "20rem"
-      : (height ?? width);
+      : onlyWidth
+        ? loaded
+          ? "auto"
+          : width
+        : (height ?? width);
 
   if (!image) {
     if (placeholder) {
@@ -88,7 +95,7 @@ export default function ImageRenderer({
         width: containerWidth,
         height: containerHeight,
         minWidth: containerWidth,
-        minHeight: containerHeight,
+        minHeight: loaded && onlyWidth ? 0 : containerHeight,
         flexShrink: 0,
         display: "flex",
         alignItems: "center",

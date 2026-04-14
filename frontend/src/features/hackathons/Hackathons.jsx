@@ -69,7 +69,7 @@ export default function Hackathons() {
       <>
         <h1>Hackathons</h1>
         <AdminCreateButton entity="Hackathon" />
-        <p className="hackathon-empty">No hackathons found.</p>
+        <p className="empty-search">No hackathons found.</p>
       </>
     );
 
@@ -81,7 +81,7 @@ export default function Hackathons() {
         <div key={title} className="hackathon-list-group">
           <h2>{title}</h2>
           {Object.keys(hackathons).length === 0 ? (
-            <p className="hackathon-empty">No hackathons found.</p>
+            <p className="empty-search">No hackathons found.</p>
           ) : (
             Object.entries(hackathons).map(([editionName, hackathonList]) => (
               <div key={editionName} className="hackathon-edition-group">

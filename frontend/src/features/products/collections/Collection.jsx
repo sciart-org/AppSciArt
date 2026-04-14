@@ -122,9 +122,9 @@ export default function Collection({ itemName: itemNameRaw }) {
       <>
         <Header />
         <CreateButton />
-        <h2 style={{ fontWeight: "normal" }}>
-          No {itemName}s for this edition yet
-        </h2>
+        <p className="empty-search" style={{ fontWeight: "normal" }}>
+          No {itemName}s found.
+        </p>
       </>
     );
   }

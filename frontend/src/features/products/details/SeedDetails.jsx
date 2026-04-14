@@ -59,6 +59,7 @@ export default function SeedDetails({ seed, setSeed }) {
         <div>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <ImageRenderer
+              width={"30vw"}
               image={seed?.mainImage}
               placeholder={logoSeedBlack}
             />
