@@ -54,7 +54,7 @@ export default function SeedDetails({ seed, setSeed }) {
 
   return (
     <div>
-      <h1 style={{ width: "70vw", marginInline: "auto" }}>{seed?.title}</h1>
+      <h1 style={{ width: "85vw", marginInline: "auto" }}>{seed?.title}</h1>
       <div className="seed-details-container">
         <div>
           <div style={{ display: "flex", justifyContent: "center" }}>
