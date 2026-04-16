@@ -3,6 +3,7 @@ import useWebSockets from "../../utils/useWebSockets";
 import { HackathonContext } from "./components/HackathonContext";
 import PrepareHackathon from "./adminPhases/PrepareHackathon";
 import { useEffect } from "react";
+import CreateGroups from "./adminPhases/CreateGroups";
 import "./adminPhases/adminPhases.css";
 
 export default function HackathonManagement() {
@@ -37,7 +38,7 @@ export default function HackathonManagement() {
   if (hackathon.phase === "PREPARING") {
     return <PrepareHackathon updateParticipation={updateParticipation} />;
   } else if (hackathon.phase === "GROUP_CREATION") {
-    return "Under development";
+    return <CreateGroups />;
   } else if (hackathon.phase === "GROUP_WORK") {
     return "Under development";
   } else if (hackathon.phase === "GROUP_PRESENTATION") {

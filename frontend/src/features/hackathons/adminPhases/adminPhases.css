@@ -56,3 +56,36 @@
   padding: 0.6rem;
   margin: 0.5rem;
 }
+
+.group-box-container {
+  display: flex;
+  width: 85vw;
+  margin-inline: auto;
+  gap: 5rem;
+}
+
+.group-box-container > * {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.group-box-header {
+  border-bottom: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 0;
+}
+
+.group-box-item {
+  margin: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
