@@ -67,9 +67,21 @@ export default function HackathonRouter() {
     );
   }
 
+  const handleNextPhase = () => {
+    fetcher({
+      url: `hackathons/${hackathon.id}/next-phase?broadcast=true`,
+      method: "POST",
+      onSuccess: (updatedHackathon) => {
+        setHackathon(updatedHackathon);
+      },
+    });
+  };
+
   if (hackathon.state === "CLOSED") {
     return (
-      <HackathonContext value={{ hackathon, setHackathon, socket, setSocket }}>
+      <HackathonContext
+        value={{ hackathon, setHackathon, socket, setSocket, handleNextPhase }}
+      >
         <HackathonManagement />
       </HackathonContext>
     );

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { HackathonContext } from "../components/HackathonContext";
-import "./adminPhases.css";
 import AsterButton from "../../../components/buttons/AsterButton";
 import FormInput from "../../../components/form/FormInput";
 import Participant from "../../../components/roles/Participant";
@@ -9,30 +8,15 @@ import useFetcher from "../../../utils/useFetcher";
 import { showSuccessMessage } from "../../../components/messages/Message";
 import ConfirmPhaseChangeModal from "./ConfirmPhaseChangeModal";
 
-export default function PrepareHackathon() {
-  const { hackathon, setHackathon, socket } = useContext(HackathonContext);
+export default function PrepareHackathon(props) {
+  const { hackathon, setHackathon, handleNextPhase } =
+    useContext(HackathonContext);
 
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [meetLink, setMeetLink] = useState(hackathon.meetLink ?? "");
 
   const { fetcher } = useFetcher(error, setError);
-
-  const updateParticipation = (participationChanges) => {
-    setHackathon((prev) => ({
-      ...prev,
-      participations: prev.participations.map((p) =>
-        p.id === participationChanges.id ? participationChanges : p,
-      ),
-    }));
-  };
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("participation:updated", (participationChanges) =>
-      updateParticipation(participationChanges),
-    );
-  }, [socket]);
 
   useEffect(() => {
     if (meetLink === hackathon.meetLink) return;
@@ -60,17 +44,7 @@ export default function PrepareHackathon() {
       method: "PUT",
       body: { hasConfirmedAssistance: !participant.hasConfirmedAssistance },
       onSuccess: (updatedParticipation) =>
-        updateParticipation(updatedParticipation),
-    });
-  };
-
-  const handleCreateGroups = () => {
-    fetcher({
-      url: `hackathons/${hackathon.id}/next-phase?broadcast=true`,
-      method: "POST",
-      onSuccess: (updatedHackathon) => {
-        setHackathon(updatedHackathon);
-      },
+        props.updateParticipation(updatedParticipation),
     });
   };
 
@@ -101,7 +75,7 @@ export default function PrepareHackathon() {
 
       <ConfirmPhaseChangeModal
         openCondition={openModal}
-        onConfirm={handleCreateGroups}
+        onConfirm={handleNextPhase}
         onCancel={() => setOpenModal(false)}
       />
 
