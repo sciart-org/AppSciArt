@@ -1,8 +1,12 @@
+import { checkExists } from '../../validators/generalValidators.js'
 import { FinishedState } from './FinishedState.js'
 import { HackathonState } from './HackathonState.js'
 
 const phaseRules = {
   PREPARING: (h) => {
+    if (h.type !== 'ON_SITE' && !checkExists(h.meetLink)) {
+      return { canAdvance: false, errorMessage: 'Online hackathons must have a meet link before starting.' }
+    }
     return { canAdvance: true }
   },
   GROUP_CREATION: (h) => {

@@ -110,7 +110,9 @@ export default function PrepareHackathon() {
           name="Meet Link"
           type="text"
           value={meetLink}
-          onChange={(e) => setMeetLink(e.target.value)}
+          onChange={(e) =>
+            setMeetLink(e.target.value === "" ? null : e.target.value)
+          }
         />
         <AsterButton type="submit" className="meet-link-submit">
           Submit
