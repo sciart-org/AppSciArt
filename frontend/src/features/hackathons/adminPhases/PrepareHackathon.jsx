@@ -77,7 +77,11 @@ export default function PrepareHackathon(props) {
         openCondition={openModal}
         onConfirm={handleNextPhase}
         onCancel={() => setOpenModal(false)}
-      />
+      >
+        {hackathon.participations.some((p) => !p.hasConfirmedAssistance) ? (
+          <p>Some participants have not confirmed their assistance yet</p>
+        ) : undefined}
+      </ConfirmPhaseChangeModal>
 
       <form onSubmit={handleSubmitLink} className="meet-link-form">
         <FormInput

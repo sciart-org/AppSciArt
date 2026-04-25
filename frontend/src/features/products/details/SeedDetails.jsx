@@ -3,7 +3,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import tokenService from "../../../utils/token.service";
 import SeedResources from "../components/SeedResources";
-import "./css/details.css";
+import "./details.css";
 import RenderUrl from "../../../components/RenderUrl";
 import ImageRenderer from "../../../components/ImageRenderer";
 import logoSeedBlack from "../../../assets/logoSeedBlack.png";

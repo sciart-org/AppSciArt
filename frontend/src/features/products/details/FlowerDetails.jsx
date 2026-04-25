@@ -5,7 +5,7 @@ import Loading from "../../../components/messages/Loading";
 import AsterButton from "../../../components/buttons/AsterButton";
 import Seed from "../../../components/sciartProducts/Seed";
 
-import "./css/details.css";
+import "./details.css";
 
 export default function FlowerDetails() {
   const params = useParams();

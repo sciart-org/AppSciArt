@@ -4,7 +4,7 @@ import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import AdminCreateButton from "../../components/buttons/AdminCreateButton";
 import tokenService from "../../utils/token.service";
-import "./css/hackathons.css";
+import "./hackathons.css";
 
 export default function Hackathons() {
   const [hackathons, setHackathons] = useState([]);

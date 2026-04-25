@@ -10,7 +10,7 @@ import {
   scrollToTop,
 } from "../../utils/commonUtils";
 import { EditionEditContext } from "./components/EditionEditContext";
-import "./css/edition-details.css";
+import "./EditionDetails.css";
 import EditionDetails from "./EditionDetails";
 import EditionCard from "../../components/cards/EditionCard";
 import SelectorBar from "../../components/buttons/SelectorBar";

@@ -5,13 +5,16 @@ export default function ConfirmPhaseChangeModal({
   openCondition,
   onConfirm,
   onCancel,
+  children,
 }) {
   return (
     <Modal openCondition={openCondition}>
       <h3 style={{ textAlign: "center" }}>
         Are you sure you want to continue to the next phase?
       </h3>
-      <p>All participants will be redirected to the next phase.</p>
+      {children ?? (
+        <p>All participants will be redirected to the next phase.</p>
+      )}
       <div
         style={{
           display: "flex",

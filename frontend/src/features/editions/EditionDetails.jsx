@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import logoCatalog from "../../assets/logoCatalog.png";
 import Carousel from "../home/components/Carousel";
-import "./css/edition-details.css";
+import "./EditionDetails.css";
 import EditionCollectionButtons from "./components/EditionCollectionButtons";
 import ImageRenderer from "../../components/ImageRenderer";
 import logoFlowerBlack from "../../assets/logoFlowerBlack.png";

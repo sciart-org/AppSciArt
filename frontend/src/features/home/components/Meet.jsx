@@ -2,7 +2,7 @@ import meetSvg from "../../../assets/meet.svg";
 import AsterButton from "../../../components/buttons/AsterButton";
 import { HackathonContext } from "../../hackathons/components/HackathonContext";
 import { useContext } from "react";
-import "../css/Meet.css";
+import "./Meet.css";
 
 export default function Meet() {
   const { hackathon } = useContext(HackathonContext);

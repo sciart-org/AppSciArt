@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import tokenService from "../../utils/token.service";
-import "./css/Home.css";
+import "./Home.css";
 import ScientistHome from "./ScientistHome";
 import { useNavigate } from "react-router";
 

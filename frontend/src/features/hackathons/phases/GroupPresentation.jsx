@@ -9,7 +9,7 @@ import Loading from "../../../components/messages/Loading";
 import Seed from "../../../components/sciartProducts/Seed";
 import StarRating from "../../../components/buttons/StarRating";
 import "./phases.css";
-import "../../products/collections/css/collections.css";
+import "../../products/collections/Collection.css";
 import CreatingTeams from "./CreatingTeams";
 import ImageRenderer from "../../../components/ImageRenderer";
 import logoSeedBlack from '../../../assets/logoSeedBlack.png';

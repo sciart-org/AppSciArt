@@ -2,7 +2,7 @@ import Seed from "../../../components/sciartProducts/Seed";
 import Flower from "../../../components/sciartProducts/Flower";
 import Fruit from "../../../components/sciartProducts/Fruit";
 import AsterButton from "../../../components/buttons/AsterButton";
-import "../css/edition-details.css";
+import "../EditionDetails.css";
 
 export default function EditionCollectionButtons({ editionId }) {
   return (

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import CollectionsPagination from "../../../components/CollectionsPagination";
 import tokenService from "../../../utils/token.service";
-import "./css/collections.css";
+import "./Collection.css";
 import useFetcher from "../../../utils/useFetcher";
 import AsterButton from "../../../components/buttons/AsterButton";
 import FruitCard from "./components/FruitCard";
@@ -67,7 +67,6 @@ export default function Collection({ itemName: itemNameRaw }) {
       url: `${itemName}s?editionId=${selectedEdition?.id}`,
       onSuccess: (data) => {
         setItems(data);
-        console.log(data);
       },
       onError: () => {
         setItems([]);

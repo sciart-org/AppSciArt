@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../css/Carousel.css";
+import "./Carousel.css";
 import { GrCaretNext } from "react-icons/gr";
 import ImageRenderer from "../../../components/ImageRenderer";
 import logoFlowerBlack from "../../../assets/logoFlowerBlack.png";
