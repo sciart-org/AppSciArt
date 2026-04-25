@@ -1,10 +1,5 @@
-import { ConceptualMap } from '../models/ConceptualMap.js'
-import { Flower } from '../models/Flower.js'
-import { Fruit } from '../models/Fruit.js'
 import { Participation } from '../models/Participation.js'
 import { Seed } from '../models/Seed.js'
-import { UserProfile } from '../models/UserProfile.js'
-import { includeSeedAuthors } from '../services/includes/productIncludes.js'
 
 const getRoleScope = (isAdmin = false, userId = null) => {
   return isAdmin
@@ -56,41 +51,6 @@ export const getMinimalParticipationOfUserInHackathon = (userId, hackathonId) =>
 }
 
 export const getParticipationById = (participationId) => {
-  return Participation.findByPk(participationId, {
-    attributes: {
-      exclude: ['interests', 'roles', 'userProfileId']
-    },
-    include: [{
-      model: UserProfile,
-      attributes: ['id', 'name', 'surname', 'email']
-    }, {
-      model: Fruit
-    },
-    {
-      model: Flower,
-      attributes: {
-        exclude: ['title', 'mainImage', 'concept', 'conceptualMap', 'state', 'seedId']
-      },
-      include: {
-        model: Seed,
-        attributes: {
-          exclude: ['template', 'state', 'branchesOfKnowledge']
-        },
-        include: includeSeedAuthors
-      }
-    },
-    {
-      model: ConceptualMap,
-      attributes: {
-        exclude: ['seedId']
-      },
-      include: {
-        model: Seed,
-        attributes: {
-          exclude: ['template', 'state', 'branchesOfKnowledge']
-        }
-      }
-    }
-    ]
-  })
+  return Participation.scope('full').findByPk(participationId
+  )
 }

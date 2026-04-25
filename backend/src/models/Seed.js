@@ -101,7 +101,7 @@ Seed.associate = (db) => {
     include: [
       {
         model: Edition,
-        where: editionId ? { id: editionId } : undefined,
+        where: editionId ? { id: editionId } : null,
         attributes: [],
         through: { attributes: [] }
       }
@@ -112,8 +112,9 @@ Seed.associate = (db) => {
     include: [
       {
         model: Hackathon,
-        where: hackathonId ? { id: hackathonId } : undefined,
+        where: hackathonId ? { id: hackathonId } : null,
         attributes: [],
+        required: true,
         through: { attributes: [] }
       }
     ]

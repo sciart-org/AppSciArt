@@ -132,7 +132,7 @@ Participation.prototype.toJSON = function () {
 }
 
 Participation.associate = (db) => {
-  const { ConceptualMap, Flower, Fruit, UserProfile, Hackathon } = db
+  const { ConceptualMap, Flower, Fruit, UserProfile, Hackathon, Seed } = db
   ConceptualMap.hasMany(Participation, { foreignKey: 'groupId' })
   Flower.hasMany(Participation, { foreignKey: 'teamId' })
   Fruit.hasMany(Participation, { foreignKey: 'fruitId' })
@@ -143,4 +143,48 @@ Participation.associate = (db) => {
   Participation.belongsTo(Fruit, { foreignKey: 'fruitId' })
   Participation.belongsTo(UserProfile, notNull('userProfileId'))
   Participation.belongsTo(Hackathon, notNull('hackathonId'))
+
+  Participation.addScope('full', {
+    attributes: {
+      exclude: ['interests', 'userProfileId']
+    },
+    include: [
+      {
+        model: UserProfile,
+        attributes: ['id', 'name', 'surname', 'email']
+      },
+      {
+        model: Fruit
+      },
+      {
+        model: Flower,
+        attributes: {
+          exclude: ['title', 'mainImage', 'concept', 'conceptualMap', 'state', 'seedId']
+        },
+        include: {
+          model: Seed,
+          attributes: {
+            exclude: ['template', 'state', 'branchesOfKnowledge']
+          },
+          include: {
+            model: UserProfile,
+            attributes: ['name', 'surname'],
+            through: { attributes: [] }
+          }
+        }
+      },
+      {
+        model: ConceptualMap,
+        attributes: {
+          exclude: ['seedId']
+        },
+        include: {
+          model: Seed,
+          attributes: {
+            exclude: ['template', 'state', 'branchesOfKnowledge']
+          }
+        }
+      }
+    ]
+  })
 }

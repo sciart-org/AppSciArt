@@ -69,4 +69,18 @@ Flower.associate = (db) => {
   const { Seed } = db
   Flower.belongsTo(Seed)
   Seed.hasMany(Flower, notNull('seedId'))
+
+  Flower.addScope('withSeedsOfHackathon', (hackathonId) => ({
+    attributes: ['id', 'seedId'],
+    include: [
+      {
+        model: Seed.scope([
+          'admin',
+          { method: ['withHackathon', hackathonId] }
+        ]),
+        required: true,
+        attributes: ['state']
+      }
+    ]
+  }))
 }

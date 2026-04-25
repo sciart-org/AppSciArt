@@ -78,9 +78,10 @@ export async function updateHackathon (currentUserId, hackathonId, body) {
   const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink } = body
   let edition
 
-  if (type !== 'ON_SITE') {
-    errorThrower(!meetLink && !hackathon.meetLink, 'A meet link is needed for online or hybrid hackathons', 400)
-  }
+  const isPreparing = hackathon.phase === 'PREPARING'
+  const noMeetLink = !meetLink && !hackathon.meetLink
+  const isOnSite = type !== 'ON_SITE'
+  errorThrower(!isPreparing && !isOnSite && noMeetLink, 'A meet link is needed for online or hybrid hackathons', 400)
 
   if (editionId) {
     edition = await validateIsActive(editionId)
