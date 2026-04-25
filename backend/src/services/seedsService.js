@@ -4,9 +4,9 @@ import { checkExists } from '../validators/generalValidators.js'
 import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { ConceptualMap } from '../models/ConceptualMap.js'
 import { Edition } from '../models/Edition.js'
 import * as ProductsRepository from '../repositories/productsRepository.js'
+import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 
 const checkSeedExists = async (seedId) => {
   const exists = await ProductsRepository.getMinimalSeedUnrestricted(seedId)
@@ -61,13 +61,7 @@ export async function getSeedConceptualMapIds (userId, seedId) {
     await checkSeedExists(seedId)
   }
 
-  const conceptualMapsIds = await ConceptualMap.findAll({
-    where: {
-      seedId,
-      isDelivered: true
-    },
-    attributes: ['id']
-  })
+  const conceptualMapsIds = await GroupsAndTeamsRepository.getDeliveredMapIdsOfSeed(seedId)
 
   return conceptualMapsIds
 }

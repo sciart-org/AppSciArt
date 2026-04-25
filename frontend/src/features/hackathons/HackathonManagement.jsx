@@ -38,7 +38,7 @@ export default function HackathonManagement() {
   if (hackathon.phase === "PREPARING") {
     return <PrepareHackathon updateParticipation={updateParticipation} />;
   } else if (hackathon.phase === "GROUP_CREATION") {
-    return <CreateGroups />;
+    return <CreateGroups updateParticipation={updateParticipation} />;
   } else if (hackathon.phase === "GROUP_WORK") {
     return "Under development";
   } else if (hackathon.phase === "GROUP_PRESENTATION") {

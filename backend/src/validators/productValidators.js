@@ -1,4 +1,3 @@
-import { ConceptualMap } from '../models/ConceptualMap.js'
 import { Flower } from '../models/Flower.js'
 import { Fruit } from '../models/Fruit.js'
 import { Hackathon } from '../models/Hackathon.js'
@@ -6,6 +5,7 @@ import { Seed } from '../models/Seed.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from './generalValidators.js'
 import { checkIsStaff } from './userValidators.js'
+import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 
 const validateIsPublicOrStaff = async (userId, product) => {
   return errorThrower(product.state !== 'PUBLISHED' && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this resource', 403)
@@ -27,12 +27,7 @@ const seedWithHackathonInclude = (hackathonId) => ({
 })
 
 export const validateConceptualMapIsFromHackathon = async (conceptualMapId, hackathonId) => {
-  const conceptualMap = await ConceptualMap.findOne({
-    where: { id: conceptualMapId },
-    attributes: ['id'],
-    limit: 1,
-    include: [seedWithHackathonInclude(hackathonId)]
-  })
+  const conceptualMap = await GroupsAndTeamsRepository.getConceptualMapOfHackathon(conceptualMapId, hackathonId)
   errorThrower(!checkExists(conceptualMap), 'This conceptual map does not belong to the current hackathon', 403)
 }
 

@@ -32,7 +32,7 @@ export class HackathonStates {
 
     errorThrower(!canAdvance, errorMessage, 400)
 
-    const newState = state.advance()
+    const newState = await state.advance()
     await hackathon.save()
 
     return newState

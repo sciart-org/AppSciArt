@@ -1,4 +1,4 @@
-import { ConceptualMap } from '../models/ConceptualMap.js'
+import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 
 const rooms = {}
 let io = null
@@ -11,9 +11,7 @@ const loadInitialRoom = async (room) => {
 
 const getMapOfGroup = async (group) => {
   const conceptualMapId = group.split('/group/')[1]
-  const conceptualMap = await ConceptualMap.findByPk(conceptualMapId, {
-    attributes: ['map']
-  })
+  const conceptualMap = await GroupsAndTeamsRepository.getMinimalConceptualMap(conceptualMapId)
   if (!conceptualMap || !conceptualMap.map) {
     return {
       nodes: [
@@ -39,7 +37,7 @@ const storeEmptyRooms = () => {
 
 const storeMapOfGroup = async (group) => {
   const conceptualMapId = group.split('/group/')[1]
-  const conceptualMap = await ConceptualMap.findByPk(conceptualMapId)
+  const conceptualMap = await GroupsAndTeamsRepository.getConceptualMap(conceptualMapId)
   conceptualMap.map = rooms[group]
   await conceptualMap.save()
 }

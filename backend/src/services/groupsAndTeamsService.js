@@ -1,14 +1,23 @@
-import { ConceptualMap } from '../models/ConceptualMap.js'
 import { Participation } from '../models/Participation.js'
-import { Seed } from '../models/Seed.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { checkUserIsGroupVoice, checkUserIsInHackathon } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { includeParticipationItems } from './includes/participationIncludes.js'
 import { mapGroupMember } from './mappers/participationMapper.js'
 import { getMembers } from './userHackathonsService.js'
+import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
+import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 
 export async function getClusterExploringGroups (hackathonId, clusterNumber) {
+  const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
+  if (!checkExists(hackathon)) return []
+  if (hackathon.phase === 'GROUP_CREATION') {
+    return await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)
+  }
+  return await getClusterExploringGroupsAfterCreation(hackathonId, clusterNumber)
+}
+
+export async function getClusterExploringGroupsAfterCreation (hackathonId, clusterNumber) {
   const allGroupsMembers = await Participation.scope({
     method: ['inHackathon', { hackathonId, clusterNumber }]
   }).findAll()
@@ -82,7 +91,7 @@ export function updateCoCreationTeam (req, res) {
 }
 
 const updateConceptualMap = async (conceptualMapId, map) => {
-  const mapToUpdate = await ConceptualMap.findByPk(conceptualMapId)
+  const mapToUpdate = await GroupsAndTeamsRepository.getConceptualMap(conceptualMapId)
   errorThrower(!checkExists(mapToUpdate), 'Group not found', 404)
   errorThrower(mapToUpdate.isDelivered, 'Conceptual map already delivered', 409)
   mapToUpdate.map = map
@@ -103,13 +112,7 @@ export async function submitConceptualMap (userId, groupId, map) {
 }
 
 export async function getConceptualMap (userId, groupId) {
-  const conceptualMap = await ConceptualMap.findByPk(groupId, {
-    attributes: { exclude: ['seedId'] },
-    include: [{
-      model: Seed,
-      attributes: ['id', 'mainImage', 'title']
-    }]
-  })
+  const conceptualMap = await GroupsAndTeamsRepository.test3(groupId)
   errorThrower(!checkExists(conceptualMap), 'Map not found', 404)
 
   if (conceptualMap.isDelivered) {

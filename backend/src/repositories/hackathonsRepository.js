@@ -51,11 +51,13 @@ export const getHackathons = (userId, isAdmin) => {
 export const getHackathonById = (userId, hackathonId, isAdmin) => {
   const scopes = [
     getRoleScope(isAdmin),
-    'withEdition',
-    isAdmin ? 'withAllParticipations' : { method: ['withUserParticipation', userId] }
+    'withEdition'
   ]
+
   if (!isAdmin) {
     scopes.push({ method: ['withEnrollment', userId] })
+  } else {
+    scopes.push('withAllParticipations')
   }
 
   return Hackathon.scope(scopes).findByPk(hackathonId)

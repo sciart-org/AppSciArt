@@ -1,6 +1,8 @@
 import { checkExists } from '../../validators/generalValidators.js'
 import { FinishedState } from './FinishedState.js'
 import { HackathonState } from './HackathonState.js'
+import * as SeedsService from '../../services/seedsService.js'
+import * as GroupsAndTeamsRepository from '../../repositories/groupsAndTeamsRepository.js'
 
 const phaseRules = {
   PREPARING: (h) => {
@@ -32,12 +34,17 @@ export class ClosedState extends HackathonState {
     return rule ? rule(this.hackathon) : { canAdvance: false, errorMessage: 'Unknown phase' }
   }
 
-  advance () {
+  async advance () {
     const nextPhase = this.getNextPhase()
     const nextState = this.getNextState()
 
     this.hackathon.phase = nextPhase
     this.hackathon.state = nextState
+
+    if (nextPhase === 'GROUP_CREATION') {
+      const hackathonSeeds = await SeedsService.getSeedsByHackathon(null, this.hackathon.id)
+      await Promise.all(hackathonSeeds.map((seed) => GroupsAndTeamsRepository.createConceptualMapOfSeed(seed?.id)))
+    }
 
     if (nextState === 'FINISHED') {
       return new FinishedState(this.hackathon)

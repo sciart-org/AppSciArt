@@ -29,7 +29,7 @@ export const getSeedsOfHackathon = (hackathonId, isAdmin) => {
     getRoleScope(isAdmin),
     { method: ['withHackathon', hackathonId] }
   ]).findAll({
-    attributes: ['id', 'title', 'mainImage']
+    attributes: ['id', 'title', 'mainImage', 'state']
   })
 }
 
