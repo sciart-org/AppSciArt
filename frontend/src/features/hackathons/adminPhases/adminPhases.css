@@ -61,6 +61,7 @@
   display: flex;
   width: 85vw;
   margin-inline: auto;
+  margin-bottom: 1rem;
   gap: 5rem;
 }
 
@@ -98,4 +99,26 @@
   border-collapse: separate;
   border-spacing: 0;
   text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.participant-card-hint .participant-card-hint__tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  background: #333;
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.4rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  white-space: pre-line;
+  width: 10rem;
+}
+
+.participant-card-hint:hover .participant-card-hint__tooltip {
+  display: block;
 }

@@ -112,7 +112,7 @@ export default function PrepareHackathon(props) {
       <div className="create-groups-section">
         <p>Is everybody here?</p>
         <AsterButton onClick={() => setOpenModal(true)}>
-          Create Exploring Groups
+          Start hackathon
         </AsterButton>
       </div>
     </div>

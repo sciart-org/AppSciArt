@@ -6,10 +6,10 @@ import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/ad
 import ParticipantCard from "../../../components/drag-and-drop/ParticipantCard";
 import SeedSection from "../../../components/drag-and-drop/SeedSection";
 import Column from "../../../components/drag-and-drop/Column";
+import AsterButton from "../../../components/buttons/AsterButton";
 
 export default function CreateGroups(props) {
-  const { hackathon, handleNextPhase, setHackathon } =
-    useContext(HackathonContext);
+  const { hackathon, handleNextPhase } = useContext(HackathonContext);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [hackathonSeeds, setHackathonSeeds] = useState([]);
@@ -73,12 +73,20 @@ export default function CreateGroups(props) {
   return (
     <div>
       <h1>{hackathon.internalName}</h1>
-      <h2>Creation of exploring groups</h2>
+      <h2>Exploring groups creation</h2>
       <ConfirmPhaseChangeModal
         openCondition={openModal}
-        onConfirm={handleNextPhase}
+        onConfirm={() => {
+          setOpenModal(false);
+          handleNextPhase();
+        }}
         onCancel={() => setOpenModal(false)}
-      />
+      >
+        <p>
+          Groups will be created and participants will start working on the
+          SciArt flowers creation
+        </p>
+      </ConfirmPhaseChangeModal>
       <div className="group-box-container">
         <div>
           <h3 className="group-box-header">Unassigned participants</h3>
@@ -113,6 +121,7 @@ export default function CreateGroups(props) {
           </div>
         </div>
       </div>
+      <AsterButton onClick={() => setOpenModal(true)}>Create</AsterButton>
     </div>
   );
 }

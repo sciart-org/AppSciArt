@@ -1,5 +1,6 @@
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { useEffect, useRef, useState } from "react";
+import { CiCircleQuestion } from "react-icons/ci";
 
 export default function ParticipantCard({ participant }) {
   const ref = useRef(null);
@@ -24,6 +25,17 @@ export default function ParticipantCard({ participant }) {
     >
       {participant.userProfile.name} {participant.userProfile.surname}
       {participant.roles ? " — " + participant.roles.join(", ") : null}
+      {!participant.hasConfirmedAssistance && (
+        <span
+          style={{ marginLeft: "auto", position: "relative" }}
+          className="participant-card-hint"
+        >
+          <CiCircleQuestion size={"1.5rem"} />
+          <span className="participant-card-hint__tooltip">
+            Assistance not confirmed. Go to previous stage to modify this.{" "}
+          </span>
+        </span>
+      )}
     </p>
   );
 }
