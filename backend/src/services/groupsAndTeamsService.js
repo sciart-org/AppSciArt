@@ -7,6 +7,7 @@ import { mapGroupMember } from './mappers/participationMapper.js'
 import { getMembers } from './userHackathonsService.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
+import { toPlainObject } from './mappers/utils.js'
 
 export async function getClusterExploringGroups (hackathonId, clusterNumber) {
   const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
@@ -26,10 +27,14 @@ export async function getClusterExploringGroupsAfterCreation (hackathonId, clust
   const groups = []
 
   for (const groupId of groupIds) {
+    if (!checkExists(groupId)) continue
+
+    const groupMembers = allGroupsMembers.filter(m => m.groupId === groupId)
     groups.push({
       id: groupId,
-      members: allGroupsMembers.filter(m => m.groupId === groupId).map(m => mapGroupMember(m)),
-      number: groups.length + 1
+      members: groupMembers.map(m => mapGroupMember(m)),
+      number: groups.length + 1,
+      seedId: toPlainObject(groupMembers[0]).conceptualMap?.seedId ?? null
     })
   }
 

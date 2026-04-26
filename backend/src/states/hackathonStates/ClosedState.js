@@ -12,7 +12,7 @@ const phaseRules = {
     return { canAdvance: true }
   },
   GROUP_CREATION: (h) => {
-    if (h.participations.some(p => !p.hasConfirmedAssistance && !checkExists(p.groupId))) {
+    if (h.participations.some(p => p.hasConfirmedAssistance && !checkExists(p.groupId))) {
       return { canAdvance: false, errorMessage: 'There are assisting participants without an assigned exploring group.' }
     }
     return { canAdvance: true }

@@ -93,6 +93,10 @@ export const Participation = sequelize.define(
           {
             model: UserProfile,
             attributes: ['id', 'name', 'surname']
+          },
+          {
+            model: ConceptualMap,
+            attributes: ['seedId']
           }
         ]
       })
