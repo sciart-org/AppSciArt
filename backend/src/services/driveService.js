@@ -1,6 +1,7 @@
 import { PassThrough } from 'stream'
 import { loadDriveAuthConfig } from '../config/drive.js'
 import { toPlainObject } from './mappers/utils.js'
+import { errorThrower } from './errorThrower.js'
 
 const ROOT_FOLDER_ID = process.env.DRIVE_FOLDER_ID
 
@@ -15,7 +16,17 @@ const drive = new Proxy({}, {
         if (error.response?.status === 400 || error.code === 400) {
           console.log('Refreshing auth...')
           driveInstance = await loadDriveAuthConfig()
-          return await driveInstance[prop][method](...args)
+          try {
+            return await driveInstance[prop][method](...args)
+          } catch (retryError) {
+            errorThrower(
+              retryError.response?.data?.error === 'invalid_grant',
+              'Google OAuth token expired or revoked. Re-authorization required.',
+              401
+            )
+            console.error('Drive retry error:', { message: retryError.message, status: retryError.response?.status })
+            throw retryError
+          }
         }
         throw error
       }
@@ -191,11 +202,16 @@ export const getEntitiesWithLogo = async (entitiesList) => {
   const entitiesWithLogo = await Promise.all(
     entitiesList.map(async (entity) => {
       if (!entity?.driveLink) return toPlainObject(entity)
-      const logo = await getLogoFromDrive(entity.driveLink)
 
-      return {
-        ...toPlainObject(entity),
-        logo
+      try {
+        const logo = await getLogoFromDrive(entity.driveLink)
+        return { ...toPlainObject(entity), logo }
+      } catch (err) {
+        if (err.status === 401 || err.message === 'REAUTH_REQUIRED') {
+          console.warn('Drive auth expired, skipping logo for entity:', entity.id)
+          return { ...toPlainObject(entity), logo: null }
+        }
+        throw err
       }
     })
   )
