@@ -1,22 +1,22 @@
 .selector-bar {
-    display: flex;
-    margin: auto;
-    width: 80vw;
+  display: flex;
+  margin: auto;
+  width: 80vw;
 }
 
-.selector-bar > * {
-    height: 2.5rem;
-    flex: 1;
-    margin: 0;
-    padding: 0
+.selector-bar .aster-button {
+  height: 2.5rem;
+  flex: 1;
+  margin: 0;
+  padding: 0;
 }
 
-.selector-bar > :first-child{
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+.selector-bar > :first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-.selector-bar > :last-child{
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+.selector-bar > :last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }

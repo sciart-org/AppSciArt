@@ -10,6 +10,9 @@ import AsterButton from "../../../components/buttons/AsterButton";
 
 export default function CreateGroups(props) {
   const { hackathon, handleNextPhase } = useContext(HackathonContext);
+
+  const isCurrentPhase = hackathon.phase === "GROUP_CREATION";
+
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [hackathonSeeds, setHackathonSeeds] = useState([]);
@@ -72,8 +75,20 @@ export default function CreateGroups(props) {
 
   return (
     <div>
-      <h1>{hackathon.internalName}</h1>
       <h2>Exploring groups creation</h2>
+      {!isCurrentPhase && (
+        <p
+          className="warning-text justified-text"
+          style={{
+            maxWidth: "25rem",
+            marginInline: "auto",
+            marginBottom: "2rem",
+          }}
+        >
+          ⚠ Making changes to groups after their creation is not recommended.
+          Proceed with caution.
+        </p>
+      )}
       <ConfirmPhaseChangeModal
         openCondition={openModal}
         onConfirm={() => {
@@ -121,7 +136,9 @@ export default function CreateGroups(props) {
           </div>
         </div>
       </div>
-      <AsterButton onClick={() => setOpenModal(true)}>Create</AsterButton>
+      {isCurrentPhase && (
+        <AsterButton onClick={() => setOpenModal(true)}>Create</AsterButton>
+      )}
     </div>
   );
 }

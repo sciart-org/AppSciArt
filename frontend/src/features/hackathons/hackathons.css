@@ -27,3 +27,28 @@
   font-weight: 700;
   letter-spacing: 0.1em;
 }
+
+.hackathon-past-phase {
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(245, 245, 200);
+  border: 1px solid rgb(200, 190, 100);
+  color: rgb(120, 100, 0);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.hackathon-warning-phase {
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 10rem;
+}

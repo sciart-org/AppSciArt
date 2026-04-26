@@ -30,9 +30,9 @@ export default function ParticipantCard({ participant }) {
           style={{ marginLeft: "auto", position: "relative" }}
           className="participant-card-hint"
         >
-          <CiCircleQuestion size={"1.5rem"} />
+          <CiCircleQuestion size={"1.5rem"} style={{ display: "block" }} />
           <span className="participant-card-hint__tooltip">
-            Assistance not confirmed. Go to previous stage to modify this.{" "}
+            Assistance not confirmed. Go to previous stage to modify this.
           </span>
         </span>
       )}

@@ -1,13 +1,12 @@
+.hackathon-management-page {
+  padding: 2rem;
+}
+
 .prepare-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3rem;
-  padding: 2rem;
-}
-
-.prepare-page h1 {
-  margin: 0;
 }
 
 .meet-link-form {
@@ -121,4 +120,22 @@
 
 .participant-card-hint:hover .participant-card-hint__tooltip {
   display: block;
+}
+
+.hackathon-phase-selector {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 2rem;
+}
+
+.past-hackathon-phase {
+  background-color: rgb(245, 245, 245);
+  color: rgb(150, 150, 150);
+  opacity: 0.7;
+}
+
+.current-hackathon-phase {
+  border-bottom: 3px solid rgb(100, 100, 100);
 }

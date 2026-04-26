@@ -95,6 +95,16 @@ button:focus-visible {
   text-align: justify;
 }
 
+.warning-text {
+  background-color: rgb(245, 245, 200);
+  border: 1px solid rgb(200, 190, 100);
+  color: rgb(120, 100, 0);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
 #content {
   flex: 1;
   padding: 2vh;

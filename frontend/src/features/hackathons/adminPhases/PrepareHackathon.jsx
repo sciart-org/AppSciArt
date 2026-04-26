@@ -12,6 +12,8 @@ export default function PrepareHackathon(props) {
   const { hackathon, setHackathon, handleNextPhase } =
     useContext(HackathonContext);
 
+  const isCurrentPhase = hackathon.phase === "PREPARING";
+
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [meetLink, setMeetLink] = useState(hackathon.meetLink ?? "");
@@ -71,8 +73,6 @@ export default function PrepareHackathon(props) {
 
   return (
     <div className="prepare-page">
-      <h1>{hackathon.internalName}</h1>
-
       <ConfirmPhaseChangeModal
         openCondition={openModal}
         onConfirm={handleNextPhase}
@@ -109,12 +109,14 @@ export default function PrepareHackathon(props) {
         />
       </section>
 
-      <div className="create-groups-section">
-        <p>Is everybody here?</p>
-        <AsterButton onClick={() => setOpenModal(true)}>
-          Start hackathon
-        </AsterButton>
-      </div>
+      {isCurrentPhase && (
+        <div className="create-groups-section">
+          <p>Is everybody here?</p>
+          <AsterButton onClick={() => setOpenModal(true)}>
+            Start hackathon
+          </AsterButton>
+        </div>
+      )}
     </div>
   );
 }
