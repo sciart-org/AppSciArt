@@ -7,6 +7,10 @@ const ROOT_FOLDER_ID = process.env.DRIVE_FOLDER_ID
 
 let driveInstance = await loadDriveAuthConfig()
 
+export const reloadDriveInstance = async () => {
+  driveInstance = await loadDriveAuthConfig()
+}
+
 const drive = new Proxy({}, {
   get: (_, prop) => new Proxy({}, {
     get: (_, method) => async (...args) => {
@@ -15,7 +19,7 @@ const drive = new Proxy({}, {
       } catch (error) {
         if (error.response?.status === 400 || error.code === 400) {
           console.log('Refreshing auth...')
-          driveInstance = await loadDriveAuthConfig()
+          await reloadDriveInstance()
           try {
             return await driveInstance[prop][method](...args)
           } catch (retryError) {

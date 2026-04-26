@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { showErrorMessage } from "../components/messages/Message";
 import tokenService from "./token.service";
 import { useNavigate } from "react-router";
+import { checkExists } from "../../../backend/src/validators/generalValidators";
 
 export default function useFetcher(error, setError) {
     const API_URL = import.meta.env.VITE_API_URL;
@@ -19,6 +20,16 @@ export default function useFetcher(error, setError) {
     }
 
     async function fetcher({ url, method = "GET", body = null, onSuccess = () => { }, onError = () => { } }) {
+        if (checkExists(jwt) && !tokenService.checkToken()) {
+            jwt = undefined
+            tokenService.removeUser()
+            setTimeout(() => {
+                showErrorMessage("Your session has expired. Please, log in again.", () => { })
+            }, 100)
+            navigate("/signin")
+            return
+        }
+
         if (method === "GET" && body) {
             setError("GET requests should not have a body");
             return

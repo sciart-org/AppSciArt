@@ -34,12 +34,13 @@ import { scrollToTop } from "./utils/commonUtils";
 function App() {
   const [user, setUser] = useState(tokenService.getUser());
   const [justRegistered, setJustRegistered] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     if (!tokenService.checkToken()) {
       setUser(undefined);
     }
-  }, []);
+  }, [location]);
 
   const refreshSession = () => {
     const foundUser = tokenService.getUser();
