@@ -93,7 +93,7 @@ export default function HackathonManagement() {
             <div style={{ position: "relative", flex: 1 }}>
               <AsterButton
                 onClick={() => setSelectedPhase(hackathonPhases.indexOf(p))}
-                style={{ borderRadius: 0 }}
+                style={{ borderRadius: 0, width: '100%' }}
                 className={[
                   isCurrent ? "current-hackathon-phase" : "",
                   isSelected
