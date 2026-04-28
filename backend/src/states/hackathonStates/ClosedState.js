@@ -1,8 +1,7 @@
 import { checkExists } from '../../validators/generalValidators.js'
 import { FinishedState } from './FinishedState.js'
 import { HackathonState } from './HackathonState.js'
-import * as SeedsService from '../../services/seedsService.js'
-import * as GroupsAndTeamsRepository from '../../repositories/groupsAndTeamsRepository.js'
+import * as GroupsAndTeamsService from '../../services/groupsAndTeamsService.js'
 
 const phaseRules = {
   PREPARING: (h) => {
@@ -45,8 +44,9 @@ export class ClosedState extends HackathonState {
     this.hackathon.state = nextState
 
     if (nextPhase === 'GROUP_CREATION') {
-      const hackathonSeeds = await SeedsService.getSeedsByHackathon(null, this.hackathon.id)
-      await Promise.all(hackathonSeeds.map((seed) => GroupsAndTeamsRepository.createConceptualMapOfSeed(seed?.id)))
+      await GroupsAndTeamsService.createConceptualMapsOfHackathon(this.hackathon.id)
+    } else if (nextPhase === 'GROUP_WORK') {
+      await GroupsAndTeamsService.deleteUnassignedConceptualMapsOfHackathon(this.hackathon.id)
     }
 
     if (nextState === 'FINISHED') {

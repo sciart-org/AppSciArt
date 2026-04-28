@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { Participation } from '../models/Participation.js'
 import { Seed } from '../models/Seed.js'
 
@@ -41,16 +42,21 @@ export const getMinimalSeedById = (seedId, userId, isAdmin) => {
 }
 
 export const getMinimalParticipationOfUserInHackathon = (userId, hackathonId) => {
-  return Participation.findOne({
+  return Participation.scope({ method: ['inHackathon', { hackathonId }] }).findOne({
     attributes: ['id'],
-    where: {
-      userProfileId: userId,
-      hackathonId
-    }
+    where: { userProfileId: userId },
+    include: []
   })
 }
 
 export const getParticipationById = (participationId) => {
-  return Participation.scope('full').findByPk(participationId
-  )
+  return Participation.scope('full').findByPk(participationId)
+}
+
+export const getMinimalParticipationsOfHackathon = (hackathonId) => {
+  return Participation.scope({ method: ['inHackathon', { hackathonId }] }).findAll({
+    attributes: ['id', 'groupId'],
+    where: { groupId: { [Op.ne]: null } },
+    include: []
+  })
 }

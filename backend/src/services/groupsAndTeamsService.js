@@ -5,9 +5,11 @@ import { errorThrower } from './errorThrower.js'
 import { includeParticipationItems } from './includes/participationIncludes.js'
 import { mapGroupMember } from './mappers/participationMapper.js'
 import { getMembers } from './userHackathonsService.js'
+import { toPlainObject } from './mappers/utils.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
-import { toPlainObject } from './mappers/utils.js'
+import * as ProductsRepository from '../repositories/productsRepository.js'
+import * as SeedsService from '../services/seedsService.js'
 
 export async function getClusterExploringGroups (hackathonId, clusterNumber) {
   const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
@@ -135,4 +137,24 @@ export async function getConceptualMap (userId, groupId) {
   await checkUserIsInHackathon(userId, hackathonId)
 
   return conceptualMap
+}
+
+export const deleteUnassignedConceptualMapsOfHackathon = async (hackathonId) => {
+  const participations = await ProductsRepository.getMinimalParticipationsOfHackathon(hackathonId)
+
+  const associatedGroupIds = participations.map(p => p.groupId)
+  const mapsInHackathon = await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)
+  const mapIdsInHackathon = mapsInHackathon.map(m => m.id)
+  if (!mapIdsInHackathon.length) return 0
+
+  const unassignedIds = mapsInHackathon
+    .map(m => m.id)
+    .filter(id => !associatedGroupIds.includes(id))
+
+  return Promise.all(unassignedIds.map(GroupsAndTeamsRepository.deleteConceptualMap))
+}
+
+export const createConceptualMapsOfHackathon = async (hackathonId) => {
+  const hackathonSeeds = await SeedsService.getSeedsByHackathon(null, hackathonId)
+  return Promise.all(hackathonSeeds.map((seed) => GroupsAndTeamsRepository.createConceptualMapOfSeed(seed?.id)))
 }

@@ -37,3 +37,11 @@ export const getConceptualMapOfHackathon = (conceptualMapId, hackathonId) => {
 export const createConceptualMapOfSeed = (seedId) => {
   return ConceptualMap.create({ seedId })
 }
+
+export const deleteConceptualMap = (conceptualMapId) => {
+  return ConceptualMap.destroy({
+    where: {
+      id: conceptualMapId
+    }
+  })
+}
