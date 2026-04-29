@@ -1,6 +1,8 @@
 import * as service from '../services/groupsAndTeamsService.js'
 import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
+import { getMembers } from '../services/userHackathonsService.js'
+import * as UserHackathonsService from '../services/userHackathonsService.js'
 
 export const getClusterExploringGroups = withErrorHandler(async (req, res) => {
   const { hackathonId, clusterNumber } = req.params
@@ -55,6 +57,10 @@ export const submitConceptualMap = withErrorHandler(async (req, res) => {
   const groupId = req.params.groupId
   const mapToSubmit = req.body
   const currentUser = await UsersService.getCurrentUserProfile(req)
-  const updatedParticipation = await service.submitConceptualMap(currentUser?.id, groupId, mapToSubmit)
-  return res.status(200).send(updatedParticipation)
+  const updatedParticipationId = await service.submitConceptualMap(currentUser?.id, groupId, mapToSubmit)
+  const updatedParticipation = await UserHackathonsService.getParticipationById(currentUser?.id, updatedParticipationId)
+  return res.status(200).send({
+    ...updatedParticipation.toJSON(),
+    ...(await getMembers(updatedParticipation))
+  })
 })

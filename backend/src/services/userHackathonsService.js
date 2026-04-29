@@ -68,8 +68,13 @@ export const getMembers = async (participation) => {
   return { groupMembers, teamMembers }
 }
 
-async function getParticipationById (participationId) {
+export async function getParticipationById (userId, participationId) {
+  const user = await UsersRepository.getUserProfileById(userId)
+  errorThrower(!checkExists(user), 'User not found.', 404)
+
   const participation = await ProductsRepository.getParticipationById(participationId)
+
+  errorThrower(!(participation.userProfile.id === userId || await checkIsStaff(userId)), 'Unauthorized: You cannot access this participation', 403)
 
   const members = await getMembers(participation)
 
@@ -80,9 +85,6 @@ async function getParticipationById (participationId) {
 }
 
 export async function getParticipation (userId, hackathonId) {
-  const user = await UsersRepository.getUserProfileById(userId)
-  errorThrower(!checkExists(user), 'User not found.', 404)
-
   const participation = await validateParticipantExists(userId, hackathonId)
   return await getParticipationById(participation.id)
 }

@@ -2,9 +2,7 @@ import { Participation } from '../models/Participation.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { checkUserIsGroupVoice, checkUserIsInHackathon } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { includeParticipationItems } from './includes/participationIncludes.js'
 import { mapGroupMember } from './mappers/participationMapper.js'
-import { getMembers } from './userHackathonsService.js'
 import { toPlainObject } from './mappers/utils.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
@@ -97,29 +95,21 @@ export function updateCoCreationTeam (req, res) {
   })
 }
 
-const updateConceptualMap = async (conceptualMapId, map) => {
-  const mapToUpdate = await GroupsAndTeamsRepository.getConceptualMap(conceptualMapId)
+export async function submitConceptualMap (userId, groupId, map) {
+  const userParticipation = await checkUserIsGroupVoice(userId, groupId)
+
+  const mapToUpdate = await GroupsAndTeamsRepository.getConceptualMap(groupId)
   errorThrower(!checkExists(mapToUpdate), 'Group not found', 404)
   errorThrower(mapToUpdate.isDelivered, 'Conceptual map already delivered', 409)
   mapToUpdate.map = map
   mapToUpdate.isDelivered = true
   await mapToUpdate.save()
-}
 
-export async function submitConceptualMap (userId, groupId, map) {
-  const userParticipation = await checkUserIsGroupVoice(userId, groupId)
-  await updateConceptualMap(groupId, map)
-  const updatedParticipation = await Participation.findByPk(userParticipation.id, {
-    include: includeParticipationItems()
-  })
-  return {
-    ...updatedParticipation.toJSON(),
-    ...(await getMembers(updatedParticipation))
-  }
+  return userParticipation.id
 }
 
 export async function getConceptualMap (userId, groupId) {
-  const conceptualMap = await GroupsAndTeamsRepository.test3(groupId)
+  const conceptualMap = await GroupsAndTeamsRepository.getConceptualMapWithSeeds(groupId)
   errorThrower(!checkExists(conceptualMap), 'Map not found', 404)
 
   if (conceptualMap.isDelivered) {
