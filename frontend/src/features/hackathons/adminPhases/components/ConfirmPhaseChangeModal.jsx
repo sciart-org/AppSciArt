@@ -1,5 +1,5 @@
-import AsterButton from "../../../components/buttons/AsterButton";
-import Modal from "../../../components/Modal";
+import AsterButton from "../../../../components/buttons/AsterButton";
+import Modal from "../../../../components/Modal";
 
 export default function ConfirmPhaseChangeModal({
   openCondition,

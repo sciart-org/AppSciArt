@@ -6,7 +6,7 @@ import Participant from "../../../components/roles/Participant";
 import AsterTable from "../../../components/AsterTable";
 import useFetcher from "../../../utils/useFetcher";
 import { showSuccessMessage } from "../../../components/messages/Message";
-import ConfirmPhaseChangeModal from "./ConfirmPhaseChangeModal";
+import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
 
 export default function PrepareHackathon(props) {
   const { hackathon, setHackathon, handleNextPhase } =
