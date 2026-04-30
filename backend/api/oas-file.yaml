@@ -190,6 +190,8 @@ components:
       $ref: "./components/schemas/fruit.yaml#/FruitList"
     GroupDetails:
       $ref: "./components/schemas/group.yaml#/GroupDetails"
+    NewGroup:
+      $ref: "./components/schemas/group.yaml#/NewGroup"
     GroupList:
       $ref: "./components/schemas/group.yaml#/GroupList"
     TeamDetails:

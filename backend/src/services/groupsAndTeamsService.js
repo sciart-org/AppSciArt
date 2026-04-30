@@ -8,6 +8,7 @@ import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as ProductsRepository from '../repositories/productsRepository.js'
 import * as SeedsService from '../services/seedsService.js'
+import { checkIsStaff } from '../validators/userValidators.js'
 
 export async function getClusterExploringGroups (hackathonId, clusterNumber) {
   const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
@@ -41,16 +42,30 @@ export async function getClusterExploringGroupsAfterCreation (hackathonId, clust
   return groups
 }
 
-export function createExploringGroup (req, res) {
-  res.send({
-    message: 'This is the mockup controller for createExploringGroup'
-  })
+export async function createExploringGroup (userId, hackathonId, seedId) {
+  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create exploring groups', 403)
+  const seedsOfHackathon = await ProductsRepository.getSeedsOfHackathon(hackathonId)
+  errorThrower(!seedsOfHackathon.map(s => s.id).includes(seedId), 'The seed does not belong to this hackathon', 400)
+  return await GroupsAndTeamsRepository.createConceptualMapOfSeed(seedId)
 }
 
-export function getExploringGroupDetails (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getExploringGroupDetails'
-  })
+export async function getExploringGroupDetails (groupId) {
+  if (!groupId) return null
+
+  const groupMembers = await ProductsRepository.getParticipationsOfHackathon({ groupId })
+
+  const { hackathonId, clusterNumber } = groupMembers[0]
+
+  const allGroupsMembers = await ProductsRepository.getMinimalParticipationsOfHackathon({ hackathonId, clusterNumber })
+
+  const groupIds = [...new Set(allGroupsMembers.map(m => m.groupId))].sort()
+
+  return {
+    id: groupId,
+    members: groupMembers.map(m => mapGroupMember(m)),
+    number: groupIds.indexOf(groupId) + 1,
+    seedId: toPlainObject(groupMembers[0]).conceptualMap?.seedId ?? null
+  }
 }
 
 export function deleteExploringGroup (req, res) {

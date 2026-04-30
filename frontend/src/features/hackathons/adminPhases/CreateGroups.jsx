@@ -9,35 +9,48 @@ import Column from "../../../components/drag-and-drop/Column";
 import AsterButton from "../../../components/buttons/AsterButton";
 import { checkExists } from "../../../../../backend/src/validators/generalValidators";
 import MoveParticipantModal from "./components/MoveParticipantModal";
+import NewGroupModal from "./components/NewGroupModal";
+import Loading from "../../../components/messages/Loading";
 
 export default function CreateGroups(props) {
   const { hackathon, handleNextPhase } = useContext(HackathonContext);
 
   const isCurrentPhase = hackathon.phase === "GROUP_CREATION";
 
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [hackathonSeeds, setHackathonSeeds] = useState([]);
   const [exploringGroups, setExploringGroups] = useState([]);
-  const [hasConfirmed, setHasConfirmed] = useState(false);
+  const [hasConfirmedChange, setHasConfirmedChange] = useState(false);
+  const [openNewGroupModal, setOpenNewGroupModal] = useState(false);
+
+  const [hackathonSeeds, setHackathonSeeds] = useState([]);
+  const seedsToDisplay = hackathonSeeds.filter((s) =>
+    exploringGroups.map((e) => e.seedId).includes(s.id),
+  );
+
   const [changingParticipant, setChangingParticipant] = useState(false);
-  const changingSeedTitle = hackathonSeeds.find(
+  const changingSeedTitle = seedsToDisplay.find(
     (s) => s.id === changingParticipant?.seedId,
   )?.title;
 
   const { fetcher } = useFetcher(error, setError);
 
-  const fetchSeeds = async (groups) => {
+  const fetchSeeds = async () => {
     await fetcher({
       url: `seeds?hackathonId=${hackathon.id}`,
+      onSuccess: (data) => setHackathonSeeds(data),
+    }).finally(() => setLoading(false));
+  };
+
+  const fetchExploringGroups = async (withSeeds = false) => {
+    await fetcher({
+      url: `hackathons/${hackathon.id}/clusters/${0}/exploring-groups`,
       onSuccess: (data) => {
-        let seeds = data;
-        if (!isCurrentPhase) {
-          seeds = seeds.filter((s) =>
-            groups.map((e) => e.seedId).includes(s.id),
-          );
+        setExploringGroups(data);
+        if (withSeeds) {
+          fetchSeeds();
         }
-        setHackathonSeeds(seeds);
       },
     });
   };
@@ -67,7 +80,7 @@ export default function CreateGroups(props) {
     const group = exploringGroupsRef.current.find((g) => g.seedId === seedId);
 
     if (
-      !hasConfirmed &&
+      !hasConfirmedChange &&
       !isCurrentPhase &&
       checkExists(participant?.groupSeed?.id)
     ) {
@@ -83,14 +96,13 @@ export default function CreateGroups(props) {
   };
 
   useEffect(() => {
+    if (!props.socket) return;
+    props.socket.on("participation:updated", () => fetchExploringGroups());
+  }, [props.socket]);
+
+  useEffect(() => {
     if (!hackathon.id) return;
-    fetcher({
-      url: `hackathons/${hackathon.id}/clusters/${0}/exploring-groups`,
-      onSuccess: (data) => {
-        setExploringGroups(data);
-        fetchSeeds(data);
-      },
-    });
+    fetchExploringGroups(true);
   }, [hackathon?.id]);
 
   const exploringGroupsRef = useRef(exploringGroups);
@@ -113,6 +125,10 @@ export default function CreateGroups(props) {
       },
     });
   }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div>
@@ -163,7 +179,7 @@ export default function CreateGroups(props) {
             Exploring groups (seeds)
           </h3>
           <div style={{ maxHeight: "80vh", overflowY: "scroll" }}>
-            {hackathonSeeds.map((seed) => (
+            {seedsToDisplay.map((seed) => (
               <SeedSection key={seed.id} seed={seed}>
                 {participantsForSeed(seed.id).map((p) => (
                   <ParticipantCard
@@ -177,14 +193,21 @@ export default function CreateGroups(props) {
           </div>
         </div>
       </div>
-      {isCurrentPhase && (
+      {isCurrentPhase ? (
         <AsterButton onClick={() => setOpenModal(true)}>Create</AsterButton>
+      ) : (
+        <>
+          <p>Need a new group?</p>
+          <AsterButton onClick={() => setOpenNewGroupModal(!isCurrentPhase)}>
+            Create group
+          </AsterButton>
+        </>
       )}
       <MoveParticipantModal
         changingParticipant={changingParticipant}
         changingSeedTitle={changingSeedTitle}
         onConfirm={() => {
-          setHasConfirmed(true);
+          setHasConfirmedChange(true);
           changeSeed(
             changingParticipant.participant,
             changingParticipant.seedId,
@@ -193,6 +216,13 @@ export default function CreateGroups(props) {
           setChangingParticipant(null);
         }}
         onCancel={() => setChangingParticipant(null)}
+      />
+      <NewGroupModal
+        openCondition={openNewGroupModal}
+        seedOptions={hackathonSeeds.filter((s) => !seedsToDisplay.includes(s))}
+        participantOptions={unassignedParticipants}
+        onClose={() => setOpenNewGroupModal(false)}
+        onCreate={() => fetchExploringGroups()}
       />
     </div>
   );

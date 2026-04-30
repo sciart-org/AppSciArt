@@ -63,7 +63,7 @@ export default function HackathonManagement() {
     const screens = {
       PREPARING: <PrepareHackathon updateParticipation={updateParticipation} />,
       GROUP_CREATION: (
-        <CreateGroups updateParticipation={updateParticipation} />
+        <CreateGroups updateParticipation={updateParticipation} socket={socket} />
       ),
       GROUP_WORK: "Under development",
       GROUP_PRESENTATION: "Under development",

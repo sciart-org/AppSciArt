@@ -3,6 +3,7 @@ import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
 import { getMembers } from '../services/userHackathonsService.js'
 import * as UserHackathonsService from '../services/userHackathonsService.js'
+import { emitParticipationUpdateToStaff } from '../sockets/hackathonPhases.js'
 
 export const getClusterExploringGroups = withErrorHandler(async (req, res) => {
   const { hackathonId, clusterNumber } = req.params
@@ -10,13 +11,29 @@ export const getClusterExploringGroups = withErrorHandler(async (req, res) => {
   return res.status(200).send(exploringGroups)
 })
 
-export function createExploringGroup (req, res) {
-  service.createExploringGroup(req, res)
-}
+export const createExploringGroup = withErrorHandler(async (req, res) => {
+  const { hackathonId } = req.params
+  const { participantIds, seedId } = req.body
+  const { broadcast } = req.query
 
-export function getExploringGroupDetails (req, res) {
-  service.getExploringGroupDetails(req, res)
-}
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  const createdExploringGroup = await service.createExploringGroup(currentUser?.id, hackathonId, seedId)
+
+  await Promise.all(participantIds.map(async participationId => {
+    const updatedParticipatino = await UserHackathonsService.updateParticipationById(currentUser?.id, participationId, { groupId: createdExploringGroup.id })
+    if (broadcast && broadcast === 'true') {
+      emitParticipationUpdateToStaff(hackathonId, participationId, updatedParticipatino)
+    }
+  }))
+
+  return res.status(201).send(await service.getExploringGroupDetails(createdExploringGroup.id))
+})
+
+export const getExploringGroupDetails = withErrorHandler(async (req, res) => {
+  const { groupId } = req.params
+  const exploringGroup = await service.getExploringGroupDetails(groupId)
+  return res.status(200).send(exploringGroup)
+})
 
 export function deleteExploringGroup (req, res) {
   service.deleteExploringGroup(req, res)

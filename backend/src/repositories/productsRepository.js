@@ -49,14 +49,32 @@ export const getMinimalParticipationOfUserInHackathon = (userId, hackathonId) =>
   })
 }
 
+export const getMinimalParticipation = (participationId) => {
+  return Participation.findByPk(participationId, {
+    attributes: ['id', 'hackathonId'],
+    include: []
+  })
+}
+
 export const getParticipationById = (participationId) => {
   return Participation.scope('full').findByPk(participationId)
 }
 
-export const getMinimalParticipationsOfHackathon = (hackathonId) => {
-  return Participation.scope({ method: ['inHackathon', { hackathonId }] }).findAll({
+export const getMinimalParticipationsOfHackathon = (inHackathonAttributes) => {
+  return Participation.scope({ method: ['inHackathon', inHackathonAttributes] }).findAll({
     attributes: ['id', 'groupId'],
     where: { groupId: { [Op.ne]: null } },
     include: []
   })
 }
+
+export const getParticipationsOfHackathon = (inHackathonAttributes) => {
+  return Participation.scope({ method: ['inHackathon', inHackathonAttributes] }).findAll({
+    where: { groupId: { [Op.ne]: null } }
+  })
+}
+
+export const updateParticipationById = (participationId, body) => {
+  return Participation.update(body, { where: { id: participationId } })
+}
+

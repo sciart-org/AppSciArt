@@ -403,6 +403,17 @@ exploringGroups:
         schema:
           type: integer
           minimum: 0
+      - name: broadcast
+        in: query
+        required: false
+        schema:
+          type: boolean
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/group.yaml#/NewGroup"
     responses:
       "201":
         description: Exploring group created

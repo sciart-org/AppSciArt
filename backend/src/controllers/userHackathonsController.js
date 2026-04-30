@@ -53,7 +53,7 @@ export const updateParticipation = withErrorHandler(async (req, res) => {
   const participation = req.body
   const { broadcast } = req.query
 
-  const updatedParticipation = await service.updateParticipation(currentUser.id, userId, hackathonId, participation)
+  const updatedParticipation = await service.updateParticipationByUserAndHackathon(currentUser.id, userId, hackathonId, participation)
 
   if (broadcast && broadcast === 'true') {
     emitParticipationUpdateToStaff(hackathonId, participation.id, updatedParticipation)

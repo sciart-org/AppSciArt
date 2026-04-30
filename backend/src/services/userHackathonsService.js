@@ -74,7 +74,7 @@ export async function getParticipationById (userId, participationId) {
 
   const participation = await ProductsRepository.getParticipationById(participationId)
 
-  errorThrower(!(participation.userProfile.id === userId || await checkIsStaff(userId)), 'Unauthorized: You cannot access this participation', 403)
+  errorThrower(!(participation.user_profile.id === userId || await checkIsStaff(userId)), 'Unauthorized: You cannot access this participation', 403)
 
   const members = await getMembers(participation)
 
@@ -86,31 +86,40 @@ export async function getParticipationById (userId, participationId) {
 
 export async function getParticipation (userId, hackathonId) {
   const participation = await validateParticipantExists(userId, hackathonId)
-  return await getParticipationById(participation.id)
+  return await getParticipationById(userId, participation.id)
 }
 
-export async function updateParticipation (currentUserId, userId, hackathonId, body) {
+export async function updateParticipationById (currentUserId, participationId, body) {
   errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot edit participations', 403)
-  const participation = await validateParticipantExists(userId, hackathonId)
+  const participation = await ProductsRepository.getMinimalParticipation(participationId)
+  return await updateParticipation(currentUserId, participation, body)
+}
 
+async function updateParticipation (currentUserId, participation, body) {
   const { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId } = body
   const participationBody = { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId }
 
   if (groupId) {
-    await validateConceptualMapIsFromHackathon(groupId, hackathonId)
+    await validateConceptualMapIsFromHackathon(groupId, participation.hackathonId)
   }
 
   if (teamId) {
-    await validateFlowerIsFromHackathon(teamId, hackathonId)
+    await validateFlowerIsFromHackathon(teamId, participation.hackathonId)
   }
 
   if (fruitId) {
-    await validateFruitIsFromHackathon(fruitId, hackathonId)
+    await validateFruitIsFromHackathon(fruitId, participation.hackathonId)
   }
 
   if (Object.values(participationBody).some(v => v !== undefined)) {
-    await Participation.update(participationBody, { where: { id: participation.id } })
+    await ProductsRepository.updateParticipationById(participation.id, participationBody)
   }
 
-  return await getParticipationById(participation.id)
+  return await getParticipationById(currentUserId, participation.id)
+}
+
+export async function updateParticipationByUserAndHackathon (currentUserId, userId, hackathonId, body) {
+  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot edit participations', 403)
+  const participation = await validateParticipantExists(userId, hackathonId)
+  return await updateParticipation(currentUserId, participation, body)
 }
