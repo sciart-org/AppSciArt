@@ -1,4 +1,3 @@
-import { Participation } from '../models/Participation.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { checkUserIsGroupVoice, checkUserIsInHackathon } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
@@ -19,10 +18,8 @@ export async function getClusterExploringGroups (hackathonId, clusterNumber) {
   return await getClusterExploringGroupsAfterCreation(hackathonId, clusterNumber)
 }
 
-export async function getClusterExploringGroupsAfterCreation (hackathonId, clusterNumber) {
-  const allGroupsMembers = await Participation.scope({
-    method: ['inHackathon', { hackathonId, clusterNumber }]
-  }).findAll()
+async function getClusterExploringGroupsAfterCreation (hackathonId, clusterNumber) {
+  const allGroupsMembers = await ProductsRepository.getParticipationsOfHackathon({ hackathonId, clusterNumber })
 
   const groupIds = [...new Set(allGroupsMembers.map(m => m.groupId))].sort()
   const groups = []
@@ -131,12 +128,10 @@ export async function getConceptualMap (userId, groupId) {
     return conceptualMap
   }
 
-  const hackathonId = (await Participation.findOne({
-    attributes: ['hackathonId'],
-    where: {
-      groupId
-    }
-  }))?.hackathonId
+  const hackathonId = (await ProductsRepository.getMinimalParticipationInHackathon(
+    { groupId }
+  ))?.hackathonId
+
   errorThrower(!checkExists(hackathonId), 'Group not found', 404)
 
   await checkUserIsInHackathon(userId, hackathonId)
@@ -145,7 +140,7 @@ export async function getConceptualMap (userId, groupId) {
 }
 
 export const deleteUnassignedConceptualMapsOfHackathon = async (hackathonId) => {
-  const participations = await ProductsRepository.getMinimalParticipationsOfHackathon(hackathonId)
+  const participations = await ProductsRepository.getMinimalParticipationsOfHackathon({ hackathonId })
 
   const associatedGroupIds = participations.map(p => p.groupId)
   const mapsInHackathon = await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)

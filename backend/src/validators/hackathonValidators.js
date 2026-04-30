@@ -43,7 +43,7 @@ const validateHackathonNameUnique = async (internalName, editingHackathonId = nu
 }
 
 const validateParticipantExists = async (userId, hackathonId) => {
-  const participation = await ProductsRepository.getMinimalParticipationOfUserInHackathon(userId, hackathonId)
+  const participation = await ProductsRepository.getMinimalParticipationOfUserInHackathon(userId, { hackathonId })
   errorThrower(!checkExists(participation), 'Participation not found.', 404)
   return participation
 }

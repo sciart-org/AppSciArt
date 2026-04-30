@@ -1,4 +1,3 @@
-import { Participation } from '../models/Participation.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateParticipantExists } from '../validators/hackathonValidators.js'
 import { validateConceptualMapIsFromHackathon, validateFlowerIsFromHackathon, validateFruitIsFromHackathon } from '../validators/productValidators.js'
@@ -18,7 +17,7 @@ export async function joinHackathon (userId, hackathonId, roles, interests) {
   const user = await UsersRepository.getUserProfileById(userId)
   errorThrower(!checkExists(user), 'User not found.', 404)
 
-  return await Participation.create({
+  return await ProductsRepository.createParticipation({
     userProfileId: userId,
     hackathonId,
     roles,
@@ -43,25 +42,21 @@ export const getMembers = async (participation) => {
   let teamMembers = []
 
   if (checkExists(participation.groupId)) {
-    const members = await Participation.scope({
-      method: ['inHackathon', {
-        hackathonId: participation.hackathonId,
-        clusterNumber: participation.clusterNumber,
-        groupId: participation.groupId
-      }]
-    }).findAll()
+    const members = await ProductsRepository.getParticipationsOfHackathon({
+      hackathonId: participation.hackathonId,
+      clusterNumber: participation.clusterNumber,
+      groupId: participation.groupId
+    })
     groupMembers = members.map(mapGroupMember)
   }
 
   if (checkExists(participation.teamId) || checkExists(participation.fruitId)) {
     const teamSearchCondition = checkExists(participation.fruitId) ? { fruitId: participation.fruitId } : { teamId: participation.teamId }
-    const members = await Participation.scope({
-      method: ['inHackathon', {
-        hackathonId: participation.hackathonId,
-        clusterNumber: participation.clusterNumber,
-        ...teamSearchCondition
-      }]
-    }).findAll()
+    const members = await ProductsRepository.getParticipationsOfHackathon({
+      hackathonId: participation.hackathonId,
+      clusterNumber: participation.clusterNumber,
+      ...teamSearchCondition
+    })
     teamMembers = members.map(mapTeamMember)
   }
 

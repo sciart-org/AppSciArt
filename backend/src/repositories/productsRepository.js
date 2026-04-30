@@ -41,9 +41,9 @@ export const getMinimalSeedById = (seedId, userId, isAdmin) => {
   return Seed.scope(getRoleScope(isAdmin, userId)).findByPk(seedId, { attributes: ['id'] })
 }
 
-export const getMinimalParticipationOfUserInHackathon = (userId, hackathonId) => {
-  return Participation.scope({ method: ['inHackathon', { hackathonId }] }).findOne({
-    attributes: ['id'],
+export const getMinimalParticipationOfUserInHackathon = (userId, inHackathonAttributes) => {
+  return Participation.scope({ method: ['inHackathon', inHackathonAttributes] }).findOne({
+    attributes: ['id', 'hackathonId'],
     where: { userProfileId: userId },
     include: []
   })
@@ -78,3 +78,13 @@ export const updateParticipationById = (participationId, body) => {
   return Participation.update(body, { where: { id: participationId } })
 }
 
+export const createParticipation = (body) => {
+  return Participation.create(body)
+}
+
+export const getMinimalParticipationInHackathon = (inHackathonAttributes) => {
+  return Participation.scope({ method: ['inHackathon', inHackathonAttributes] }).findOne({
+    attributes: ['id', 'hackathonId'],
+    include: []
+  })
+}
