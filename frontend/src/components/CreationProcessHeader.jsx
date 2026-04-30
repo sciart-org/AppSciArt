@@ -13,21 +13,20 @@ export default function CreationProcessHeader({
         justifyContent: "center",
       }}
     >
-      <div style={{ flex: 1, marginTop: "1vw" }}>
-        <ParticipantList
-          participants={members || []}
-          fontSize={"1vw"}
-          className={"participant-icon"}
-        />
-      </div>
+      <ParticipantList
+        participants={members || []}
+        fontSize={"1vw"}
+        gridNumber={3}
+        className={"participant-icon"}
+        style={{ flex: 1, marginTop: "1vw", paddingInline: "2rem" }}
+      />
       <PhaseTitle>{children}</PhaseTitle>
-      <div style={{ flex: 1, marginTop: "1vw" }}>
-        <ParticipantList
-          participants={scientists || []}
-          fontSize={"1vw"}
-          className={"participant-icon"}
-        />
-      </div>
+      <ParticipantList
+        participants={scientists || []}
+        fontSize={"1vw"}
+        className={"participant-icon"}
+        style={{ flex: 1, marginTop: "1vw", paddingInline: "2rem" }}
+      />
     </div>
   );
 }

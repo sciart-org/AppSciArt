@@ -64,6 +64,9 @@ export default function CreatedGroups() {
         <ParticipantList
           participants={participation?.groupMembers}
           participantStyle={{ margin: "2vw 2vw 0 2vw" }}
+          isGroup={true}
+          gridNumber={5}
+          style={{ width: "75%", margin: "auto" }}
         />
         <AsterButton
           onClick={() => {
