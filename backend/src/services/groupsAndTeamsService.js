@@ -24,7 +24,9 @@ async function getHackathonExploringGroupsAfterCreation (hackathonId) {
     id: map.id,
     members: map.participations.map(m => mapGroupMember(m)),
     number: index + 1,
-    seedId: map.seedId ?? null
+    seedId: map.seedId ?? null,
+    seedTitle: map.seed?.title ?? null,
+    isDelivered: map.isDelivered
   }))
 }
 

@@ -51,7 +51,7 @@ ConceptualMap.associate = (db) => {
   })
 
   ConceptualMap.addScope('withSeedsOfHackathon', (hackathonId) => ({
-    attributes: ['id', 'seedId'],
+    attributes: ['id', 'seedId', 'isDelivered'],
     include: [
       {
         model: Seed.scope([
@@ -59,7 +59,7 @@ ConceptualMap.associate = (db) => {
           { method: ['withHackathon', hackathonId] }
         ]),
         required: true,
-        attributes: ['state']
+        attributes: ['state', 'title']
       }
     ]
   }))

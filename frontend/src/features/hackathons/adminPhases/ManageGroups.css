@@ -1,0 +1,105 @@
+.manage-groups-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.manage-groups-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.manage-groups-card:hover {
+  border-color: rgb(150, 150, 150);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.manage-groups-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.manage-groups-card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.manage-groups-delivered-badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgb(180, 180, 180);
+  color: gray;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.manage-groups-seed {
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgb(60, 60, 60);
+  text-align: justify;
+}
+
+.manage-groups-card h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: gray;
+  font-weight: 600;
+  text-align: left;
+}
+
+.manage-groups-members {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.manage-groups-member {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background-color: rgb(249, 249, 249);
+  border-radius: 0.5rem;
+  border: 1px solid rgb(235, 235, 235);
+}
+
+.manage-groups-member-name {
+  flex: 1;
+  font-size: 0.9rem;
+  color: rgb(40, 40, 40);
+  text-align: left;
+}
+
+.manage-groups-no-members {
+  margin: 0;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.9rem;
+  color: gray;
+  font-style: italic;
+}
+
+.manage-groups-voice-badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgb(180, 180, 180);
+  color: gray;
+  font-weight: 500;
+  white-space: nowrap;
+}

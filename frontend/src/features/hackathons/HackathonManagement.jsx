@@ -89,7 +89,7 @@ export default function HackathonManagement() {
           fetchExploringGroups={fetchExploringGroups}
         />
       ),
-      GROUP_WORK: <ManageGroups />,
+      GROUP_WORK: <ManageGroups exploringGroups={exploringGroups} />,
       GROUP_PRESENTATION: "Under development",
       TEAM_CREATION: "Under development",
       TEAM_WORK: "Under development",
