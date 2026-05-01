@@ -33,7 +33,7 @@ export default function NewGroupModal({
     }
 
     fetcher({
-      url: `hackathons/${groupSelection.participants[0].hackathonId}/clusters/${0}/exploring-groups?broadcast=true`,
+      url: `hackathons/${groupSelection.participants[0].hackathonId}/clusters/${0}/exploring-groups?broadcast=ALL`,
       method: "POST",
       body: {
         participantIds: groupSelection.participants.map((p) => p.id),

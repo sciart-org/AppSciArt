@@ -52,3 +52,11 @@ ConceptualMap:
       type: array
       items:
         $ref: "./user.yaml#/UserDetails"
+
+Broadcast:
+  type: string
+  enum:
+    - ALL
+    - STAFF
+    - NONE
+  default: NONE

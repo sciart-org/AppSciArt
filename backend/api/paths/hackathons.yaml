@@ -90,7 +90,7 @@ hackathonById:
         in: query
         required: false
         schema:
-          type: boolean
+          $ref: "../components/schemas/common.yaml#/Broadcast"
     requestBody:
       required: true
       content:
@@ -259,7 +259,7 @@ participantsByUser:
         in: query
         required: false
         schema:
-          type: boolean
+          $ref: "../components/schemas/common.yaml#/Broadcast"
     requestBody:
       required: true
       content:
@@ -364,8 +364,8 @@ exploringGroups:
   x-router-controller: groupsAndTeamsController
   get:
     tags: [Groups & Teams]
-    summary: Get exploring groups of a cluster
-    operationId: getClusterExploringGroups
+    summary: Get exploring groups of a hackathon
+    operationId: getHackathonExploringGroups
     parameters:
       - name: hackathonId
         in: path
@@ -373,12 +373,6 @@ exploringGroups:
         schema:
           type: string
           format: uuid
-      - name: clusterNumber
-        in: path
-        required: true
-        schema:
-          type: integer
-          minimum: 0
     responses:
       "200":
         description: List of exploring groups
@@ -407,7 +401,7 @@ exploringGroups:
         in: query
         required: false
         schema:
-          type: boolean
+          $ref: "../components/schemas/common.yaml#/Broadcast"
     requestBody:
       required: true
       content:
@@ -421,6 +415,8 @@ exploringGroups:
           application/json:
             schema:
               $ref: "../components/schemas/group.yaml#/GroupDetails"
+      "409":
+        description: Group already created for this seed
 
 exploringGroupByNumber:
   x-router-controller: groupsAndTeamsController
@@ -730,7 +726,7 @@ hackathonNextPhase:
         in: query
         required: false
         schema:
-          type: boolean
+          $ref: "../components/schemas/common.yaml#/Broadcast"
     responses:
       "201":
         description: Continued to next phase

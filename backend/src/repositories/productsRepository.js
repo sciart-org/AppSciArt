@@ -43,7 +43,7 @@ export const getMinimalSeedById = (seedId, userId, isAdmin) => {
 
 export const getMinimalParticipationOfUserInHackathon = (userId, inHackathonAttributes) => {
   return Participation.scope({ method: ['inHackathon', inHackathonAttributes] }).findOne({
-    attributes: ['id', 'hackathonId'],
+    attributes: ['id', 'hackathonId', 'groupId'],
     where: { userProfileId: userId },
     include: []
   })
@@ -51,7 +51,7 @@ export const getMinimalParticipationOfUserInHackathon = (userId, inHackathonAttr
 
 export const getMinimalParticipation = (participationId) => {
   return Participation.findByPk(participationId, {
-    attributes: ['id', 'hackathonId'],
+    attributes: ['id', 'hackathonId', 'groupId'],
     include: []
   })
 }
@@ -69,9 +69,7 @@ export const getMinimalParticipationsOfHackathon = (inHackathonAttributes) => {
 }
 
 export const getParticipationsOfHackathon = (inHackathonAttributes) => {
-  return Participation.scope({ method: ['inHackathon', inHackathonAttributes] }).findAll({
-    where: { groupId: { [Op.ne]: null } }
-  })
+  return Participation.scope({ method: ['inHackathon', inHackathonAttributes] }).findAll()
 }
 
 export const updateParticipationById = (participationId, body) => {

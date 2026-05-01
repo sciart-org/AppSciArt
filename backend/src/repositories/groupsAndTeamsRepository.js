@@ -34,6 +34,25 @@ export const getConceptualMapOfHackathon = (conceptualMapId, hackathonId) => {
   })
 }
 
+export const getConceptualMapsOfHackathonWithParticipants = (hackathonId) => {
+  return ConceptualMap.scope(
+    { method: ['withSeedsOfHackathon', hackathonId] },
+    'withParticipants'
+  ).findAll({
+    order: [['createdAt', 'ASC']]
+  })
+}
+
+export const getConceptualMapWithParticipants = (groupId) => {
+  return ConceptualMap.scope('withParticipants').findByPk(groupId)
+}
+
+export const getConceptualMapOfSeedInHackathon = (seedId, hackathonId) => {
+  return ConceptualMap.scope({ method: ['withSeedsOfHackathon', hackathonId] }).findOne({
+    where: { seedId }
+  })
+}
+
 export const createConceptualMapOfSeed = (seedId) => {
   return ConceptualMap.create({ seedId })
 }

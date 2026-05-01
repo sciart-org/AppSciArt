@@ -36,7 +36,7 @@ export const ConceptualMap = sequelize.define(
 )
 
 ConceptualMap.associate = (db) => {
-  const { Seed } = db
+  const { Seed, Participation } = db
   ConceptualMap.belongsTo(Seed)
   Seed.hasMany(ConceptualMap, notNull('seedId'))
 
@@ -63,4 +63,11 @@ ConceptualMap.associate = (db) => {
       }
     ]
   }))
+
+  ConceptualMap.addScope('withParticipants', {
+    include: [{
+      model: Participation.scope('inHackathon')
+    }],
+    order: [['createdAt', 'ASC']]
+  })
 }

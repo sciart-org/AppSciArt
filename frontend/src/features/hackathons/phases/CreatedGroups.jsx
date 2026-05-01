@@ -50,6 +50,21 @@ export default function CreatedGroups() {
     return <h2>This phase is not active</h2>;
   }
 
+  if (!participation?.groupSeed) {
+    return (
+      <>
+        <h2>
+          Now, you will work in groups to get familiar with the scientific
+          seeds.
+        </h2>
+        <p>
+          You don't have a group yet. Contact the hackathon organizers to get
+          one assigned.
+        </p>
+      </>
+    );
+  }
+
   if (justEntered) {
     return (
       <>

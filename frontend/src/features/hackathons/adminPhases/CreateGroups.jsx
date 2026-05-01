@@ -14,13 +14,13 @@ import Loading from "../../../components/messages/Loading";
 
 export default function CreateGroups(props) {
   const { hackathon, handleNextPhase } = useContext(HackathonContext);
+  const exploringGroups = props.exploringGroups;
 
   const isCurrentPhase = hackathon.phase === "GROUP_CREATION";
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [exploringGroups, setExploringGroups] = useState([]);
   const [hasConfirmedChange, setHasConfirmedChange] = useState(false);
   const [openNewGroupModal, setOpenNewGroupModal] = useState(false);
 
@@ -43,18 +43,6 @@ export default function CreateGroups(props) {
     }).finally(() => setLoading(false));
   };
 
-  const fetchExploringGroups = async (withSeeds = false) => {
-    await fetcher({
-      url: `hackathons/${hackathon.id}/clusters/${0}/exploring-groups`,
-      onSuccess: (data) => {
-        setExploringGroups(data);
-        if (withSeeds) {
-          fetchSeeds();
-        }
-      },
-    });
-  };
-
   const unassignedParticipants = hackathon.participations.filter(
     (p) => p.groupSeed == null || Object.keys(p.groupSeed).length === 0,
   );
@@ -68,7 +56,7 @@ export default function CreateGroups(props) {
     if (participant?.groupSeed?.id === groupId) return;
 
     fetcher({
-      url: `hackathons/${hackathon.id}/participants/${participant.userProfile.id}?broadcast=true`,
+      url: `hackathons/${hackathon.id}/participants/${participant.userProfile.id}?broadcast=ALL`,
       method: "PUT",
       body: { groupId },
       onSuccess: (updatedParticipation) =>
@@ -96,13 +84,8 @@ export default function CreateGroups(props) {
   };
 
   useEffect(() => {
-    if (!props.socket) return;
-    props.socket.on("participation:updated", () => fetchExploringGroups());
-  }, [props.socket]);
-
-  useEffect(() => {
     if (!hackathon.id) return;
-    fetchExploringGroups(true);
+    fetchSeeds();
   }, [hackathon?.id]);
 
   const exploringGroupsRef = useRef(exploringGroups);
@@ -222,7 +205,7 @@ export default function CreateGroups(props) {
         seedOptions={hackathonSeeds.filter((s) => !seedsToDisplay.includes(s))}
         participantOptions={unassignedParticipants}
         onClose={() => setOpenNewGroupModal(false)}
-        onCreate={() => fetchExploringGroups()}
+        onCreate={() => props.fetchExploringGroups()}
       />
     </div>
   );

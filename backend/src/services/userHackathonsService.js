@@ -6,6 +6,7 @@ import { errorThrower } from './errorThrower.js'
 import { mapGroupMember, mapTeamMember } from './mappers/participationMapper.js'
 import * as ProductsRepository from '../repositories/productsRepository.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
+import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
@@ -93,24 +94,25 @@ export async function updateParticipationById (currentUserId, participationId, b
 async function updateParticipation (currentUserId, participation, body) {
   const { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId } = body
   const participationBody = { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId }
+  const previousGroupId = participation.groupId
 
-  if (groupId) {
-    await validateConceptualMapIsFromHackathon(groupId, participation.hackathonId)
-  }
+  if (groupId) await validateConceptualMapIsFromHackathon(groupId, participation.hackathonId)
+  if (teamId) await validateFlowerIsFromHackathon(teamId, participation.hackathonId)
+  if (fruitId) await validateFruitIsFromHackathon(fruitId, participation.hackathonId)
 
-  if (teamId) {
-    await validateFlowerIsFromHackathon(teamId, participation.hackathonId)
-  }
-
-  if (fruitId) {
-    await validateFruitIsFromHackathon(fruitId, participation.hackathonId)
-  }
+  const previousGroup = previousGroupId && groupId === null
+    ? await GroupsAndTeamsRepository.getConceptualMapWithParticipants(previousGroupId)
+    : null
 
   if (Object.values(participationBody).some(v => v !== undefined)) {
     await ProductsRepository.updateParticipationById(participation.id, participationBody)
   }
 
-  return await getParticipationById(currentUserId, participation.id)
+  if (previousGroup?.participations.length === 1) {
+    await GroupsAndTeamsRepository.deleteConceptualMap(previousGroupId)
+  }
+
+  return getParticipationById(currentUserId, participation.id)
 }
 
 export async function updateParticipationByUserAndHackathon (currentUserId, userId, hackathonId, body) {

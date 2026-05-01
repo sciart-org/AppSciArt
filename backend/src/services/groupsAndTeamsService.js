@@ -2,45 +2,36 @@ import { checkExists } from '../validators/generalValidators.js'
 import { checkUserIsGroupVoice, checkUserIsInHackathon } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { mapGroupMember } from './mappers/participationMapper.js'
-import { toPlainObject } from './mappers/utils.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as ProductsRepository from '../repositories/productsRepository.js'
 import * as SeedsService from '../services/seedsService.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 
-export async function getClusterExploringGroups (hackathonId, clusterNumber) {
+export async function getHackathonExploringGroups (hackathonId) {
   const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
   if (!checkExists(hackathon)) return []
   if (hackathon.phase === 'GROUP_CREATION') {
     return await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)
   }
-  return await getClusterExploringGroupsAfterCreation(hackathonId, clusterNumber)
+  return await getHackathonExploringGroupsAfterCreation(hackathonId)
 }
 
-async function getClusterExploringGroupsAfterCreation (hackathonId, clusterNumber) {
-  const allGroupsMembers = await ProductsRepository.getParticipationsOfHackathon({ hackathonId, clusterNumber })
+async function getHackathonExploringGroupsAfterCreation (hackathonId) {
+  const conceptualMaps = await GroupsAndTeamsRepository.getConceptualMapsOfHackathonWithParticipants(hackathonId)
 
-  const groupIds = [...new Set(allGroupsMembers.map(m => m.groupId))].sort()
-  const groups = []
-
-  for (const groupId of groupIds) {
-    if (!checkExists(groupId)) continue
-
-    const groupMembers = allGroupsMembers.filter(m => m.groupId === groupId)
-    groups.push({
-      id: groupId,
-      members: groupMembers.map(m => mapGroupMember(m)),
-      number: groups.length + 1,
-      seedId: toPlainObject(groupMembers[0]).conceptualMap?.seedId ?? null
-    })
-  }
-
-  return groups
+  return conceptualMaps.map((map, index) => ({
+    id: map.id,
+    members: map.participations.map(m => mapGroupMember(m)),
+    number: index + 1,
+    seedId: map.seedId ?? null
+  }))
 }
 
 export async function createExploringGroup (userId, hackathonId, seedId) {
   errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create exploring groups', 403)
+  const existingGroup = await GroupsAndTeamsRepository.getConceptualMapOfSeedInHackathon(seedId, hackathonId)
+  errorThrower(checkExists(existingGroup), 'A group already exists for this seed', 409)
   const seedsOfHackathon = await ProductsRepository.getSeedsOfHackathon(hackathonId)
   errorThrower(!seedsOfHackathon.map(s => s.id).includes(seedId), 'The seed does not belong to this hackathon', 400)
   return await GroupsAndTeamsRepository.createConceptualMapOfSeed(seedId)
@@ -49,19 +40,19 @@ export async function createExploringGroup (userId, hackathonId, seedId) {
 export async function getExploringGroupDetails (groupId) {
   if (!groupId) return null
 
-  const groupMembers = await ProductsRepository.getParticipationsOfHackathon({ groupId })
+  const conceptualMap = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(groupId)
+  if (!conceptualMap) return null
 
-  const { hackathonId, clusterNumber } = groupMembers[0]
+  const { hackathonId } = conceptualMap.participations[0]
 
-  const allGroupsMembers = await ProductsRepository.getMinimalParticipationsOfHackathon({ hackathonId, clusterNumber })
-
-  const groupIds = [...new Set(allGroupsMembers.map(m => m.groupId))].sort()
+  const allMaps = await GroupsAndTeamsRepository.getConceptualMapsOfHackathonWithParticipants(hackathonId)
+  const number = allMaps.findIndex(m => m.id === groupId) + 1
 
   return {
     id: groupId,
-    members: groupMembers.map(m => mapGroupMember(m)),
-    number: groupIds.indexOf(groupId) + 1,
-    seedId: toPlainObject(groupMembers[0]).conceptualMap?.seedId ?? null
+    members: conceptualMap.participations.map(m => mapGroupMember(m)),
+    number,
+    seedId: conceptualMap.seedId ?? null
   }
 }
 

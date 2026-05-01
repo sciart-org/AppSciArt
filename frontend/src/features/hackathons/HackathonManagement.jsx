@@ -8,10 +8,17 @@ import "./adminPhases/adminPhases.css";
 import SelectorBar from "../../components/buttons/SelectorBar";
 import AsterButton from "../../components/buttons/AsterButton";
 import { parseEnumValue } from "../../utils/commonUtils";
+import ManageGroups from "./adminPhases/ManageGroups";
+import useFetcher from "../../utils/useFetcher";
 
 export default function HackathonManagement() {
   const { hackathon, setHackathon, setSocket } = useContext(HackathonContext);
-  const { socket } = useWebSockets(!!hackathon, hackathon.id);
+  const { socket } = useWebSockets(!!hackathon, `${hackathon.id}/staff`);
+  const [error, setError] = useState(null);
+
+  const { fetcher } = useFetcher(error, setError);
+
+  const [exploringGroups, setExploringGroups] = useState([]);
 
   const hackathonPhases = [
     "PREPARING",
@@ -28,6 +35,7 @@ export default function HackathonManagement() {
 
   useEffect(() => {
     setSelectedPhase(hackathonPhases.indexOf(hackathon.phase));
+    fetchExploringGroups();
   }, [hackathon.phase]);
 
   const updateParticipation = (participationChanges) => {
@@ -39,21 +47,33 @@ export default function HackathonManagement() {
     }));
   };
 
+  const fetchExploringGroups = async () => {
+    await fetcher({
+      url: `hackathons/${hackathon.id}/clusters/${0}/exploring-groups`,
+      onSuccess: (data) => {
+        setExploringGroups(data);
+      },
+    });
+  };
+
   useEffect(() => {
     if (!socket) return;
     setSocket(socket);
-    const adminRoom = `${hackathon.id}/staff`;
-    socket.emit("join_room", adminRoom);
-
     socket.on("hackathon:updated", (hackathonChanges) => {
       if (hackathonChanges.id !== hackathon.id) return;
       setHackathon((prev) => ({ ...prev, ...hackathonChanges }));
     });
 
-    socket.on("participation:updated", (participationChanges) =>
-      updateParticipation(participationChanges),
-    );
+    socket.on("participation:updated", (participationChanges) => {
+      updateParticipation(participationChanges);
+      fetchExploringGroups();
+    });
   }, [socket]);
+
+  useEffect(() => {
+    if (!hackathon.id) return;
+    fetchExploringGroups();
+  }, [hackathon.id]);
 
   const phaseScreen = () => {
     if (selectedPhase > hackathonPhases.indexOf(hackathon.phase)) {
@@ -63,9 +83,13 @@ export default function HackathonManagement() {
     const screens = {
       PREPARING: <PrepareHackathon updateParticipation={updateParticipation} />,
       GROUP_CREATION: (
-        <CreateGroups updateParticipation={updateParticipation} socket={socket} />
+        <CreateGroups
+          updateParticipation={updateParticipation}
+          exploringGroups={exploringGroups}
+          fetchExploringGroups={fetchExploringGroups}
+        />
       ),
-      GROUP_WORK: "Under development",
+      GROUP_WORK: <ManageGroups />,
       GROUP_PRESENTATION: "Under development",
       TEAM_CREATION: "Under development",
       TEAM_WORK: "Under development",
@@ -93,7 +117,7 @@ export default function HackathonManagement() {
             <div style={{ position: "relative", flex: 1 }}>
               <AsterButton
                 onClick={() => setSelectedPhase(hackathonPhases.indexOf(p))}
-                style={{ borderRadius: 0, width: '100%' }}
+                style={{ borderRadius: 0, width: "100%" }}
                 className={[
                   isCurrent ? "current-hackathon-phase" : "",
                   isSelected

@@ -1,4 +1,4 @@
-import { getClusterExploringGroups, getConceptualMap } from '../services/groupsAndTeamsService.js'
+import { getHackathonExploringGroups, getConceptualMap } from '../services/groupsAndTeamsService.js'
 import { getUserIdFromSocket } from './socketUtils.js'
 
 const presentingGroups = {}
@@ -6,8 +6,7 @@ const ratings = {}
 
 async function getPreviousGroupSeeds (socket, clusterRoom) {
   const hackathonId = clusterRoom.split('/cluster/')[0]
-  const clusterNumber = clusterRoom.split('/cluster/')[1]
-  const groups = await getClusterExploringGroups(hackathonId, clusterNumber)
+  const groups = await getHackathonExploringGroups(hackathonId)
   const previousSeeds = []
 
   for (let groupNumber = 1; groupNumber < presentingGroups[clusterRoom]; groupNumber++) {

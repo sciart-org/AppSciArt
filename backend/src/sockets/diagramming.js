@@ -38,6 +38,7 @@ const storeEmptyRooms = () => {
 const storeMapOfGroup = async (group) => {
   const conceptualMapId = group.split('/group/')[1]
   const conceptualMap = await GroupsAndTeamsRepository.getConceptualMap(conceptualMapId)
+  if (!conceptualMap) return
   conceptualMap.map = rooms[group]
   await conceptualMap.save()
 }

@@ -9,8 +9,13 @@ import CreatedTeams from "./phases/CreatedTeams";
 import { HackathonContext } from "./components/HackathonContext";
 
 export default function ActiveHackathon() {
-  const { hackathon, setHackathon, participation, setSocket } =
-    useContext(HackathonContext);
+  const {
+    hackathon,
+    setHackathon,
+    participation,
+    setSocket,
+    fetchParticipation,
+  } = useContext(HackathonContext);
 
   const date = new Date(hackathon?.startDate);
   const rawDays = new Date() - date;
@@ -39,6 +44,9 @@ export default function ActiveHackathon() {
     socket.on("hackathon:updated", (hackathonChanges) => {
       if (hackathonChanges.id !== hackathon.id) return;
       setHackathon((prev) => ({ ...prev, ...hackathonChanges }));
+    });
+    socket.on("participation:updated", () => {
+      fetchParticipation();
     });
   }, [socket]);
 

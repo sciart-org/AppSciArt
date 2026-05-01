@@ -3,8 +3,7 @@ import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { emitHackathonUpdate } from '../sockets/hackathonPhases.js'
-import { toPlainObject } from '../services/mappers/utils.js'
+import { broadcastHackathonUpdate } from '../sockets/hackathonPhases.js'
 
 export const getHackathons = withErrorHandler(async (req, res) => {
   const { filter } = req.query
@@ -52,10 +51,7 @@ export const updateHackathon = withErrorHandler(async (req, res) => {
   const { broadcast } = req.query
 
   const updatedHackathon = await service.updateHackathon(currentUser?.id, hackathonId, hackathon)
-
-  if (broadcast && broadcast === 'true') {
-    emitHackathonUpdate(hackathonId, updatedHackathon)
-  }
+  broadcastHackathonUpdate(broadcast, hackathonId, updatedHackathon)
 
   return res.status(200).send(updatedHackathon)
 })
@@ -80,10 +76,7 @@ export const nextHackathonPhase = withErrorHandler(async (req, res) => {
   const { broadcast } = req.query
 
   const updatedHackathon = await service.nextHackathonPhase(currentUser?.id, hackathonId)
-
-  if (broadcast && broadcast === 'true') {
-    emitHackathonUpdate(hackathonId, toPlainObject(updatedHackathon))
-  }
+  broadcastHackathonUpdate(broadcast, hackathonId, updatedHackathon)
 
   return res.status(200).send(updatedHackathon)
 })

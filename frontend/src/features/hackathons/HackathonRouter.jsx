@@ -22,6 +22,15 @@ export default function HackathonRouter() {
   const navigate = useNavigate();
   const params = useParams();
 
+  const fetchParticipation = async () => {
+    await fetcher({
+      url: `hackathons/${params.hackathonId}/participants/me`,
+      onSuccess: (data) => {
+        setParticipation(data);
+      },
+    });
+  };
+
   useEffect(() => {
     fetcher({
       url: `hackathons/${params.hackathonId}`,
@@ -36,12 +45,7 @@ export default function HackathonRouter() {
 
   useEffect(() => {
     if (!isAdmin) {
-      fetcher({
-        url: `hackathons/${params.hackathonId}/participants/me`,
-        onSuccess: (data) => {
-          setParticipation(data);
-        },
-      });
+      fetchParticipation();
     }
   }, [isAdmin]);
 
@@ -60,7 +64,14 @@ export default function HackathonRouter() {
   if (!isAdmin) {
     return (
       <HackathonContext
-        value={{ hackathon, setHackathon, participation, socket, setSocket }}
+        value={{
+          hackathon,
+          setHackathon,
+          participation,
+          socket,
+          setSocket,
+          fetchParticipation,
+        }}
       >
         <ActiveHackathon />
       </HackathonContext>
@@ -69,7 +80,7 @@ export default function HackathonRouter() {
 
   const handleNextPhase = () => {
     fetcher({
-      url: `hackathons/${hackathon.id}/next-phase?broadcast=true`,
+      url: `hackathons/${hackathon.id}/next-phase?broadcast=ALL`,
       method: "POST",
       onSuccess: (updatedHackathon) => {
         setHackathon(updatedHackathon);

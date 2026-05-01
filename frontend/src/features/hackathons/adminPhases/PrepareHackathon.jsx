@@ -29,7 +29,7 @@ export default function PrepareHackathon(props) {
     e.preventDefault();
     if (hackathon.meetLink === meetLink) return;
     fetcher({
-      url: `hackathons/${hackathon.id}?broadcast=true`,
+      url: `hackathons/${hackathon.id}?broadcast=ALL`,
       method: "PUT",
       body: { meetLink },
       onSuccess: (updatedHackathon) => {
@@ -42,7 +42,7 @@ export default function PrepareHackathon(props) {
 
   const handleToggleConfirmed = (participant) => {
     fetcher({
-      url: `hackathons/${hackathon.id}/participants/${participant.userProfile.id}?broadcast=true`,
+      url: `hackathons/${hackathon.id}/participants/${participant.userProfile.id}?broadcast=STAFF`,
       method: "PUT",
       body: { hasConfirmedAssistance: !participant.hasConfirmedAssistance },
       onSuccess: (updatedParticipation) =>
@@ -75,7 +75,10 @@ export default function PrepareHackathon(props) {
     <div className="prepare-page">
       <ConfirmPhaseChangeModal
         openCondition={openModal}
-        onConfirm={handleNextPhase}
+        onConfirm={() => {
+          setOpenModal(false);
+          handleNextPhase();
+        }}
         onCancel={() => setOpenModal(false)}
       >
         {hackathon.participations.some((p) => !p.hasConfirmedAssistance) ? (

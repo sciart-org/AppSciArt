@@ -8,7 +8,7 @@
 }
 
 .modal dialog {
-  width: 40vw;
+  width: 40rem;
   border: 1px solid rgb(200, 200, 200);
   border-radius: 5px;
   margin-top: 20vh;
