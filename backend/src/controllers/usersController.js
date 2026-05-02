@@ -1,6 +1,10 @@
 import * as service from '../services/usersService.js'
 import { withErrorHandler } from './errorHandling.js'
 
+export const getHealth = withErrorHandler(async (req, res) => {
+  return res.status(200).send({ status: 'ok' })
+})
+
 export function getUsers (req, res) {
   service.getUsers(req, res)
 }

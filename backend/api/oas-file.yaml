@@ -36,6 +36,23 @@ tags:
     description: Domain values and enumerations
 
 paths:
+  /health:
+    x-router-controller: usersController
+    get:
+      security: [{}]
+      summary: Health check endpoint
+      operationId: getHealth
+      responses:
+        "200":
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+
   /editions:
     $ref: "./paths/editions.yaml#/editions"
   /editions/{editionId}:
