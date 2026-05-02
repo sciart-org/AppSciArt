@@ -5,6 +5,7 @@ export default function CreationProcessHeader({
   members,
   scientists,
   children,
+  isGroup = false,
 }) {
   return (
     <div
@@ -19,6 +20,7 @@ export default function CreationProcessHeader({
           participants={members || []}
           gridNumber={3}
           className="participant-icon"
+          isGroup={isGroup}
         />
       </div>
 

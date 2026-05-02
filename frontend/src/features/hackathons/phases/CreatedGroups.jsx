@@ -2,23 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import AsterButton from "../../../components/buttons/AsterButton";
 import useFetcher from "../../../utils/useFetcher";
 import ParticipantList from "../components/ParticipantList";
-import SeedResources from "../../products/components/SeedResources";
 import Diagram from "../components/diagramming/Diagram";
 import Modal from "../../../components/Modal";
 import "./phases.css";
 import { DiagramContext } from "../components/diagramming/DiagramContext";
 import CreationProcessHeader from "../../../components/CreationProcessHeader";
-import RenderUrl from "../../../components/RenderUrl";
 import { HackathonContext } from "../components/HackathonContext";
-
-const GroupSeedResources = ({ pdf, seed }) => {
-  return (
-    <div style={{ flex: 1 }}>
-      <RenderUrl url={pdf} style={{ margin: "1rem 0" }} />
-      <SeedResources seed={seed} style={{ marginLeft: 0 }} />
-    </div>
-  );
-};
+import GroupSeedResources from "../components/GroupSeedResources";
 
 export default function CreatedGroups() {
   const { hackathon, participation, setParticipation, socket } =
@@ -103,7 +93,10 @@ export default function CreatedGroups() {
   if (participation?.conceptualMap?.isDelivered) {
     return (
       <>
-        <CreationProcessHeader members={participation?.groupMembers}>
+        <CreationProcessHeader
+          members={participation?.groupMembers}
+          isGroup={true}
+        >
           Exploring group
         </CreationProcessHeader>
         <h3 style={{ marginTop: "5vh" }}>
@@ -168,7 +161,10 @@ export default function CreatedGroups() {
   return (
     <div>
       <ConfirmDeliveryModal />
-      <CreationProcessHeader members={participation?.groupMembers}>
+      <CreationProcessHeader
+        members={participation?.groupMembers}
+        isGroup={true}
+      >
         Exploring group
       </CreationProcessHeader>
       <div style={{ display: "flex" }}>

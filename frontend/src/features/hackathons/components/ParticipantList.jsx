@@ -12,31 +12,39 @@ export default function ParticipantList({
 }) {
   const [page, setPage] = useState(0);
   const total = participants?.length || 0;
-  const totalPages = Math.ceil(total / gridNumber);
+  const actualGridNumber = total < gridNumber ? total : gridNumber;
+  const totalPages = Math.ceil(total / actualGridNumber);
   const showingParticipants = participants?.slice(
-    page * gridNumber,
-    (page + 1) * gridNumber,
+    page * actualGridNumber,
+    (page + 1) * actualGridNumber,
   );
-  const showButtons = total > gridNumber;
-
-  const actualGrid = Math.min(gridNumber, showingParticipants?.length || 0);
+  const showButtons = total > actualGridNumber;
 
   return (
     <div
-      style={{ display: "flex", alignItems: "center", gap: "0.5rem", ...style }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
+        ...style,
+      }}
     >
-      {showButtons && (
-        <button onClick={() => setPage((p) => p - 1)} disabled={page === 0}>
-          {"<"}
-        </button>
-      )}
+      <button
+        onClick={() => setPage((p) => p - 1)}
+        disabled={page === 0}
+        style={{ visibility: showButtons ? "visible" : "hidden" }}
+      >
+        {"<"}
+      </button>
 
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${actualGrid}, 1fr)`,
-          gap: "0.5rem",
-          flex: 1,
+          gridTemplateColumns: `repeat(${actualGridNumber}, 8vw)`,
+          gap: "1rem",
+          width: "auto",
+          justifyContent: "center",
         }}
       >
         {showingParticipants?.map((m) => (
@@ -47,7 +55,6 @@ export default function ParticipantList({
               flexDirection: "column",
               alignItems: "center",
               textAlign: "center",
-              minWidth: 0,
             }}
           >
             <Participant style={participantStyle} className={className} />
@@ -56,32 +63,34 @@ export default function ParticipantList({
                 fontSize: fontSize || "clamp(0.6rem, 1.2vw, 0.85rem)",
                 marginBlock: "0.25rem 0",
                 width: "100%",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
+                wordBreak: "break-word",
                 paddingInline: "0.25rem",
+                marginBottom: "0.5rem",
               }}
             >
               {m.name} {m.surname}
             </p>
-            {isGroup && m?.isGroupVoice && (
-              <span className="manage-groups-voice-badge">Group voice</span>
-            )}
-            {!isGroup && m?.isTeamSpeaker && (
-              <span className="manage-groups-voice-badge">Team speaker</span>
-            )}
+            <span
+              className="manage-groups-voice-badge"
+              style={{
+                visibility: (isGroup ? m?.isGroupVoice : m?.isTeamSpeaker)
+                  ? "visible"
+                  : "hidden",
+              }}
+            >
+              {isGroup ? "Group voice" : "Team speaker"}
+            </span>
           </div>
         ))}
       </div>
 
-      {showButtons && (
-        <button
-          onClick={() => setPage((p) => p + 1)}
-          disabled={page === totalPages - 1}
-        >
-          {">"}
-        </button>
-      )}
+      <button
+        onClick={() => setPage((p) => p + 1)}
+        disabled={page === totalPages - 1}
+        style={{ visibility: showButtons ? "visible" : "hidden" }}
+      >
+        {">"}
+      </button>
     </div>
   );
 }

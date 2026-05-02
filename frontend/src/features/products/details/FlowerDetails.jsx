@@ -20,7 +20,6 @@ export default function FlowerDetails() {
       url: `flowers/${params.flowerId}`,
       onSuccess: (data) => {
         setFlower(data);
-        console.log(data);
       },
     }).finally(() => {
       setLoading(false);

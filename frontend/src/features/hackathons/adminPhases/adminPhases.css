@@ -120,10 +120,6 @@
   width: 10rem;
 }
 
-.participant-card-hint:hover .participant-card-hint__tooltip {
-  display: block;
-}
-
 .hackathon-phase-selector {
   width: 100vw;
   position: relative;

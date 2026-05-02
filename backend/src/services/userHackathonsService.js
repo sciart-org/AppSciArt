@@ -99,6 +99,11 @@ async function updateParticipation (currentUserId, participation, body) {
   if (groupId) await validateConceptualMapIsFromHackathon(groupId, participation.hackathonId)
   if (teamId) await validateFlowerIsFromHackathon(teamId, participation.hackathonId)
   if (fruitId) await validateFruitIsFromHackathon(fruitId, participation.hackathonId)
+  if (isGroupVoice) {
+    const group = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(previousGroupId)
+    const otherIds = group.participations.map(p => p.id).filter(id => id !== participation.id)
+    await Promise.all(otherIds.map(async id => await ProductsRepository.updateParticipationById(id, { isGroupVoice: false })))
+  }
 
   const previousGroup = previousGroupId && groupId === null
     ? await GroupsAndTeamsRepository.getConceptualMapWithParticipants(previousGroupId)

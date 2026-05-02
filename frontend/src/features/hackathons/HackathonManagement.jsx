@@ -41,9 +41,16 @@ export default function HackathonManagement() {
   const updateParticipation = (participationChanges) => {
     setHackathon((prev) => ({
       ...prev,
-      participations: prev.participations.map((p) =>
-        p.id === participationChanges.id ? participationChanges : p,
-      ),
+      participations: prev.participations.map((p) => {
+        if (p.id === participationChanges.id) return participationChanges;
+        if (
+          participationChanges.isGroupVoice &&
+          p.conceptualMap?.id === participationChanges.conceptualMap?.id
+        ) {
+          return { ...p, isGroupVoice: false };
+        }
+        return p;
+      }),
     }));
   };
 

@@ -5,21 +5,43 @@ import CreationProcessHeader from "../../../components/CreationProcessHeader";
 import { DiagramContext } from "../components/diagramming/DiagramContext";
 import Diagram from "../components/diagramming/Diagram";
 import { Link } from "react-router";
+import useFetcher from "../../../utils/useFetcher";
+import Loading from "../../../components/messages/Loading";
+import GroupSeedResources from "../components/GroupSeedResources";
 
 export default function ManageGroups(props) {
   const { socket, hackathon } = useContext(HackathonContext);
   const exploringGroups = props.exploringGroups;
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [groupSeed, setGroupSeed] = useState(null);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const { fetcher } = useFetcher(error, setError);
 
   const groupRoom = `${hackathon?.id}/group/${selectedGroup?.id}`;
+  const getFullName = (member) => {
+    return member.name + " " + member.surname;
+  };
 
   useEffect(() => {
     if (!socket || !selectedGroup?.id) return;
     socket.emit("join_room", groupRoom);
     return () => socket.emit("leave_room", groupRoom);
   }, [socket, selectedGroup?.id]);
+
+  useEffect(() => {
+    if (!selectedGroup || !selectedGroup.seedId) return;
+
+    fetcher({
+      url: `seeds/${selectedGroup.seedId}`,
+      onSuccess: (data) => {
+        setGroupSeed(data);
+      },
+    }).finally(() => setLoading(false));
+  }, [selectedGroup]);
 
   if (!selectedGroup) {
     return (
@@ -46,18 +68,20 @@ export default function ManageGroups(props) {
               {group?.members?.length === 0 ? (
                 <p className="manage-groups-no-members">No members</p>
               ) : (
-                group?.members?.map((m) => (
-                  <div key={m.id} className="manage-groups-member">
-                    <span className="manage-groups-member-name">
-                      {m.name} {m.surname}
-                    </span>
-                    {m.isGroupVoice && (
-                      <span className="manage-groups-voice-badge">
-                        Group voice
+                group?.members
+                  ?.sort((a, b) => getFullName(a).localeCompare(getFullName(b)))
+                  .map((m) => (
+                    <div key={m.id} className="manage-groups-member">
+                      <span className="manage-groups-member-name">
+                        {getFullName(m)}
                       </span>
-                    )}
-                  </div>
-                ))
+                      {m.isGroupVoice && (
+                        <span className="manage-groups-voice-badge">
+                          Group voice
+                        </span>
+                      )}
+                    </div>
+                  ))
               )}
             </div>
           </div>
@@ -82,11 +106,15 @@ export default function ManageGroups(props) {
     );
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   if (selectedGroup?.isDelivered) {
     return (
       <>
         <GoBack />
-        <CreationProcessHeader members={selectedGroup?.members}>
+        <CreationProcessHeader members={selectedGroup?.members} isGroup={true}>
           Exploring group {selectedGroup.number}
         </CreationProcessHeader>
         <h3 style={{ marginTop: "5vh" }}>
@@ -99,16 +127,11 @@ export default function ManageGroups(props) {
   return (
     <>
       <GoBack />
-      <CreationProcessHeader members={selectedGroup?.members}>
+      <CreationProcessHeader members={selectedGroup?.members} isGroup={true}>
         Exploring group {selectedGroup.number}
       </CreationProcessHeader>
       <div style={{ display: "flex" }}>
-        {/*
-        <GroupSeedResources
-          pdf={}
-          seed={}
-        />
-        */}
+        <GroupSeedResources pdf={groupSeed?.seedPDF} seed={groupSeed} />
         <div style={{ flex: 1 }}>
           <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
             <Diagram socket={socket} room={groupRoom} editionMode={false} />

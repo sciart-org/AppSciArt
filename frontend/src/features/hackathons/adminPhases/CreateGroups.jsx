@@ -43,25 +43,41 @@ export default function CreateGroups(props) {
     }).finally(() => setLoading(false));
   };
 
-  const unassignedParticipants = hackathon.participations.filter(
-    (p) => p.groupSeed == null || Object.keys(p.groupSeed).length === 0,
+  const getFullName = (member) => {
+    return member.userProfile.name + " " + member.userProfile.surname;
+  };
+
+  const sortByName = (members) => {
+    return members.sort((a, b) => getFullName(a).localeCompare(getFullName(b)));
+  };
+
+  const unassignedParticipants = sortByName(
+    hackathon.participations.filter(
+      (p) => p.groupSeed == null || Object.keys(p.groupSeed).length === 0,
+    ),
   );
 
   const participantsForSeed = (seedId) =>
-    hackathon.participations.filter((p) => p.groupSeed?.id === seedId);
+    sortByName(
+      hackathon.participations.filter((p) => p.groupSeed?.id === seedId),
+    );
+
+  const updateParticipant = async (participantId, newParticipant) => {
+    fetcher({
+      url: `hackathons/${hackathon.id}/participants/${participantId}?broadcast=ALL`,
+      method: "PUT",
+      body: newParticipant,
+      onSuccess: (updatedParticipation) =>
+        props.updateParticipation(updatedParticipation),
+    });
+  };
 
   const changeSeed = (participant, seedId, group) => {
     const groupId = seedId === null ? null : group?.id;
 
     if (participant?.groupSeed?.id === groupId) return;
 
-    fetcher({
-      url: `hackathons/${hackathon.id}/participants/${participant.userProfile.id}?broadcast=ALL`,
-      method: "PUT",
-      body: { groupId },
-      onSuccess: (updatedParticipation) =>
-        props.updateParticipation(updatedParticipation),
-    });
+    updateParticipant(participant.userProfile.id, { groupId });
   };
 
   const handleSeedChange = (participant, seedId) => {
@@ -81,6 +97,12 @@ export default function CreateGroups(props) {
     }
 
     changeSeed(participant, seedId, group);
+  };
+
+  const handleToggleGroupVoice = (participant) => {
+    updateParticipant(participant.userProfile.id, {
+      isGroupVoice: !participant.isGroupVoice,
+    });
   };
 
   useEffect(() => {
@@ -150,7 +172,11 @@ export default function CreateGroups(props) {
             style={{ height: "100%", maxHeight: "80vh", overflowY: "scroll" }}
           >
             {unassignedParticipants.map((p) => (
-              <ParticipantCard key={p.id} participant={p} />
+              <ParticipantCard
+                key={p.id}
+                participant={p}
+                onToggleGroupVoice={handleToggleGroupVoice}
+              />
             ))}
           </Column>
         </div>
@@ -169,6 +195,7 @@ export default function CreateGroups(props) {
                     key={p.id}
                     participant={p}
                     seedId={seed.id}
+                    onToggleGroupVoice={handleToggleGroupVoice}
                   />
                 ))}
               </SeedSection>
