@@ -99,7 +99,7 @@ export default function CreatedGroups() {
         >
           Exploring group
         </CreationProcessHeader>
-        <h3 style={{ marginTop: "5vh" }}>
+        <h3 style={{ marginTop: "1rem" }}>
           Your conceptual map has been submitted! Feel free to take a break.
         </h3>
       </>
@@ -124,7 +124,7 @@ export default function CreatedGroups() {
   const submitConceptualMap = async () => {
     if (!participation?.isGroupVoice) return;
     fetcher({
-      url: `exploring-groups/${participation?.conceptualMap?.id}/conceptual-map/submit`,
+      url: `exploring-groups/${participation?.conceptualMap?.id}/conceptual-map/submit?broadcast=ALL`,
       method: "PATCH",
       body: { nodes, edges },
       onSuccess: (data) => {
@@ -137,22 +137,26 @@ export default function CreatedGroups() {
     return (
       <Modal openCondition={participation?.isGroupVoice && openModal}>
         <h3>Submit conceptual map</h3>
-        <hr style={{ width: "90%" }} />
         <p>
           Are you sure you want to submit your conceptual map? {"\n"} This
           cannot be undone
         </p>
-        <hr style={{ width: "90%" }} />
         <div
           style={{
             display: "flex",
-            gap: "5vw",
+            justifyContent: "space-between",
+            gap: "1rem",
           }}
         >
-          <div></div>
-          <AsterButton onClick={submitConceptualMap}>Submit</AsterButton>
+          <AsterButton
+            onClick={() => {
+              submitConceptualMap();
+              setOpenModal(false);
+            }}
+          >
+            Submit
+          </AsterButton>
           <AsterButton onClick={() => setOpenModal(false)}>Cancel</AsterButton>
-          <div></div>
         </div>
       </Modal>
     );

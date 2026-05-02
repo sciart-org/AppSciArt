@@ -73,7 +73,14 @@ export default function HackathonManagement() {
 
     socket.on("participation:updated", (participationChanges) => {
       updateParticipation(participationChanges);
-      fetchExploringGroups();
+    });
+
+    socket.on("group:updated", (groupChanges) => {
+      setExploringGroups((prev) =>
+        prev.map((g) =>
+          g.id === groupChanges.id ? { ...g, ...groupChanges } : g,
+        ),
+      );
     });
   }, [socket]);
 

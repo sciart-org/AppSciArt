@@ -113,6 +113,18 @@ export async function submitConceptualMap (userId, groupId, map) {
   return userParticipation.id
 }
 
+export async function reopenConceptualMap (userId, groupId) {
+  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot reopen conceptual maps', 403)
+
+  const mapToUpdate = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(groupId)
+  errorThrower(!checkExists(mapToUpdate), 'Group not found', 404)
+  errorThrower(!mapToUpdate.isDelivered, 'Conceptual map already open', 409)
+  mapToUpdate.isDelivered = false
+  await mapToUpdate.save()
+
+  return { map: mapToUpdate, hackathonId: mapToUpdate.participations[0]?.hackathonId }
+}
+
 export async function getConceptualMap (userId, groupId) {
   const conceptualMap = await GroupsAndTeamsRepository.getConceptualMapWithSeeds(groupId)
   errorThrower(!checkExists(conceptualMap), 'Map not found', 404)

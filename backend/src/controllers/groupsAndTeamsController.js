@@ -3,7 +3,9 @@ import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
 import { getMembers } from '../services/userHackathonsService.js'
 import * as UserHackathonsService from '../services/userHackathonsService.js'
-import { broadcastParticipationUpdate } from '../sockets/hackathonPhases.js'
+import { broadcastGroupUpdate, broadcastParticipationUpdate } from '../sockets/hackathonPhases.js'
+import { errorThrower } from '../services/errorThrower.js'
+import { checkExists } from '../validators/generalValidators.js'
 
 export const getHackathonExploringGroups = withErrorHandler(async (req, res) => {
   const { hackathonId } = req.params
@@ -17,6 +19,8 @@ export const createExploringGroup = withErrorHandler(async (req, res) => {
   const { broadcast } = req.query
 
   const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
   const createdExploringGroup = await service.createExploringGroup(currentUser?.id, hackathonId, seedId)
 
   await Promise.all(participantIds.map(async participationId => {
@@ -24,6 +28,7 @@ export const createExploringGroup = withErrorHandler(async (req, res) => {
     broadcastParticipationUpdate(broadcast, hackathonId, participationId, updatedParticipatino)
   }))
 
+  broadcastGroupUpdate(broadcast === 'NONE' ? 'NONE' : 'STAFF', hackathonId, createdExploringGroup.id, createdExploringGroup)
   return res.status(201).send(await service.getExploringGroupDetails(createdExploringGroup.id))
 })
 
@@ -71,11 +76,26 @@ export const getConceptualMap = withErrorHandler(async (req, res) => {
 export const submitConceptualMap = withErrorHandler(async (req, res) => {
   const groupId = req.params.groupId
   const mapToSubmit = req.body
+  const broadcast = req.query.broadcast
   const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
   const updatedParticipationId = await service.submitConceptualMap(currentUser?.id, groupId, mapToSubmit)
   const updatedParticipation = await UserHackathonsService.getParticipationById(currentUser?.id, updatedParticipationId)
+  broadcastGroupUpdate(broadcast, updatedParticipation.hackathonId, groupId, { isDelivered: updatedParticipation.conceptualMap.isDelivered })
   return res.status(200).send({
-    ...updatedParticipation.toJSON(),
+    ...updatedParticipation,
     ...(await getMembers(updatedParticipation))
   })
+})
+
+export const reopenConceptualMap = withErrorHandler(async (req, res) => {
+  const groupId = req.params.groupId
+  const broadcast = req.query.broadcast
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
+  const { map: updatedConceptualMap, hackathonId } = await service.reopenConceptualMap(currentUser?.id, groupId)
+  broadcastGroupUpdate(broadcast, hackathonId, groupId, { isDelivered: updatedConceptualMap.isDelivered })
+  return res.status(200).send(updatedConceptualMap)
 })

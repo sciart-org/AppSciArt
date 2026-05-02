@@ -88,7 +88,7 @@ export const Participation = sequelize.define(
           ...(groupId ? { groupId } : {}),
           ...(fruitId ? { fruitId } : teamId ? { teamId } : {})
         },
-        attributes: ['id', 'isGroupVoice', 'isTeamSpeaker', 'groupId', 'teamId', 'fruitId'],
+        attributes: ['id', 'isGroupVoice', 'isTeamSpeaker', 'groupId', 'teamId', 'fruitId', 'hackathonId'],
         include: [
           {
             model: UserProfile,

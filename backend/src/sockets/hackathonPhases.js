@@ -21,6 +21,19 @@ const emitParticipationUpdateToParticipants = (hackathonId) => {
   io?.to(hackathonId).emit('participation:updated')
 }
 
+const emitGroupUpdateToStaff = (hackathonId, groupId, changes) => {
+  const io = getIo()
+  io?.to(`${hackathonId}/staff`).emit('group:updated', { id: groupId, ...toPlainObject(changes) })
+}
+
+export const broadcastGroupUpdate = (broadcast, hackathonId, groupId, changes) => {
+  if (!broadcast || broadcast === 'NONE') return
+  emitGroupUpdateToStaff(hackathonId, groupId, changes)
+  if (broadcast === 'ALL') {
+    emitParticipationUpdateToParticipants(hackathonId)
+  }
+}
+
 export const broadcastHackathonUpdate = (broadcast, hackathonId, updatedHackathon) => {
   if (!broadcast || broadcast === 'NONE') return
   emitHackathonUpdateToStaff(hackathonId, updatedHackathon)

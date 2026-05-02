@@ -80,6 +80,8 @@ paths:
     $ref: "./paths/hackathons.yaml#/conceptualMap"
   /exploring-groups/{groupId}/conceptual-map/submit:
     $ref: "./paths/hackathons.yaml#/conceptualMapSubmit"
+  /exploring-groups/{groupId}/conceptual-map/reopen:
+    $ref: "./paths/hackathons.yaml#/conceptualMapReopen"
 
   /users:
     $ref: "./paths/users.yaml#/users"

@@ -8,6 +8,7 @@ import { Link } from "react-router";
 import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
 import GroupSeedResources from "../components/GroupSeedResources";
+import AsterButton from "../../../components/buttons/AsterButton";
 
 export default function ManageGroups(props) {
   const { socket, hackathon } = useContext(HackathonContext);
@@ -42,6 +43,12 @@ export default function ManageGroups(props) {
       },
     }).finally(() => setLoading(false));
   }, [selectedGroup]);
+
+  useEffect(() => {
+    if (!selectedGroup) return;
+    const updated = exploringGroups?.find((g) => g.id === selectedGroup.id);
+    if (updated) setSelectedGroup(updated);
+  }, [exploringGroups]);
 
   if (!selectedGroup) {
     return (
@@ -110,6 +117,13 @@ export default function ManageGroups(props) {
     return <Loading />;
   }
 
+  const undeliverGroupMap = async () => {
+    await fetcher({
+      url: `exploring-groups/${selectedGroup.id}/conceptual-map/reopen?broadcast=ALL`,
+      method: "PATCH",
+    });
+  };
+
   if (selectedGroup?.isDelivered) {
     return (
       <>
@@ -117,9 +131,13 @@ export default function ManageGroups(props) {
         <CreationProcessHeader members={selectedGroup?.members} isGroup={true}>
           Exploring group {selectedGroup.number}
         </CreationProcessHeader>
-        <h3 style={{ marginTop: "5vh" }}>
-          Your conceptual map has been submitted! Feel free to take a break.
+        <h3 style={{ marginTop: "1rem" }}>
+          Group {selectedGroup.number} have submitted their conceptual map!
         </h3>
+        <p>Do they need to modify it?</p>
+        <AsterButton onClick={undeliverGroupMap}>
+          Mark as undelivered
+        </AsterButton>
       </>
     );
   }

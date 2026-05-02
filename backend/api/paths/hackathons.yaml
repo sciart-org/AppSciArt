@@ -693,6 +693,11 @@ conceptualMapSubmit:
         schema:
           type: string
           format: uuid
+      - name: broadcast
+        in: query
+        required: false
+        schema:
+          $ref: "../components/schemas/common.yaml#/Broadcast"
     requestBody:
       required: true
       content:
@@ -708,6 +713,34 @@ conceptualMapSubmit:
         description: Resource not found
       "409":
         description: Conceptual map already delivered
+
+conceptualMapReopen:
+  x-router-controller: groupsAndTeamsController
+  patch:
+    tags: [Groups & Teams]
+    summary: Reopen conceptual map of an exploring group
+    operationId: reopenConceptualMap
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: broadcast
+        in: query
+        required: false
+        schema:
+          $ref: "../components/schemas/common.yaml#/Broadcast"
+    responses:
+      "200":
+        description: Conceptual map reopened
+      "403":
+        description: Forbidden
+      "404":
+        description: Resource not found
+      "409":
+        description: Conceptual map already open
 
 hackathonNextPhase:
   x-router-controller: hackathonsController
