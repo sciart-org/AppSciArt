@@ -68,6 +68,7 @@ export default function HackathonRouter() {
           hackathon,
           setHackathon,
           participation,
+          setParticipation,
           socket,
           setSocket,
           fetchParticipation,

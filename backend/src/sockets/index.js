@@ -1,5 +1,5 @@
 import { Server } from 'socket.io'
-import { initializeDiagramming, onConnectDiagramming, onDisconnectDiagramming, onJoinDiagramming } from './diagramming.js'
+import { initializeDiagramming, onConnectDiagramming, onDisconnectDiagramming } from './diagramming.js'
 import { onConnectPresentations } from './presentations.js'
 import { useJwtAuthorization } from './socketUtils.js'
 
@@ -11,7 +11,6 @@ const onConnect = (socket) => {
 
 const onJoinRoom = (socket, room) => {
   socket.join(room)
-  onJoinDiagramming(room)
   console.log(`User ${socket.id} joined room ${room}`)
 }
 
@@ -45,6 +44,12 @@ export function initializeWebSockets (server) {
 
     socket.on('disconnect', () => {
       onDisconnect(socket)
+    })
+
+    socket.on('leave_room', (room) => {
+      socket.leave(room)
+      console.log(`User ${socket.id} left room ${room}`)
+      onDisconnectDiagramming()
     })
   })
 

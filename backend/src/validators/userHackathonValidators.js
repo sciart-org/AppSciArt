@@ -1,6 +1,7 @@
 import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from './generalValidators.js'
 import * as ProductsRepository from '../repositories/productsRepository.js'
+import { checkIsStaff } from './userValidators.js'
 
 const checkUserIsInGroup = async (userId, groupId) => {
   const participation = await ProductsRepository.getMinimalParticipationOfUserInHackathon(userId, { groupId })
@@ -16,6 +17,7 @@ export const checkUserIsGroupVoice = async (userId, groupId) => {
 
 export const checkUserIsInHackathon = async (userId, hackathonId) => {
   const participation = await ProductsRepository.getMinimalParticipationOfUserInHackathon(userId, { hackathonId })
+  if (checkIsStaff(userId)) return participation
   errorThrower(!checkExists(participation), 'You are not in this hackathon', 403)
   return participation
 }

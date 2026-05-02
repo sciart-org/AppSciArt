@@ -10,23 +10,27 @@ export default function CreationProcessHeader({
     <div
       style={{
         display: "flex",
-        justifyContent: "center",
+        alignItems: "flex-start",
+        justifyContent: "space-between",
       }}
     >
-      <ParticipantList
-        participants={members || []}
-        fontSize={"1vw"}
-        gridNumber={3}
-        className={"participant-icon"}
-        style={{ flex: 1, marginTop: "1vw", paddingInline: "2rem" }}
-      />
-      <PhaseTitle>{children}</PhaseTitle>
-      <ParticipantList
-        participants={scientists || []}
-        fontSize={"1vw"}
-        className={"participant-icon"}
-        style={{ flex: 1, marginTop: "1vw", paddingInline: "2rem" }}
-      />
+      <div style={{ width: "30vw", marginTop: "1rem", marginLeft: "2rem" }}>
+        <ParticipantList
+          participants={members || []}
+          gridNumber={3}
+          className="participant-icon"
+        />
+      </div>
+
+      <PhaseTitle style={{ flexShrink: 0 }}>{children}</PhaseTitle>
+
+      <div style={{ width: "30vw", marginTop: "1rem", marginRight: "2rem" }}>
+        <ParticipantList
+          participants={scientists || []}
+          gridNumber={3}
+          className="participant-icon"
+        />
+      </div>
     </div>
   );
 }

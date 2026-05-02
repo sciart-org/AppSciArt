@@ -41,7 +41,7 @@ ConceptualMap.associate = (db) => {
   Seed.hasMany(ConceptualMap, notNull('seedId'))
 
   ConceptualMap.addScope('withSeeds', {
-    attributes: ['id', 'seedId'],
+    attributes: ['id', 'seedId', 'map', 'isDelivered'],
     include: [
       {
         model: Seed.scope('public'),

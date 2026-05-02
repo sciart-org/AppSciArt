@@ -63,7 +63,7 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
   }, [socket]);
 
   useEffect(() => {
-    if (!socket || !initialsLoaded) return;
+    if (!editionMode || !socket || !initialsLoaded) return;
     if (skipEmit.current) {
       skipEmit.current = false;
       return;
@@ -72,7 +72,7 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
   }, [edges]);
 
   useEffect(() => {
-    if (!socket || !initialsLoaded) return;
+    if (!editionMode || !socket || !initialsLoaded) return;
     if (skipEmit.current) {
       skipEmit.current = false;
       return;
@@ -83,18 +83,18 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
   const onNodesChange = useCallback(
     (changes) =>
       setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-    []
+    [],
   );
 
   const onEdgesChange = useCallback(
     (changes) =>
       setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    []
+    [],
   );
 
   const onConnect = useCallback(
     (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
-    []
+    [],
   );
 
   const getEdgesWithEnds = () => {
@@ -110,7 +110,7 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
 
   const createNode = (type) => {
     const nodeNumber = findFirstMissingNode(
-      nodes.map((n) => parseInt(n.id.substring(1)))
+      nodes.map((n) => parseInt(n.id.substring(1))),
     );
 
     setNodes([

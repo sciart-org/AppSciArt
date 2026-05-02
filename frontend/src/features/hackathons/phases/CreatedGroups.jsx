@@ -21,7 +21,8 @@ const GroupSeedResources = ({ pdf, seed }) => {
 };
 
 export default function CreatedGroups() {
-  const { hackathon, participation, socket } = useContext(HackathonContext);
+  const { hackathon, participation, setParticipation, socket } =
+    useContext(HackathonContext);
   const isPhaseActive = hackathon.phase === "GROUP_WORK";
 
   const [justEntered, setJustEntered] = useState(true);
@@ -78,12 +79,17 @@ export default function CreatedGroups() {
         <h3 style={{ marginTop: 0 }}>{participation?.groupSeed?.title}</h3>
         <ParticipantList
           participants={participation?.groupMembers}
-          participantStyle={{ margin: "2vw 2vw 0 2vw" }}
+          participantStyle={{ margin: "2vw 4vw 0 4vw", width: "6vw" }}
           isGroup={true}
           gridNumber={5}
-          style={{ width: "75%", margin: "auto" }}
+          style={{
+            width: "75%",
+            margin: "auto",
+            justifyContent: "center",
+          }}
         />
         <AsterButton
+          style={{ marginTop: "2rem" }}
           onClick={() => {
             setJustEntered(false);
           }}
@@ -123,6 +129,7 @@ export default function CreatedGroups() {
   };
 
   const submitConceptualMap = async () => {
+    if (!participation?.isGroupVoice) return;
     fetcher({
       url: `exploring-groups/${participation?.conceptualMap?.id}/conceptual-map/submit`,
       method: "PATCH",

@@ -1,18 +1,19 @@
+import { toPlainObject } from '../services/mappers/utils.js'
 import { getIo } from './index.js'
 
 const emitHackathonUpdateToParticipants = (hackathonId, changes) => {
   const io = getIo()
-  io?.to(hackathonId).emit('hackathon:updated', { id: hackathonId, ...changes })
+  io?.to(hackathonId).emit('hackathon:updated', { id: hackathonId, ...toPlainObject(changes) })
 }
 
 const emitHackathonUpdateToStaff = (hackathonId, changes) => {
   const io = getIo()
-  io?.to(`${hackathonId}/staff`).emit('hackathon:updated', { id: hackathonId, ...changes })
+  io?.to(`${hackathonId}/staff`).emit('hackathon:updated', { id: hackathonId, ...toPlainObject(changes) })
 }
 
 const emitParticipationUpdateToStaff = (hackathonId, participationId, changes) => {
   const io = getIo()
-  io?.to(`${hackathonId}/staff`).emit('participation:updated', { id: participationId, ...changes })
+  io?.to(`${hackathonId}/staff`).emit('participation:updated', { id: participationId, ...toPlainObject(changes) })
 }
 
 const emitParticipationUpdateToParticipants = (hackathonId) => {

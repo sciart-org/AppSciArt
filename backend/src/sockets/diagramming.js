@@ -48,7 +48,8 @@ export function initializeDiagramming (socketIoInstance) {
 }
 
 export function onConnectDiagramming (socket) {
-  socket.on('get_initial_state', (room) => {
+  socket.on('get_initial_state', async (room) => {
+    await loadInitialRoom(room)
     socket.emit('initial_state', rooms[room])
   })
 
@@ -63,10 +64,6 @@ export function onConnectDiagramming (socket) {
     rooms[room].edges = edges
     socket.to(room).emit('new_edges', edges)
   })
-}
-
-export function onJoinDiagramming (room) {
-  loadInitialRoom(room)
 }
 
 export function onDisconnectDiagramming () {
