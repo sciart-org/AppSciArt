@@ -105,6 +105,10 @@ export default function ManageGroups(props) {
           onClick={(e) => {
             e.preventDefault();
             setSelectedGroup(null);
+            setEdges([]);
+            setNodes([]);
+            setGroupSeed(null);
+            setLoading(true);
           }}
         >
           {"<"} Go back
