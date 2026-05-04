@@ -11,6 +11,7 @@ import { parseEnumValue } from "../../utils/commonUtils";
 import ManageGroups from "./adminPhases/ManageGroups";
 import useFetcher from "../../utils/useFetcher";
 import ManageGroupPresentations from "./adminPhases/ManageGroupPresentations";
+import { showErrorMessage } from "../../components/messages/Message";
 
 export default function HackathonManagement() {
   const { hackathon, setHackathon, setSocket } = useContext(HackathonContext);
@@ -86,6 +87,10 @@ export default function HackathonManagement() {
 
     socket.on("group:removed", (groupId) => {
       setExploringGroups((prev) => prev.filter((g) => g.id !== groupId));
+    });
+
+    socket.on("error_message", (error) => {
+      showErrorMessage(error)
     });
   }, [socket]);
 

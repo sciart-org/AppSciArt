@@ -13,6 +13,7 @@ import "../../products/collections/Collection.css";
 import CreatingTeams from "./CreatingTeams";
 import ImageRenderer from "../../../components/ImageRenderer";
 import logoSeedBlack from "../../../assets/logoSeedBlack.png";
+import Modal from "../../../components/Modal";
 
 const RatingCard = ({ item, setRatingItems }) => {
   return (
@@ -61,6 +62,7 @@ export default function GroupPresentation({
   const [ratingItems, setRatingItems] = useState([]);
   const [canSubmitRatings, setCanSubmitRatings] = useState(false);
   const [ratingsSubmitted, setRatingsSubmitted] = useState(false);
+  const [openSubmissionModal, setOpenSubmissionModal] = useState(false);
   const { fetcher } = useFetcher(error, setError);
 
   const presentingGroupId = groups.find(
@@ -113,7 +115,7 @@ export default function GroupPresentation({
       setPresentingGroup(groupNumber);
     });
 
-    socket.on("enable_ratings_submission", () => {
+    socket.on("ratings_submission_enabled", () => {
       setCanSubmitRatings(true);
     });
 
@@ -131,8 +133,44 @@ export default function GroupPresentation({
     return <Loading />;
   }
 
+  const submitRatings = () => {
+    socket.emit(
+      "submit_ratings",
+      `${hackathonId}/cluster/${clusterNumber}`,
+      ratingItems.map((ri) => {
+        return { seedId: ri.id, rating: ri.rating || 0.5 };
+      }),
+    );
+    setRatingsSubmitted(true);
+  };
+
+  const SubmissionModal = () => {
+    return (
+      <Modal openCondition={openSubmissionModal}>
+        <h3>Submit ratings</h3>
+        <p>Your ratings will be submitted. This cannot be undone</p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "1rem",
+          }}
+        >
+          <AsterButton onClick={submitRatings}>Confirm</AsterButton>
+          <AsterButton
+            variant="secondary"
+            onClick={() => setOpenSubmissionModal(false)}
+          >
+            Cancel
+          </AsterButton>
+        </div>
+      </Modal>
+    );
+  };
+
   return (
     <div>
+      <SubmissionModal />
       <div className="groups-container">
         {groups.map((group) => (
           <div>
@@ -174,18 +212,7 @@ export default function GroupPresentation({
         </div>
         {canSubmitRatings && (
           <div>
-            <AsterButton
-              onClick={() => {
-                socket.emit(
-                  "submit_ratings",
-                  `${hackathonId}/cluster/${clusterNumber}`,
-                  ratingItems.map((ri) => {
-                    return { seedId: ri.id, rating: ri.rating || 0.5 };
-                  }),
-                );
-                setRatingsSubmitted(true);
-              }}
-            >
+            <AsterButton onClick={() => setOpenSubmissionModal(true)}>
               Submit my ratings
             </AsterButton>
           </div>

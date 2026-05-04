@@ -7,6 +7,7 @@ import GroupPresentation from "./phases/GroupPresentation";
 import CreatingTeams from "./phases/CreatingTeams";
 import CreatedTeams from "./phases/CreatedTeams";
 import { HackathonContext } from "./components/HackathonContext";
+import { showErrorMessage } from "../../components/messages/Message";
 
 export default function ActiveHackathon() {
   const {
@@ -47,6 +48,9 @@ export default function ActiveHackathon() {
     });
     socket.on("participation:updated", () => {
       fetchParticipation();
+    });
+    socket.on("error_message", (error) => {
+      showErrorMessage(error)
     });
   }, [socket]);
 
