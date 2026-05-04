@@ -11,7 +11,10 @@ export default function Dropdown({ children, title, style }) {
 
   return (
     <Link
-      onClick={() => setShowDropdown(!showCollections)}
+      onClick={(e) => {
+        e.preventDefault();
+        setShowDropdown(!showCollections);
+      }}
       className="collections-container"
       ref={dropdownref}
     >
