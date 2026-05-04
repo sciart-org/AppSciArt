@@ -196,6 +196,7 @@ export default function CreateGroups(props) {
                     participant={p}
                     seedId={seed.id}
                     onToggleGroupVoice={handleToggleGroupVoice}
+                    hasGroup={true}
                   />
                 ))}
               </SeedSection>

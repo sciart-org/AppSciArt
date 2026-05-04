@@ -7,6 +7,8 @@ import { mapGroupMember, mapTeamMember } from './mappers/participationMapper.js'
 import * as ProductsRepository from '../repositories/productsRepository.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
+import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
+import { emitGroupRemovedToStaff } from '../sockets/hackathonPhases.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
@@ -91,30 +93,77 @@ export async function updateParticipationById (currentUserId, participationId, b
   return await updateParticipation(currentUserId, participation, body)
 }
 
-async function updateParticipation (currentUserId, participation, body) {
-  const { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId } = body
-  const participationBody = { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId }
-  const previousGroupId = participation.groupId
+const checkMovingGroupVoice = async (currentUserId, hackathonId, participation, previousGroupId) => {
+  if (!participation.isGroupVoice || previousGroupId === null) {
+    return
+  }
+  const group = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(previousGroupId)
+  if (group.participations.length === 1) {
+    return
+  }
+  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId, true)
+  errorThrower(hackathon.phase !== 'GROUP_CREATION' && participation.isGroupVoice, 'You cannot move the group voice. Please assign a new group voice before moving the participant.', 400)
+}
 
-  if (groupId) await validateConceptualMapIsFromHackathon(groupId, participation.hackathonId)
-  if (teamId) await validateFlowerIsFromHackathon(teamId, participation.hackathonId)
-  if (fruitId) await validateFruitIsFromHackathon(fruitId, participation.hackathonId)
-  if (isGroupVoice) {
-    const group = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(previousGroupId)
-    const otherIds = group.participations.map(p => p.id).filter(id => id !== participation.id)
-    await Promise.all(otherIds.map(async id => await ProductsRepository.updateParticipationById(id, { isGroupVoice: false })))
+const setRestOfGroupVoiceToFalse = async (groupId, participationId) => {
+  const group = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(groupId)
+  const otherIds = group.participations.map(p => p.id).filter(id => id !== participationId)
+  await Promise.all(otherIds.map(async id => await ProductsRepository.updateParticipationById(id, { isGroupVoice: false })))
+}
+
+const checkIsRemovingGroupVoiceOfCreatedGroup = async (currentUserId, hackathonId) => {
+  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId, true)
+  errorThrower(hackathon.phase !== 'GROUP_CREATION', 'You must assign a new group voice.', 400)
+}
+
+const validateCanUpdateParticipation = async (currentUserId, participation, body) => {
+  let { isGroupVoice, groupId, teamId, fruitId } = body
+  const previousGroupId = participation.groupId
+  const hackathonId = participation.hackathonId
+
+  if (groupId !== undefined) {
+    await checkMovingGroupVoice(currentUserId, hackathonId, participation, previousGroupId)
+    isGroupVoice = false
   }
 
-  const previousGroup = previousGroupId && groupId === null
-    ? await GroupsAndTeamsRepository.getConceptualMapWithParticipants(previousGroupId)
-    : null
+  if (groupId) { await validateConceptualMapIsFromHackathon(groupId, hackathonId) }
+  if (teamId) await validateFlowerIsFromHackathon(teamId, hackathonId)
+  if (fruitId) await validateFruitIsFromHackathon(fruitId, hackathonId)
+
+  if (isGroupVoice) {
+    errorThrower(previousGroupId === null, 'A group voice must be assigned to a group.', 400)
+    await setRestOfGroupVoiceToFalse(previousGroupId, participation.id)
+  }
+
+  if (isGroupVoice === false && groupId === undefined) {
+    await checkIsRemovingGroupVoiceOfCreatedGroup(currentUserId, hackathonId)
+  }
+}
+
+const removeGroupIfEmpty = async (groupId, hackathonId) => {
+  const group = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(groupId)
+
+  if (group?.participations.length === 1) {
+    await GroupsAndTeamsRepository.deleteConceptualMap(groupId)
+    emitGroupRemovedToStaff(hackathonId, groupId)
+  }
+}
+
+async function updateParticipation (currentUserId, participation, body) {
+  const previousGroupId = participation.groupId
+  const hackathonId = participation.hackathonId
+
+  await validateCanUpdateParticipation(currentUserId, participation, body)
+
+  const { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId } = body
+  const participationBody = { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId }
+
+  if (groupId === null) {
+    await removeGroupIfEmpty(previousGroupId, hackathonId)
+  }
 
   if (Object.values(participationBody).some(v => v !== undefined)) {
     await ProductsRepository.updateParticipationById(participation.id, participationBody)
-  }
-
-  if (previousGroup?.participations.length === 1) {
-    await GroupsAndTeamsRepository.deleteConceptualMap(previousGroupId)
   }
 
   return getParticipationById(currentUserId, participation.id)

@@ -24,9 +24,12 @@ export const createExploringGroup = withErrorHandler(async (req, res) => {
   const createdExploringGroup = await service.createExploringGroup(currentUser?.id, hackathonId, seedId)
 
   await Promise.all(participantIds.map(async participationId => {
-    const updatedParticipatino = await UserHackathonsService.updateParticipationById(currentUser?.id, participationId, { groupId: createdExploringGroup.id })
-    broadcastParticipationUpdate(broadcast, hackathonId, participationId, updatedParticipatino)
+    const updatedParticipation = await UserHackathonsService.updateParticipationById(currentUser?.id, participationId, { groupId: createdExploringGroup.id })
+    broadcastParticipationUpdate(broadcast, hackathonId, participationId, updatedParticipation)
   }))
+
+  const updatedParticipation = await UserHackathonsService.updateParticipationById(currentUser?.id, participantIds[0], { isGroupVoice: true })
+  broadcastParticipationUpdate(broadcast, hackathonId, participantIds[0], updatedParticipation)
 
   broadcastGroupUpdate(broadcast === 'NONE' ? 'NONE' : 'STAFF', hackathonId, createdExploringGroup.id, createdExploringGroup)
   return res.status(201).send(await service.getExploringGroupDetails(createdExploringGroup.id))

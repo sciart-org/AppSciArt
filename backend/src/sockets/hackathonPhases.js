@@ -26,6 +26,11 @@ const emitGroupUpdateToStaff = (hackathonId, groupId, changes) => {
   io?.to(`${hackathonId}/staff`).emit('group:updated', { id: groupId, ...toPlainObject(changes) })
 }
 
+export const emitGroupRemovedToStaff = (hackathonId, groupId) => {
+  const io = getIo()
+  io?.to(`${hackathonId}/staff`).emit('group:removed', groupId)
+}
+
 export const broadcastGroupUpdate = (broadcast, hackathonId, groupId, changes) => {
   if (!broadcast || broadcast === 'NONE') return
   emitGroupUpdateToStaff(hackathonId, groupId, changes)

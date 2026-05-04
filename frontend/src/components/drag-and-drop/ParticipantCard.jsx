@@ -4,7 +4,7 @@ import { CiCircleQuestion } from "react-icons/ci";
 
 export default function ParticipantCard({
   participant,
-  seedId,
+  hasGroup = false,
   onToggleGroupVoice,
 }) {
   const ref = useRef(null);
@@ -74,7 +74,7 @@ export default function ParticipantCard({
             )}
           </span>
         )}
-        {onToggleGroupVoice && (
+        {hasGroup && onToggleGroupVoice && (
           <label
             style={{
               marginLeft: "auto",

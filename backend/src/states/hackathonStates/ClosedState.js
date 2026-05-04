@@ -3,6 +3,18 @@ import { FinishedState } from './FinishedState.js'
 import { HackathonState } from './HackathonState.js'
 import * as GroupsAndTeamsService from '../../services/groupsAndTeamsService.js'
 
+const checkSomeGroupWithoutVoice = (hackathon) => {
+  const groups = [...new Set(hackathon.participations.map(p => p.groupId).filter(Boolean))]
+  const groupWithoutVoice = groups.find(
+    (groupId) => !hackathon.participations.some(p => p.groupId === groupId && p.isGroupVoice)
+  )
+  return !!groupWithoutVoice
+}
+
+const checkSomeAssistingWithoutGroup = (hackathon) => {
+  return hackathon.participations.some(p => p.hasConfirmedAssistance && !checkExists(p.groupId))
+}
+
 const phaseRules = {
   PREPARING: (h) => {
     if (h.type !== 'ON_SITE' && !checkExists(h.meetLink)) {
@@ -11,8 +23,11 @@ const phaseRules = {
     return { canAdvance: true }
   },
   GROUP_CREATION: (h) => {
-    if (h.participations.some(p => p.hasConfirmedAssistance && !checkExists(p.groupId))) {
+    if (checkSomeAssistingWithoutGroup(h)) {
       return { canAdvance: false, errorMessage: 'There are assisting participants without an assigned exploring group.' }
+    }
+    if (checkSomeGroupWithoutVoice(h)) {
+      return { canAdvance: false, errorMessage: 'There are groups without a group voice assigned.' }
     }
     return { canAdvance: true }
   },
