@@ -136,6 +136,9 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
         onConnect={editionMode ? onConnect : () => {}}
         nodeTypes={nodeTypes}
         connectionMode="loose"
+        nodesDraggable={editionMode}
+        nodesConnectable={editionMode}
+        elementsSelectable={editionMode}
         fitView
         style={{ marginBottom: "1rem" }}
       >
