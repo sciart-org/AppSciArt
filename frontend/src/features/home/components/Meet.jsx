@@ -4,7 +4,7 @@ import { HackathonContext } from "../../hackathons/components/HackathonContext";
 import { useContext } from "react";
 import "./Meet.css";
 
-export default function Meet() {
+export default function Meet({ style, children }) {
   const { hackathon } = useContext(HackathonContext);
 
   if (!hackathon.meetLink) return null;
@@ -14,9 +14,10 @@ export default function Meet() {
       <AsterButton
         className="meet-button"
         onClick={() => window.open(hackathon.meetLink, "_blank")}
+        style={style}
       >
         <img src={meetSvg} className="meet-button__icon" alt="Google Meet" />
-        <span>Join with Google Meet</span>
+        {children ?? <span>Join with Google Meet</span>}
       </AsterButton>
     </>
   );

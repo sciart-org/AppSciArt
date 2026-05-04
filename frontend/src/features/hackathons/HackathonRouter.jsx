@@ -7,6 +7,7 @@ import useFetcher from "../../utils/useFetcher";
 import HackathonEdit from "./HackathonEdit";
 import HackathonManagement from "./HackathonManagement";
 import { HackathonContext } from "./components/HackathonContext";
+import Meet from "../home/components/Meet";
 
 export default function HackathonRouter() {
   const isAdmin = tokenService.getIsAdmin();
@@ -74,6 +75,18 @@ export default function HackathonRouter() {
           fetchParticipation,
         }}
       >
+        {hackathon.phase !== "PREPARING" && (
+          <Meet
+            style={{
+              position: "absolute",
+              right: 0,
+              margin: "1rem",
+              width: "auto",
+            }}
+          >
+            <span>Meet</span>
+          </Meet>
+        )}
         <ActiveHackathon />
       </HackathonContext>
     );
