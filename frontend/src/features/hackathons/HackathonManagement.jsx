@@ -10,6 +10,7 @@ import AsterButton from "../../components/buttons/AsterButton";
 import { parseEnumValue } from "../../utils/commonUtils";
 import ManageGroups from "./adminPhases/ManageGroups";
 import useFetcher from "../../utils/useFetcher";
+import ManageGroupPresentations from "./adminPhases/ManageGroupPresentations";
 
 export default function HackathonManagement() {
   const { hackathon, setHackathon, setSocket } = useContext(HackathonContext);
@@ -108,7 +109,9 @@ export default function HackathonManagement() {
         />
       ),
       GROUP_WORK: <ManageGroups exploringGroups={exploringGroups} />,
-      GROUP_PRESENTATION: "Under development",
+      GROUP_PRESENTATION: (
+        <ManageGroupPresentations exploringGroups={exploringGroups} />
+      ),
       TEAM_CREATION: "Under development",
       TEAM_WORK: "Under development",
     };
