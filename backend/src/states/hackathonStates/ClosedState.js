@@ -2,6 +2,7 @@ import { checkExists } from '../../validators/generalValidators.js'
 import { FinishedState } from './FinishedState.js'
 import { HackathonState } from './HackathonState.js'
 import * as GroupsAndTeamsService from '../../services/groupsAndTeamsService.js'
+import { storeAndDeleteAllGroupsOfHackathon } from '../../sockets/diagramming.js'
 
 const checkSomeGroupWithoutVoice = (hackathon) => {
   const groups = [...new Set(hackathon.participations.map(p => p.groupId).filter(Boolean))]
@@ -63,6 +64,7 @@ export class ClosedState extends HackathonState {
     } else if (nextPhase === 'GROUP_WORK') {
       await GroupsAndTeamsService.deleteUnassignedConceptualMapsOfHackathon(this.hackathon.id)
     } else if (nextPhase === 'GROUP_PRESENTATION') {
+      storeAndDeleteAllGroupsOfHackathon(this.hackathon.id)
       await GroupsAndTeamsService.deliverAllConceptualMapsOfHackathon(this.hackathon.id)
     }
 

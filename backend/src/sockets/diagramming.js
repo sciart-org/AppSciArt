@@ -35,6 +35,15 @@ const storeEmptyRooms = () => {
   }
 }
 
+export const storeAndDeleteAllGroupsOfHackathon = (hackathonId) => {
+  const inMemoryGroups = Object.keys(rooms)
+  inMemoryGroups.filter(group => group.split('/group/')[0] === hackathonId).forEach(group => {
+    storeMapOfGroup(group).then(() => {
+      delete rooms[group]
+    })
+  })
+}
+
 const storeMapOfGroup = async (group) => {
   const conceptualMapId = group.split('/group/')[1]
   const conceptualMap = await GroupsAndTeamsRepository.getConceptualMap(conceptualMapId)

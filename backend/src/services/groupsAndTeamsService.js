@@ -8,6 +8,13 @@ import * as ProductsRepository from '../repositories/productsRepository.js'
 import * as SeedsService from '../services/seedsService.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 
+const defaultConceptualMap = {
+  nodes: [
+    { id: 'n0', position: { x: 0, y: 0 }, data: { label: 'ASTER+S' }, type: 'text' }
+  ],
+  edges: []
+}
+
 export async function getHackathonExploringGroups (hackathonId) {
   const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
   if (!checkExists(hackathon)) return []
@@ -105,6 +112,9 @@ const deliverMap = async (mapToUpdate, mapData = undefined) => {
   errorThrower(mapToUpdate.isDelivered, 'Conceptual map already delivered', 409)
   if (checkExists(mapData)) {
     mapToUpdate.map = mapData
+  }
+  if (!mapToUpdate.map) {
+    mapToUpdate.map = defaultConceptualMap
   }
   mapToUpdate.isDelivered = true
   await mapToUpdate.save()
