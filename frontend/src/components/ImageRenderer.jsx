@@ -48,7 +48,7 @@ export default function ImageRenderer({
         >
           <img
             src={placeholder}
-            style={{ maxWidth: "100%", maxHeight: "100%" }}
+            style={{ maxWidth: "100%", maxHeight: "100%", ...style }}
             className={"disable-select" + (className ? ` ${className}` : "")}
           />
         </div>

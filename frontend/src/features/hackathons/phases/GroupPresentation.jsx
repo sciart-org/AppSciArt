@@ -12,12 +12,19 @@ import "./phases.css";
 import "../../products/collections/Collection.css";
 import CreatingTeams from "./CreatingTeams";
 import ImageRenderer from "../../../components/ImageRenderer";
-import logoSeedBlack from '../../../assets/logoSeedBlack.png';
+import logoSeedBlack from "../../../assets/logoSeedBlack.png";
 
 const RatingCard = ({ item, setRatingItems }) => {
   return (
     <div>
-      <ImageRenderer image={item.mainImage} style={{ justifySelf: "center", maxHeight: "30vh" }} placeholder={logoSeedBlack} />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <ImageRenderer
+          image={item.mainImage}
+          style={{ maxHeight: "30vh" }}
+          placeholder={logoSeedBlack}
+        />
+      </div>
+      <p style={{ width: "20rem", marginInline: "auto" }}>{item.title}</p>
       <div className="rating-card-content">
         <div
           onClick={() => window.open(`/seeds/${item.id}`, "_blank")}
@@ -29,8 +36,8 @@ const RatingCard = ({ item, setRatingItems }) => {
           onChange={(newRating) => {
             setRatingItems((prevItems) =>
               prevItems.map((ri) =>
-                ri.id === item.id ? { ...ri, rating: newRating } : ri
-              )
+                ri.id === item.id ? { ...ri, rating: newRating } : ri,
+              ),
             );
           }}
         />
@@ -57,8 +64,18 @@ export default function GroupPresentation({
   const { fetcher } = useFetcher(error, setError);
 
   const presentingGroupId = groups.find(
-    (g) => g.number === presentingGroup
+    (g) => g.number === presentingGroup,
   )?.id;
+
+  const addRatingItems = (newItems) => {
+    setRatingItems((prev) => {
+      const existingGroupNumbers = new Set(prev.map((i) => i.groupNumber));
+      return [
+        ...prev,
+        ...newItems.filter((i) => !existingGroupNumbers.has(i.groupNumber)),
+      ];
+    });
+  };
 
   useEffect(() => {
     if (presentingGroup === null || !presentingGroupId) return;
@@ -68,10 +85,7 @@ export default function GroupPresentation({
         setNodes(data.map.nodes || []);
         setEdges(data.map.edges || []);
         setShowMap(true);
-        setRatingItems([
-          ...ratingItems,
-          { ...data.seed, groupNumber: presentingGroup },
-        ]);
+        addRatingItems([{ ...data.seed, groupNumber: presentingGroup }]);
       },
     });
   }, [presentingGroup, presentingGroupId]);
@@ -90,7 +104,7 @@ export default function GroupPresentation({
     if (!socket || !hackathonId || clusterNumber == null) return;
     socket.on("presenting_state", (presentingState) => {
       setPresentingGroup(presentingState.presentingGroup);
-      setRatingItems([...ratingItems, ...presentingState.previousSeeds]);
+      addRatingItems(presentingState.previousSeeds);
       setCanSubmitRatings(presentingState.submissionEnabled);
       setRatingsSubmitted(presentingState.hasSubmitted);
     });
@@ -105,7 +119,7 @@ export default function GroupPresentation({
 
     socket.emit(
       "get_presenting_state",
-      `${hackathonId}/cluster/${clusterNumber}`
+      `${hackathonId}/cluster/${clusterNumber}`,
     );
   }, [socket, hackathonId, clusterNumber]);
 
@@ -167,7 +181,7 @@ export default function GroupPresentation({
                   `${hackathonId}/cluster/${clusterNumber}`,
                   ratingItems.map((ri) => {
                     return { seedId: ri.id, rating: ri.rating || 0.5 };
-                  })
+                  }),
                 );
                 setRatingsSubmitted(true);
               }}
