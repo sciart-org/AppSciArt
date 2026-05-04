@@ -100,17 +100,33 @@ export function updateCoCreationTeam (req, res) {
   })
 }
 
+const deliverMap = async (mapToUpdate, mapData = undefined) => {
+  errorThrower(!checkExists(mapToUpdate), 'Group not found', 404)
+  errorThrower(mapToUpdate.isDelivered, 'Conceptual map already delivered', 409)
+  if (checkExists(mapData)) {
+    mapToUpdate.map = mapData
+  }
+  mapToUpdate.isDelivered = true
+  await mapToUpdate.save()
+}
+
 export async function submitConceptualMap (userId, groupId, map) {
   const userParticipation = await checkUserIsGroupVoice(userId, groupId)
 
   const mapToUpdate = await GroupsAndTeamsRepository.getConceptualMap(groupId)
-  errorThrower(!checkExists(mapToUpdate), 'Group not found', 404)
-  errorThrower(mapToUpdate.isDelivered, 'Conceptual map already delivered', 409)
-  mapToUpdate.map = map
-  mapToUpdate.isDelivered = true
-  await mapToUpdate.save()
+  await deliverMap(mapToUpdate, map)
 
   return userParticipation.id
+}
+
+export async function deliverAllConceptualMapsOfHackathon (hackathonId) {
+  const maps = await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)
+  return Promise.all(maps.map((map) => {
+    if (!map.isDelivered) {
+      return deliverMap(map)
+    }
+    return null
+  }))
 }
 
 export async function reopenConceptualMap (userId, groupId) {

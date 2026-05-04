@@ -9,18 +9,24 @@ import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
 import GroupSeedResources from "../components/GroupSeedResources";
 import AsterButton from "../../../components/buttons/AsterButton";
+import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
 
 export default function ManageGroups(props) {
-  const { socket, hackathon } = useContext(HackathonContext);
+  const { socket, hackathon, handleNextPhase } = useContext(HackathonContext);
   const exploringGroups = props.exploringGroups;
+
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [groupSeed, setGroupSeed] = useState(null);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
 
   const { fetcher } = useFetcher(error, setError);
+
+  const isCurrentPhase = hackathon.phase === "GROUP_WORK";
 
   const groupRoom = `${hackathon?.id}/group/${selectedGroup?.id}`;
   const getFullName = (member) => {
@@ -52,48 +58,76 @@ export default function ManageGroups(props) {
 
   if (!selectedGroup) {
     return (
-      <div className="manage-groups-grid">
-        {exploringGroups?.map((group) => (
-          <div
-            key={group.id}
-            className="manage-groups-card"
-            onClick={() => setSelectedGroup(group)}
-          >
-            <div className="manage-groups-header">
-              <h2>Group {group.number}</h2>
-              {group.isDelivered && (
-                <span className="manage-groups-delivered-badge">
-                  ✓ Delivered
-                </span>
-              )}
-            </div>
+      <>
+        <ConfirmPhaseChangeModal
+          openCondition={openModal}
+          onConfirm={() => {
+            setOpenModal(false);
+            handleNextPhase();
+          }}
+          onCancel={() => setOpenModal(false)}
+        >
+          <p>
+            All conceptual maps will be locked and no more changes will be
+            allowed. Participants will present their conceptual maps.
+          </p>
+        </ConfirmPhaseChangeModal>
+        <div className="manage-groups-grid">
+          {exploringGroups?.map((group) => (
+            <div
+              key={group.id}
+              className="manage-groups-card"
+              onClick={() => setSelectedGroup(group)}
+            >
+              <div className="manage-groups-header">
+                <h2>Group {group.number}</h2>
+                {group.isDelivered && (
+                  <span className="manage-groups-delivered-badge">
+                    ✓ Delivered
+                  </span>
+                )}
+              </div>
 
-            <p className="manage-groups-seed">{group.seedTitle}</p>
+              <p className="manage-groups-seed">{group.seedTitle}</p>
 
-            <h4>Members</h4>
-            <div className="manage-groups-members">
-              {group?.members?.length === 0 ? (
-                <p className="manage-groups-no-members">No members</p>
-              ) : (
-                group?.members
-                  ?.sort((a, b) => getFullName(a).localeCompare(getFullName(b)))
-                  .map((m) => (
-                    <div key={m.id} className="manage-groups-member">
-                      <span className="manage-groups-member-name">
-                        {getFullName(m)}
-                      </span>
-                      {m.isGroupVoice && (
-                        <span className="manage-groups-voice-badge">
-                          Group voice
+              <h4>Members</h4>
+              <div className="manage-groups-members">
+                {group?.members?.length === 0 ? (
+                  <p className="manage-groups-no-members">No members</p>
+                ) : (
+                  group?.members
+                    ?.sort((a, b) =>
+                      getFullName(a).localeCompare(getFullName(b)),
+                    )
+                    .map((m) => (
+                      <div key={m.id} className="manage-groups-member">
+                        <span className="manage-groups-member-name">
+                          {getFullName(m)}
                         </span>
-                      )}
-                    </div>
-                  ))
-              )}
+                        {m.isGroupVoice && (
+                          <span className="manage-groups-voice-badge">
+                            Group voice
+                          </span>
+                        )}
+                      </div>
+                    ))
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+        {isCurrentPhase && (
+          <>
+            <p>
+              {`${exploringGroups.filter((g) => g.isDelivered).length} / ${exploringGroups.length} conceptual maps `}
+              delivered
+            </p>
+            <AsterButton onClick={() => setOpenModal(true)}>
+              Start presentations
+            </AsterButton>
+          </>
+        )}
+      </>
     );
   }
 
@@ -135,13 +169,27 @@ export default function ManageGroups(props) {
         <CreationProcessHeader members={selectedGroup?.members} isGroup={true}>
           Exploring group {selectedGroup.number}
         </CreationProcessHeader>
-        <h3 style={{ marginTop: "1rem" }}>
+        <h3 style={{ marginTop: 0 }}>
           Group {selectedGroup.number} have submitted their conceptual map!
         </h3>
-        <p>Do they need to modify it?</p>
-        <AsterButton onClick={undeliverGroupMap}>
-          Mark as undelivered
-        </AsterButton>
+        <div style={{ flex: 1 }}>
+          <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
+            <Diagram
+              socket={socket}
+              room={groupRoom}
+              editionMode={false}
+              style={{ width: "70vw" }}
+            />
+          </DiagramContext>
+        </div>
+        {isCurrentPhase && (
+          <>
+            <p>Do they need to modify it?</p>
+            <AsterButton onClick={undeliverGroupMap}>
+              Mark as undelivered
+            </AsterButton>
+          </>
+        )}
       </>
     );
   }
