@@ -172,7 +172,11 @@ export default function CreateGroups(props) {
           </h3>
           <div style={{ maxHeight: "80vh", overflowY: "scroll" }}>
             {seedsToDisplay.map((seed) => (
-              <AggregationsSection key={seed.id} aggregation={seed}>
+              <AggregationsSection
+                key={seed.id}
+                data={seed.id}
+                title={seed.title}
+              >
                 {participantsForSeed(seed.id).map((p) => (
                   <ParticipantCard
                     key={p.id}
