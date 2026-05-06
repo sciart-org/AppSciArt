@@ -4,7 +4,8 @@ import { errorThrower } from './errorThrower.js'
 import { mapGroupMember } from './mappers/participationMapper.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
-import * as ProductsRepository from '../repositories/productsRepository.js'
+import * as ParticipationsRepository from '../repositories/participationsRepository.js'
+import * as SeedsRepository from '../repositories/participationsRepository.js'
 import * as SeedsService from '../services/seedsService.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 
@@ -41,7 +42,7 @@ export async function createExploringGroup (userId, hackathonId, seedId) {
   errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create exploring groups', 403)
   const existingGroup = await GroupsAndTeamsRepository.getConceptualMapOfSeedInHackathon(seedId, hackathonId)
   errorThrower(checkExists(existingGroup), 'A group already exists for this seed', 409)
-  const seedsOfHackathon = await ProductsRepository.getSeedsOfHackathon(hackathonId)
+  const seedsOfHackathon = await SeedsRepository.getSeedsOfHackathon(hackathonId)
   errorThrower(!seedsOfHackathon.map(s => s.id).includes(seedId), 'The seed does not belong to this hackathon', 400)
   return await GroupsAndTeamsRepository.createConceptualMapOfSeed(seedId)
 }
@@ -159,7 +160,7 @@ export async function getConceptualMap (userId, groupId) {
     return conceptualMap
   }
 
-  const hackathonId = (await ProductsRepository.getMinimalParticipationInHackathon(
+  const hackathonId = (await ParticipationsRepository.getMinimalParticipationInHackathon(
     { groupId }
   ))?.hackathonId
 
@@ -171,7 +172,7 @@ export async function getConceptualMap (userId, groupId) {
 }
 
 export const deleteUnassignedConceptualMapsOfHackathon = async (hackathonId) => {
-  const participations = await ProductsRepository.getMinimalParticipationsOfHackathon({ hackathonId })
+  const participations = await ParticipationsRepository.getMinimalParticipationsOfHackathon({ hackathonId })
 
   const associatedGroupIds = participations.map(p => p.groupId)
   const mapsInHackathon = await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)

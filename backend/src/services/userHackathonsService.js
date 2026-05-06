@@ -4,7 +4,7 @@ import { validateConceptualMapIsFromHackathon, validateFlowerIsFromHackathon, va
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { mapGroupMember, mapTeamMember } from './mappers/participationMapper.js'
-import * as ProductsRepository from '../repositories/productsRepository.js'
+import * as ParticipationsRepository from '../repositories/participationsRepository.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
@@ -20,7 +20,7 @@ export async function joinHackathon (userId, hackathonId, roles, interests) {
   const user = await UsersRepository.getUserProfileById(userId)
   errorThrower(!checkExists(user), 'User not found.', 404)
 
-  return await ProductsRepository.createParticipation({
+  return await ParticipationsRepository.createParticipation({
     userProfileId: userId,
     hackathonId,
     roles,
@@ -45,7 +45,7 @@ export const getMembers = async (participation) => {
   let teamMembers = []
 
   if (checkExists(participation.groupId)) {
-    const members = await ProductsRepository.getParticipationsOfHackathon({
+    const members = await ParticipationsRepository.getParticipationsOfHackathon({
       hackathonId: participation.hackathonId,
       clusterNumber: participation.clusterNumber,
       groupId: participation.groupId
@@ -55,7 +55,7 @@ export const getMembers = async (participation) => {
 
   if (checkExists(participation.teamId) || checkExists(participation.fruitId)) {
     const teamSearchCondition = checkExists(participation.fruitId) ? { fruitId: participation.fruitId } : { teamId: participation.teamId }
-    const members = await ProductsRepository.getParticipationsOfHackathon({
+    const members = await ParticipationsRepository.getParticipationsOfHackathon({
       hackathonId: participation.hackathonId,
       clusterNumber: participation.clusterNumber,
       ...teamSearchCondition
@@ -70,7 +70,7 @@ export async function getParticipationById (userId, participationId) {
   const user = await UsersRepository.getUserProfileById(userId)
   errorThrower(!checkExists(user), 'User not found.', 404)
 
-  const participation = await ProductsRepository.getParticipationById(participationId)
+  const participation = await ParticipationsRepository.getParticipationById(participationId)
 
   errorThrower(!(participation.user_profile.id === userId || await checkIsStaff(userId)), 'Unauthorized: You cannot access this participation', 403)
 
@@ -89,7 +89,7 @@ export async function getParticipation (userId, hackathonId) {
 
 export async function updateParticipationById (currentUserId, participationId, body) {
   errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot edit participations', 403)
-  const participation = await ProductsRepository.getMinimalParticipation(participationId)
+  const participation = await ParticipationsRepository.getMinimalParticipation(participationId)
   return await updateParticipation(currentUserId, participation, body)
 }
 
@@ -119,7 +119,7 @@ const checkMovingTeamSpeaker = async (currentUserId, hackathonId, participation,
 const setRestOfGroupVoiceToFalse = async (groupId, participationId) => {
   const group = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(groupId)
   const otherIds = group.participations.map(p => p.id).filter(id => id !== participationId)
-  await Promise.all(otherIds.map(async id => await ProductsRepository.updateParticipationById(id, { isGroupVoice: false })))
+  await Promise.all(otherIds.map(async id => await ParticipationsRepository.updateParticipationById(id, { isGroupVoice: false })))
 }
 
 const setRestOfTeamSpeakersToFalse = async (teamId, participationId) => {
@@ -215,7 +215,7 @@ async function updateParticipation (currentUserId, participation, body) {
   }
 
   if (Object.values(participationBody).some(v => v !== undefined)) {
-    await ProductsRepository.updateParticipationById(participation.id, participationBody)
+    await ParticipationsRepository.updateParticipationById(participation.id, participationBody)
   }
 
   return getParticipationById(currentUserId, participation.id)

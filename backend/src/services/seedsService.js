@@ -5,11 +5,11 @@ import { validateHackathonIsReadable } from '../validators/hackathonValidators.j
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { Edition } from '../models/Edition.js'
-import * as ProductsRepository from '../repositories/productsRepository.js'
+import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 
 const checkSeedExists = async (seedId) => {
-  const exists = await ProductsRepository.getMinimalSeedUnrestricted(seedId)
+  const exists = await SeedsRepository.getMinimalSeedUnrestricted(seedId)
   errorThrower(checkExists(exists), 'Unauthorized: You cannot access this seed', 403)
   errorThrower(true, 'Seed not found', 404)
 }
@@ -17,13 +17,13 @@ const checkSeedExists = async (seedId) => {
 export async function getSeedsByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
   const isAdmin = await checkIsStaff(userId)
-  return await ProductsRepository.getSeedsOfEdition(editionId, isAdmin)
+  return await SeedsRepository.getSeedsOfEdition(editionId, isAdmin)
 }
 
 export async function getSeedsByHackathon (userId, hackathonId) {
   await validateHackathonIsReadable(userId, hackathonId)
   const isAdmin = await checkIsStaff(userId)
-  return await ProductsRepository.getSeedsOfHackathon(hackathonId, isAdmin)
+  return await SeedsRepository.getSeedsOfHackathon(hackathonId, isAdmin)
 }
 
 export async function createSeed (userId, title, editionId, template) {
@@ -44,7 +44,7 @@ export async function createSeed (userId, title, editionId, template) {
 
 export async function getSeedDetails (userId, seedId) {
   const isAdmin = await checkIsStaff(userId)
-  const seed = await ProductsRepository.getSeedById(seedId, userId, isAdmin)
+  const seed = await SeedsRepository.getSeedById(seedId, userId, isAdmin)
 
   if (!checkExists(seed)) {
     await checkSeedExists(seedId)
@@ -55,7 +55,7 @@ export async function getSeedDetails (userId, seedId) {
 
 export async function getSeedConceptualMapIds (userId, seedId) {
   const isAdmin = await checkIsStaff(userId)
-  const seed = await ProductsRepository.getMinimalSeedById(seedId, userId, isAdmin)
+  const seed = await SeedsRepository.getMinimalSeedById(seedId, userId, isAdmin)
 
   if (!checkExists(seed)) {
     await checkSeedExists(seedId)
