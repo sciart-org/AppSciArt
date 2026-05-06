@@ -2,7 +2,6 @@ import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
-import { validateIsPublicOrStaff } from '../validators/productValidators.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
 
 export async function getFlowersByEdition (userId, editionId) {
@@ -17,10 +16,20 @@ export function createFlower (req, res) {
   })
 }
 
+const checkFlowerExists = async (flowerId) => {
+  const exists = await FlowersRepository.getMinimalFlowerUnrestricted(flowerId)
+  errorThrower(checkExists(exists), 'Unauthorized: You cannot access this flower', 403)
+  errorThrower(true, 'Flower not found', 404)
+}
+
 export async function getFlowerDetails (userId, flowerId) {
-  const flower = await FlowersRepository.getFlowerWithSeedById(flowerId, false)
-  errorThrower(!checkExists(flower), 'Flower not found', 404)
-  await validateIsPublicOrStaff(userId, flower)
+  const isAdmin = await checkIsStaff(userId)
+  const flower = await FlowersRepository.getFlowerWithSeedById(flowerId, isAdmin)
+
+  if (!checkExists(flower)) {
+    await checkFlowerExists(flowerId)
+  }
+
   return flower
 }
 

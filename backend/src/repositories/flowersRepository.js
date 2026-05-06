@@ -22,6 +22,10 @@ export const getFlowerWithHackathonSeed = (flowerId, hackathonId) => {
   })
 }
 
+export const getMinimalFlowerUnrestricted = (flowerId) => {
+  return Flower.unscoped().findByPk(flowerId, { attributes: ['id'] })
+}
+
 export const createFlowerOfSeed = (seedId) => {
 
 }
