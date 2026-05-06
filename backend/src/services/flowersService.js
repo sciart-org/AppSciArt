@@ -3,11 +3,19 @@ import { checkExists } from '../validators/generalValidators.js'
 import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
+import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
+import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
 
 export async function getFlowersByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
   const isAdmin = await checkIsStaff(userId)
   return await FlowersRepository.getFlowersOfEdition(editionId, isAdmin)
+}
+
+export async function getFlowersByHackathon (userId, hackathonId) {
+  await validateHackathonIsReadable(userId, hackathonId)
+  const isAdmin = await checkIsStaff(userId)
+  return await FlowersRepository.getFlowersOfHackathon(hackathonId, isAdmin)
 }
 
 export function createFlower (req, res) {

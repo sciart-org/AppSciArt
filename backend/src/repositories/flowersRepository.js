@@ -16,6 +16,12 @@ export const getFlowersOfEdition = (editionId, isAdmin) => {
   })
 }
 
+export const getFlowersOfHackathon = (hackathonId, isAdmin) => {
+  return Flower.scope([getRoleScope(isAdmin), 'withAuthors', { method: ['withSeedsOfHackathon', hackathonId] }]).findAll({
+    attributes: ['id', 'title', 'mainImage', 'state']
+  })
+}
+
 export const getFlowerWithHackathonSeed = (flowerId, hackathonId) => {
   return Flower.scope({ method: ['withSeedsOfHackathon', hackathonId] }).findOne({
     where: { id: flowerId }

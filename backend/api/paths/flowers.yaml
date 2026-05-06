@@ -4,11 +4,17 @@ flowers:
     security: [{}]
     tags: [SciArt flowers]
     summary: Get flowers
-    operationId: getFlowersByEdition
+    operationId: getFlowers
     parameters:
       - name: editionId
         in: query
-        required: true
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: hackathonId
+        in: query
+        required: false
         schema:
           type: string
           format: uuid
