@@ -92,7 +92,7 @@ Flower.associate = (db) => {
           { method: ['withHackathon', hackathonId] }
         ]),
         required: true,
-        attributes: ['state']
+        attributes: ['id', 'state', 'title']
       }
     ]
   }))
