@@ -1,16 +1,16 @@
 import { useState } from "react";
 import Column from "./Column";
 
-export default function SeedSection({ seed, children }) {
+export default function AggregationsSection({ aggregation, children }) {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
-    <Column key={seed.id} data={seed.id}>
+    <Column key={aggregation.id} data={aggregation.id}>
       <h4
-        className="group-box-header seed-section-header"
+        className="group-box-header aggregation-section-header"
         onClick={() => setCollapsed((prev) => !prev)}
       >
-        {seed.title}
+        {aggregation.title}
         <span style={{ fontSize: "0.8rem", color: "#888", marginLeft: "2rem" }}>
           {collapsed ? "▶" : "▼"}
         </span>

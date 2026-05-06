@@ -12,6 +12,7 @@ import ManageGroups from "./adminPhases/ManageGroups";
 import useFetcher from "../../utils/useFetcher";
 import ManageGroupPresentations from "./adminPhases/ManageGroupPresentations";
 import { showErrorMessage } from "../../components/messages/Message";
+import WarningText from "../../components/messages/WarningText";
 
 export default function HackathonManagement() {
   const { hackathon, setHackathon, setSocket } = useContext(HackathonContext);
@@ -40,7 +41,7 @@ export default function HackathonManagement() {
     fetchExploringGroups();
   }, [hackathon.phase]);
 
-  const updateParticipation = (participationChanges) => {
+  const updateParticipationState = (participationChanges) => {
     setHackathon((prev) => ({
       ...prev,
       participations: prev.participations.map((p) => {
@@ -74,7 +75,7 @@ export default function HackathonManagement() {
     });
 
     socket.on("participation:updated", (participationChanges) => {
-      updateParticipation(participationChanges);
+      updateParticipationState(participationChanges);
     });
 
     socket.on("group:updated", (groupChanges) => {
@@ -90,7 +91,7 @@ export default function HackathonManagement() {
     });
 
     socket.on("error_message", (error) => {
-      showErrorMessage(error)
+      showErrorMessage(error);
     });
   }, [socket]);
 
@@ -99,16 +100,31 @@ export default function HackathonManagement() {
     fetchExploringGroups();
   }, [hackathon.id]);
 
+  const updateParticipant = async (
+    participantId,
+    newParticipant,
+    broadcast = "ALL",
+  ) => {
+    await fetcher({
+      url: `hackathons/${hackathon.id}/participants/${participantId}?broadcast=${broadcast}`,
+      method: "PUT",
+      body: newParticipant,
+      onSuccess: (updatedParticipation) => {
+        updateParticipationState(updatedParticipation);
+      },
+    });
+  };
+
   const phaseScreen = () => {
     if (selectedPhase > hackathonPhases.indexOf(hackathon.phase)) {
       return <p>Phase not yet started</p>;
     }
 
     const screens = {
-      PREPARING: <PrepareHackathon updateParticipation={updateParticipation} />,
+      PREPARING: <PrepareHackathon updateParticipant={updateParticipant} />,
       GROUP_CREATION: (
         <CreateGroups
-          updateParticipation={updateParticipation}
+          updateParticipant={updateParticipant}
           exploringGroups={exploringGroups}
           fetchExploringGroups={fetchExploringGroups}
         />
@@ -156,9 +172,9 @@ export default function HackathonManagement() {
                 {parseEnumValue(p)}
               </AsterButton>
               {isPast && isSelected && (
-                <p className="warning-text hackathon-warning-phase">
+                <WarningText className="hackathon-warning-phase">
                   ⚠ This is a past phase
-                </p>
+                </WarningText>
               )}
             </div>
           );

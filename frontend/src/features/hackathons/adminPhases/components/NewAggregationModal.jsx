@@ -2,49 +2,33 @@ import { useState } from "react";
 import FormSelect from "../../../../components/form/FormSelect";
 import Modal from "../../../../components/Modal";
 import AsterButton from "../../../../components/buttons/AsterButton";
-import useFetcher from "../../../../utils/useFetcher";
 import { showErrorMessage } from "../../../../components/messages/Message";
 
-export default function NewGroupModal({
+export default function NewAggregationModal({
   openCondition,
   seedOptions,
   participantOptions,
   onClose,
   onCreate,
+  aggregationName,
 }) {
-  const [error, setError] = useState(null);
-  const [groupSelection, setGroupSelection] = useState({});
-
-  const { fetcher } = useFetcher(error, setError);
+  const [selection, setSelection] = useState({});
+  const lowerCaseName = aggregationName.toLowerCase();
 
   const getFullName = (participant) =>
     `${participant.userProfile?.name} ${participant.userProfile?.surname}`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      !groupSelection.participants ||
-      groupSelection.participants.length === 0
-    ) {
-      showErrorMessage("You cannot create an empty exploring group");
+    if (!selection.participants || selection.participants.length === 0) {
+      showErrorMessage(`You cannot create an empty ${lowerCaseName}`);
     }
-    if (!groupSelection.seed) {
-      showErrorMessage("You need to associate the group to a seed");
+    if (!selection.seed) {
+      showErrorMessage(`You need to associate the ${lowerCaseName} to a seed`);
     }
 
-    fetcher({
-      url: `hackathons/${groupSelection.participants[0].hackathonId}/clusters/${0}/exploring-groups?broadcast=ALL`,
-      method: "POST",
-      body: {
-        participantIds: groupSelection.participants.map((p) => p.id),
-        seedId: groupSelection.seed.id,
-      },
-      onSuccess: () => {
-        onCreate();
-        setGroupSelection({});
-        onClose();
-      },
-    });
+    onCreate(selection);
+    setSelection({});
   };
 
   if (!participantOptions || participantOptions.length === 0) {
@@ -52,8 +36,8 @@ export default function NewGroupModal({
       <Modal openCondition={openCondition}>
         <h3>No participants available</h3>
         <p>
-          All participants are already assigned to a group. Unassign one to
-          create a new group.
+          All participants are already assigned. Unassign one to create a new{" "}
+          {lowerCaseName}.
         </p>
         <AsterButton type="secondary" onClick={onClose}>
           Go back
@@ -64,8 +48,11 @@ export default function NewGroupModal({
 
   return (
     <Modal openCondition={openCondition}>
-      <h3 style={{ textAlign: "center" }}>New exploring group</h3>
-      <p>Select the seed and participants to be assigned to the new group</p>
+      <h3 style={{ textAlign: "center" }}>New {lowerCaseName}</h3>
+      <p>
+        Select the seed and participants to be assigned to the new{" "}
+        {lowerCaseName}
+      </p>
       <form
         onSubmit={handleSubmit}
         style={{
@@ -78,10 +65,10 @@ export default function NewGroupModal({
           name={"Seed"}
           placeholder={"Select seed..."}
           options={seedOptions.map((s) => s.title)}
-          value={groupSelection.seed?.title}
+          value={selection.seed?.title}
           setValue={(v) => {
-            setGroupSelection({
-              ...groupSelection,
+            setSelection({
+              ...selection,
               seed: seedOptions.find((s) => s.title === v),
             });
           }}
@@ -92,10 +79,10 @@ export default function NewGroupModal({
           name={"Participants"}
           placeholder={"Select participants..."}
           options={participantOptions.map((p) => getFullName(p))}
-          value={groupSelection.participants?.map((p) => getFullName(p))}
+          value={selection.participants?.map((p) => getFullName(p))}
           setValue={(v) => {
-            setGroupSelection({
-              ...groupSelection,
+            setSelection({
+              ...selection,
               participants: v
                 ? v.map((name) =>
                     participantOptions.find((p) => getFullName(p) === name),
@@ -120,7 +107,7 @@ export default function NewGroupModal({
             type="secondary"
             onClick={() => {
               onClose();
-              setGroupSelection({});
+              setSelection({});
             }}
           >
             Cancel

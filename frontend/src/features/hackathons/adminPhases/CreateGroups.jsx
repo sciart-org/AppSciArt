@@ -4,13 +4,14 @@ import useFetcher from "../../../utils/useFetcher";
 import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import ParticipantCard from "../../../components/drag-and-drop/ParticipantCard";
-import SeedSection from "../../../components/drag-and-drop/SeedSection";
 import Column from "../../../components/drag-and-drop/Column";
 import AsterButton from "../../../components/buttons/AsterButton";
 import { checkExists } from "../../../../../backend/src/validators/generalValidators";
 import MoveParticipantModal from "./components/MoveParticipantModal";
-import NewGroupModal from "./components/NewGroupModal";
+import NewAggregationModal from "./components/NewAggregationModal";
 import Loading from "../../../components/messages/Loading";
+import AggregationsSection from "../../../components/drag-and-drop/AggregationsSection";
+import WarningText from "../../../components/messages/WarningText";
 
 export default function CreateGroups(props) {
   const { hackathon, handleNextPhase } = useContext(HackathonContext);
@@ -62,22 +63,10 @@ export default function CreateGroups(props) {
       hackathon.participations.filter((p) => p.groupSeed?.id === seedId),
     );
 
-  const updateParticipant = async (participantId, newParticipant) => {
-    fetcher({
-      url: `hackathons/${hackathon.id}/participants/${participantId}?broadcast=ALL`,
-      method: "PUT",
-      body: newParticipant,
-      onSuccess: (updatedParticipation) =>
-        props.updateParticipation(updatedParticipation),
-    });
-  };
-
   const changeSeed = (participant, seedId, group) => {
     const groupId = seedId === null ? null : group?.id;
-
     if (participant?.groupSeed?.id === groupId) return;
-
-    updateParticipant(participant.userProfile.id, { groupId });
+    props.updateParticipant(participant.userProfile.id, { groupId });
   };
 
   const handleSeedChange = (participant, seedId) => {
@@ -100,7 +89,7 @@ export default function CreateGroups(props) {
   };
 
   const handleToggleGroupVoice = (participant) => {
-    updateParticipant(participant.userProfile.id, {
+    props.updateParticipant(participant.userProfile.id, {
       isGroupVoice: !participant.isGroupVoice,
     });
   };
@@ -139,8 +128,7 @@ export default function CreateGroups(props) {
     <div>
       <h2>Exploring groups creation</h2>
       {!isCurrentPhase && (
-        <p
-          className="warning-text justified-text"
+        <WarningText
           style={{
             maxWidth: "25rem",
             marginInline: "auto",
@@ -149,7 +137,7 @@ export default function CreateGroups(props) {
         >
           ⚠ Making changes to groups after their creation is not recommended.
           Proceed with caution.
-        </p>
+        </WarningText>
       )}
       <ConfirmPhaseChangeModal
         openCondition={openModal}
@@ -160,8 +148,8 @@ export default function CreateGroups(props) {
         onCancel={() => setOpenModal(false)}
       >
         <p>
-          Groups will be created and participants will start working on the
-          SciArt flowers creation
+          Groups will be created and participants will start working on creating
+          conceptual maps.
         </p>
       </ConfirmPhaseChangeModal>
       <div className="group-box-container">
@@ -172,11 +160,7 @@ export default function CreateGroups(props) {
             style={{ height: "100%", maxHeight: "80vh", overflowY: "scroll" }}
           >
             {unassignedParticipants.map((p) => (
-              <ParticipantCard
-                key={p.id}
-                participant={p}
-                onToggleGroupVoice={handleToggleGroupVoice}
-              />
+              <ParticipantCard key={p.id} participant={p} />
             ))}
           </Column>
         </div>
@@ -189,17 +173,17 @@ export default function CreateGroups(props) {
           </h3>
           <div style={{ maxHeight: "80vh", overflowY: "scroll" }}>
             {seedsToDisplay.map((seed) => (
-              <SeedSection key={seed.id} seed={seed}>
+              <AggregationsSection key={seed.id} aggregation={seed}>
                 {participantsForSeed(seed.id).map((p) => (
                   <ParticipantCard
                     key={p.id}
                     participant={p}
-                    seedId={seed.id}
-                    onToggleGroupVoice={handleToggleGroupVoice}
-                    hasGroup={true}
+                    checkboxValue={!!p.isGroupVoice}
+                    onToggleCheckbox={handleToggleGroupVoice}
+                    isAssigned={true}
                   />
                 ))}
-              </SeedSection>
+              </AggregationsSection>
             ))}
           </div>
         </div>
@@ -228,12 +212,26 @@ export default function CreateGroups(props) {
         }}
         onCancel={() => setChangingParticipant(null)}
       />
-      <NewGroupModal
+      <NewAggregationModal
         openCondition={openNewGroupModal}
         seedOptions={hackathonSeeds.filter((s) => !seedsToDisplay.includes(s))}
         participantOptions={unassignedParticipants}
         onClose={() => setOpenNewGroupModal(false)}
-        onCreate={() => props.fetchExploringGroups()}
+        onCreate={(selection) => {
+          fetcher({
+            url: `hackathons/${selection.participants[0].hackathonId}/clusters/${0}/exploring-groups?broadcast=ALL`,
+            method: "POST",
+            body: {
+              participantIds: selection.participants.map((p) => p.id),
+              seedId: selection.seed.id,
+            },
+            onSuccess: () => {
+              props.fetchExploringGroups();
+              setOpenNewGroupModal(false);
+            },
+          });
+        }}
+        aggregationName={"exploring group"}
       />
     </div>
   );

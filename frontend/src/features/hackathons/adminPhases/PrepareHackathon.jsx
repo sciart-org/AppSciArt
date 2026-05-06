@@ -41,13 +41,13 @@ export default function PrepareHackathon(props) {
   };
 
   const handleToggleConfirmed = (participant) => {
-    fetcher({
-      url: `hackathons/${hackathon.id}/participants/${participant.userProfile.id}?broadcast=STAFF`,
-      method: "PUT",
-      body: { hasConfirmedAssistance: !participant.hasConfirmedAssistance },
-      onSuccess: (updatedParticipation) =>
-        props.updateParticipation(updatedParticipation),
-    });
+    props.updateParticipant(
+      participant.userProfile.id,
+      {
+        hasConfirmedAssistance: !participant.hasConfirmedAssistance,
+      },
+      "STAFF",
+    );
   };
 
   const participantsColumns = [
