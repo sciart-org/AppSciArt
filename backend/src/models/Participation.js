@@ -167,7 +167,7 @@ Participation.associate = (db) => {
         model: Fruit
       },
       {
-        model: Flower,
+        model: Flower.unscoped(),
         attributes: {
           exclude: ['title', 'mainImage', 'concept', 'conceptualMap', 'state', 'seedId']
         },
