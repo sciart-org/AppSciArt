@@ -5,7 +5,7 @@ import { mapGroupMember } from './mappers/participationMapper.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as ParticipationsRepository from '../repositories/participationsRepository.js'
-import * as SeedsRepository from '../repositories/participationsRepository.js'
+import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as SeedsService from '../services/seedsService.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 
