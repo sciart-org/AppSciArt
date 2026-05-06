@@ -1,24 +1,14 @@
-import { Seed } from '../models/Seed.js'
-import { Flower } from '../models/Flower.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsPublicOrStaff } from '../validators/productValidators.js'
-import { includeSeedsOfEdition, filterPublished, includeFlowerAuthors, includeSeedAuthors } from './includes/productIncludes.js'
+import * as FlowersRepository from '../repositories/flowersRepository.js'
 
 export async function getFlowersByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
-  const showUnpublished = await checkIsStaff(userId)
-  return await Flower.findAll({
-    where: showUnpublished ? {} : filterPublished,
-    attributes: ['id', 'title', 'mainImage', 'state'],
-    include: [
-      includeSeedsOfEdition(editionId),
-      includeFlowerAuthors
-    ]
-  }
-  )
+  const isAdmin = await checkIsStaff(userId)
+  return await FlowersRepository.getFlowersOfEdition(editionId, isAdmin)
 }
 
 export function createFlower (req, res) {
@@ -28,22 +18,7 @@ export function createFlower (req, res) {
 }
 
 export async function getFlowerDetails (userId, flowerId) {
-  const flower = await Flower.findByPk(flowerId, {
-    attributes: {
-      exclude: ['template', 'conceptualMap', 'driveLink', 'seedId']
-    },
-    include: [
-      {
-        model: Seed,
-        required: true,
-        attributes: ['id', 'title'],
-        include: [
-          includeSeedAuthors
-        ]
-      },
-      includeFlowerAuthors
-    ]
-  })
+  const flower = await FlowersRepository.getFlowerWithSeedById(flowerId, false)
   errorThrower(!checkExists(flower), 'Flower not found', 404)
   await validateIsPublicOrStaff(userId, flower)
   return flower

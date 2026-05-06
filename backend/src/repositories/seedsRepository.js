@@ -7,6 +7,7 @@ const getRoleScope = (isAdmin = false, userId = null) => {
       ? { method: ['scientist', userId] }
       : 'public'
 }
+
 export const getSeedsOfEdition = async (editionId, isAdmin) => {
   return Seed.scope([
     getRoleScope(isAdmin),

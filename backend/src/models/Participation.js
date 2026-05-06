@@ -99,7 +99,13 @@ export const Participation = sequelize.define(
             attributes: ['seedId']
           }
         ]
-      })
+      }),
+      withUser: {
+        include: {
+          model: UserProfile,
+          attributes: ['id', 'name', 'surname']
+        }
+      }
     },
     indexes: [
       {

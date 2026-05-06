@@ -4,6 +4,7 @@ import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from './generalValidators.js'
 import { checkIsStaff } from './userValidators.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
+import * as FlowersRepository from '../repositories/flowersRepository.js'
 
 const validateIsPublicOrStaff = async (userId, product) => {
   return errorThrower(product.state !== 'PUBLISHED' && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this resource', 403)
@@ -15,9 +16,7 @@ export const validateConceptualMapIsFromHackathon = async (conceptualMapId, hack
 }
 
 export const validateFlowerIsFromHackathon = async (flowerId, hackathonId) => {
-  const flower = await Flower.scope({ method: ['withSeedsOfHackathon', hackathonId] }).findOne({
-    where: { id: flowerId }
-  })
+  const flower = await FlowersRepository.getFlowerWithHackathonSeed(flowerId, hackathonId)
   errorThrower(!checkExists(flower), 'This flower does not belong to the current hackathon', 403)
 }
 

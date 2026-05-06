@@ -3,6 +3,13 @@ import { sequelize } from '../config/sequelize.js'
 import { Seed } from './Seed.js'
 import { notNull } from './modelUtils.js'
 
+const publicScope = {
+  attributes: {
+    exclude: ['createdAt', 'updatedAt', 'template', 'state', 'conceptualMap']
+  },
+  where: { state: 'PUBLISHED' }
+}
+
 export const Flower = sequelize.define(
   'flowers',
   {
@@ -43,8 +50,14 @@ export const Flower = sequelize.define(
       }
     }
   }, {
-    defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    defaultScope: publicScope,
+    scopes: {
+      public: publicScope,
+      admin: {
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
+      }
     },
     indexes: [
       {
@@ -66,7 +79,7 @@ Flower.prototype.toJSON = function () {
 }
 
 Flower.associate = (db) => {
-  const { Seed } = db
+  const { Seed, Participation } = db
   Flower.belongsTo(Seed)
   Seed.hasMany(Flower, notNull('seedId'))
 
@@ -83,4 +96,37 @@ Flower.associate = (db) => {
       }
     ]
   }))
+
+  Flower.addScope('withSeedsOfEdition', (editionId) => ({
+    attributes: ['id', 'title', 'mainImage', 'state'],
+    include: [
+      {
+        model: Seed.scope([
+          'admin',
+          { method: ['withEdition', editionId] }
+        ]),
+        required: true,
+        attributes: ['id', 'title']
+      }
+    ]
+  }))
+
+  Flower.addScope('withSeeds', {
+    include: [
+      {
+        model: Seed.scope('withAuthors'),
+        required: true,
+        attributes: ['id', 'title']
+      }
+    ]
+  })
+
+  Flower.addScope('withAuthors', {
+    include: [
+      {
+        model: Participation.scope('withUser'),
+        attributes: ['id']
+      }
+    ]
+  })
 }

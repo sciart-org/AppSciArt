@@ -33,12 +33,6 @@ const includeAuthor = () => {
 
 export const includeSeedAuthors = { ...includeAuthor(), through: { attributes: [] } }
 
-export const includeFlowerAuthors = {
-  model: Participation,
-  attributes: ['id'],
-  include: [includeAuthor()]
-}
-
 export const includeFruitAuthors = {
   model: Participation,
   attributes: ['id'],
