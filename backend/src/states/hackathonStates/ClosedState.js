@@ -43,6 +43,9 @@ const phaseRules = {
   },
   TEAM_WORK: (h) => {
     return { canAdvance: true }
+  },
+  TEAM_PRESENTATION: (h) => {
+    return { canAdvance: true }
   }
 }
 
@@ -76,7 +79,7 @@ export class ClosedState extends HackathonState {
   }
 
   getNextState () {
-    if (this.hackathon.phase === 'TEAM_WORK') { return 'FINISHED' }
+    if (this.hackathon.phase === 'TEAM_PRESENTATION') { return 'FINISHED' }
     return 'CLOSED'
   }
 
@@ -93,7 +96,9 @@ export class ClosedState extends HackathonState {
       case 'TEAM_CREATION':
         return 'TEAM_WORK'
       case 'TEAM_WORK':
-        return 'TEAM_WORK'
+        return 'TEAM_PRESENTATION'
+      case 'TEAM_PRESENTATION':
+        return 'TEAM_PRESENTATION'
       default:
         return this.hackathon.phase
     }

@@ -30,6 +30,7 @@ export default function HackathonManagement() {
     "GROUP_PRESENTATION",
     "TEAM_CREATION",
     "TEAM_WORK",
+    "TEAM_PRESENTATION",
   ];
 
   const [selectedPhase, setSelectedPhase] = useState(
@@ -135,6 +136,7 @@ export default function HackathonManagement() {
       ),
       TEAM_CREATION: "Under development",
       TEAM_WORK: "Under development",
+      TEAM_PRESENTATION: "Under development",
     };
 
     return (
