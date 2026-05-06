@@ -6,7 +6,6 @@ import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/ad
 import ParticipantCard from "../../../components/drag-and-drop/ParticipantCard";
 import Column from "../../../components/drag-and-drop/Column";
 import AsterButton from "../../../components/buttons/AsterButton";
-import { checkExists } from "../../../../../backend/src/validators/generalValidators";
 import MoveParticipantModal from "./components/MoveParticipantModal";
 import NewAggregationModal from "./components/NewAggregationModal";
 import Loading from "../../../components/messages/Loading";
@@ -75,7 +74,7 @@ export default function CreateGroups(props) {
     if (
       !hasConfirmedChange &&
       !isCurrentPhase &&
-      checkExists(participant?.groupSeed?.id)
+      !!participant?.groupSeed?.id
     ) {
       setChangingParticipant({
         participant,

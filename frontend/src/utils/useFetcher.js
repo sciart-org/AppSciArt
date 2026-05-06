@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { showErrorMessage } from "../components/messages/Message";
 import tokenService from "./token.service";
 import { useNavigate } from "react-router";
-import { checkExists } from "../../../backend/src/validators/generalValidators";
 
 export default function useFetcher(error, setError) {
     const API_URL = import.meta.env.VITE_API_URL;
@@ -20,7 +19,7 @@ export default function useFetcher(error, setError) {
     }
 
     async function fetcher({ url, method = "GET", body = null, onSuccess = () => { }, onError = () => { } }) {
-        if (checkExists(jwt) && !tokenService.checkToken()) {
+        if (!!jwt && !tokenService.checkToken()) {
             jwt = undefined
             tokenService.removeUser()
             setTimeout(() => {

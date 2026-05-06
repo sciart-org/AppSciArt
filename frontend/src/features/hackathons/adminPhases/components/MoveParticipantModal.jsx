@@ -1,4 +1,3 @@
-import { checkExists } from "../../../../../../backend/src/validators/generalValidators";
 import AsterButton from "../../../../components/buttons/AsterButton";
 import Modal from "../../../../components/Modal";
 
@@ -9,7 +8,7 @@ export default function MoveParticipantModal({
   changingSeedTitle,
 }) {
   return (
-    <Modal openCondition={checkExists(changingParticipant)}>
+    <Modal openCondition={!!changingParticipant}>
       <h3 style={{ textAlign: "center" }}>Are you sure?</h3>
       <p>
         {`${changingParticipant?.participant?.userProfile?.name} ${changingParticipant?.participant?.userProfile?.surname} `}
