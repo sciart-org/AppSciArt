@@ -105,10 +105,27 @@ const checkMovingGroupVoice = async (currentUserId, hackathonId, participation, 
   errorThrower(hackathon.phase !== 'GROUP_CREATION' && participation.isGroupVoice, 'You cannot move the group voice. Please assign a new group voice before moving the participant.', 400)
 }
 
+const checkMovingTeamSpeaker = async (currentUserId, hackathonId, participation, previousTeamId) => {
+  if (!participation.isTeamSpeaker || previousTeamId === null) {
+    return
+  }
+  /*
+  TODO
+  */
+  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId, true)
+  errorThrower(hackathon.phase !== 'TEAM_CREATION' && participation.isGroupVoice, 'You cannot move the team speaker. Please assign a new team speaker before moving the participant.', 400)
+}
+
 const setRestOfGroupVoiceToFalse = async (groupId, participationId) => {
   const group = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(groupId)
   const otherIds = group.participations.map(p => p.id).filter(id => id !== participationId)
   await Promise.all(otherIds.map(async id => await ProductsRepository.updateParticipationById(id, { isGroupVoice: false })))
+}
+
+const setRestOfTeamSpeakersToFalse = async (teamId, participationId) => {
+  /*
+  TODO
+  */
 }
 
 const checkIsRemovingGroupVoiceOfCreatedGroup = async (currentUserId, hackathonId) => {
@@ -116,8 +133,14 @@ const checkIsRemovingGroupVoiceOfCreatedGroup = async (currentUserId, hackathonI
   errorThrower(hackathon.phase !== 'GROUP_CREATION', 'You must assign a new group voice.', 400)
 }
 
-const validateCanUpdateParticipation = async (currentUserId, participation, body) => {
-  let { isGroupVoice, groupId, teamId, fruitId } = body
+const checkIsRemovingTeamSpeakerOfCreatedTeam = async (currentUserId, hackathonId) => {
+  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId, true)
+  errorThrower(hackathon.phase !== 'TEAM_CREATION', 'You must assign a new team speaker.', 400)
+}
+
+const validateGroupIsValid = async (currentUserId, participation, body) => {
+  let { isGroupVoice, groupId } = body
+
   const previousGroupId = participation.groupId
   const hackathonId = participation.hackathonId
 
@@ -127,17 +150,46 @@ const validateCanUpdateParticipation = async (currentUserId, participation, body
   }
 
   if (groupId) { await validateConceptualMapIsFromHackathon(groupId, hackathonId) }
-  if (teamId) await validateFlowerIsFromHackathon(teamId, hackathonId)
-  if (fruitId) await validateFruitIsFromHackathon(fruitId, hackathonId)
 
   if (isGroupVoice) {
     errorThrower(previousGroupId === null, 'A group voice must be assigned to a group.', 400)
     await setRestOfGroupVoiceToFalse(previousGroupId, participation.id)
   }
-
   if (isGroupVoice === false && groupId === undefined) {
     await checkIsRemovingGroupVoiceOfCreatedGroup(currentUserId, hackathonId)
   }
+}
+
+const validateTeamIsValid = async (currentUserId, participation, body) => {
+  let { isTeamSpeaker, teamId } = body
+
+  const previousTeamId = participation.teamId
+  const hackathonId = participation.hackathonId
+
+  if (teamId !== undefined) {
+    await checkMovingTeamSpeaker(currentUserId, hackathonId, participation, previousTeamId)
+    isTeamSpeaker = false
+  }
+
+  if (teamId) await validateFlowerIsFromHackathon(teamId, hackathonId)
+
+  if (isTeamSpeaker) {
+    errorThrower(previousTeamId === null, 'A team speaker must be assigned to a team.', 400)
+    await setRestOfTeamSpeakersToFalse(previousTeamId, participation.id)
+  }
+  if (isTeamSpeaker === false && teamId === undefined) {
+    await checkIsRemovingTeamSpeakerOfCreatedTeam(currentUserId, hackathonId)
+  }
+}
+
+const validateCanUpdateParticipation = async (currentUserId, participation, body) => {
+  const { fruitId } = body
+  const hackathonId = participation.hackathonId
+
+  await validateGroupIsValid(currentUserId, participation, body)
+  await validateTeamIsValid(currentUserId, participation, body)
+
+  if (fruitId) await validateFruitIsFromHackathon(fruitId, hackathonId)
 }
 
 const removeGroupIfEmpty = async (groupId, hackathonId) => {
