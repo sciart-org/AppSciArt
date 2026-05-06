@@ -50,3 +50,8 @@ export function publishFlower (req, res) {
     message: 'This is the mockup controller for publishFlower'
   })
 }
+
+export const createFlowersOfHackathon = async (hackathonId) => {
+  const hackathonGroups = await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)
+  return Promise.all(hackathonGroups.map(g => FlowersRepository.createFlowerOfSeed(g.seedId)))
+}

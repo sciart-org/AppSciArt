@@ -2,6 +2,7 @@ import { checkExists } from '../../validators/generalValidators.js'
 import { FinishedState } from './FinishedState.js'
 import { HackathonState } from './HackathonState.js'
 import * as GroupsAndTeamsService from '../../services/groupsAndTeamsService.js'
+import * as FlowersService from '../../services/flowersService.js'
 import { storeAndDeleteAllGroupsOfHackathon } from '../../sockets/diagramming.js'
 
 const checkSomeGroupWithoutVoice = (hackathon) => {
@@ -12,8 +13,20 @@ const checkSomeGroupWithoutVoice = (hackathon) => {
   return !!groupWithoutVoice
 }
 
+const checkSomeTeamWithoutSpeaker = (hackathon) => {
+  const teams = [...new Set(hackathon.participations.map(p => p.teamId).filter(Boolean))]
+  const teamsWithoutSpeaker = teams.find(
+    (teamId) => !hackathon.participations.some(p => p.teamId === teamId && p.isTeamSpeaker)
+  )
+  return !!teamsWithoutSpeaker
+}
+
 const checkSomeAssistingWithoutGroup = (hackathon) => {
   return hackathon.participations.some(p => p.hasConfirmedAssistance && !checkExists(p.groupId))
+}
+
+const checkSomeAssistingWithoutTeam = (hackathon) => {
+  return hackathon.participations.some(p => p.hasConfirmedAssistance && !checkExists(p.teamId))
 }
 
 const phaseRules = {
@@ -39,6 +52,12 @@ const phaseRules = {
     return { canAdvance: true }
   },
   TEAM_CREATION: (h) => {
+    if (checkSomeAssistingWithoutTeam(h)) {
+      return { canAdvance: false, errorMessage: 'There are assisting participants without an assigned co-creation team.' }
+    }
+    if (checkSomeTeamWithoutSpeaker(h)) {
+      return { canAdvance: false, errorMessage: 'There are teams without a team speaker assigned.' }
+    }
     return { canAdvance: true }
   },
   TEAM_WORK: (h) => {
@@ -69,6 +88,9 @@ export class ClosedState extends HackathonState {
     } else if (nextPhase === 'GROUP_PRESENTATION') {
       storeAndDeleteAllGroupsOfHackathon(this.hackathon.id)
       await GroupsAndTeamsService.deliverAllConceptualMapsOfHackathon(this.hackathon.id)
+    } else if (nextPhase === 'TEAM_CREATION') {
+      await FlowersService.createFlowersOfHackathon(this.hackathon.id)
+    } else if (nextPhase === 'TEAM_WORK') {
     }
 
     if (nextState === 'FINISHED') {

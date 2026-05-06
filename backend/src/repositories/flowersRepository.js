@@ -27,5 +27,5 @@ export const getMinimalFlowerUnrestricted = (flowerId) => {
 }
 
 export const createFlowerOfSeed = (seedId) => {
-
+  return Flower.create({ seedId })
 }
