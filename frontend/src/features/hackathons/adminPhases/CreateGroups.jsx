@@ -8,23 +8,25 @@ import Column from "../../../components/drag-and-drop/Column";
 import AsterButton from "../../../components/buttons/AsterButton";
 import MoveParticipantModal from "./components/MoveParticipantModal";
 import NewAggregationModal from "./components/NewAggregationModal";
-import Loading from "../../../components/messages/Loading";
 import AggregationsSection from "../../../components/drag-and-drop/AggregationsSection";
 import WarningText from "../../../components/messages/WarningText";
 
-export default function CreateGroups(props) {
-  const { hackathon, handleNextPhase } = useContext(HackathonContext);
-  const exploringGroups = props.exploringGroups;
+export default function CreateGroups() {
+  const {
+    hackathon,
+    handleNextPhase,
+    hackathonSeeds,
+    exploringGroups,
+    updateParticipant,
+  } = useContext(HackathonContext);
 
   const isCurrentPhase = hackathon.phase === "GROUP_CREATION";
 
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [hasConfirmedChange, setHasConfirmedChange] = useState(false);
   const [openNewGroupModal, setOpenNewGroupModal] = useState(false);
 
-  const [hackathonSeeds, setHackathonSeeds] = useState([]);
   const seedsToDisplay = hackathonSeeds.filter((s) =>
     exploringGroups.map((e) => e.seedId).includes(s.id),
   );
@@ -35,13 +37,6 @@ export default function CreateGroups(props) {
   )?.title;
 
   const { fetcher } = useFetcher(error, setError);
-
-  const fetchSeeds = async () => {
-    await fetcher({
-      url: `seeds?hackathonId=${hackathon.id}`,
-      onSuccess: (data) => setHackathonSeeds(data),
-    }).finally(() => setLoading(false));
-  };
 
   const getFullName = (member) => {
     return member.userProfile.name + " " + member.userProfile.surname;
@@ -65,7 +60,7 @@ export default function CreateGroups(props) {
   const changeSeed = (participant, seedId, group) => {
     const groupId = seedId === null ? null : group?.id;
     if (participant?.groupSeed?.id === groupId) return;
-    props.updateParticipant(participant.userProfile.id, { groupId });
+    updateParticipant(participant.userProfile.id, { groupId });
   };
 
   const handleSeedChange = (participant, seedId) => {
@@ -88,15 +83,10 @@ export default function CreateGroups(props) {
   };
 
   const handleToggleGroupVoice = (participant) => {
-    props.updateParticipant(participant.userProfile.id, {
+    updateParticipant(participant.userProfile.id, {
       isGroupVoice: !participant.isGroupVoice,
     });
   };
-
-  useEffect(() => {
-    if (!hackathon.id) return;
-    fetchSeeds();
-  }, [hackathon?.id]);
 
   const exploringGroupsRef = useRef(exploringGroups);
   useEffect(() => {
@@ -118,10 +108,6 @@ export default function CreateGroups(props) {
       },
     });
   }, []);
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <div>
@@ -227,10 +213,6 @@ export default function CreateGroups(props) {
             body: {
               participantIds: selection.participants.map((p) => p.id),
               seedId: selection.seed.id,
-            },
-            onSuccess: () => {
-              props.fetchExploringGroups();
-              setOpenNewGroupModal(false);
             },
           });
         }}

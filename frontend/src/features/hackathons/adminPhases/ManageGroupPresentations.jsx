@@ -11,8 +11,10 @@ import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
 import RatingCard from "./components/RatingCard";
 import Loading from "../../../components/messages/Loading";
 
-export default function ManageGroupPresentations({ exploringGroups }) {
-  const { socket, hackathon, handleNextPhase } = useContext(HackathonContext);
+export default function ManageGroupPresentations() {
+  const { socket, hackathon, handleNextPhase, exploringGroups } =
+    useContext(HackathonContext);
+
   const [presentingGroup, setPresentingGroup] = useState(null);
   const [viewingGroup, setViewingGroup] = useState(null);
   const [changingGroup, setChangingGroup] = useState(null);

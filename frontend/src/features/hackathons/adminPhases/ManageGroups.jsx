@@ -11,9 +11,9 @@ import GroupSeedResources from "../components/GroupSeedResources";
 import AsterButton from "../../../components/buttons/AsterButton";
 import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
 
-export default function ManageGroups(props) {
-  const { socket, hackathon, handleNextPhase } = useContext(HackathonContext);
-  const exploringGroups = props.exploringGroups;
+export default function ManageGroups() {
+  const { socket, hackathon, handleNextPhase, exploringGroups } =
+    useContext(HackathonContext);
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);

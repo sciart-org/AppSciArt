@@ -8,8 +8,8 @@ import useFetcher from "../../../utils/useFetcher";
 import { showSuccessMessage } from "../../../components/messages/Message";
 import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
 
-export default function PrepareHackathon(props) {
-  const { hackathon, setHackathon, handleNextPhase } =
+export default function PrepareHackathon() {
+  const { hackathon, setHackathon, handleNextPhase, updateParticipant } =
     useContext(HackathonContext);
 
   const isCurrentPhase = hackathon.phase === "PREPARING";
@@ -41,7 +41,7 @@ export default function PrepareHackathon(props) {
   };
 
   const handleToggleConfirmed = (participant) => {
-    props.updateParticipant(
+    updateParticipant(
       participant.userProfile.id,
       {
         hasConfirmedAssistance: !participant.hasConfirmedAssistance,

@@ -28,6 +28,7 @@ export default function NewAggregationModal({
     }
 
     onCreate(selection);
+    onClose();
     setSelection({});
   };
 

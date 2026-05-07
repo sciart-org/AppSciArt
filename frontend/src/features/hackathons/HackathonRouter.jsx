@@ -18,19 +18,14 @@ export default function HackathonRouter() {
   const [error, setError] = useState(null);
   const [socket, setSocket] = useState(null);
 
+  const [hackathonSeeds, setHackathonSeeds] = useState([]);
+  const [hackathonFlowers, setHackathonFlowers] = useState([]);
+  const [exploringGroups, setExploringGroups] = useState([]);
+
   const { fetcher } = useFetcher(error, setError);
 
   const navigate = useNavigate();
   const params = useParams();
-
-  const fetchParticipation = async () => {
-    await fetcher({
-      url: `hackathons/${params.hackathonId}/participants/me`,
-      onSuccess: (data) => {
-        setParticipation(data);
-      },
-    });
-  };
 
   useEffect(() => {
     fetcher({
@@ -43,12 +38,6 @@ export default function HackathonRouter() {
       },
     }).finally(() => setLoading(false));
   }, []);
-
-  useEffect(() => {
-    if (!isAdmin) {
-      fetchParticipation();
-    }
-  }, [isAdmin]);
 
   if (loading) {
     return <Loading />;
@@ -72,7 +61,6 @@ export default function HackathonRouter() {
           setParticipation,
           socket,
           setSocket,
-          fetchParticipation,
         }}
       >
         {hackathon.phase !== "PREPARING" && (
@@ -102,12 +90,64 @@ export default function HackathonRouter() {
     });
   };
 
+  const updateParticipationState = (participationChanges) => {
+    setHackathon((prev) => ({
+      ...prev,
+      participations: prev.participations.map((p) => {
+        if (p.id === participationChanges.id) return participationChanges;
+
+        const sameGroup =
+          p.conceptualMap?.id === participationChanges.conceptualMap?.id;
+        const sameTeam =
+          p.teamFlower?.id === participationChanges.teamFlower?.id;
+
+        return {
+          ...p,
+          ...(participationChanges.isGroupVoice &&
+            sameGroup && { isGroupVoice: false }),
+          ...(participationChanges.isTeamSpeaker &&
+            sameTeam && { isTeamSpeaker: false }),
+        };
+      }),
+    }));
+  };
+
+  const updateParticipant = async (
+    participantId,
+    newParticipant,
+    broadcast = "ALL",
+  ) => {
+    await fetcher({
+      url: `hackathons/${hackathon.id}/participants/${participantId}?broadcast=${broadcast}`,
+      method: "PUT",
+      body: newParticipant,
+      onSuccess: (updatedParticipation) => {
+        updateParticipationState(updatedParticipation);
+      },
+    });
+  };
+
   if (hackathon.state === "CLOSED") {
     return (
       <HackathonContext
-        value={{ hackathon, setHackathon, socket, setSocket, handleNextPhase }}
+        value={{
+          hackathon,
+          setHackathon,
+          socket,
+          setSocket,
+          handleNextPhase,
+          hackathonSeeds,
+          hackathonFlowers,
+          exploringGroups,
+          updateParticipant,
+        }}
       >
-        <HackathonManagement />
+        <HackathonManagement
+          updateParticipationState={updateParticipationState}
+          setHackathonFlowers={setHackathonFlowers}
+          setExploringGroups={setExploringGroups}
+          setHackathonSeeds={setHackathonSeeds}
+        />
       </HackathonContext>
     );
   }

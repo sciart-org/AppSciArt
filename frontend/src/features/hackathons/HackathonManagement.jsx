@@ -9,19 +9,31 @@ import SelectorBar from "../../components/buttons/SelectorBar";
 import AsterButton from "../../components/buttons/AsterButton";
 import { parseEnumValue } from "../../utils/commonUtils";
 import ManageGroups from "./adminPhases/ManageGroups";
-import useFetcher from "../../utils/useFetcher";
 import ManageGroupPresentations from "./adminPhases/ManageGroupPresentations";
 import { showErrorMessage } from "../../components/messages/Message";
 import WarningText from "../../components/messages/WarningText";
+import useFetcher from "../../utils/useFetcher";
+import Loading from "../../components/messages/Loading";
 
-export default function HackathonManagement() {
-  const { hackathon, setHackathon, setSocket } = useContext(HackathonContext);
-  const { socket } = useWebSockets(!!hackathon, `${hackathon.id}/staff`);
+export default function HackathonManagement({
+  updateParticipationState,
+  setHackathonFlowers,
+  setHackathonSeeds,
+  setExploringGroups,
+}) {
+  const {
+    hackathon,
+    setHackathon,
+    setSocket,
+    hackathonFlowers,
+    exploringGroups,
+  } = useContext(HackathonContext);
+
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  const { socket } = useWebSockets(!!hackathon, `${hackathon.id}/staff`);
   const { fetcher } = useFetcher(error, setError);
-
-  const [exploringGroups, setExploringGroups] = useState([]);
 
   const hackathonPhases = [
     "PREPARING",
@@ -37,35 +49,39 @@ export default function HackathonManagement() {
     hackathonPhases.indexOf(hackathon.phase),
   );
 
-  useEffect(() => {
-    setSelectedPhase(hackathonPhases.indexOf(hackathon.phase));
-    fetchExploringGroups();
-  }, [hackathon.phase]);
-
-  const updateParticipationState = (participationChanges) => {
-    setHackathon((prev) => ({
-      ...prev,
-      participations: prev.participations.map((p) => {
-        if (p.id === participationChanges.id) return participationChanges;
-        if (
-          participationChanges.isGroupVoice &&
-          p.conceptualMap?.id === participationChanges.conceptualMap?.id
-        ) {
-          return { ...p, isGroupVoice: false };
-        }
-        return p;
-      }),
-    }));
-  };
-
   const fetchExploringGroups = async () => {
     await fetcher({
       url: `hackathons/${hackathon.id}/clusters/${0}/exploring-groups`,
-      onSuccess: (data) => {
-        setExploringGroups(data);
-      },
+      onSuccess: (data) => setExploringGroups(data),
     });
   };
+
+  const fetchFlowers = async () => {
+    await fetcher({
+      url: `flowers?hackathonId=${hackathon.id}`,
+      onSuccess: (data) => setHackathonFlowers(data),
+    });
+  };
+
+  const fetchSeeds = async () => {
+    await fetcher({
+      url: `seeds?hackathonId=${hackathon.id}`,
+      onSuccess: (data) => setHackathonSeeds(data),
+    });
+  };
+
+  const fetchHackathonItems = async () => {
+    try {
+      await Promise.all([fetchExploringGroups(), fetchFlowers(), fetchSeeds()]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setSelectedPhase(hackathonPhases.indexOf(hackathon.phase));
+    fetchHackathonItems();
+  }, [hackathon.phase]);
 
   useEffect(() => {
     if (!socket) return;
@@ -80,9 +96,25 @@ export default function HackathonManagement() {
     });
 
     socket.on("group:updated", (groupChanges) => {
+      if (!exploringGroups.map((g) => g.id).includes(groupChanges.id)) {
+        fetchExploringGroups();
+        return;
+      }
       setExploringGroups((prev) =>
         prev.map((g) =>
           g.id === groupChanges.id ? { ...g, ...groupChanges } : g,
+        ),
+      );
+    });
+
+    socket.on("team:updated", (teamChanges) => {
+      if (!hackathonFlowers.map((f) => f.id).includes(teamChanges.id)) {
+        fetchFlowers();
+        return;
+      }
+      setHackathonFlowers((prev) =>
+        prev.map((f) =>
+          f.id === teamChanges.id ? { ...f, ...teamChanges } : f,
         ),
       );
     });
@@ -96,44 +128,16 @@ export default function HackathonManagement() {
     });
   }, [socket]);
 
-  useEffect(() => {
-    if (!hackathon.id) return;
-    fetchExploringGroups();
-  }, [hackathon.id]);
-
-  const updateParticipant = async (
-    participantId,
-    newParticipant,
-    broadcast = "ALL",
-  ) => {
-    await fetcher({
-      url: `hackathons/${hackathon.id}/participants/${participantId}?broadcast=${broadcast}`,
-      method: "PUT",
-      body: newParticipant,
-      onSuccess: (updatedParticipation) => {
-        updateParticipationState(updatedParticipation);
-      },
-    });
-  };
-
   const phaseScreen = () => {
     if (selectedPhase > hackathonPhases.indexOf(hackathon.phase)) {
       return <p>Phase not yet started</p>;
     }
 
     const screens = {
-      PREPARING: <PrepareHackathon updateParticipant={updateParticipant} />,
-      GROUP_CREATION: (
-        <CreateGroups
-          updateParticipant={updateParticipant}
-          exploringGroups={exploringGroups}
-          fetchExploringGroups={fetchExploringGroups}
-        />
-      ),
-      GROUP_WORK: <ManageGroups exploringGroups={exploringGroups} />,
-      GROUP_PRESENTATION: (
-        <ManageGroupPresentations exploringGroups={exploringGroups} />
-      ),
+      PREPARING: <PrepareHackathon />,
+      GROUP_CREATION: <CreateGroups />,
+      GROUP_WORK: <ManageGroups />,
+      GROUP_PRESENTATION: <ManageGroupPresentations />,
       TEAM_CREATION: "Under development",
       TEAM_WORK: "Under development",
       TEAM_PRESENTATION: "Under development",
@@ -145,6 +149,10 @@ export default function HackathonManagement() {
       )
     );
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="hackathon-management-page">

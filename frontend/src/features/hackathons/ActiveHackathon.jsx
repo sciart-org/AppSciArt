@@ -14,8 +14,8 @@ export default function ActiveHackathon() {
     hackathon,
     setHackathon,
     participation,
+    setParticipation,
     setSocket,
-    fetchParticipation,
   } = useContext(HackathonContext);
 
   const date = new Date(hackathon?.startDate);
@@ -27,6 +27,15 @@ export default function ActiveHackathon() {
     rawDays < 0
   );
   const { socket } = useWebSockets(socketCondition, hackathon.id);
+
+  const fetchParticipation = async () => {
+    await fetcher({
+      url: `hackathons/${params.hackathonId}/participants/me`,
+      onSuccess: (data) => {
+        setParticipation(data);
+      },
+    });
+  };
 
   useEffect(() => {
     const shouldNotConnect =
@@ -50,7 +59,7 @@ export default function ActiveHackathon() {
       fetchParticipation();
     });
     socket.on("error_message", (error) => {
-      showErrorMessage(error)
+      showErrorMessage(error);
     });
   }, [socket]);
 

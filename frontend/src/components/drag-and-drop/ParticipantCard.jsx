@@ -23,7 +23,7 @@ export default function ParticipantCard({
   }, [participant]);
 
   return (
-    <p
+    <div
       ref={ref}
       className="group-box-item"
       style={{ opacity: dragging ? 0.4 : 1, cursor: "grab" }}
@@ -60,6 +60,6 @@ export default function ParticipantCard({
           </label>
         )}
       </div>
-    </p>
+    </div>
   );
 }
