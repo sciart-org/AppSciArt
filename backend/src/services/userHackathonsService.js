@@ -9,6 +9,7 @@ import * as UsersRepository from '../repositories/usersRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import { emitGroupRemovedToStaff } from '../sockets/hackathonPhases.js'
+import * as FlowersRepository from '../repositories/flowersRepository.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
@@ -109,11 +110,12 @@ const checkMovingTeamSpeaker = async (currentUserId, hackathonId, participation,
   if (!participation.isTeamSpeaker || previousTeamId === null) {
     return
   }
-  /*
-  TODO
-  */
+  const teamFlower = await FlowersRepository.getFlowerWithSeedById(previousTeamId, true)
+  if (teamFlower.participations.length === 1) {
+    return
+  }
   const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId, true)
-  errorThrower(hackathon.phase !== 'TEAM_CREATION' && participation.isGroupVoice, 'You cannot move the team speaker. Please assign a new team speaker before moving the participant.', 400)
+  errorThrower(hackathon.phase !== 'TEAM_CREATION' && participation.isTeamSpeaker, 'You cannot move the team speaker. Please assign a new team speaker before moving the participant.', 400)
 }
 
 const setRestOfGroupVoiceToFalse = async (groupId, participationId) => {
@@ -123,9 +125,11 @@ const setRestOfGroupVoiceToFalse = async (groupId, participationId) => {
 }
 
 const setRestOfTeamSpeakersToFalse = async (teamId, participationId) => {
-  /*
-  TODO
-  */
+  const participations = await ParticipationsRepository.getParticipationsByTeamId(teamId)
+  const otherIds = participations.map(p => p.id).filter(id => id !== participationId)
+  await Promise.all(otherIds.map(id =>
+    ParticipationsRepository.updateParticipationById(id, { isTeamSpeaker: false })
+  ))
 }
 
 const checkIsRemovingGroupVoiceOfCreatedGroup = async (currentUserId, hackathonId) => {

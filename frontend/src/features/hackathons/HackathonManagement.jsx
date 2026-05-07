@@ -11,6 +11,7 @@ import { parseEnumValue } from "../../utils/commonUtils";
 import ManageGroups from "./adminPhases/ManageGroups";
 import ManageGroupPresentations from "./adminPhases/ManageGroupPresentations";
 import { showErrorMessage } from "../../components/messages/Message";
+import CreateTeams from "./adminPhases/CreateTeams";
 import WarningText from "../../components/messages/WarningText";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
@@ -138,7 +139,7 @@ export default function HackathonManagement({
       GROUP_CREATION: <CreateGroups />,
       GROUP_WORK: <ManageGroups />,
       GROUP_PRESENTATION: <ManageGroupPresentations />,
-      TEAM_CREATION: "Under development",
+      TEAM_CREATION: <CreateTeams />,
       TEAM_WORK: "Under development",
       TEAM_PRESENTATION: "Under development",
     };

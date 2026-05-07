@@ -35,3 +35,9 @@ export const getMinimalFlowerUnrestricted = (flowerId) => {
 export const createFlowerOfSeed = (seedId) => {
   return Flower.create({ seedId })
 }
+
+export const getFlowerOfSeedInHackathon = (seedId, hackathonId) => {
+  return Flower.scope({ method: ['withSeedsOfHackathon', hackathonId] }).findOne({
+    where: { seedId }
+  })
+}

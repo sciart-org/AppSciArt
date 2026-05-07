@@ -556,6 +556,17 @@ coCreationTeams:
         schema:
           type: integer
           minimum: 0
+      - name: broadcast
+        in: query
+        required: false
+        schema:
+          $ref: "../components/schemas/common.yaml#/Broadcast"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/group.yaml#/NewGroup"
     responses:
       "201":
         description: Co-creation team created
@@ -563,6 +574,8 @@ coCreationTeams:
           application/json:
             schema:
               $ref: "../components/schemas/group.yaml#/TeamDetails"
+      "409":
+        description: Team already created for this seed
 
 coCreationTeamByNumber:
   x-router-controller: groupsAndTeamsController

@@ -46,3 +46,10 @@ export const getMinimalParticipationInHackathon = (inHackathonAttributes) => {
     include: []
   })
 }
+
+export const getParticipationsByTeamId = (teamId) => {
+  return Participation.scope({ method: ['inHackathon', teamId] }).findAll({
+    attributes: ['id', 'teamId'],
+    include: []
+  })
+}

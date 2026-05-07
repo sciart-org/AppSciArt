@@ -1,0 +1,228 @@
+import { useContext, useEffect, useState } from "react";
+import { HackathonContext } from "../components/HackathonContext";
+import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
+import ParticipantCard from "../../../components/drag-and-drop/ParticipantCard";
+import Column from "../../../components/drag-and-drop/Column";
+import AsterButton from "../../../components/buttons/AsterButton";
+import AggregationsSection from "../../../components/drag-and-drop/AggregationsSection";
+import NewAggregationModal from "./components/NewAggregationModal";
+import useFetcher from "../../../utils/useFetcher";
+import WarningText from "../../../components/messages/WarningText";
+import MoveParticipantModal from "./components/MoveParticipantModal";
+import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+
+export default function CreateTeams() {
+  const {
+    hackathon,
+    handleNextPhase,
+    hackathonSeeds,
+    hackathonFlowers,
+    updateParticipant,
+  } = useContext(HackathonContext);
+
+  const [error, setError] = useState(null);
+
+  const [openNextPhaseModal, setOpenNextPhaseModal] = useState(false);
+  const [openNewTeamModal, setOpenNewTeamModal] = useState(false);
+  const [hasConfirmedChange, setHasConfirmedChange] = useState(false);
+  const [changingParticipant, setChangingParticipant] = useState(false);
+
+  const flowerSeeds = hackathonSeeds.filter((s) =>
+    hackathonFlowers.map((f) => f.seedId).includes(s.id),
+  );
+  const changingFlowerSeedTitle = flowerSeeds.find(
+    (f) => f.id === changingParticipant?.flowerId,
+  )?.seed?.title;
+  const seedsWithoutTeam = hackathonSeeds.filter(
+    (s) => !flowerSeeds.includes(s),
+  );
+
+  const { fetcher } = useFetcher(error, setError);
+
+  const isCurrentPhase = hackathon.phase === "TEAM_CREATION";
+
+  const getFullName = (member) => {
+    return member.userProfile.name + " " + member.userProfile.surname;
+  };
+
+  const sortByName = (members) => {
+    return members.sort((a, b) => getFullName(a).localeCompare(getFullName(b)));
+  };
+
+  const unassignedParticipants = sortByName(
+    hackathon.participations.filter(
+      (p) => p.teamFlower == null || Object.keys(p.teamFlower).length === 0,
+    ),
+  );
+
+  const participantsForFlower = (flowerId) =>
+    sortByName(
+      hackathon.participations.filter((p) => p.teamFlower?.id === flowerId),
+    );
+
+  const handleToggleTeamSpeaker = (participant) => {
+    updateParticipant(participant.userProfile.id, {
+      isTeamSpeaker: !participant.isTeamSpeaker,
+    });
+  };
+
+  const changeFlower = (participant, flowerId) => {
+    if (participant?.teamFlower?.id === flowerId) return;
+    updateParticipant(participant.userProfile.id, { teamId: flowerId });
+  };
+
+  const handleFlowerChange = (participant, flowerId) => {
+    if (
+      !hasConfirmedChange &&
+      !isCurrentPhase &&
+      !!participant?.teamFlower?.id
+    ) {
+      setChangingParticipant({
+        participant,
+        flowerId,
+      });
+      return;
+    }
+
+    changeFlower(participant, flowerId);
+  };
+
+  useEffect(() => {
+    return monitorForElements({
+      onDrop({ source, location }) {
+        const destination = location.current.dropTargets[0];
+        if (!destination) return;
+
+        const { participant } = source.data;
+        const { data } = destination.data;
+
+        if (!participant || data === undefined) return;
+
+        handleFlowerChange(participant, data);
+      },
+    });
+  }, []);
+
+  return (
+    <div>
+      <h2>Co-creation teams creation</h2>
+      {!isCurrentPhase && (
+        <WarningText
+          style={{
+            maxWidth: "25rem",
+            marginInline: "auto",
+            marginBottom: "2rem",
+          }}
+        >
+          ⚠ Making changes to teams after their creation is not recommended.
+          Proceed with caution.
+        </WarningText>
+      )}
+      <ConfirmPhaseChangeModal
+        openCondition={openNextPhaseModal}
+        onConfirm={() => {
+          setOpenNextPhaseModal(false);
+          handleNextPhase();
+        }}
+        onCancel={() => setOpenNextPhaseModal(false)}
+      >
+        <p>
+          Teams will be created and participants will start working on the
+          SciArt flowers creation.
+        </p>
+      </ConfirmPhaseChangeModal>
+      <div className="group-box-container">
+        <div>
+          <h3 className="group-box-header">Unassigned participants</h3>
+          <Column
+            data={null}
+            style={{ height: "100%", maxHeight: "80vh", overflowY: "scroll" }}
+          >
+            {unassignedParticipants.map((p) => (
+              <ParticipantCard key={p.id} participant={p} />
+            ))}
+          </Column>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h3
+            className="group-box-header"
+            style={{ margin: 0, borderBottom: 0 }}
+          >
+            Co-creation teams
+          </h3>
+          <div style={{ maxHeight: "80vh", overflowY: "scroll", flex: 1 }}>
+            {hackathonFlowers.map((flower) => (
+              <AggregationsSection
+                key={flower.id}
+                data={flower.id}
+                title={flower.seed.title}
+              >
+                {participantsForFlower(flower.id).map((p) => {
+                  return (
+                    <ParticipantCard
+                      key={p.id}
+                      participant={p}
+                      checkboxValue={!!p.isTeamSpeaker}
+                      onToggleCheckbox={handleToggleTeamSpeaker}
+                      isAssigned={true}
+                    />
+                  );
+                })}
+              </AggregationsSection>
+            ))}
+          </div>
+          {seedsWithoutTeam && seedsWithoutTeam.length !== 0 && (
+            <AsterButton
+              onClick={() => setOpenNewTeamModal(true)}
+              style={{ width: "100%", borderRadius: 0 }}
+            >
+              Create team
+            </AsterButton>
+          )}
+        </div>
+      </div>
+      {isCurrentPhase ? (
+        <AsterButton onClick={() => setOpenNextPhaseModal(true)}>
+          Create
+        </AsterButton>
+      ) : (
+        <>
+          <p>Need a new team?</p>
+          <AsterButton onClick={() => setOpenNewTeamModal(!isCurrentPhase)}>
+            Create team
+          </AsterButton>
+        </>
+      )}
+      <MoveParticipantModal
+        changingParticipant={changingParticipant}
+        changingSeedTitle={changingFlowerSeedTitle}
+        onConfirm={() => {
+          setHasConfirmedChange(true);
+          changeFlower(
+            changingParticipant.participant,
+            changingParticipant.flowerId,
+          );
+          setChangingParticipant(null);
+        }}
+        onCancel={() => setChangingParticipant(null)}
+      />
+      <NewAggregationModal
+        openCondition={openNewTeamModal}
+        seedOptions={seedsWithoutTeam}
+        participantOptions={unassignedParticipants}
+        onClose={() => setOpenNewTeamModal(false)}
+        onCreate={(selection) => {
+          fetcher({
+            url: `hackathons/${selection.participants[0].hackathonId}/clusters/${0}/co-creation-teams?broadcast=ALL`,
+            method: "POST",
+            body: {
+              participantIds: selection.participants.map((p) => p.id),
+              seedId: selection.seed.id,
+            },
+          });
+        }}
+        aggregationName={"co-creation team"}
+      />
+    </div>
+  );
+}

@@ -1,12 +1,13 @@
 import { checkExists } from '../validators/generalValidators.js'
 import { checkUserIsGroupVoice, checkUserIsInHackathon } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { mapGroupMember } from './mappers/participationMapper.js'
+import { mapGroupMember, mapTeamMember } from './mappers/participationMapper.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as ParticipationsRepository from '../repositories/participationsRepository.js'
 import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as SeedsService from '../services/seedsService.js'
+import * as FlowersRepository from '../repositories/flowersRepository.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 
 const defaultConceptualMap = {
@@ -47,6 +48,15 @@ export async function createExploringGroup (userId, hackathonId, seedId) {
   return await GroupsAndTeamsRepository.createConceptualMapOfSeed(seedId)
 }
 
+export async function createCoCreationTeam (userId, hackathonId, seedId) {
+  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create co-creation teams', 403)
+  const existingTeam = await FlowersRepository.getFlowerOfSeedInHackathon(seedId, hackathonId)
+  errorThrower(checkExists(existingTeam), 'A team already exists for this seed', 409)
+  const seedsOfHackathon = await SeedsRepository.getSeedsOfHackathon(hackathonId)
+  errorThrower(!seedsOfHackathon.map(s => s.id).includes(seedId), 'The seed does not belong to this hackathon', 400)
+  return await FlowersRepository.createFlowerOfSeed(seedId)
+}
+
 export async function getExploringGroupDetails (groupId) {
   if (!groupId) return null
 
@@ -84,16 +94,23 @@ export function getClusterCoCreationTeams (req, res) {
   })
 }
 
-export function createCoCreationTeam (req, res) {
-  res.send({
-    message: 'This is the mockup controller for createCoCreationTeam'
-  })
-}
+export async function getCoCreationTeamDetails (teamId) {
+  if (!teamId) return null
 
-export function getCoCreationTeamDetails (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getCoCreationTeamDetails'
-  })
+  const flower = await FlowersRepository.getFlowerWithSeedById(teamId, true)
+  if (!flower) return null
+
+  const { hackathonId } = flower.participations[0]
+
+  const allFlowers = await FlowersRepository.getFlowersOfHackathon(hackathonId)
+  const number = allFlowers.findIndex(m => m.id === teamId) + 1
+
+  return {
+    id: teamId,
+    members: flower.participations.map(m => mapTeamMember(m)),
+    number,
+    seedId: flower.seedId ?? null
+  }
 }
 
 export function deleteCoCreationTeam (req, res) {
