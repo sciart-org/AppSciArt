@@ -55,6 +55,21 @@ export default function Carousel({
   onClickItem = () => {},
   loading,
 }) {
+  const [centerImage, setCenterImage] = useState(0);
+  const [animating, setAnimating] = useState(null);
+
+  const handleSlide = (direction) => {
+    if (animating) return;
+    setAnimating(direction);
+    const newImageIndexOffset = direction === "right" ? 1 : -1;
+    setTimeout(() => {
+      setCenterImage(
+        (centerImage + allItems.length + newImageIndexOffset) % allItems.length,
+      );
+      setAnimating(false);
+    }, 500);
+  };
+
   if (!loading && (!allItems || allItems.length === 0)) {
     return (
       <CarouselContainer
@@ -67,9 +82,6 @@ export default function Carousel({
     );
   }
 
-  const [centerImage, setCenterImage] = useState(0);
-  const [animating, setAnimating] = useState(null);
-
   const shownObjects = [
     allItems[(centerImage - 2 + allItems.length) % allItems.length],
     allItems[(centerImage - 1 + allItems.length) % allItems.length],
@@ -79,18 +91,6 @@ export default function Carousel({
   ];
 
   const currentEdition = allItems[centerImage];
-
-  const handleSlide = (direction) => {
-    if (animating) return;
-    setAnimating(direction);
-    const newImageIndexOffset = direction == "right" ? 1 : -1;
-    setTimeout(() => {
-      setCenterImage(
-        (centerImage + allItems.length + newImageIndexOffset) % allItems.length,
-      );
-      setAnimating(false);
-    }, 500);
-  };
 
   return (
     <>
@@ -103,13 +103,9 @@ export default function Carousel({
           <div
             className={small ? "image-container small" : "image-container"}
             onClick={() => {
-              if (shownObjects[1] === o) {
-                handleSlide("left");
-              } else if (shownObjects[2] === o) {
-                onClickItem(o);
-              } else if (shownObjects[3] === o) {
-                handleSlide("right");
-              }
+              if (shownObjects[1] === o) handleSlide("left");
+              else if (shownObjects[2] === o) onClickItem(o);
+              else if (shownObjects[3] === o) handleSlide("right");
             }}
             style={{ cursor: "pointer" }}
           >
