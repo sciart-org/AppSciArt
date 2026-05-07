@@ -41,3 +41,11 @@ export const getFlowerOfSeedInHackathon = (seedId, hackathonId) => {
     where: { seedId }
   })
 }
+
+export const deleteFlower = (flowerId) => {
+  return Flower.destroy({
+    where: {
+      id: flowerId
+    }
+  })
+}

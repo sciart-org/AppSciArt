@@ -91,6 +91,7 @@ export class ClosedState extends HackathonState {
     } else if (nextPhase === 'TEAM_CREATION') {
       await FlowersService.createFlowersOfHackathon(this.hackathon.id)
     } else if (nextPhase === 'TEAM_WORK') {
+      await FlowersService.deleteUnassignedFlowersOfHackathon(this.hackathon.id)
     }
 
     if (nextState === 'FINISHED') {

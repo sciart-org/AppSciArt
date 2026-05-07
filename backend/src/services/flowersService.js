@@ -5,6 +5,7 @@ import { checkIsStaff } from '../validators/userValidators.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
+import * as ParticipationsRepository from '../repositories/participationsRepository.js'
 
 export async function getFlowersByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
@@ -62,4 +63,19 @@ export function publishFlower (req, res) {
 export const createFlowersOfHackathon = async (hackathonId) => {
   const hackathonGroups = await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)
   return Promise.all(hackathonGroups.map(g => FlowersRepository.createFlowerOfSeed(g.seedId)))
+}
+
+export const deleteUnassignedFlowersOfHackathon = async (hackathonId) => {
+  const participations = await ParticipationsRepository.getMinimalParticipationsOfHackathon({ hackathonId })
+
+  const associatedTeamIds = participations.map(p => p.teamId)
+  const teamsOfHackathon = await FlowersRepository.getFlowersOfHackathon(hackathonId, true)
+  const teamIdsInHackathon = teamsOfHackathon.map(m => m.id)
+  if (!teamIdsInHackathon.length) return 0
+
+  const unassignedIds = teamsOfHackathon
+    .map(m => m.id)
+    .filter(id => !associatedTeamIds.includes(id))
+
+  return Promise.all(unassignedIds.map(FlowersRepository.deleteFlower))
 }
