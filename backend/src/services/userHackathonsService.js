@@ -125,7 +125,7 @@ const setRestOfGroupVoiceToFalse = async (groupId, participationId) => {
 }
 
 const setRestOfTeamSpeakersToFalse = async (teamId, participationId) => {
-  const participations = await ParticipationsRepository.getParticipationsByTeamId(teamId)
+  const participations = await ParticipationsRepository.getMinimalParticipationsOfHackathon({ teamId })
   const otherIds = participations.map(p => p.id).filter(id => id !== participationId)
   await Promise.all(otherIds.map(id =>
     ParticipationsRepository.updateParticipationById(id, { isTeamSpeaker: false })
@@ -143,45 +143,46 @@ const checkIsRemovingTeamSpeakerOfCreatedTeam = async (currentUserId, hackathonI
 }
 
 const validateGroupIsValid = async (currentUserId, participation, body) => {
-  let { isGroupVoice, groupId } = body
-
   const previousGroupId = participation.groupId
   const hackathonId = participation.hackathonId
 
-  if (groupId !== undefined) {
+  if (body.groupId !== undefined) {
     await checkMovingGroupVoice(currentUserId, hackathonId, participation, previousGroupId)
-    isGroupVoice = false
+    body.isGroupVoice = false
   }
 
-  if (groupId) { await validateConceptualMapIsFromHackathon(groupId, hackathonId) }
+  if (body.groupId) {
+    await validateConceptualMapIsFromHackathon(body.groupId, hackathonId)
+  }
 
-  if (isGroupVoice) {
+  if (body.isGroupVoice) {
     errorThrower(previousGroupId === null, 'A group voice must be assigned to a group.', 400)
     await setRestOfGroupVoiceToFalse(previousGroupId, participation.id)
   }
-  if (isGroupVoice === false && groupId === undefined) {
+  if (body.isGroupVoice === false && body.groupId === undefined) {
     await checkIsRemovingGroupVoiceOfCreatedGroup(currentUserId, hackathonId)
   }
 }
 
 const validateTeamIsValid = async (currentUserId, participation, body) => {
-  let { isTeamSpeaker, teamId } = body
-
   const previousTeamId = participation.teamId
   const hackathonId = participation.hackathonId
 
-  if (teamId !== undefined) {
+  if (body.teamId !== undefined) {
     await checkMovingTeamSpeaker(currentUserId, hackathonId, participation, previousTeamId)
-    isTeamSpeaker = false
+    body.isTeamSpeaker = false
   }
 
-  if (teamId) await validateFlowerIsFromHackathon(teamId, hackathonId)
+  if (body.teamId) {
+    await validateFlowerIsFromHackathon(body.teamId, hackathonId)
+  }
 
-  if (isTeamSpeaker) {
+  if (body.isTeamSpeaker) {
     errorThrower(previousTeamId === null, 'A team speaker must be assigned to a team.', 400)
     await setRestOfTeamSpeakersToFalse(previousTeamId, participation.id)
   }
-  if (isTeamSpeaker === false && teamId === undefined) {
+
+  if (body.isTeamSpeaker === false && body.teamId === undefined) {
     await checkIsRemovingTeamSpeakerOfCreatedTeam(currentUserId, hackathonId)
   }
 }

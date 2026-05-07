@@ -43,7 +43,7 @@ export const getFlowerOfSeedInHackathon = (seedId, hackathonId) => {
 }
 
 export const deleteFlower = (flowerId) => {
-  return Flower.destroy({
+  return Flower.unscoped().destroy({
     where: {
       id: flowerId
     }

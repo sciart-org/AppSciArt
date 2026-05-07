@@ -1,4 +1,3 @@
-import { Op } from 'sequelize'
 import { Participation } from '../models/Participation.js'
 
 export const getMinimalParticipationOfUserInHackathon = (userId, inHackathonAttributes) => {
@@ -22,8 +21,7 @@ export const getParticipationById = (participationId) => {
 
 export const getMinimalParticipationsOfHackathon = (inHackathonAttributes) => {
   return Participation.scope({ method: ['inHackathon', inHackathonAttributes] }).findAll({
-    attributes: ['id', 'groupId'],
-    where: { groupId: { [Op.ne]: null } },
+    attributes: ['id', 'groupId', 'teamId'],
     include: []
   })
 }
@@ -43,13 +41,6 @@ export const createParticipation = (body) => {
 export const getMinimalParticipationInHackathon = (inHackathonAttributes) => {
   return Participation.scope({ method: ['inHackathon', inHackathonAttributes] }).findOne({
     attributes: ['id', 'hackathonId'],
-    include: []
-  })
-}
-
-export const getParticipationsByTeamId = (teamId) => {
-  return Participation.scope({ method: ['inHackathon', teamId] }).findAll({
-    attributes: ['id', 'teamId'],
     include: []
   })
 }

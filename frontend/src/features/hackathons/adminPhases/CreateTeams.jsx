@@ -171,7 +171,7 @@ export default function CreateTeams() {
               </AggregationsSection>
             ))}
           </div>
-          {seedsWithoutTeam && seedsWithoutTeam.length !== 0 && (
+          {seedsWithoutTeam && seedsWithoutTeam.length !== 0 && isCurrentPhase && (
             <AsterButton
               onClick={() => setOpenNewTeamModal(true)}
               style={{ width: "100%", borderRadius: 0 }}

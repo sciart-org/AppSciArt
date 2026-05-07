@@ -68,7 +68,7 @@ export const createFlowersOfHackathon = async (hackathonId) => {
 export const deleteUnassignedFlowersOfHackathon = async (hackathonId) => {
   const participations = await ParticipationsRepository.getMinimalParticipationsOfHackathon({ hackathonId })
 
-  const associatedTeamIds = participations.map(p => p.teamId)
+  const associatedTeamIds = participations.map(p => p.teamId).filter(Boolean)
   const teamsOfHackathon = await FlowersRepository.getFlowersOfHackathon(hackathonId, true)
   const teamIdsInHackathon = teamsOfHackathon.map(m => m.id)
   if (!teamIdsInHackathon.length) return 0
