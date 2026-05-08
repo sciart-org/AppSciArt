@@ -66,7 +66,7 @@ export default function CreatedGroups() {
         <h3 style={{ marginBottom: "1rem", marginTop: "2rem" }}>
           Groups have been created! Your group will discover the seed:
         </h3>
-        <h3 style={{ marginTop: 0 }}>{participation?.groupSeed?.title}</h3>
+        <h3 style={{ marginBlock: 0 }}>{participation?.groupSeed?.title}</h3>
         <ParticipantList
           participants={participation?.groupMembers}
           participantStyle={{ margin: "2vw 4vw 0 4vw", width: "6vw" }}

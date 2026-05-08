@@ -38,12 +38,19 @@ export default function CreatedTeams() {
           Co-creation teams have been created!
           {"\n"}Your team will help this seed flourish:
         </h3>
-        <h3 style={{ marginTop: 0 }}>{seed?.title}</h3>
+        <h3 style={{ marginBlock: 0 }}>{seed?.title}</h3>
         <ParticipantList
           participants={participation?.teamMembers}
-          participantStyle={{ margin: "2vw 2vw 0 2vw" }}
+          participantStyle={{ margin: "2vw 4vw 0 4vw", width: "6vw" }}
+          gridNumber={5}
+          style={{
+            width: "75%",
+            margin: "auto",
+            justifyContent: "center",
+          }}
         />
         <AsterButton
+          style={{ marginTop: "2rem" }}
           onClick={() => {
             setJustEntered(false);
           }}

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import useWebSockets from "../../utils/useWebSockets";
 import CreatedGroups from "./phases/CreatedGroups";
 import CreatingGroups from "./phases/CreatingGroups";
@@ -8,6 +8,7 @@ import CreatingTeams from "./phases/CreatingTeams";
 import CreatedTeams from "./phases/CreatedTeams";
 import { HackathonContext } from "./components/HackathonContext";
 import { showErrorMessage } from "../../components/messages/Message";
+import useFetcher from "../../utils/useFetcher";
 
 export default function ActiveHackathon() {
   const {
@@ -26,16 +27,21 @@ export default function ActiveHackathon() {
     hackathon.state === "FINISHED" ||
     rawDays < 0
   );
+
+  const [error, setError] = useState(null);
   const { socket } = useWebSockets(socketCondition, hackathon.id);
+  const { fetcher } = useFetcher(error, setError);
 
   const fetchParticipation = async () => {
     await fetcher({
-      url: `hackathons/${params.hackathonId}/participants/me`,
-      onSuccess: (data) => {
-        setParticipation(data);
-      },
+      url: `hackathons/${hackathon?.id}/participants/me`,
+      onSuccess: (data) => setParticipation(data),
     });
   };
+
+  useEffect(() => {
+    fetchParticipation();
+  }, []);
 
   useEffect(() => {
     const shouldNotConnect =
