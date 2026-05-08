@@ -19,7 +19,7 @@ export default function HackathonRouter() {
   const [socket, setSocket] = useState(null);
 
   const [hackathonSeeds, setHackathonSeeds] = useState([]);
-  const [hackathonFlowers, setHackathonFlowers] = useState([]);
+  const [coCreationTeams, setCoCreationTeams] = useState([]);
   const [exploringGroups, setExploringGroups] = useState([]);
 
   const { fetcher } = useFetcher(error, setError);
@@ -137,16 +137,16 @@ export default function HackathonRouter() {
           setSocket,
           handleNextPhase,
           hackathonSeeds,
-          hackathonFlowers,
           exploringGroups,
+          coCreationTeams,
           updateParticipant,
         }}
       >
         <HackathonManagement
           updateParticipationState={updateParticipationState}
-          setHackathonFlowers={setHackathonFlowers}
-          setExploringGroups={setExploringGroups}
           setHackathonSeeds={setHackathonSeeds}
+          setExploringGroups={setExploringGroups}
+          setCoCreationTeams={setCoCreationTeams}
         />
       </HackathonContext>
     );

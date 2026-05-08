@@ -19,11 +19,20 @@ const defaultConceptualMap = {
 
 export async function getHackathonExploringGroups (hackathonId) {
   const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
-  if (!checkExists(hackathon)) return []
+  errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
   if (hackathon.phase === 'GROUP_CREATION') {
     return await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)
   }
   return await getHackathonExploringGroupsAfterCreation(hackathonId)
+}
+
+export async function getHackathonCoCreationTeams (hackathonId) {
+  const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
+  errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
+  if (hackathon.phase === 'TEAM_CREATION') {
+    return await FlowersRepository.getFlowersOfHackathon(hackathonId, true)
+  }
+  return await getHackathonCoCreationTeamsAfterCreation(hackathonId)
 }
 
 async function getHackathonExploringGroupsAfterCreation (hackathonId) {
@@ -36,6 +45,18 @@ async function getHackathonExploringGroupsAfterCreation (hackathonId) {
     seedId: map.seedId ?? null,
     seedTitle: map.seed?.title ?? null,
     isDelivered: map.isDelivered
+  }))
+}
+
+async function getHackathonCoCreationTeamsAfterCreation (hackathonId) {
+  const flowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, true)
+
+  return flowers.map((flower, index) => ({
+    id: flower.id,
+    members: flower.participations.map(m => mapTeamMember(m)),
+    number: index + 1,
+    seedId: flower.seedId ?? null,
+    seedTitle: flower.seed?.title ?? null
   }))
 }
 
@@ -62,18 +83,20 @@ export async function getExploringGroupDetails (groupId) {
 
   const conceptualMap = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(groupId)
   if (!conceptualMap) return null
-
-  const { hackathonId } = conceptualMap.participations[0]
-
-  const allMaps = await GroupsAndTeamsRepository.getConceptualMapsOfHackathonWithParticipants(hackathonId)
-  const number = allMaps.findIndex(m => m.id === groupId) + 1
+  const groupNumber = await getGroupNumber(conceptualMap)
 
   return {
     id: groupId,
     members: conceptualMap.participations.map(m => mapGroupMember(m)),
-    number,
+    number: groupNumber,
     seedId: conceptualMap.seedId ?? null
   }
+}
+
+export const getGroupNumber = async (conceptualMap) => {
+  const { hackathonId } = conceptualMap.participations[0]
+  const allMaps = await GroupsAndTeamsRepository.getConceptualMapsOfHackathonWithParticipants(hackathonId)
+  return allMaps.findIndex(m => m.id === conceptualMap.id) + 1
 }
 
 export function deleteExploringGroup (req, res) {
@@ -88,29 +111,25 @@ export function updateExploringGroup (req, res) {
   })
 }
 
-export function getClusterCoCreationTeams (req, res) {
-  res.send({
-    message: 'This is the mockup controller for getClusterCoCreationTeams'
-  })
-}
-
 export async function getCoCreationTeamDetails (teamId) {
   if (!teamId) return null
 
   const flower = await FlowersRepository.getFlowerWithSeedById(teamId, true)
   if (!flower) return null
-
-  const { hackathonId } = flower.participations[0]
-
-  const allFlowers = await FlowersRepository.getFlowersOfHackathon(hackathonId)
-  const number = allFlowers.findIndex(m => m.id === teamId) + 1
+  const teamNumber = await getTeamNumber(flower)
 
   return {
     id: teamId,
     members: flower.participations.map(m => mapTeamMember(m)),
-    number,
+    number: teamNumber,
     seedId: flower.seedId ?? null
   }
+}
+
+export const getTeamNumber = async (flower) => {
+  const { hackathonId } = flower.participations[0]
+  const allFlowers = await FlowersRepository.getFlowersOfHackathon(hackathonId)
+  return allFlowers.findIndex(m => m.id === flower.id) + 1
 }
 
 export function deleteCoCreationTeam (req, res) {

@@ -13,6 +13,12 @@ export const getHackathonExploringGroups = withErrorHandler(async (req, res) => 
   return res.status(200).send(exploringGroups)
 })
 
+export const getHackathonCoCreationTeams = withErrorHandler(async (req, res) => {
+  const { hackathonId } = req.params
+  const coCreationTeams = await service.getHackathonCoCreationTeams(hackathonId)
+  return res.status(200).send(coCreationTeams)
+})
+
 export const createExploringGroup = withErrorHandler(async (req, res) => {
   const { hackathonId } = req.params
   const { participantIds, seedId } = req.body
@@ -49,10 +55,6 @@ export function updateExploringGroup (req, res) {
   service.updateExploringGroup(req, res)
 }
 
-export function getClusterCoCreationTeams (req, res) {
-  service.getClusterCoCreationTeams(req, res)
-}
-
 export const createCoCreationTeam = withErrorHandler(async (req, res) => {
   const { hackathonId } = req.params
   const { participantIds, seedId } = req.body
@@ -75,9 +77,11 @@ export const createCoCreationTeam = withErrorHandler(async (req, res) => {
   return res.status(201).send(await service.getCoCreationTeamDetails(createdCoCreationTeam.id))
 })
 
-export function getCoCreationTeamDetails (req, res) {
-  service.getCoCreationTeamDetails(req, res)
-}
+export const getCoCreationTeamDetails = withErrorHandler(async (req, res) => {
+  const { teamId } = req.params
+  const coCreationTeam = await service.getCoCreationTeamDetails(teamId)
+  return res.status(200).send(coCreationTeam)
+})
 
 export function deleteCoCreationTeam (req, res) {
   service.deleteCoCreationTeam(req, res)

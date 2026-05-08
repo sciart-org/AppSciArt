@@ -517,8 +517,8 @@ coCreationTeams:
   x-router-controller: groupsAndTeamsController
   get:
     tags: [Groups & Teams]
-    summary: Get co-creation teams of a cluster
-    operationId: getClusterCoCreationTeams
+    summary: Get co-creation teams of a hackathon
+    operationId: getHackathonCoCreationTeams
     parameters:
       - name: hackathonId
         in: path
@@ -526,12 +526,6 @@ coCreationTeams:
         schema:
           type: string
           format: uuid
-      - name: clusterNumber
-        in: path
-        required: true
-        schema:
-          type: integer
-          minimum: 0
     responses:
       "200":
         description: List of co-creation teams

@@ -10,13 +10,14 @@ import useFetcher from "../../../utils/useFetcher";
 import WarningText from "../../../components/messages/WarningText";
 import MoveParticipantModal from "./components/MoveParticipantModal";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { useRef } from "react";
 
 export default function CreateTeams() {
   const {
     hackathon,
     handleNextPhase,
     hackathonSeeds,
-    hackathonFlowers,
+    coCreationTeams,
     updateParticipant,
   } = useContext(HackathonContext);
 
@@ -28,11 +29,11 @@ export default function CreateTeams() {
   const [changingParticipant, setChangingParticipant] = useState(false);
 
   const flowerSeeds = hackathonSeeds.filter((s) =>
-    hackathonFlowers.map((f) => f.seedId).includes(s.id),
+    coCreationTeams.map((f) => f.seedId).includes(s.id),
   );
-  const changingFlowerSeedTitle = flowerSeeds.find(
-    (f) => f.id === changingParticipant?.flowerId,
-  )?.seed?.title;
+  const changingFlowerSeedTitle = hackathonSeeds.find(
+    (s) => s.id === changingParticipant?.seedId,
+  )?.title;
   const seedsWithoutTeam = hackathonSeeds.filter(
     (s) => !flowerSeeds.includes(s),
   );
@@ -55,9 +56,9 @@ export default function CreateTeams() {
     ),
   );
 
-  const participantsForFlower = (flowerId) =>
+  const participantsForFlowerOfSeed = (seedId) =>
     sortByName(
-      hackathon.participations.filter((p) => p.teamFlower?.id === flowerId),
+      hackathon.participations.filter((p) => p.teamFlower?.seed?.id === seedId),
     );
 
   const handleToggleTeamSpeaker = (participant) => {
@@ -66,12 +67,17 @@ export default function CreateTeams() {
     });
   };
 
-  const changeFlower = (participant, flowerId) => {
-    if (participant?.teamFlower?.id === flowerId) return;
-    updateParticipant(participant.userProfile.id, { teamId: flowerId });
+  const changeFlower = (participant, seedId, team) => {
+    const teamId = seedId === null ? null : team?.id;
+    if (participant?.teamFlower?.id === teamId) return;
+    updateParticipant(participant.userProfile.id, { teamId });
   };
 
-  const handleFlowerChange = (participant, flowerId) => {
+  const handleFlowerChange = (participant, seedId) => {
+    const coCreationTeam = coCreationTeamsRef.current.find(
+      (team) => team.seedId === seedId,
+    );
+
     if (
       !hasConfirmedChange &&
       !isCurrentPhase &&
@@ -79,13 +85,19 @@ export default function CreateTeams() {
     ) {
       setChangingParticipant({
         participant,
-        flowerId,
+        seedId,
+        coCreationTeam,
       });
       return;
     }
 
-    changeFlower(participant, flowerId);
+    changeFlower(participant, seedId, coCreationTeam);
   };
+
+  const coCreationTeamsRef = useRef(coCreationTeams);
+  useEffect(() => {
+    coCreationTeamsRef.current = coCreationTeams;
+  }, [coCreationTeams]);
 
   useEffect(() => {
     return monitorForElements({
@@ -151,13 +163,13 @@ export default function CreateTeams() {
             Co-creation teams
           </h3>
           <div style={{ maxHeight: "80vh", overflowY: "scroll", flex: 1 }}>
-            {hackathonFlowers.map((flower) => (
+            {flowerSeeds.map((seed) => (
               <AggregationsSection
-                key={flower.id}
-                data={flower.id}
-                title={flower.seed.title}
+                key={seed.id}
+                data={seed.id}
+                title={seed.title}
               >
-                {participantsForFlower(flower.id).map((p) => {
+                {participantsForFlowerOfSeed(seed.id).map((p) => {
                   return (
                     <ParticipantCard
                       key={p.id}
@@ -171,14 +183,16 @@ export default function CreateTeams() {
               </AggregationsSection>
             ))}
           </div>
-          {seedsWithoutTeam && seedsWithoutTeam.length !== 0 && isCurrentPhase && (
-            <AsterButton
-              onClick={() => setOpenNewTeamModal(true)}
-              style={{ width: "100%", borderRadius: 0 }}
-            >
-              Create team
-            </AsterButton>
-          )}
+          {seedsWithoutTeam &&
+            seedsWithoutTeam.length !== 0 &&
+            isCurrentPhase && (
+              <AsterButton
+                onClick={() => setOpenNewTeamModal(true)}
+                style={{ width: "100%", borderRadius: 0 }}
+              >
+                Assign seed to new team
+              </AsterButton>
+            )}
         </div>
       </div>
       {isCurrentPhase ? (
@@ -196,11 +210,14 @@ export default function CreateTeams() {
       <MoveParticipantModal
         changingParticipant={changingParticipant}
         changingSeedTitle={changingFlowerSeedTitle}
+        aggregationNumber={changingParticipant?.coCreationTeam?.number}
+        aggregationName={"Team"}
         onConfirm={() => {
           setHasConfirmedChange(true);
           changeFlower(
             changingParticipant.participant,
-            changingParticipant.flowerId,
+            changingParticipant.seedId,
+            changingParticipant.teamId,
           );
           setChangingParticipant(null);
         }}

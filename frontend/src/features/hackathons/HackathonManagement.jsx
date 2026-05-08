@@ -18,16 +18,16 @@ import Loading from "../../components/messages/Loading";
 
 export default function HackathonManagement({
   updateParticipationState,
-  setHackathonFlowers,
   setHackathonSeeds,
   setExploringGroups,
+  setCoCreationTeams,
 }) {
   const {
     hackathon,
     setHackathon,
     setSocket,
-    hackathonFlowers,
     exploringGroups,
+    coCreationTeams,
   } = useContext(HackathonContext);
 
   const [error, setError] = useState(null);
@@ -57,10 +57,10 @@ export default function HackathonManagement({
     });
   };
 
-  const fetchFlowers = async () => {
+  const fetchCoCreationTeams = async () => {
     await fetcher({
-      url: `flowers?hackathonId=${hackathon.id}`,
-      onSuccess: (data) => setHackathonFlowers(data),
+      url: `hackathons/${hackathon.id}/clusters/${0}/co-creation-teams`,
+      onSuccess: (data) => setCoCreationTeams(data),
     });
   };
 
@@ -73,7 +73,11 @@ export default function HackathonManagement({
 
   const fetchHackathonItems = async () => {
     try {
-      await Promise.all([fetchExploringGroups(), fetchFlowers(), fetchSeeds()]);
+      await Promise.all([
+        fetchExploringGroups(),
+        fetchCoCreationTeams(),
+        fetchSeeds(),
+      ]);
     } finally {
       setLoading(false);
     }
@@ -109,11 +113,11 @@ export default function HackathonManagement({
     });
 
     socket.on("team:updated", (teamChanges) => {
-      if (!hackathonFlowers.map((f) => f.id).includes(teamChanges.id)) {
-        fetchFlowers();
+      if (!coCreationTeams.map((f) => f.id).includes(teamChanges.id)) {
+        fetchCoCreationTeams();
         return;
       }
-      setHackathonFlowers((prev) =>
+      setCoCreationTeams((prev) =>
         prev.map((f) =>
           f.id === teamChanges.id ? { ...f, ...teamChanges } : f,
         ),

@@ -6,20 +6,24 @@ export default function MoveParticipantModal({
   onConfirm,
   onCancel,
   changingSeedTitle,
+  aggregationName,
+  aggregationNumber
 }) {
+  const lowerCaseName = aggregationName.toLowerCase();
+
   return (
     <Modal openCondition={!!changingParticipant}>
       <h3 style={{ textAlign: "center" }}>Are you sure?</h3>
       <p>
         {`${changingParticipant?.participant?.userProfile?.name} ${changingParticipant?.participant?.userProfile?.surname} `}
-        is already in a group.
+        is already in a {lowerCaseName}.
         {changingParticipant?.seedId
           ? " Do you want to move them to:"
-          : " Do you want to remove them from their current group?"}
+          : ` Do you want to remove them from their current ${lowerCaseName}?`}
       </p>
       {changingParticipant?.seedId && (
         <p>
-          {`Group ${changingParticipant?.group?.number} — ${changingSeedTitle}?`}
+          {`${aggregationName} ${aggregationNumber} — ${changingSeedTitle}?`}
         </p>
       )}
       <div

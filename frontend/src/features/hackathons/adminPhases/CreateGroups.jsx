@@ -190,6 +190,8 @@ export default function CreateGroups() {
       <MoveParticipantModal
         changingParticipant={changingParticipant}
         changingSeedTitle={changingSeedTitle}
+        aggregationNumber={changingParticipant?.group?.number}
+        aggregationName={"Group"}
         onConfirm={() => {
           setHasConfirmedChange(true);
           changeSeed(
