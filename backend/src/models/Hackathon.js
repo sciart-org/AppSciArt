@@ -5,7 +5,7 @@ import { notNull } from './modelUtils.js'
 
 const publicScope = {
   attributes: {
-    exclude: ['createdAt', 'updatedAt', 'isPrivate', 'internalName']
+    exclude: ['createdAt', 'updatedAt', 'isPrivate', 'internalName', 'driveLink']
   },
   where: { isPrivate: false, state: { [Op.ne]: 'PLANNED' } },
   order: [['startDate', 'ASC']]

@@ -234,13 +234,19 @@ export const updateFolderName = async (driveLink, newName) => {
   })
 }
 
-export const getEntitiesWithLogo = async (entitiesList) => {
-  const entitiesWithLogo = await Promise.all(
-    entitiesList.map(async (entity) => {
-      if (!entity?.driveLink) return toPlainObject(entity)
-
+export const getEntitiesWithLogo = async (entitiesList, Model) => {
+  const validEntities = entitiesList.filter(Boolean)
+  const driveLinks = await Model.unscoped().findAll({
+    where: { id: validEntities.map(e => e.id) },
+    attributes: ['id', 'driveLink']
+  })
+  const driveLinkMap = Object.fromEntries(driveLinks.map(e => [e.id, e.driveLink]))
+  return Promise.all(
+    validEntities.map(async (entity) => {
+      const driveLink = driveLinkMap[entity.id]
+      if (!driveLink) return { ...toPlainObject(entity), logo: null }
       try {
-        const logo = await getLogoFromDrive(entity.driveLink)
+        const logo = await getLogoFromDrive(driveLink)
         return { ...toPlainObject(entity), logo }
       } catch (err) {
         if (err.status === 401 || err.message === 'REAUTH_REQUIRED') {
@@ -251,8 +257,6 @@ export const getEntitiesWithLogo = async (entitiesList) => {
       }
     })
   )
-
-  return entitiesWithLogo
 }
 
 const createEmptyDoc = async (folderId, name) => {

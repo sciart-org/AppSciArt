@@ -169,12 +169,12 @@ Participation.associate = (db) => {
       {
         model: Flower.unscoped(),
         attributes: {
-          exclude: ['title', 'mainImage', 'concept', 'conceptualMap', 'state', 'seedId']
+          exclude: ['title', 'mainImage', 'concept', 'state', 'seedId']
         },
         include: {
           model: Seed,
           attributes: {
-            exclude: ['template', 'state', 'branchesOfKnowledge']
+            exclude: ['state', 'branchesOfKnowledge']
           },
           include: {
             model: UserProfile,
@@ -191,7 +191,7 @@ Participation.associate = (db) => {
         include: {
           model: Seed,
           attributes: {
-            exclude: ['template', 'state', 'branchesOfKnowledge']
+            exclude: ['state', 'branchesOfKnowledge']
           }
         }
       }

@@ -6,18 +6,23 @@ import { createDriveHackathon, getEntitiesWithLogo, moveDriveFolder, parseFolder
 import { toPlainObject } from './mappers/utils.js'
 import * as HackathonRepository from '../repositories/hackathonsRepository.js'
 import { HackathonStates } from '../states/HackathonStates.js'
+import { Hackathon } from '../models/Hackathon.js'
+
+const getHackathonsWithLogo = async (hackathons) => {
+  return await getEntitiesWithLogo(hackathons, Hackathon)
+}
 
 export async function getClosestHackathon (userId) {
   const hackathon = await HackathonRepository.getClosestHackathon(userId)
-
-  const [hackathonWithLogo] = await getEntitiesWithLogo([hackathon])
+  if (!hackathon) return null
+  const [hackathonWithLogo] = await getHackathonsWithLogo([hackathon])
   return hackathonWithLogo
 }
 
 export async function getIncomingHackathons (userId) {
   const hackathons = await HackathonRepository.getIncomingHackathons(userId)
 
-  const hackathonsWithLogo = await getEntitiesWithLogo(hackathons)
+  const hackathonsWithLogo = await getHackathonsWithLogo(hackathons)
   return hackathonsWithLogo
 }
 
@@ -28,7 +33,7 @@ export async function getActiveHackathon (userId) {
 
   const hackathon = await HackathonRepository.getActiveHackathon(userId, await checkIsStaff(userId))
 
-  const [hackathonWithLogo] = await getEntitiesWithLogo([hackathon])
+  const [hackathonWithLogo] = await getHackathonsWithLogo([hackathon])
   return hackathonWithLogo
 }
 
@@ -37,7 +42,7 @@ export async function getHackathons (userId) {
 
   const hackathons = await HackathonRepository.getHackathons(userId, isAdmin)
 
-  const hackathonsWithLogo = await getEntitiesWithLogo(hackathons)
+  const hackathonsWithLogo = await getHackathonsWithLogo(hackathons)
   return hackathonsWithLogo
 }
 
@@ -53,7 +58,7 @@ export async function createHackathon (userId, body) {
   const createdHackathon = await HackathonRepository.createHackathon({
     startDate, endDate, type, location, description, editionId, internalName, isPrivate, driveLink, meetLink
   })
-  const hackathonsWithLogo = await getEntitiesWithLogo([createdHackathon])
+  const hackathonsWithLogo = await getHackathonsWithLogo([createdHackathon])
   return hackathonsWithLogo[0]
 }
 
@@ -68,7 +73,7 @@ export async function getHackathonDetails (hackathonId, userId) {
     descriptions: descriptionsPlain
   }
 
-  const hackathonsWithLogo = await getEntitiesWithLogo([hackathonWithDescriptions])
+  const hackathonsWithLogo = await getHackathonsWithLogo([hackathonWithDescriptions])
   return hackathonsWithLogo[0]
 }
 
@@ -104,7 +109,7 @@ export async function updateHackathon (currentUserId, hackathonId, body) {
     await hackathon.update(hackathonBody)
   }
 
-  const hackathonsWithLogo = await getEntitiesWithLogo([hackathon])
+  const hackathonsWithLogo = await getHackathonsWithLogo([hackathon])
   const result = hackathonsWithLogo[0]
   if (editionId) result.editionName = edition.name
   return result

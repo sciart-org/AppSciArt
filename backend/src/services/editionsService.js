@@ -6,6 +6,10 @@ import { errorThrower } from './errorThrower.js'
 import { createDriveEdition, createEditionFolderName, getEntitiesWithLogo, updateFolderName, uploadImg } from './driveService.js'
 import { Op } from 'sequelize'
 
+const getEditionsWithLogo = async (editions) => {
+  return await getEntitiesWithLogo(editions, Edition)
+}
+
 export async function getEditions (userId, state) {
   const showPlannedEditions = await checkIsStaff(userId)
 
@@ -27,7 +31,7 @@ export async function getEditions (userId, state) {
     order: [['year', 'DESC']]
   })
 
-  const editionsWithLogo = await getEntitiesWithLogo(editions)
+  const editionsWithLogo = await getEditionsWithLogo(editions)
   return editionsWithLogo
 }
 
@@ -51,7 +55,7 @@ export async function getEditionDetails (userId, editionId) {
   const edition = await Edition.findByPk(editionId, {
     include: includeEditionFruits
   })
-  const editionsWithLogo = await getEntitiesWithLogo([edition])
+  const editionsWithLogo = await getEditionsWithLogo([edition])
   return editionsWithLogo[0]
 }
 

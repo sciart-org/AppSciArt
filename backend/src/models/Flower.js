@@ -5,7 +5,7 @@ import { notNull } from './modelUtils.js'
 
 const publicScope = {
   attributes: {
-    exclude: ['createdAt', 'updatedAt', 'template', 'state', 'conceptualMap']
+    exclude: ['createdAt', 'updatedAt', 'state', 'driveLink']
   },
   where: { state: 'PUBLISHED' }
 }
@@ -21,17 +21,11 @@ export const Flower = sequelize.define(
     title: {
       type: DataTypes.STRING
     },
-    template: {
-      type: DataTypes.STRING
-    },
     mainImage: {
       type: DataTypes.STRING
     },
     concept: {
       type: DataTypes.TEXT
-    },
-    conceptualMap: {
-      type: DataTypes.STRING
     },
     state: {
       type: DataTypes.ENUM('IN_BLANK', 'IN_PROGRESS', 'IN_REVIEW', 'PUBLISHED'),

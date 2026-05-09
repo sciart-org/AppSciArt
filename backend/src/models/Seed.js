@@ -4,7 +4,7 @@ import { UserProfile } from './UserProfile.js'
 
 const publicScope = {
   attributes: {
-    exclude: ['createdAt', 'updatedAt', 'template', 'state']
+    exclude: ['createdAt', 'updatedAt', 'state', 'driveLink']
   },
   where: { state: 'PUBLISHED' }
 }
@@ -18,9 +18,6 @@ export const Seed = sequelize.define(
       primaryKey: true
     },
     title: {
-      type: DataTypes.STRING
-    },
-    template: {
       type: DataTypes.STRING
     },
     mainImage: {

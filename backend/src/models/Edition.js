@@ -41,7 +41,7 @@ export const Edition = sequelize.define(
   },
   {
     defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
+      attributes: { exclude: ['createdAt', 'updatedAt', 'driveLink'] }
     }
   }
 )

@@ -44,7 +44,7 @@ export const Fruit = sequelize.define(
     }
   }, {
     defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt'] }
+      attributes: { exclude: ['createdAt', 'updatedAt', 'driveLink'] }
     },
     indexes: [
       {
