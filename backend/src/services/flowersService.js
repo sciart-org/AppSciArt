@@ -35,13 +35,20 @@ const checkFlowerExists = async (flowerId) => {
 
 export async function getFlowerDetails (userId, flowerId) {
   const isAdmin = await checkIsStaff(userId)
-  const flower = await FlowersRepository.getFlowerWithSeedById(flowerId, isAdmin)
+  const flowerOwners = await ParticipationsRepository.getParticipationsOfHackathon({ teamId: flowerId })
+  const isInTeam = flowerOwners.map(participant => participant.user_profile.id).includes(userId)
+  const isOwner = isAdmin || isInTeam
+  const flower = await FlowersRepository.getFlowerWithSeedById(flowerId, isOwner)
 
   if (!checkExists(flower)) {
     await checkFlowerExists(flowerId)
   }
 
-  const [flowerWithTemplate] = DriveService.getFlowersWithTemplate([flower])
+  if (!isOwner) {
+    return flower
+  }
+
+  const [flowerWithTemplate] = await DriveService.getFlowersWithTemplate([flower])
   return flowerWithTemplate
 }
 

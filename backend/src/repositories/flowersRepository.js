@@ -6,8 +6,8 @@ const getRoleScope = (isAdmin = false) => {
     : 'public'
 }
 
-export const getFlowerWithSeedById = (flowerId, isAdmin = false) => {
-  return Flower.scope([getRoleScope(isAdmin), 'withSeeds', 'withAuthors']).findByPk(flowerId)
+export const getFlowerWithSeedById = (flowerId, isOwner = false) => {
+  return Flower.scope([getRoleScope(isOwner), 'withSeeds', 'withAuthors']).findByPk(flowerId)
 }
 
 export const getFlowersOfEdition = (editionId, isAdmin) => {
