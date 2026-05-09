@@ -48,6 +48,17 @@ const createReaderLink = async (id) => {
   })
 }
 
+const createWriterLink = async (id) => {
+  await drive.permissions.create({
+    fileId: id,
+    requestBody: {
+      role: 'writer',
+      type: 'anyone'
+    }
+  })
+}
+
+
 const extractDriveFolderId = (driveLink) => {
   const match = driveLink.match(/[-\w]{25,}/)
   if (!match) return null
@@ -75,22 +86,20 @@ const buildImgMedia = (imgB64) => {
   }
 }
 
-export const getLogoFromDrive = async (driveLink) => {
-  const folderId = extractDriveFolderId(driveLink)
-
+const findFileInFolder = async (folderId, fileName, exact = false) => {
+  const nameQuery = exact ? `name = '${fileName}'` : `name contains '${fileName}'`
   const res = await drive.files.list({
-    q: `'${folderId}' in parents and name contains 'logo' and trashed = false`,
-    fields: 'files(id, name, mimeType)',
+    q: `'${folderId}' in parents and ${nameQuery} and trashed = false`,
+    fields: 'files(id)',
     pageSize: 1
   })
+  return res.data.files[0]?.id ?? null
+}
 
-  if (!res.data.files || res.data.files.length === 0) {
-    return null
-  }
-
-  const logoFile = res.data.files[0]
-
-  return getImgUrl(logoFile.id)
+export const getLogoFromDrive = async (driveLink) => {
+  const folderId = extractDriveFolderId(driveLink)
+  const logoId = await findFileInFolder(folderId, 'logo')
+  return logoId ? getImgUrl(logoId) : null
 }
 
 const deleteOldImg = async (newImgId, folderId) => {
@@ -187,6 +196,29 @@ const createHackathonFolder = async (folderName, editionFolderId) => {
   return hackathonFolder.data
 }
 
+const copyFileToFolder = async (fileId, folderId, newName) => {
+  const res = await drive.files.copy({
+    fileId,
+    requestBody: {
+      name: newName,
+      parents: [folderId]
+    },
+    fields: 'id'
+  })
+  return res.data.id
+}
+
+const createFlowerFolder = async (folderName, flowersFolderId) => {
+  const flowerTemplateFileId = await findFileInFolder(flowersFolderId, 'flowerTemplate')
+  const flowerFolder = await createFolderGeneric(folderName, flowersFolderId)
+  const copiedFileId = await copyFileToFolder(flowerTemplateFileId, flowerFolder.data.id, 'flowerTemplate')
+  await Promise.all([
+    createReaderLink(flowerFolder.data.id),
+    copiedFileId && createWriterLink(copiedFileId)
+  ])
+  return flowerFolder.data
+}
+
 const createDriveFolderLink = (editionFolderId) => {
   return `https://drive.google.com/drive/folders/${editionFolderId}`
 }
@@ -223,6 +255,16 @@ export const getEntitiesWithLogo = async (entitiesList) => {
   return entitiesWithLogo
 }
 
+const createEmptyDoc = async (folderId, name) => {
+  await drive.files.create({
+    requestBody: {
+      name,
+      mimeType: 'application/vnd.google-apps.document',
+      parents: [folderId]
+    }
+  })
+}
+
 export const createDriveEdition = async (year, name, logo) => {
   const folderName = createEditionFolderName(year, name)
   const editionFolder = await createEditionFolder(folderName)
@@ -235,9 +277,21 @@ export const createDriveHackathon = async (editionDriveLink, internalName, logo)
   const folderName = parseFolderName(internalName)
   const editionFolderId = extractDriveFolderId(editionDriveLink)
   const hackathonFolder = await createHackathonFolder(folderName, editionFolderId)
+  await createFolderGeneric('flowers', hackathonFolder.id)
   const driveLink = createDriveFolderLink(hackathonFolder.id)
-  await uploadImg(logo, driveLink)
+  await Promise.all([
+    uploadImg(logo, driveLink),
+    createEmptyDoc(hackathonFolder.id, 'flowerTemplate')
+  ])
   return driveLink
+}
+
+export const createDriveFlower = async (hackathonDriveLink, teamNumber, seedTitle) => {
+  const folderName = parseFolderName(`Team ${teamNumber} - ${seedTitle}`)
+  const hackathonFolderId = extractDriveFolderId(hackathonDriveLink)
+  const flowersFolderId = await getOrCreateFolder(hackathonFolderId, 'flowers')
+  const flowerFolder = await createFlowerFolder(folderName, flowersFolderId)
+  return createDriveFolderLink(flowerFolder.id)
 }
 
 export const moveDriveFolder = async (folderDriveLink, targetEditionDriveLink) => {

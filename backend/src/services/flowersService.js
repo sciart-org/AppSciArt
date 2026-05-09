@@ -6,6 +6,8 @@ import * as FlowersRepository from '../repositories/flowersRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
 import * as ParticipationsRepository from '../repositories/participationsRepository.js'
+import * as DriveService from '../services/driveService.js'
+import * as HackathonRepository from '../repositories/hackathonsRepository.js'
 
 export async function getFlowersByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
@@ -78,4 +80,17 @@ export const deleteUnassignedFlowersOfHackathon = async (hackathonId) => {
     .filter(id => !associatedTeamIds.includes(id))
 
   return Promise.all(unassignedIds.map(FlowersRepository.deleteFlower))
+}
+
+export const setHackathonFlowersToInProgress = async (hackathonId) => {
+  const [flowers, hackathon] = await Promise.all([
+    FlowersRepository.getFlowersOfHackathon(hackathonId, true),
+    HackathonRepository.getHackathonById(null, hackathonId, true)
+  ])
+  await Promise.all(flowers.map(async (f, index) => {
+    const teamNumber = index + 1
+    f.state = 'IN_PROGRESS'
+    f.driveLink = await DriveService.createDriveFlower(hackathon.driveLink, teamNumber, f.seed?.title)
+    return f.save()
+  }))
 }
