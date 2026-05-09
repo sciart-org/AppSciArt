@@ -58,6 +58,14 @@ const createWriterLink = async (id) => {
   })
 }
 
+export const getFlowersWithTemplate = async (flowers) => {
+  return Promise.all(flowers.map(async (flower) => {
+    if (!flower.driveLink) return { ...toPlainObject(flower), templateLink: null }
+    const folderId = extractDriveFolderId(flower.driveLink)
+    const templateId = await findFileInFolder(folderId, 'flowerTemplate')
+    return { ...toPlainObject(flower), template: templateId ? getDocUrl(templateId) : null }
+  }))
+}
 
 const extractDriveFolderId = (driveLink) => {
   const match = driveLink.match(/[-\w]{25,}/)
@@ -67,6 +75,10 @@ const extractDriveFolderId = (driveLink) => {
 
 const getImgUrl = (fileId) => {
   return `https://drive.google.com/thumbnail?id=${fileId}&sz=s4000`
+}
+
+const getDocUrl = (docId) => {
+  return `https://docs.google.com/document/d/${docId}/edit?embedded=true&rm=demo`
 }
 
 const buildImgMedia = (imgB64) => {

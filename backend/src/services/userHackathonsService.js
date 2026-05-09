@@ -10,6 +10,8 @@ import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsReposit
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import { emitGroupRemovedToStaff } from '../sockets/hackathonPhases.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
+import { getFlowersWithTemplate } from './driveService.js'
+import { toPlainObject } from './mappers/utils.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
@@ -76,9 +78,12 @@ export async function getParticipationById (userId, participationId) {
   errorThrower(!(participation.user_profile.id === userId || await checkIsStaff(userId)), 'Unauthorized: You cannot access this participation', 403)
 
   const members = await getMembers(participation)
+  const plainParticipation = toPlainObject(participation)
+  const [flowerWithTemplate] = await getFlowersWithTemplate([plainParticipation.teamFlower])
 
   return {
-    ...participation.toJSON(),
+    ...plainParticipation,
+    teamFlower: flowerWithTemplate,
     ...members
   }
 }

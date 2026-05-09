@@ -41,7 +41,8 @@ export async function getFlowerDetails (userId, flowerId) {
     await checkFlowerExists(flowerId)
   }
 
-  return flower
+  const [flowerWithTemplate] = DriveService.getFlowersWithTemplate([flower])
+  return flowerWithTemplate
 }
 
 export function updateFlower (req, res) {

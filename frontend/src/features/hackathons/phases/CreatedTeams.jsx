@@ -6,6 +6,7 @@ import SeedResources from "../../products/components/SeedResources";
 import { DiagramGallery } from "../components/diagramming/DiagramGallery";
 import CreationProcessHeader from "../../../components/CreationProcessHeader";
 import { HackathonContext } from "../components/HackathonContext";
+import RenderUrl from "../../../components/RenderUrl";
 
 export default function CreatedTeams() {
   const { hackathon, participation } = useContext(HackathonContext);
@@ -69,7 +70,16 @@ export default function CreatedTeams() {
       >
         Co-creation team
       </CreationProcessHeader>
-      <div style={{ height: "70vh", border: "solid 1px" }} />
+      <RenderUrl
+        url={participation?.teamFlower?.template}
+        style={{
+          height: "90vh",
+          border: "solid 1px rgba(191, 191, 191, 255)",
+          borderRadius: "1rem",
+          marginTop: "1rem",
+          width: "90vw",
+        }}
+      />
       <h3>Additional information</h3>
       <p>Seed: {seed?.title}</p>
       <SeedResources seed={seed} isHorizontal includePdf />
