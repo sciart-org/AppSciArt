@@ -4,12 +4,12 @@ import "./ManageGroups.css";
 import CreationProcessHeader from "../../../components/CreationProcessHeader";
 import { DiagramContext } from "../components/diagramming/DiagramContext";
 import Diagram from "../components/diagramming/Diagram";
-import { Link } from "react-router";
 import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
 import GroupSeedResources from "../components/GroupSeedResources";
 import AsterButton from "../../../components/buttons/AsterButton";
 import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
+import GoBack from "./components/GoBack";
 
 export default function ManageGroups() {
   const { socket, hackathon, handleNextPhase, exploringGroups } =
@@ -131,26 +131,6 @@ export default function ManageGroups() {
     );
   }
 
-  const GoBack = () => {
-    return (
-      <div style={{ position: "relative", height: 0, width: "10rem" }}>
-        <Link
-          style={{ position: "absolute", top: "-1rem", left: 0 }}
-          onClick={(e) => {
-            e.preventDefault();
-            setSelectedGroup(null);
-            setEdges([]);
-            setNodes([]);
-            setGroupSeed(null);
-            setLoading(true);
-          }}
-        >
-          {"<"} Go back
-        </Link>
-      </div>
-    );
-  };
-
   if (loading) {
     return <Loading />;
   }
@@ -165,7 +145,15 @@ export default function ManageGroups() {
   if (selectedGroup?.isDelivered) {
     return (
       <>
-        <GoBack />
+        <GoBack
+          onClick={() => {
+            setSelectedGroup(null);
+            setEdges([]);
+            setNodes([]);
+            setGroupSeed(null);
+            setLoading(true);
+          }}
+        />
         <CreationProcessHeader members={selectedGroup?.members} isGroup={true}>
           Exploring group {selectedGroup.number}
         </CreationProcessHeader>

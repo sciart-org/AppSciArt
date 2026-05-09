@@ -108,9 +108,8 @@ Flower.associate = (db) => {
   Flower.addScope('withSeeds', {
     include: [
       {
-        model: Seed.scope('withAuthors'),
-        required: true,
-        attributes: ['id', 'title']
+        model: Seed.scope(['withAuthors', 'public']),
+        required: true
       }
     ]
   })
