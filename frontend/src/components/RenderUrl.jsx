@@ -7,7 +7,9 @@ export default function RenderUrl({ url, style }) {
       {isValidUrl(url) ? (
         <iframe src={url} className="iframe" style={style} />
       ) : (
-        <p>No URL found</p>
+        <div style={style}>
+          <p>No URL found</p>
+        </div>
       )}
     </div>
   );
