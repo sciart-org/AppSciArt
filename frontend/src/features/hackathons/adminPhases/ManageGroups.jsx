@@ -142,7 +142,7 @@ export default function ManageGroups() {
     });
   };
 
-  if (selectedGroup?.isDelivered) {
+  const GroupHeader = () => {
     return (
       <>
         <GoBack
@@ -157,6 +157,14 @@ export default function ManageGroups() {
         <CreationProcessHeader members={selectedGroup?.members} isGroup={true}>
           Exploring group {selectedGroup.number}
         </CreationProcessHeader>
+      </>
+    );
+  };
+
+  if (selectedGroup?.isDelivered) {
+    return (
+      <>
+        <GroupHeader />
         <h3 style={{ marginTop: 0 }}>
           Group {selectedGroup.number} have submitted their conceptual map!
         </h3>
@@ -184,10 +192,7 @@ export default function ManageGroups() {
 
   return (
     <>
-      <GoBack />
-      <CreationProcessHeader members={selectedGroup?.members} isGroup={true}>
-        Exploring group {selectedGroup.number}
-      </CreationProcessHeader>
+      <GroupHeader />
       <div style={{ display: "flex" }}>
         <GroupSeedResources pdf={groupSeed?.seedPDF} seed={groupSeed} />
         <div style={{ flex: 1 }}>

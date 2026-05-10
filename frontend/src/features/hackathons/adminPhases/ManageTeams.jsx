@@ -121,19 +121,26 @@ export default function ManageTeams() {
     return <Loading />;
   }
 
-  return (
-    <div>
-      <GoBack
-        onClick={() => {
-          setSelectedTeam(null);
-          setTeamFlower(null);
-          setShowMap(false);
-          setLoading(true);
-        }}
-      />
-      <CreationProcessHeader members={selectedTeam?.members}>
-        Co-creation team {selectedTeam.number}
-      </CreationProcessHeader>
+  const TeamHeader = () => {
+    return (
+      <>
+        <GoBack
+          onClick={() => {
+            setSelectedTeam(null);
+            setTeamFlower(null);
+            setShowMap(false);
+            setLoading(true);
+          }}
+        />
+        <CreationProcessHeader members={selectedTeam?.members}>
+          Co-creation team {selectedTeam.number}
+        </CreationProcessHeader>
+      </>
+    );
+  };
+
+  const TeamFlowerDoc = () => {
+    return (
       <RenderUrl
         url={teamFlower?.template}
         style={{
@@ -145,6 +152,31 @@ export default function ManageTeams() {
           marginInline: "auto",
         }}
       />
+    );
+  };
+
+  if (selectedTeam?.isDelivered) {
+    return (
+      <>
+        <TeamHeader />
+        <h3 style={{ marginTop: 0 }}>
+          Team {selectedTeam.number} have submitted their flower!
+        </h3>
+        <TeamFlowerDoc />
+        {isCurrentPhase && (
+          <>
+            <p>Do they need to modify it?</p>
+            <AsterButton onClick={() => {}}>Mark as undelivered</AsterButton>
+          </>
+        )}
+      </>
+    );
+  }
+
+  return (
+    <div>
+      <TeamHeader />
+      <TeamFlowerDoc />
       <h3>Additional information</h3>
       <p>Seed: {selectedTeam.seedTitle}</p>
       {<SeedResources seed={teamFlower.seed} isHorizontal includePdf />}
