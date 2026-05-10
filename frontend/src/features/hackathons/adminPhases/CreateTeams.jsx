@@ -217,7 +217,7 @@ export default function CreateTeams() {
           changeFlower(
             changingParticipant.participant,
             changingParticipant.seedId,
-            changingParticipant.teamId,
+            changingParticipant.coCreationTeam,
           );
           setChangingParticipant(null);
         }}
