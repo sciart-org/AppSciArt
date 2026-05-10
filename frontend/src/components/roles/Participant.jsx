@@ -1,20 +1,10 @@
-import { FaRegUser } from "react-icons/fa";
-import { FaUsers } from "react-icons/fa";
+import { FaRegUser, FaUsers } from "react-icons/fa";
 
 export default function Participant(props) {
-  const participantProps = {
-    style: { ...props.style },
-    className: props.className,
-    size: "10vw",
-    color: "black",
-  };
+  const Icon = props.multiple ? FaUsers : FaRegUser;
   return (
-    <div>
-      {props.multiple ? (
-        <FaUsers {...participantProps} />
-      ) : (
-        <FaRegUser {...participantProps} />
-      )}
+    <div className={props.className} style={props.style}>
+      <Icon size="100%" color="black" />
     </div>
   );
 }

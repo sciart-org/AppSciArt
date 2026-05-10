@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Participant from "../../../components/roles/Participant";
+import "./ParticipantList.css";
 
 export default function ParticipantList({
   participants,
@@ -21,52 +22,27 @@ export default function ParticipantList({
   const showButtons = total > actualGridNumber;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "0.5rem",
-        ...style,
-      }}
-    >
+    <div className="participant-list-parent" style={style}>
       <button
         onClick={() => setPage((p) => p - 1)}
         disabled={page === 0}
         style={{ visibility: showButtons ? "visible" : "hidden" }}
+        className="participant-list-button"
       >
         {"<"}
       </button>
 
       <div
+        className="participant-list-container"
         style={{
-          display: "grid",
           gridTemplateColumns: `repeat(${actualGridNumber}, 8vw)`,
-          gap: "1rem",
-          width: "auto",
-          justifyContent: "center",
         }}
       >
         {showingParticipants?.map((m) => (
-          <div
-            key={m.id}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center",
-            }}
-          >
+          <div key={m.id} className="participant-container">
             <Participant style={participantStyle} className={className} />
             <p
-              style={{
-                fontSize: fontSize || "clamp(0.6rem, 1.2vw, 0.85rem)",
-                marginBlock: "0.25rem 0",
-                width: "100%",
-                wordBreak: "break-word",
-                paddingInline: "0.25rem",
-                marginBottom: "0.5rem",
-              }}
+              style={{ fontSize: fontSize || "clamp(0.6rem, 1.2vw, 0.85rem)" }}
             >
               {m.name} {m.surname}
             </p>
@@ -88,6 +64,7 @@ export default function ParticipantList({
         onClick={() => setPage((p) => p + 1)}
         disabled={page === totalPages - 1}
         style={{ visibility: showButtons ? "visible" : "hidden" }}
+        className="participant-list-button"
       >
         {">"}
       </button>

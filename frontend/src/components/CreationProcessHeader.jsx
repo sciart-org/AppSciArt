@@ -15,7 +15,7 @@ export default function CreationProcessHeader({
         justifyContent: "space-between",
       }}
     >
-      <div style={{ width: "30vw", marginTop: "1rem", marginLeft: "2rem" }}>
+      <div style={{ width: "30vw", marginTop: "1rem", marginLeft: "1rem" }}>
         <ParticipantList
           participants={members || []}
           gridNumber={3}
@@ -26,7 +26,7 @@ export default function CreationProcessHeader({
 
       <PhaseTitle style={{ flexShrink: 0 }}>{children}</PhaseTitle>
 
-      <div style={{ width: "30vw", marginTop: "1rem", marginRight: "2rem" }}>
+      <div style={{ width: "30vw", marginTop: "1rem", marginRight: "1rem" }}>
         <ParticipantList
           participants={scientists || []}
           gridNumber={3}
