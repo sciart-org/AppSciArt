@@ -1,6 +1,5 @@
 .hackathon-management-page {
-  padding: 2rem;
-  padding-bottom: 0;
+  padding-top: 2rem;
 }
 
 .prepare-page {
@@ -125,7 +124,7 @@
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 }
 
 .past-hackathon-phase {

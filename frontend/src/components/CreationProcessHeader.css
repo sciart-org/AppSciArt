@@ -1,0 +1,12 @@
+.participant-icon {
+  width: 4vw;
+  height: 4vw;
+  margin: 0 1rem 0.5rem 1rem;
+  padding: 0.6rem;
+  outline: 1.5px solid #bbb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}

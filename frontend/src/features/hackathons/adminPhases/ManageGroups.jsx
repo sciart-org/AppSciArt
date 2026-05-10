@@ -59,6 +59,7 @@ export default function ManageGroups() {
   if (!selectedGroup) {
     return (
       <>
+        <h2>Groups follow-up</h2>
         <ConfirmPhaseChangeModal
           openCondition={openModal}
           onConfirm={() => {

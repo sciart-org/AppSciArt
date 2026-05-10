@@ -122,7 +122,7 @@ export default function ManageGroupPresentations() {
 
   return (
     <>
-      <div style={{ display: "flex", height: "100%" }}>
+      <div style={{ display: "flex", height: "100%", paddingInline: "2rem" }}>
         <Modal openCondition={changingGroup !== null}>
           <h3>Change Presenting Group</h3>
           <p>

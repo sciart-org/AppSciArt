@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  padding: 1rem;
+  padding-inline: 1rem;
 }
 
 .manage-groups-card {

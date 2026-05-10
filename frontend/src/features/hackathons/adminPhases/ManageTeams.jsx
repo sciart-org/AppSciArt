@@ -45,6 +45,7 @@ export default function ManageTeams() {
   if (!selectedTeam) {
     return (
       <>
+        <h2>Teams follow-up</h2>
         <ConfirmPhaseChangeModal
           openCondition={openModal}
           onConfirm={() => {
