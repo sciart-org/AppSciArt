@@ -155,7 +155,11 @@ export default function ManageGroups() {
             setLoading(true);
           }}
         />
-        <CreationProcessHeader members={selectedGroup?.members} isGroup={true}>
+        <CreationProcessHeader
+          members={selectedGroup?.members}
+          scientists={groupSeed.authors}
+          isGroup={true}
+        >
           Exploring group {selectedGroup.number}
         </CreationProcessHeader>
       </>

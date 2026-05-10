@@ -4,7 +4,7 @@ export default function GoBack({ onClick }) {
   return (
     <div style={{ position: "relative", height: 0, width: "10rem" }}>
       <Link
-        style={{ position: "absolute", top: "-1rem", left: "1rem" }}
+        style={{ position: "absolute", top: "-2rem", left: "1rem" }}
         onClick={(e) => {
           e.preventDefault();
           onClick();

@@ -133,7 +133,10 @@ export default function ManageTeams() {
             setLoading(true);
           }}
         />
-        <CreationProcessHeader members={selectedTeam?.members}>
+        <CreationProcessHeader
+          members={selectedTeam?.members}
+          scientists={teamFlower?.seed?.authors}
+        >
           Co-creation team {selectedTeam.number}
         </CreationProcessHeader>
       </>
