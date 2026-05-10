@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { UserProfile } from './UserProfile.js'
 import { Hackathon } from './Hackathon.js'
@@ -116,7 +116,7 @@ export const Participation = sequelize.define(
   })
 
 Participation.prototype.toJSON = function () {
-  const values = this.get({ plain: true })
+  const values = Model.prototype.toJSON.call(this)
 
   return {
     ...values,

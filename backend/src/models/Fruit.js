@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { Flower } from './Flower.js'
 import { notNull } from './modelUtils.js'
@@ -56,10 +56,10 @@ export const Fruit = sequelize.define(
 )
 
 Fruit.prototype.toJSON = function () {
-  const values = this.get({ plain: true })
+  const values = Model.prototype.toJSON.call(this)
   return {
     ...values,
-    authors: values?.participations?.map(p => p.user_profile),
+    authors: values?.participations?.map(p => p.userProfile),
     participations: undefined,
     seed: {
       ...values?.flower?.seed,

@@ -1,7 +1,6 @@
 import * as service from '../services/groupsAndTeamsService.js'
 import { withErrorHandler } from './errorHandling.js'
 import * as UsersService from '../services/usersService.js'
-import { getMembers } from '../services/userHackathonsService.js'
 import * as UserHackathonsService from '../services/userHackathonsService.js'
 import { broadcastGroupUpdate, broadcastParticipationUpdate, broadcastTeamUpdate } from '../sockets/hackathonPhases.js'
 import { errorThrower } from '../services/errorThrower.js'
@@ -108,10 +107,7 @@ export const submitConceptualMap = withErrorHandler(async (req, res) => {
   const updatedParticipationId = await service.submitConceptualMap(currentUser?.id, groupId, mapToSubmit)
   const updatedParticipation = await UserHackathonsService.getParticipationById(currentUser?.id, updatedParticipationId)
   broadcastGroupUpdate(broadcast, updatedParticipation.hackathonId, groupId, { isDelivered: updatedParticipation.conceptualMap.isDelivered })
-  return res.status(200).send({
-    ...updatedParticipation,
-    ...(await getMembers(updatedParticipation))
-  })
+  return res.status(200).send(updatedParticipation)
 })
 
 export const reopenConceptualMap = withErrorHandler(async (req, res) => {

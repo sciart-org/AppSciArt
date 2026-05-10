@@ -1,4 +1,4 @@
-import { DataTypes, Op } from 'sequelize'
+import { DataTypes, Model, Op } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { UserProfile } from './UserProfile.js'
 
@@ -75,7 +75,7 @@ export const Seed = sequelize.define(
 )
 
 Seed.prototype.toJSON = function () {
-  const values = Object.assign({}, this.get())
+  const values = Model.prototype.toJSON.call(this)
   values.authors = values.user_profiles
   delete values.user_profiles
   return values

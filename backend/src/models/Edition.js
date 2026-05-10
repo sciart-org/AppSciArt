@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 
 export const Edition = sequelize.define(
@@ -47,7 +47,7 @@ export const Edition = sequelize.define(
 )
 
 Edition.prototype.toJSON = function () {
-  const values = this.get({ plain: true })
+  const values = Model.prototype.toJSON.call(this)
   return {
     ...values,
     fruits: values?.seeds?.flatMap(

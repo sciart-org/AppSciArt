@@ -60,7 +60,7 @@ const createWriterLink = async (id) => {
 
 export const getFlowersWithTemplate = async (flowers) => {
   return Promise.all(flowers.map(async (flower) => {
-    if (!flower.driveLink) return { ...toPlainObject(flower), templateLink: null }
+    if (!flower.driveLink) return { ...toPlainObject(flower), template: null }
     const folderId = extractDriveFolderId(flower.driveLink)
     const templateId = await findFileInFolder(folderId, 'flowerTemplate')
     return { ...toPlainObject(flower), template: templateId ? getDocUrl(templateId) : null }
