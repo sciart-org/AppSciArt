@@ -21,12 +21,12 @@ const emitParticipationUpdateToParticipants = (hackathonId) => {
   io?.to(hackathonId).emit('participation:updated')
 }
 
-const emitGroupUpdateToStaff = (hackathonId, groupId, changes) => {
+export const emitGroupUpdateToStaff = (hackathonId, groupId, changes) => {
   const io = getIo()
   io?.to(`${hackathonId}/staff`).emit('group:updated', { id: groupId, ...toPlainObject(changes) })
 }
 
-const emitTeamUpdateToStaff = (hackathonId, teamId, changes) => {
+export const emitTeamUpdateToStaff = (hackathonId, teamId, changes) => {
   const io = getIo()
   io?.to(`${hackathonId}/staff`).emit('team:updated', { id: teamId, ...toPlainObject(changes) })
 }

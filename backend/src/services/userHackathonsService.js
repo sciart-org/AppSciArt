@@ -8,7 +8,7 @@ import * as ParticipationsRepository from '../repositories/participationsReposit
 import * as UsersRepository from '../repositories/usersRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
-import { emitGroupRemovedToStaff } from '../sockets/hackathonPhases.js'
+import { emitGroupRemovedToStaff, emitGroupUpdateToStaff, emitTeamUpdateToStaff } from '../sockets/hackathonPhases.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
 import { getFlowersWithTemplate } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
@@ -158,6 +158,7 @@ const validateGroupIsValid = async (currentUserId, participation, body) => {
 
   if (body.groupId) {
     await validateConceptualMapIsFromHackathon(body.groupId, hackathonId)
+    emitGroupUpdateToStaff(hackathonId, null, {})
   }
 
   if (body.isGroupVoice) {
@@ -180,6 +181,7 @@ const validateTeamIsValid = async (currentUserId, participation, body) => {
 
   if (body.teamId) {
     await validateFlowerIsFromHackathon(body.teamId, hackathonId)
+    emitTeamUpdateToStaff(hackathonId, null, {})
   }
 
   if (body.isTeamSpeaker) {
