@@ -3,12 +3,13 @@ import AsterButton from "../../../components/buttons/AsterButton";
 import useFetcher from "../../../utils/useFetcher";
 import ParticipantList from "../components/ParticipantList";
 import Diagram from "../components/diagramming/Diagram";
-import Modal from "../../../components/Modal";
 import "./phases.css";
 import { DiagramContext } from "../components/diagramming/DiagramContext";
 import CreationProcessHeader from "../../../components/CreationProcessHeader";
 import { HackathonContext } from "../components/HackathonContext";
 import GroupSeedResources from "../components/GroupSeedResources";
+import ConfirmDeliveryModal from "./components/ConfirmDeliveryModal";
+import DeliverButton from "./components/DeliverButton";
 
 export default function CreatedGroups() {
   const { hackathon, participation, setParticipation, socket } =
@@ -106,21 +107,6 @@ export default function CreatedGroups() {
     );
   }
 
-  const DeliverMapButton = () => {
-    if (!participation?.isGroupVoice) {
-      return <></>;
-    }
-    return (
-      <AsterButton
-        onClick={() => {
-          setOpenModal(true);
-        }}
-      >
-        Deliver conceptual map
-      </AsterButton>
-    );
-  };
-
   const submitConceptualMap = async () => {
     if (!participation?.isGroupVoice) return;
     fetcher({
@@ -133,38 +119,17 @@ export default function CreatedGroups() {
     });
   };
 
-  const ConfirmDeliveryModal = () => {
-    return (
-      <Modal openCondition={participation?.isGroupVoice && openModal}>
-        <h3>Submit conceptual map</h3>
-        <p>
-          Are you sure you want to submit your conceptual map? {"\n"} This
-          cannot be undone
-        </p>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "1rem",
-          }}
-        >
-          <AsterButton
-            onClick={() => {
-              submitConceptualMap();
-              setOpenModal(false);
-            }}
-          >
-            Submit
-          </AsterButton>
-          <AsterButton onClick={() => setOpenModal(false)}>Cancel</AsterButton>
-        </div>
-      </Modal>
-    );
-  };
-
   return (
     <div>
-      <ConfirmDeliveryModal />
+      <ConfirmDeliveryModal
+        openCondition={participation?.isGroupVoice && openModal}
+        itemToSubmit={"Conceptual map"}
+        onDeliver={() => {
+          submitConceptualMap();
+          setOpenModal(false);
+        }}
+        onCancel={() => setOpenModal(false)}
+      />
       <CreationProcessHeader
         members={participation?.groupMembers}
         isGroup={true}
@@ -180,7 +145,11 @@ export default function CreatedGroups() {
           <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
             <Diagram socket={socket} room={groupRoom} />
           </DiagramContext>
-          <DeliverMapButton />
+          <DeliverButton
+            isVisible={!participation?.isGroupVoice}
+            itemToSubmit={"Conceptual map"}
+            onClick={() => setOpenModal(true)}
+          />
         </div>
       </div>
     </div>
