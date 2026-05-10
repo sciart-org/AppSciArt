@@ -13,7 +13,9 @@ import GoBack from "./components/GoBack";
 export default function ManageTeams() {
   const { handleNextPhase, coCreationTeams, hackathon } =
     useContext(HackathonContext);
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [selectedTeamId, setSelectedTeamId] = useState(null);
+  const selectedTeam =
+    coCreationTeams?.find((t) => t.id === selectedTeamId) ?? null;
   const [openModal, setOpenModal] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [teamFlower, setTeamFlower] = useState(null);
@@ -64,7 +66,7 @@ export default function ManageTeams() {
             <div
               key={team.id}
               className="manage-groups-card"
-              onClick={() => setSelectedTeam(team)}
+              onClick={() => setSelectedTeamId(team.id)}
             >
               <div className="manage-groups-header">
                 <h2>Team {team.number}</h2>
@@ -127,7 +129,7 @@ export default function ManageTeams() {
       <>
         <GoBack
           onClick={() => {
-            setSelectedTeam(null);
+            setSelectedTeamId(null);
             setTeamFlower(null);
             setShowMap(false);
             setLoading(true);
