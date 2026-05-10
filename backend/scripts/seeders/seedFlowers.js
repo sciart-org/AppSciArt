@@ -3,7 +3,6 @@ import { Flower } from '../../src/models/Flower.js'
 const baseFlower = {
   id: null,
   title: null,
-  template: null,
   mainImage: 'https://i.imgur.com/fHZzvFR.png',
   conceptualMap: null,
   state: 'IN_BLANK',

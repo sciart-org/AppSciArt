@@ -17,6 +17,30 @@ const defaultConceptualMap = {
   edges: []
 }
 
+const buildCoCreationTeam = (flower, teamNumber) => {
+  const isDelivered = flower?.state === 'IN_REVIEW' || flower?.state === 'PUBLISHED'
+
+  return {
+    id: flower.id,
+    members: flower.participations.map(m => mapTeamMember(m)),
+    number: teamNumber,
+    seedId: flower.seedId ?? null,
+    seedTitle: flower.seed?.title ?? null,
+    isDelivered
+  }
+}
+
+const buildExploringGroup = (map, groupNumber) => {
+  return {
+    id: map.id,
+    members: map.participations.map(m => mapGroupMember(m)),
+    number: groupNumber,
+    seedId: map.seedId ?? null,
+    seedTitle: map.seed?.title ?? null,
+    isDelivered: map.isDelivered
+  }
+}
+
 export async function getHackathonExploringGroups (hackathonId) {
   const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
   errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
@@ -37,27 +61,12 @@ export async function getHackathonCoCreationTeams (hackathonId) {
 
 async function getHackathonExploringGroupsAfterCreation (hackathonId) {
   const conceptualMaps = await GroupsAndTeamsRepository.getConceptualMapsOfHackathonWithParticipants(hackathonId)
-
-  return conceptualMaps.map((map, index) => ({
-    id: map.id,
-    members: map.participations.map(m => mapGroupMember(m)),
-    number: index + 1,
-    seedId: map.seedId ?? null,
-    seedTitle: map.seed?.title ?? null,
-    isDelivered: map.isDelivered
-  }))
+  return conceptualMaps.map((map, index) => buildExploringGroup(map, index + 1))
 }
 
 async function getHackathonCoCreationTeamsAfterCreation (hackathonId) {
   const flowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, true)
-
-  return flowers.map((flower, index) => ({
-    id: flower.id,
-    members: flower.participations.map(m => mapTeamMember(m)),
-    number: index + 1,
-    seedId: flower.seedId ?? null,
-    seedTitle: flower.seed?.title ?? null
-  }))
+  return flowers.map((flower, index) => buildCoCreationTeam(flower, index + 1))
 }
 
 export async function createExploringGroup (userId, hackathonId, seedId) {
@@ -85,12 +94,7 @@ export async function getExploringGroupDetails (groupId) {
   if (!conceptualMap) return null
   const groupNumber = await getGroupNumber(conceptualMap)
 
-  return {
-    id: groupId,
-    members: conceptualMap.participations.map(m => mapGroupMember(m)),
-    number: groupNumber,
-    seedId: conceptualMap.seedId ?? null
-  }
+  return buildExploringGroup(conceptualMap, groupNumber)
 }
 
 export const getGroupNumber = async (conceptualMap) => {
@@ -118,12 +122,7 @@ export async function getCoCreationTeamDetails (teamId) {
   if (!flower) return null
   const teamNumber = await getTeamNumber(flower)
 
-  return {
-    id: teamId,
-    members: flower.participations.map(m => mapTeamMember(m)),
-    number: teamNumber,
-    seedId: flower.seedId ?? null
-  }
+  return buildCoCreationTeam(flower, teamNumber)
 }
 
 export const getTeamNumber = async (flower) => {
