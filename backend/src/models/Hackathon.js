@@ -127,7 +127,7 @@ Hackathon.associate = (db) => {
   Hackathon.addScope('withAllParticipations', () => ({
     include: [
       {
-        model: Participation.scope('full'),
+        model: Participation.scope({ method: ['full', false] }),
         include: [
           {
             model: UserProfile,

@@ -100,6 +100,11 @@ paths:
   /exploring-groups/{groupId}/conceptual-map/reopen:
     $ref: "./paths/hackathons.yaml#/conceptualMapReopen"
 
+  /co-creation-teams/{teamId}/flower/submit:
+    $ref: "./paths/hackathons.yaml#/flowerSubmit"
+  /co-creation-teams/{teamId}/flower/reopen:
+    $ref: "./paths/hackathons.yaml#/flowerReopen"
+
   /users:
     $ref: "./paths/users.yaml#/users"
   /users/{userId}:

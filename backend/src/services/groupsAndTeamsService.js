@@ -1,5 +1,5 @@
 import { checkExists } from '../validators/generalValidators.js'
-import { checkUserIsGroupVoice, checkUserIsInHackathon } from '../validators/userHackathonValidators.js'
+import { checkUserIsGroupVoice, checkUserIsInHackathon, checkUserIsTeamSpeaker } from '../validators/userHackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { mapGroupMember, mapTeamMember } from './mappers/participationMapper.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
@@ -156,6 +156,15 @@ const deliverMap = async (mapToUpdate, mapData = undefined) => {
   await mapToUpdate.save()
 }
 
+const deliverFlower = async (flowerToUpdate) => {
+  errorThrower(!checkExists(flowerToUpdate), 'Flower not found', 404)
+  const isDelivered = flowerToUpdate?.state === 'IN_REVIEW' || flowerToUpdate?.state === 'PUBLISHED'
+
+  errorThrower(isDelivered, 'Flower already delivered', 409)
+  flowerToUpdate.state = 'IN_REVIEW'
+  await flowerToUpdate.save()
+}
+
 export async function submitConceptualMap (userId, groupId, map) {
   const userParticipation = await checkUserIsGroupVoice(userId, groupId)
 
@@ -163,6 +172,28 @@ export async function submitConceptualMap (userId, groupId, map) {
   await deliverMap(mapToUpdate, map)
 
   return userParticipation.id
+}
+
+export async function submitFlower (userId, teamId) {
+  const userParticipation = await checkUserIsTeamSpeaker(userId, teamId)
+
+  const flowerToUpdate = await FlowersRepository.getFlowerWithSeedById(teamId, true)
+  await deliverFlower(flowerToUpdate)
+
+  return userParticipation.id
+}
+
+export async function reopenFlower (userId, teamId) {
+  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot reopen flowers', 403)
+
+  const flowerToUpdate = await FlowersRepository.getFlowerWithSeedById(teamId, true)
+  errorThrower(!checkExists(flowerToUpdate), 'Flower not found', 404)
+  const isDelivered = flowerToUpdate?.state === 'IN_REVIEW' || flowerToUpdate?.state === 'PUBLISHED'
+  errorThrower(!isDelivered, 'Flower already open', 409)
+  flowerToUpdate.state = 'IN_PROGRESS'
+  await flowerToUpdate.save()
+
+  return { flower: flowerToUpdate, hackathonId: flowerToUpdate.participations[0]?.hackathonId }
 }
 
 export async function deliverAllConceptualMapsOfHackathon (hackathonId) {

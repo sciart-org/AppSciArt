@@ -161,6 +161,13 @@ export default function ManageTeams() {
     );
   };
 
+  const undeliverFlower = async () => {
+    await fetcher({
+      url: `co-creation-teams/${selectedTeam.id}/flower/reopen?broadcast=ALL`,
+      method: "PATCH",
+    });
+  };
+
   if (selectedTeam?.isDelivered) {
     return (
       <>
@@ -172,7 +179,9 @@ export default function ManageTeams() {
         {isCurrentPhase && (
           <>
             <p>Do they need to modify it?</p>
-            <AsterButton onClick={() => {}}>Mark as undelivered</AsterButton>
+            <AsterButton onClick={undeliverFlower}>
+              Mark as undelivered
+            </AsterButton>
           </>
         )}
       </>

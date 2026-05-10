@@ -15,8 +15,8 @@ export const getMinimalParticipation = (participationId) => {
   })
 }
 
-export const getParticipationById = (participationId) => {
-  return Participation.scope('full').findByPk(participationId)
+export const getParticipationById = (participationId, isOwner = false) => {
+  return Participation.scope({ method: ['full', isOwner] }).findByPk(participationId)
 }
 
 export const getMinimalParticipationsOfHackathon = (inHackathonAttributes) => {

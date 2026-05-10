@@ -7,14 +7,22 @@ import { DiagramGallery } from "../components/diagramming/DiagramGallery";
 import CreationProcessHeader from "../../../components/CreationProcessHeader";
 import { HackathonContext } from "../components/HackathonContext";
 import RenderUrl from "../../../components/RenderUrl";
+import ConfirmDeliveryModal from "./components/ConfirmDeliveryModal";
+import DeliverButton from "./components/DeliverButton";
+import useFetcher from "../../../utils/useFetcher";
 
 export default function CreatedTeams() {
-  const { hackathon, participation } = useContext(HackathonContext);
+  const { hackathon, participation, setParticipation } =
+    useContext(HackathonContext);
 
   const isPhaseActive = hackathon?.phase === "TEAM_WORK";
 
   const [justEntered, setJustEntered] = useState(true);
   const [showMap, setShowMap] = useState(false);
+  const [openSubmitModal, setOpenSubmitModal] = useState(false);
+  const [error, setError] = useState(null);
+
+  const { fetcher } = useFetcher(error, setError);
 
   const seed = participation?.teamFlower?.seed;
 
@@ -62,8 +70,44 @@ export default function CreatedTeams() {
     );
   }
 
+  if (participation?.teamFlower?.isDelivered) {
+    return (
+      <>
+        <CreationProcessHeader
+          members={participation?.teamMembers}
+          scientists={seed?.authors}
+        >
+          Co-creation team
+        </CreationProcessHeader>
+        <h3 style={{ marginTop: "1rem" }}>
+          Your flower has been submitted! Feel free to take a break.
+        </h3>
+      </>
+    );
+  }
+
+  const submitFlower = () => {
+    if (!participation?.isTeamSpeaker) return;
+    fetcher({
+      url: `co-creation-teams/${participation?.teamFlower?.id}/flower/submit?broadcast=ALL`,
+      method: "PATCH",
+      onSuccess: (data) => {
+        setParticipation(data);
+      },
+    });
+  };
+
   return (
     <div>
+      <ConfirmDeliveryModal
+        openCondition={participation?.isTeamSpeaker && openSubmitModal}
+        itemToSubmit={"Flower"}
+        onDeliver={() => {
+          submitFlower();
+          setOpenSubmitModal(false);
+        }}
+        onCancel={() => setOpenSubmitModal(false)}
+      />
       <CreationProcessHeader
         members={participation?.teamMembers}
         scientists={seed?.authors}
@@ -79,6 +123,12 @@ export default function CreatedTeams() {
           marginTop: "1rem",
           width: "90vw",
         }}
+      />
+      <DeliverButton
+        isVisible={!participation?.isTeamSpeaker}
+        itemToSubmit={"Flower"}
+        onClick={() => setOpenSubmitModal(true)}
+        style={{ marginBlock: "1rem" }}
       />
       <h3>Additional information</h3>
       <p>Seed: {seed?.title}</p>

@@ -28,7 +28,7 @@ export const getSeedsOfHackathon = (hackathonId, isAdmin) => {
 }
 
 export const getSeedById = (seedId, userId, isAdmin) => {
-  return Seed.scope(getRoleScope(isAdmin, userId)).findByPk(seedId)
+  return Seed.scope([getRoleScope(isAdmin, userId), 'withAuthors']).findByPk(seedId)
 }
 
 export const getMinimalSeedUnrestricted = (seedId) => {

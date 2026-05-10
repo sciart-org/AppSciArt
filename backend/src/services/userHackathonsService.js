@@ -73,7 +73,7 @@ export async function getParticipationById (userId, participationId) {
   const user = await UsersRepository.getUserProfileById(userId)
   errorThrower(!checkExists(user), 'User not found.', 404)
 
-  const participation = await ParticipationsRepository.getParticipationById(participationId)
+  const participation = await ParticipationsRepository.getParticipationById(participationId, true)
 
   errorThrower(!(participation.user_profile.id === userId || await checkIsStaff(userId)), 'Unauthorized: You cannot access this participation', 403)
 

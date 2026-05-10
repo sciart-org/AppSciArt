@@ -64,11 +64,14 @@ export const Flower = sequelize.define(
 
 Flower.prototype.toJSON = function () {
   const values = Model.prototype.toJSON.call(this)
+  const flowerState = values.state
+  const isDelivered = flowerState === 'IN_REVIEW' || flowerState === 'PUBLISHED'
   return {
     ...values,
     authors: values?.participations?.map(p => p.userProfile),
     participations: undefined,
-    seed: values?.seed
+    seed: values?.seed,
+    isDelivered: isDelivered ?? undefined
   }
 }
 
@@ -118,7 +121,7 @@ Flower.associate = (db) => {
     include: [
       {
         model: Participation.scope('withUser'),
-        attributes: ['id']
+        attributes: ['id', 'hackathonId']
       }
     ]
   })

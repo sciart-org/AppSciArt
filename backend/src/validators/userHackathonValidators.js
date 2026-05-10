@@ -9,9 +9,21 @@ const checkUserIsInGroup = async (userId, groupId) => {
   return participation
 }
 
+const checkUserIsInTeam = async (userId, teamId) => {
+  const participation = await ParticipationsRepository.getMinimalParticipationOfUserInHackathon(userId, { teamId })
+  errorThrower(!checkExists(participation), 'You are not in this team', 403)
+  return participation
+}
+
 export const checkUserIsGroupVoice = async (userId, groupId) => {
   const participation = await checkUserIsInGroup(userId, groupId)
   errorThrower(!(participation?.isGroupVoice), 'Only the group voice can submit the conceptual map', 403)
+  return participation
+}
+
+export const checkUserIsTeamSpeaker = async (userId, teamId) => {
+  const participation = await checkUserIsInTeam(userId, teamId)
+  errorThrower(!(participation?.isTeamSpeaker), 'Only the team speaker can submit the flower', 403)
   return participation
 }
 

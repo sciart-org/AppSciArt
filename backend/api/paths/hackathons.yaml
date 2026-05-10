@@ -749,6 +749,62 @@ conceptualMapReopen:
       "409":
         description: Conceptual map already open
 
+flowerSubmit:
+  x-router-controller: groupsAndTeamsController
+  patch:
+    tags: [Groups & Teams]
+    summary: Submit flower of a co-creation team
+    operationId: submitFlower
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: broadcast
+        in: query
+        required: false
+        schema:
+          $ref: "../components/schemas/common.yaml#/Broadcast"
+    responses:
+      "200":
+        description: Flower submitted
+      "403":
+        description: Forbidden
+      "404":
+        description: Resource not found
+      "409":
+        description: Flower already delivered
+
+flowerReopen:
+  x-router-controller: groupsAndTeamsController
+  patch:
+    tags: [Groups & Teams]
+    summary: Reopen flower of a co-creation team
+    operationId: reopenFlower
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: broadcast
+        in: query
+        required: false
+        schema:
+          $ref: "../components/schemas/common.yaml#/Broadcast"
+    responses:
+      "200":
+        description: Flower reopened
+      "403":
+        description: Forbidden
+      "404":
+        description: Resource not found
+      "409":
+        description: Flower already open
+
 hackathonNextPhase:
   x-router-controller: hackathonsController
   post:

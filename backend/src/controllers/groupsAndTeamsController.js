@@ -120,3 +120,32 @@ export const reopenConceptualMap = withErrorHandler(async (req, res) => {
   broadcastGroupUpdate(broadcast, hackathonId, groupId, { isDelivered: updatedConceptualMap.isDelivered })
   return res.status(200).send(updatedConceptualMap)
 })
+
+export const submitFlower = withErrorHandler(async (req, res) => {
+  const teamId = req.params.teamId
+  const broadcast = req.query.broadcast
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
+  const updatedParticipationId = await service.submitFlower(currentUser?.id, teamId)
+  const updatedParticipation = await UserHackathonsService.getParticipationById(currentUser?.id, updatedParticipationId)
+
+  const flowerState = updatedParticipation?.teamFlower?.state
+  const isDelivered = flowerState === 'IN_REVIEW' || flowerState === 'PUBLISHED'
+
+  broadcastTeamUpdate(broadcast, updatedParticipation.hackathonId, teamId, { isDelivered })
+  return res.status(200).send(updatedParticipation)
+})
+
+export const reopenFlower = withErrorHandler(async (req, res) => {
+  const teamId = req.params.teamId
+  const broadcast = req.query.broadcast
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
+  const { flower: updatedFlower, hackathonId } = await service.reopenFlower(currentUser?.id, teamId)
+  const isDelivered = updatedFlower?.state === 'IN_REVIEW' || updatedFlower?.state === 'PUBLISHED'
+
+  broadcastTeamUpdate(broadcast, hackathonId, teamId, { isDelivered })
+  return res.status(200).send(updatedFlower)
+})

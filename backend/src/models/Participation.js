@@ -154,7 +154,7 @@ Participation.associate = (db) => {
   Participation.belongsTo(UserProfile, notNull('userProfileId'))
   Participation.belongsTo(Hackathon, notNull('hackathonId'))
 
-  Participation.addScope('full', {
+  Participation.addScope('full', (isAdmin = false) => ({
     attributes: {
       exclude: ['interests', 'userProfileId']
     },
@@ -167,12 +167,12 @@ Participation.associate = (db) => {
         model: Fruit
       },
       {
-        model: Flower.unscoped(),
+        model: Flower.scope([isAdmin ? 'admin' : 'public', 'withAuthors']),
         attributes: {
-          exclude: ['title', 'mainImage', 'concept', 'state', 'seedId']
+          exclude: ['title', 'mainImage', 'concept', 'seedId']
         },
         include: {
-          model: Seed,
+          model: Seed.scope([isAdmin ? 'admin' : 'public', 'withAuthors']),
           attributes: {
             exclude: ['state', 'branchesOfKnowledge']
           },
@@ -189,12 +189,12 @@ Participation.associate = (db) => {
           exclude: ['seedId']
         },
         include: {
-          model: Seed,
+          model: Seed.scope([isAdmin ? 'admin' : 'public', 'withAuthors']),
           attributes: {
             exclude: ['state', 'branchesOfKnowledge']
           }
         }
       }
     ]
-  })
+  }))
 }
