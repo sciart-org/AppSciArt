@@ -129,7 +129,7 @@ export default function GroupPresentation({
     return <CreatingTeams />;
   }
 
-  if (!presentingGroup) {
+  if (presentingGroup === null) {
     return <Loading />;
   }
 
