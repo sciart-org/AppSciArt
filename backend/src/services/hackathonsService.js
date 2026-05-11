@@ -32,6 +32,7 @@ export async function getActiveHackathon (userId) {
   }
 
   const hackathon = await HackathonRepository.getActiveHackathon(userId, await checkIsStaff(userId))
+  if (!hackathon) return null
 
   const [hackathonWithLogo] = await getHackathonsWithLogo([hackathon])
   return hackathonWithLogo
