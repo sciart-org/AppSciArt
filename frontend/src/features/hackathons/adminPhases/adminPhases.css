@@ -80,6 +80,15 @@
   margin: 0;
 }
 
+.group-box-content {
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
+.group-box-content > div:first-child .aggregation-section-header {
+  border-top: none;
+}
+
 .aggregation-section-header {
   border-top: 1px solid #ccc;
   cursor: pointer;
@@ -88,6 +97,10 @@
   align-items: center;
   margin-bottom: 0;
   text-align: justify;
+}
+
+.group-box-content:first-child {
+  border-top: 0;
 }
 
 .group-box-item {

@@ -150,13 +150,10 @@ export default function CreateGroups() {
           </Column>
         </div>
         <div>
-          <h3
-            className="group-box-header"
-            style={{ margin: 0, borderBottom: 0 }}
-          >
+          <h3 className="group-box-header" style={{ margin: 0 }}>
             Exploring groups (seeds)
           </h3>
-          <div style={{ maxHeight: "80vh", overflowY: "scroll" }}>
+          <div className="group-box-content">
             {seedsToDisplay.map((seed) => (
               <AggregationsSection
                 key={seed.id}

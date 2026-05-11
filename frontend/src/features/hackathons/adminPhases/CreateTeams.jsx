@@ -156,13 +156,10 @@ export default function CreateTeams() {
           </Column>
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <h3
-            className="group-box-header"
-            style={{ margin: 0, borderBottom: 0 }}
-          >
+          <h3 className="group-box-header" style={{ margin: 0 }}>
             Co-creation teams
           </h3>
-          <div style={{ maxHeight: "80vh", overflowY: "scroll", flex: 1 }}>
+          <div className="group-box-content" style={{ flex: 1 }}>
             {flowerSeeds.map((seed) => (
               <AggregationsSection
                 key={seed.id}
