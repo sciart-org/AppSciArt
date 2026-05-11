@@ -85,7 +85,7 @@ export default function ManageGroupPresentations() {
     return <Loading />;
   }
 
-  if (isCurrentPhase || canSubmitRatings) {
+  if (isCurrentPhase && canSubmitRatings) {
     return (
       <div>
         <ConfirmPhaseChangeModal

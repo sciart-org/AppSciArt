@@ -121,7 +121,7 @@ Flower.associate = (db) => {
     include: [
       {
         model: Participation.scope('withUser'),
-        attributes: ['id', 'hackathonId']
+        attributes: ['id', 'hackathonId', 'isTeamSpeaker', 'isGroupVoice']
       }
     ]
   })
