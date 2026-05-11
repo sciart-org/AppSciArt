@@ -4,6 +4,7 @@ import { HackathonState } from './HackathonState.js'
 import * as GroupsAndTeamsService from '../../services/groupsAndTeamsService.js'
 import * as FlowersService from '../../services/flowersService.js'
 import { storeAndDeleteAllGroupsOfHackathon } from '../../sockets/diagramming.js'
+import { broadcastTeamUpdate } from '../../sockets/hackathonPhases.js'
 
 const checkSomeGroupWithoutVoice = (hackathon) => {
   const groups = [...new Set(hackathon.participations.map(p => p.groupId).filter(Boolean))]
@@ -93,6 +94,7 @@ export class ClosedState extends HackathonState {
     } else if (nextPhase === 'TEAM_WORK') {
       await FlowersService.deleteUnassignedFlowersOfHackathon(this.hackathon.id)
       await FlowersService.setHackathonFlowersToInProgress(this.hackathon.id)
+      broadcastTeamUpdate('ALL', this.hackathon.id, null, {})
     }
 
     if (nextState === 'FINISHED') {

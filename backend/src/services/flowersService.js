@@ -96,6 +96,7 @@ export const setHackathonFlowersToInProgress = async (hackathonId) => {
     HackathonRepository.getHackathonById(null, hackathonId, true)
   ])
   await Promise.all(flowers.map(async (f, index) => {
+    if (f.state !== 'IN_BLANK') return
     const teamNumber = index + 1
     f.state = 'IN_PROGRESS'
     f.driveLink = await DriveService.createDriveFlower(hackathon.driveLink, teamNumber, f.seed?.title)
