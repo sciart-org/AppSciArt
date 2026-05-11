@@ -16,7 +16,10 @@ function Roles() {
         <h3>Inspiring Scientists</h3>
       </div>
       <div>
-        <Participant style={{ width: "10vw" }} />
+        <Participant
+          size={"10vw"}
+          style={{ width: "10vw", marginInline: "auto" }}
+        />
         <h3>Participants</h3>
       </div>
     </div>
