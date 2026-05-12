@@ -39,7 +39,7 @@ export default function ManageGroupPresentations() {
 
   useEffect(() => {
     if (!socket || !hackathon?.id) return;
-    socket.on("presenting_state", (presentingState) => {
+    socket.on("group_presenting_state", (presentingState) => {
       setPresentingGroup(presentingState.presentingGroup);
       setCanSubmitRatings(presentingState.submissionEnabled);
       setLoading(false);
@@ -53,7 +53,7 @@ export default function ManageGroupPresentations() {
     socket.on("ratings", (ratings) => {
       setRatings(ratings);
     });
-    socket.emit("get_presenting_state", socketRoom);
+    socket.emit("get_group_presenting_state", socketRoom);
   }, [socket, hackathon?.id]);
 
   useEffect(() => {

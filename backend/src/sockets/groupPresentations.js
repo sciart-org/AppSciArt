@@ -46,12 +46,12 @@ const getPresentingState = (clusterRoom, previousSeeds, userId = null) => {
   }
 }
 
-export function onConnectPresentations (socket) {
-  socket.on('get_presenting_state', (clusterRoom) => {
+export function onConnectGroupPresentations (socket) {
+  socket.on('get_group_presenting_state', (clusterRoom) => {
     initGroups(clusterRoom)
     const userId = getUserIdFromSocket(socket)
     getPreviousGroupSeeds(socket, clusterRoom).then((previousSeeds) => {
-      socket.emit('presenting_state', getPresentingState(clusterRoom, previousSeeds, userId))
+      socket.emit('group_presenting_state', getPresentingState(clusterRoom, previousSeeds, userId))
     })
   })
 
@@ -86,8 +86,8 @@ export function onConnectPresentations (socket) {
     socket.to(`${hackathonId}/staff`).emit('ratings_submission_enabled')
     getPreviousGroupSeeds(socket, room).then((previousSeeds) => {
       const presentingState = getPresentingState(room, previousSeeds)
-      socket.to(room).emit('presenting_state', presentingState)
-      socket.to(`${hackathonId}/staff`).emit('presenting_state', presentingState)
+      socket.to(room).emit('group_presenting_state', presentingState)
+      socket.to(`${hackathonId}/staff`).emit('group_presenting_state', presentingState)
     })
   })
 

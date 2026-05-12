@@ -6,63 +6,31 @@ import Diagram from "../components/diagramming/Diagram";
 import AsterButton from "../../../components/buttons/AsterButton";
 import SelectorBar from "../../../components/buttons/SelectorBar";
 import Loading from "../../../components/messages/Loading";
-import Seed from "../../../components/sciartProducts/Seed";
-import StarRating from "../../../components/buttons/StarRating";
 import "./phases.css";
 import "../../products/collections/Collection.css";
 import CreatingTeams from "./CreatingTeams";
-import ImageRenderer from "../../../components/ImageRenderer";
-import logoSeedBlack from "../../../assets/logoSeedBlack.png";
 import Modal from "../../../components/Modal";
+import { useContext } from "react";
+import { HackathonContext } from "../components/HackathonContext";
+import RatingCard from "./components/RatingCard";
 
-const RatingCard = ({ item, setRatingItems }) => {
-  return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <ImageRenderer
-          image={item.mainImage}
-          style={{ maxHeight: "30vh" }}
-          placeholder={logoSeedBlack}
-        />
-      </div>
-      <p style={{ width: "20rem", marginInline: "auto" }}>{item.title}</p>
-      <div className="rating-card-content">
-        <div
-          onClick={() => window.open(`/seeds/${item.id}`, "_blank")}
-          style={{ cursor: "pointer" }}
-        >
-          <Seed style={{ width: "3rem" }} />
-        </div>
-        <StarRating
-          onChange={(newRating) => {
-            setRatingItems((prevItems) =>
-              prevItems.map((ri) =>
-                ri.id === item.id ? { ...ri, rating: newRating } : ri,
-              ),
-            );
-          }}
-        />
-        <div style={{ width: "3rem" }} />
-      </div>
-    </div>
-  );
-};
+export default function GroupPresentation({ clusterNumber }) {
+  const { hackathon, socket } = useContext(HackathonContext);
+  const hackathonId = hackathon?.id;
 
-export default function GroupPresentation({
-  socket,
-  hackathonId,
-  clusterNumber,
-}) {
   const [groups, setGroups] = useState([]);
-  const [error, setError] = useState(null);
   const [presentingGroup, setPresentingGroup] = useState(null);
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
-  const [showMap, setShowMap] = useState(true);
   const [ratingItems, setRatingItems] = useState([]);
   const [canSubmitRatings, setCanSubmitRatings] = useState(false);
   const [ratingsSubmitted, setRatingsSubmitted] = useState(false);
+
+  const [error, setError] = useState(null);
+
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
+  const [showMap, setShowMap] = useState(true);
   const [openSubmissionModal, setOpenSubmissionModal] = useState(false);
+
   const { fetcher } = useFetcher(error, setError);
 
   const presentingGroupId = groups.find(
@@ -104,7 +72,7 @@ export default function GroupPresentation({
 
   useEffect(() => {
     if (!socket || !hackathonId || clusterNumber == null) return;
-    socket.on("presenting_state", (presentingState) => {
+    socket.on("group_presenting_state", (presentingState) => {
       setPresentingGroup(presentingState.presentingGroup);
       addRatingItems(presentingState.previousSeeds);
       setCanSubmitRatings(presentingState.submissionEnabled);
@@ -120,7 +88,7 @@ export default function GroupPresentation({
     });
 
     socket.emit(
-      "get_presenting_state",
+      "get_group_presenting_state",
       `${hackathonId}/cluster/${clusterNumber}`,
     );
   }, [socket, hackathonId, clusterNumber]);
