@@ -9,6 +9,7 @@ import CreatedTeams from "./phases/CreatedTeams";
 import { HackathonContext } from "./components/HackathonContext";
 import { showErrorMessage } from "../../components/messages/Message";
 import useFetcher from "../../utils/useFetcher";
+import TeamPresentation from "./phases/TeamPresentation";
 
 export default function ActiveHackathon() {
   const {
@@ -85,6 +86,8 @@ export default function ActiveHackathon() {
     return <CreatingTeams />;
   } else if (hackathon.phase === "TEAM_WORK") {
     return <CreatedTeams />;
+  } else if (hackathon.phase === "TEAM_PRESENTATION") {
+    return <TeamPresentation />;
   } else {
     return <h2>Unknown phase: {hackathon.phase}</h2>;
   }
