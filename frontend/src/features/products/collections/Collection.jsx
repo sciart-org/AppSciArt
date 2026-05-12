@@ -15,9 +15,8 @@ import SeedCard from "./components/SeedCard";
 export default function Collection({ itemName: itemNameRaw }) {
   const jwt = tokenService.getLocalAccessToken();
   const [error, setError] = useState(null);
-  const [items, setItems] = useState([]);
-  const [allEditions, setAllEditions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState(null);
+  const [allEditions, setAllEditions] = useState(null);
   const [selectedEdition, setSelectedEdition] = useState(null);
 
   const itemName = itemNameRaw.toLowerCase();
@@ -35,14 +34,15 @@ export default function Collection({ itemName: itemNameRaw }) {
     fetcher({
       url: "editions",
       onSuccess: (data) => {
+        if (!data.length > 0) {
+          setAllEditions([]);
+          return;
+        }
+
         setAllEditions(data);
 
         const url = new URL(window.location.href);
         const initialEditionId = url.searchParams.get("editionId");
-
-        if (!data.length > 0) {
-          return;
-        }
 
         if (initialEditionId) {
           setSelectedEdition(data.find((e) => e.id === initialEditionId));
@@ -52,15 +52,16 @@ export default function Collection({ itemName: itemNameRaw }) {
         setSelectedEdition(data[0]);
       },
       onError: () => {
-        setAllEditions([]);
+        setAllEditions(null);
       },
     });
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     if (!selectedEdition) {
-      setItems([]);
+      if (allEditions?.length === 0) {
+        setItems([]);
+      }
       return;
     }
     fetcher({
@@ -69,9 +70,9 @@ export default function Collection({ itemName: itemNameRaw }) {
         setItems(data);
       },
       onError: () => {
-        setItems([]);
+        setItems(null);
       },
-    }).finally(() => setLoading(false));
+    });
   }, [selectedEdition, itemName]);
 
   const Header = () => {
@@ -104,10 +105,12 @@ export default function Collection({ itemName: itemNameRaw }) {
 
   const CreateButton = () => {
     if (selectedEdition?.state === "PUBLISHED") return <></>;
-    return <AdminCreateButton entity={itemName} style={{marginBottom: '2rem'}} />;
+    return (
+      <AdminCreateButton entity={itemName} style={{ marginBottom: "2rem" }} />
+    );
   };
 
-  if (loading) {
+  if (allEditions === null || items === null) {
     return (
       <>
         <Header />
@@ -116,7 +119,7 @@ export default function Collection({ itemName: itemNameRaw }) {
     );
   }
 
-    if (allEditions.length === 0) {
+  if (allEditions.length === 0) {
     return (
       <>
         <Header />
@@ -126,7 +129,6 @@ export default function Collection({ itemName: itemNameRaw }) {
       </>
     );
   }
-
 
   if (items.length === 0) {
     return (
