@@ -59,11 +59,6 @@ export async function getCurrentUser (req) {
   return { ...data, jwt }
 }
 
-export async function getUserRolesByAuthId (authId) {
-  const userProfile = await UsersRepository.getMinimalUserProfileByAuthId(authId)
-  return await getUserRoles(userProfile.id)
-}
-
 export async function getUserRoles (userId) {
   const [isAdministrator, isDesigner, isEvaluator, isFacilitator, isScientist] = await Promise.all([
     checkHasRoleById(userId, Administrator),

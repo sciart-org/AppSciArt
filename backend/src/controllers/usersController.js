@@ -22,12 +22,14 @@ export function editUser (req, res) {
 }
 
 export const getCurrentUser = withErrorHandler(async (req, res) => {
-  const result = await service.getCurrentUser(req)
-  const roles = await service.getUserRolesByAuthId(result?.user?.id)
+  const userData = await service.getCurrentUser(req)
+  const userProfile = await service.getCurrentUserProfile(req)
+  const roles = await service.getUserRoles(userProfile.id)
   return res.status(200).send({
-    jwt: result.jwt,
-    name: result.user.user_metadata.name,
-    surname: result.user.user_metadata.surname,
+    id: userProfile.id,
+    jwt: userData.jwt,
+    name: userData.user.user_metadata.name,
+    surname: userData.user.user_metadata.surname,
     roles
   })
 })
