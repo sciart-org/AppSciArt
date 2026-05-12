@@ -29,7 +29,7 @@ export default function CreateTeams() {
   const [changingParticipant, setChangingParticipant] = useState(false);
 
   const flowerSeeds = hackathonSeeds.filter((s) =>
-    coCreationTeams.map((f) => f.seedId).includes(s.id),
+    coCreationTeams.map((f) => f.seed.id).includes(s.id),
   );
   const changingFlowerSeedTitle = hackathonSeeds.find(
     (s) => s.id === changingParticipant?.seedId,
@@ -75,7 +75,7 @@ export default function CreateTeams() {
 
   const handleFlowerChange = (participant, seedId) => {
     const coCreationTeam = coCreationTeamsRef.current.find(
-      (team) => team.seedId === seedId,
+      (team) => team.seed.id === seedId,
     );
 
     if (

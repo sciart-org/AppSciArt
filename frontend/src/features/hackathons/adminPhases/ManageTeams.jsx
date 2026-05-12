@@ -194,14 +194,14 @@ export default function ManageTeams() {
       <TeamFlowerDoc />
       <h3>Additional information</h3>
       <p>Seed: {selectedTeam.seedTitle}</p>
-      {<SeedResources seed={teamFlower.seed} isHorizontal includePdf />}
+      <SeedResources seed={teamFlower.seed} isHorizontal includePdf />
       <AsterButton
         onClick={() => setShowMap(!showMap)}
         style={{ margin: "1rem", width: "10rem" }}
       >
         {showMap ? "Hide" : "Show"} maps
       </AsterButton>
-      <DiagramGallery showMap={showMap} seedId={selectedTeam.seedId} />
+      <DiagramGallery showMap={showMap} seedId={selectedTeam.seed.id} />
     </div>
   );
 }

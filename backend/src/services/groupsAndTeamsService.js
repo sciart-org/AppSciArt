@@ -24,8 +24,12 @@ const buildCoCreationTeam = (flower, teamNumber) => {
     id: flower.id,
     members: flower.participations.map(m => mapTeamMember(m)),
     number: teamNumber,
-    seedId: flower.seedId ?? null,
-    seedTitle: flower.seed?.title ?? null,
+    seed: {
+      id: flower.seedId ?? null,
+      title: flower.seed?.title ?? null,
+      authors: flower.seed?.user_profiles ?? null
+    },
+    flowerTitle: flower?.title ?? null,
     isDelivered
   }
 }

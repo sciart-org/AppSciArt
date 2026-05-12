@@ -15,22 +15,10 @@ export default function TeamPresentation() {
   const [teams, setTeams] = useState([]);
   const [presentingTeamNumber, setPresentingTeamNumber] = useState(null);
   const presentingTeam = teams.find((t) => t.number === presentingTeamNumber);
-  const [teamFlower, setTeamFlower] = useState(null);
 
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const { fetcher } = useFetcher(error, setError);
-
-  useEffect(() => {
-    if (presentingTeamNumber === null || !presentingTeam?.id) return;
-    fetcher({
-      url: `flowers/${presentingTeam.id}`,
-      onSuccess: (data) => {
-        setTeamFlower(data);
-      },
-    }).finally(() => setLoading(false));
-  }, [presentingTeam?.id, presentingTeamNumber]);
 
   useEffect(() => {
     if (!hackathonId) return;
@@ -55,10 +43,6 @@ export default function TeamPresentation() {
     socket.emit("get_team_presenting_state", `${hackathonId}/cluster/${0}`);
   }, [socket, hackathonId]);
 
-  if (loading) {
-    return <Loading />;
-  }
-
   const getFullName = (m) => `${m.name} ${m.surname}`;
 
   const SeedFlowerTitles = () => {
@@ -71,11 +55,13 @@ export default function TeamPresentation() {
       >
         <div style={{ flex: 1 }}>
           <h3 style={{ marginBottom: 0 }}>Flower:</h3>
-          <h3 style={{ fontWeight: "unset" }}>{teamFlower.title}</h3>
+          <h3 style={{ fontWeight: "unset" }}>
+            {presentingTeam?.flowerTitle ?? "No title yet"}
+          </h3>
         </div>
         <div style={{ flex: 1 }}>
           <h3 style={{ marginBottom: 0 }}>Original seed:</h3>
-          <h3 style={{ fontWeight: "unset" }}>{presentingTeam.seedTitle}</h3>
+          <h3 style={{ fontWeight: "unset" }}>{presentingTeam?.seed?.title}</h3>
         </div>
       </div>
     );
@@ -91,13 +77,13 @@ export default function TeamPresentation() {
       >
         <div style={{ flex: 1 }}>
           <h3>Authors:</h3>
-          {presentingTeam.members.map((m) => {
+          {presentingTeam?.members.map((m) => {
             return <h3 className="member-name">{getFullName(m)}</h3>;
           })}
         </div>
         <div style={{ flex: 1 }}>
           <h3>Scientists:</h3>
-          {teamFlower?.seed?.authors.map((m) => {
+          {presentingTeam?.seed?.authors.map((m) => {
             return <h3 className="member-name">{getFullName(m)}</h3>;
           })}
         </div>
@@ -121,7 +107,7 @@ export default function TeamPresentation() {
         ))}
       </div>
       <div className="team-presentation-container">
-        <Flower style={{ height: "50vh", marginRight: "2rem", flex: 1 }} />
+        <Flower style={{ height: "50vh", marginRight: "2rem" }} />
         <div style={{ display: "flex", flexDirection: "column" }}>
           <SeedFlowerTitles />
           <SeedFlowerAuthors />
