@@ -81,7 +81,7 @@ export default function ActiveHackathon() {
   } else if (hackathon.phase === "GROUP_WORK") {
     return <CreatedGroups />;
   } else if (hackathon.phase === "GROUP_PRESENTATION") {
-    return <GroupPresentation clusterNumber={participation?.clusterNumber} />;
+    return <GroupPresentation />;
   } else if (hackathon.phase === "TEAM_CREATION") {
     return <CreatingTeams />;
   } else if (hackathon.phase === "TEAM_WORK") {

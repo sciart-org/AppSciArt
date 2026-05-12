@@ -14,7 +14,7 @@ import { useContext } from "react";
 import { HackathonContext } from "../components/HackathonContext";
 import RatingCard from "./components/RatingCard";
 
-export default function GroupPresentation({ clusterNumber }) {
+export default function GroupPresentation() {
   const { hackathon, socket } = useContext(HackathonContext);
   const hackathonId = hackathon?.id;
 
@@ -61,17 +61,17 @@ export default function GroupPresentation({ clusterNumber }) {
   }, [presentingGroup, presentingGroupId]);
 
   useEffect(() => {
-    if (!hackathonId || clusterNumber === undefined) return;
+    if (!hackathonId) return;
     fetcher({
-      url: `hackathons/${hackathonId}/clusters/${clusterNumber}/exploring-groups`,
+      url: `hackathons/${hackathonId}/clusters/${0}/exploring-groups`,
       onSuccess: (data) => {
         setGroups(data);
       },
     });
-  }, [hackathonId, clusterNumber]);
+  }, [hackathonId]);
 
   useEffect(() => {
-    if (!socket || !hackathonId || clusterNumber == null) return;
+    if (!socket || !hackathonId) return;
     socket.on("group_presenting_state", (presentingState) => {
       setPresentingGroup(presentingState.presentingGroup);
       addRatingItems(presentingState.previousSeeds);
@@ -89,9 +89,9 @@ export default function GroupPresentation({ clusterNumber }) {
 
     socket.emit(
       "get_group_presenting_state",
-      `${hackathonId}/cluster/${clusterNumber}`,
+      `${hackathonId}/cluster/${0}`,
     );
-  }, [socket, hackathonId, clusterNumber]);
+  }, [socket, hackathonId]);
 
   if (ratingsSubmitted) {
     return <CreatingTeams />;
@@ -104,7 +104,7 @@ export default function GroupPresentation({ clusterNumber }) {
   const submitRatings = () => {
     socket.emit(
       "submit_ratings",
-      `${hackathonId}/cluster/${clusterNumber}`,
+      `${hackathonId}/cluster/${0}`,
       ratingItems.map((ri) => {
         return { seedId: ri.id, rating: ri.rating || 0.5 };
       }),
