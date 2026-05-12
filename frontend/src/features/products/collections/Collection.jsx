@@ -34,7 +34,7 @@ export default function Collection({ itemName: itemNameRaw }) {
     fetcher({
       url: "editions",
       onSuccess: (data) => {
-        if (!data.length > 0) {
+        if (data.length === 0) {
           setAllEditions([]);
           return;
         }
@@ -108,7 +108,7 @@ export default function Collection({ itemName: itemNameRaw }) {
     return <AdminCreateButton entity={itemName} />;
   };
 
-  if (allEditions === null || items === null) {
+  if (allEditions === null) {
     return (
       <>
         <Header />
@@ -128,7 +128,7 @@ export default function Collection({ itemName: itemNameRaw }) {
     );
   }
 
-  if (items.length === 0) {
+  if (items?.length === 0) {
     return (
       <>
         <Header />
