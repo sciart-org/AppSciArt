@@ -44,7 +44,7 @@ export default function Editions() {
       <>
         <Header />
         <AdminCreateButton entity="Edition" />
-        <h2 style={{ fontWeight: "normal" }}>No editions found</h2>
+        <p className="empty-search">No editions found.</p>
       </>
     );
   }
