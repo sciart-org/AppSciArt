@@ -13,7 +13,8 @@ export default function SeedRouter() {
   const [loading, setLoading] = useState(true);
 
   const isAdmin = tokenService.getIsAdmin()
-  const isAuthor = seed?.authors?.some(author => author.id === userId)
+  const user = tokenService.getUser()
+  const isAuthor = seed?.authors?.some(author => author.id === user.id)
 
   const { fetcher } = useFetcher(error, setError);
 

@@ -4,7 +4,7 @@ import { UserProfile } from '../models/UserProfile.js'
 import { EarlySignup } from '../models/EarlySignup.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { getUserRoles, getUserRolesByAuthId } from './usersService.js'
+import { getUserRoles } from './usersService.js'
 import { sendQuickRegisterEmail } from '../emails/emailService.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
 
@@ -13,9 +13,11 @@ export async function login ({ email, password }) {
 
   errorThrower(error?.status, error?.message, error?.status)
 
-  const roles = await getUserRolesByAuthId(data.user.id)
+  const userProfile = await UsersRepository.getMinimalUserProfileByAuthId(data.user.id)
+  const roles = await getUserRoles(userProfile.id)
 
   return {
+    id: userProfile.id,
     jwt: data.session.access_token,
     name: data.user.user_metadata.name,
     surname: data.user.user_metadata.surname,
@@ -33,6 +35,7 @@ export async function directRegister (body) {
   const roles = await getUserRoles(createdUserProfile.id)
 
   return {
+    id: createdUserProfile.id,
     jwt: data.session.access_token,
     name: data.user.user_metadata.name,
     surname: data.user.user_metadata.surname,
