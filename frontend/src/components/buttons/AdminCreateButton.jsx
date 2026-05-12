@@ -1,12 +1,12 @@
 import tokenService from "../../utils/token.service";
 import AsterButton from "./AsterButton";
 
-export default function AdminCreateButton({ entity }) {
+export default function AdminCreateButton({ entity, style }) {
   const isAdmin = tokenService.getIsAdmin();
   if (!isAdmin) return null;
 
   return (
-    <AsterButton style={{ width: "20rem" }} to={"create"}>
+    <AsterButton style={{ width: "20rem", ...style }} to={"create"} >
       Create {entity}
     </AsterButton>
   );

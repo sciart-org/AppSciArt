@@ -104,7 +104,7 @@ export default function Collection({ itemName: itemNameRaw }) {
 
   const CreateButton = () => {
     if (selectedEdition?.state === "PUBLISHED") return <></>;
-    return <AdminCreateButton entity={itemName} />;
+    return <AdminCreateButton entity={itemName} style={{marginBottom: '2rem'}} />;
   };
 
   if (loading) {
@@ -115,6 +115,18 @@ export default function Collection({ itemName: itemNameRaw }) {
       </>
     );
   }
+
+    if (allEditions.length === 0) {
+    return (
+      <>
+        <Header />
+        <p className="empty-search" style={{ fontWeight: "normal" }}>
+          No editions yet.
+        </p>
+      </>
+    );
+  }
+
 
   if (items.length === 0) {
     return (

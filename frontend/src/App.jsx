@@ -20,7 +20,6 @@ import FruitDetails from "./features/products/details/FruitDetails";
 import FlowerDetails from "./features/products/details/FlowerDetails";
 import Unauthorized from "./features/auth/errors/Unauthorized";
 import HomeRouter from "./features/home/HomeRouter";
-import ActiveHackathon from "./features/hackathons/ActiveHackathon";
 import Forbidden from "./features/auth/errors/Forbidden";
 import SeedRouter from "./features/products/details/SeedRouter";
 import EditionRouter from "./features/editions/EditionRouter";
