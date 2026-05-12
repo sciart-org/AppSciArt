@@ -6,7 +6,10 @@ export default function AdminCreateButton({ entity, style }) {
   if (!isAdmin) return null;
 
   return (
-    <AsterButton style={{ width: "20rem", ...style }} to={"create"} >
+    <AsterButton
+      style={{ width: "20rem", marginBottom: "2rem", ...style }}
+      to={"create"}
+    >
       Create {entity}
     </AsterButton>
   );

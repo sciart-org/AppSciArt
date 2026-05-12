@@ -105,9 +105,7 @@ export default function Collection({ itemName: itemNameRaw }) {
 
   const CreateButton = () => {
     if (selectedEdition?.state === "PUBLISHED") return <></>;
-    return (
-      <AdminCreateButton entity={itemName} style={{ marginBottom: "2rem" }} />
-    );
+    return <AdminCreateButton entity={itemName} />;
   };
 
   if (allEditions === null || items === null) {
