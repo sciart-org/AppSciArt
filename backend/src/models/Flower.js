@@ -86,7 +86,8 @@ Flower.associate = (db) => {
       {
         model: Seed.scope([
           'admin',
-          { method: ['withHackathon', hackathonId] }
+          { method: ['withHackathon', hackathonId] },
+          'withAuthors'
         ]),
         required: true,
         attributes: ['id', 'state', 'title']

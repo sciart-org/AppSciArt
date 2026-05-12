@@ -16,6 +16,7 @@ import WarningText from "../../components/messages/WarningText";
 import useFetcher from "../../utils/useFetcher";
 import Loading from "../../components/messages/Loading";
 import ManageTeams from "./adminPhases/ManageTeams";
+import ManageTeamPresentations from "./adminPhases/ManageTeamPresentations";
 
 export default function HackathonManagement({
   updateParticipationState,
@@ -146,7 +147,7 @@ export default function HackathonManagement({
       GROUP_PRESENTATION: <ManageGroupPresentations />,
       TEAM_CREATION: <CreateTeams />,
       TEAM_WORK: <ManageTeams />,
-      TEAM_PRESENTATION: "Under development",
+      TEAM_PRESENTATION: <ManageTeamPresentations />,
     };
 
     return (
