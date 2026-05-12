@@ -5,7 +5,7 @@ export default function AsterTable({
   data,
   emptyMessage = "No data found.",
 }) {
-  if (data.length === 0) return <p className="table-empty">{emptyMessage}</p>;
+  if (data.length === 0) return <p className="empty-search">{emptyMessage}</p>;
 
   return (
     <table className="aster-table">
