@@ -4,12 +4,12 @@ import { DiagramContext } from "../components/diagramming/DiagramContext";
 import Diagram from "../components/diagramming/Diagram";
 import useFetcher from "../../../utils/useFetcher";
 import AsterButton from "../../../components/buttons/AsterButton";
-import Modal from "../../../components/Modal";
-import GroupSelectionCard from "./components/GroupSelectionCard";
-import "./ManageGroups.css";
+import "./ManagePresentations.css";
 import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
 import RatingCard from "./components/RatingCard";
 import Loading from "../../../components/messages/Loading";
+import ChangePresenterModal from "./components/ChangePresenterModal";
+import ItemSelectionCard from "./components/ItemSelectionCard";
 
 export default function ManageGroupPresentations() {
   const { socket, hackathon, handleNextPhase, exploringGroups } =
@@ -123,35 +123,17 @@ export default function ManageGroupPresentations() {
   return (
     <>
       <div style={{ display: "flex", height: "100%", paddingInline: "2rem" }}>
-        <Modal openCondition={changingGroup !== null}>
-          <h3>Change Presenting Group</h3>
-          <p>
-            Group {changingGroup?.number} will be set as the presenting group.
-          </p>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "1rem",
-            }}
-          >
-            <AsterButton
-              onClick={() => {
-                sendNewPresentingGroup(changingGroup);
-                setPresentingGroup(changingGroup.number);
-                setChangingGroup(null);
-              }}
-            >
-              Confirm
-            </AsterButton>
-            <AsterButton
-              variant="secondary"
-              onClick={() => setChangingGroup(null)}
-            >
-              Cancel
-            </AsterButton>
-          </div>
-        </Modal>
+        <ChangePresenterModal
+          openCondition={changingGroup !== null}
+          onChange={() => {
+            sendNewPresentingGroup(changingGroup);
+            setPresentingGroup(changingGroup.number);
+            setChangingGroup(null);
+          }}
+          onCancel={() => setChangingGroup(null)}
+          itemName={"Group"}
+          itemNumber={changingGroup?.number}
+        />
 
         <div
           style={{
@@ -164,11 +146,13 @@ export default function ManageGroupPresentations() {
         >
           <h3>Exploring groups</h3>
           {exploringGroups.map((group) => (
-            <GroupSelectionCard
+            <ItemSelectionCard
               key={group.number}
-              group={group}
-              presentingGroup={presentingGroup}
-              viewingGroup={viewingGroup}
+              itemName={"Group"}
+              itemTitle={group.seedTitle}
+              itemNumber={group.number}
+              presentingItem={presentingGroup}
+              viewingItem={viewingGroup}
               onView={() => setViewingGroup(group.number)}
               onChangePresenting={() => setChangingGroup(group)}
             />

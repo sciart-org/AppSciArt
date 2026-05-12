@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { HackathonContext } from "../components/HackathonContext";
-import "./ManageGroups.css";
+import "./ManagePresentations.css";
 import CreationProcessHeader from "../../../components/CreationProcessHeader";
 import { DiagramContext } from "../components/diagramming/DiagramContext";
 import Diagram from "../components/diagramming/Diagram";

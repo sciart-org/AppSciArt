@@ -1,18 +1,20 @@
 import AsterButton from "../../../../components/buttons/AsterButton";
 
-export default function GroupSelectionCard({
-  group,
-  presentingGroup,
-  viewingGroup,
+export default function ItemSelectionCard({
+  itemName,
+  itemTitle,
+  itemNumber,
+  presentingItem,
+  viewingItem,
   onView = () => {},
   onChangePresenting = () => {},
 }) {
-  const isPresenting = presentingGroup === group.number;
-  const isViewing = viewingGroup === group.number;
+  const isPresenting = presentingItem === itemNumber;
+  const isViewing = viewingItem === itemNumber;
 
   return (
     <div
-      key={group.id}
+      key={itemNumber}
       onClick={onView}
       style={{
         padding: "0.5rem 1rem",
@@ -28,7 +30,7 @@ export default function GroupSelectionCard({
           fontWeight: isPresenting ? "bold" : "normal",
         }}
       >
-        Group {group.number}
+        {itemName} {itemNumber}
       </p>
       <p
         style={{
@@ -37,7 +39,7 @@ export default function GroupSelectionCard({
           color: "#666",
         }}
       >
-        {group.seedTitle}
+        {itemTitle}
       </p>
       {isPresenting ? (
         <AsterButton

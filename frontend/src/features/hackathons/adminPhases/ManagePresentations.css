@@ -103,3 +103,12 @@
   font-weight: 500;
   white-space: nowrap;
 }
+
+.rubric-container {
+  width: 45vw;
+  height: 75vh;
+  border: 1px solid black;
+  margin: 1rem auto;
+  border: solid 1px rgba(191, 191, 191, 255);
+  border-radius: 1rem;
+}
