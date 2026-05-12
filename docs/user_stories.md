@@ -403,6 +403,15 @@ As a participant (speaker), I want to submit the completed flower template and o
 2. The participant clicks the "Deliver flower" button when it is finished and all items are attached
 3. The participant confirms the submission
 
+### US-XX: Present the flower created by my co-creation team
+
+As a participant (usually, the team speaker), I want to present the flower created by my co-creation team, in order to propose our piece and get it evaluated and assessed.
+
+1. The participant enters the flowers presentation screen
+2. When the turn arrives, the flower of the team will be shown in this screen
+3. The participant shares their screen with the presentation created by their team
+4. The participant presents the flower of their co-creation team
+
 ### US-29: See other participant's profile
 
 As a participant, I want to be able to view other participant's profile in order to get to know them better and discover their areas of expertise.
@@ -441,13 +450,147 @@ This user story has several user workflows.
 #### US-29F: From the [hackathon screen](#us-13-access-hackathon-main-screen)
 
 1. The participant accesses the hackathon screen
-2. The participant clicks the name or icon of some member of their exploring group, or co-creation team.
+2. The participant clicks the name or icon of some member of their exploring group, or co-creation team
 3. The participant is redirected to the profile of that participant
 
 #### US-29G: From the [exploring group](#us-17-enter-my-exploring-group) / [co-creation team](#us-25-enter-my-co-creation-team) screen
 
 1. The participant accesses the exploring group screen or the co-creation team screen
-2. The participant clicks the name or icon of some member of their exploring group, or co-creation team.
+2. The participant clicks the name or icon of some member of their exploring group, or co-creation team
 3. The participant is redirected to the profile of that participant
+
+### US-30: Edit my profile information
+
+As a participant, I want to be able to edit my profile in order to decide which information will be displayed to other participants.
+
+1. The participant clicks the his name in the Navbar
+2. The participant is redirected to his profile
+3. The participant clicks the "Edit" button in his profile
+4. The participant edits his/her information
+5. The participant clicks the "Confirm" button
+
+### US-31: Create a new edition
+
+As a designer, I want to be able to create a new edition in order to start planning hackathons and creating seeds.
+
+1. The designer clicks the "Editions" button in the Navbar
+2. The designer clicks the "Create Edition" button
+3. The designer fills the form shown in the edition creation screen
+4. The designer clicks the "Submit" button
+5. The designer is redirected to the new edition details screen
+
+### US-32: Edit an edition
+
+As a ___, I want to be able to edit the details of some edition, in order to get it ready for its announcement/publishment or to improve its details.
+
+1. The ___ clicks the "Editions" button in the Navbar
+2. The ___ clicks the "Edit" button of the edition to be edited. (TODO)
+3. The ___ clicks the editing symbol of the field he/she wants to edit
+4. The ___ fills edits the field
+5. The ___ clicks the "Confirm" button
+
+### US-33: Announce an edition
+
+As a ___, I want to be able to announce some planned edition, in order to make it public and let participants discover its seeds and announced hackathons.
+
+1. The ___ clicks the "Editions" button in the Navbar
+2. TODO
+
+### US-34: Close an edition
+
+As a ___, I want to be able to close an active (announced) edition, in order to limit the creation of hackathons and seeds for this edition.
+
+1. The ___ clicks the "Editions" button in the Navbar
+2. TODO
+
+### US-35: Publish an edition
+
+As a designer, I want to be able to publish a closed edition, in order to make its catalogue and final information public.
+
+1. The ___ clicks the "Editions" button in the Navbar
+2. TODO
+
+### US-36: Create a hackathon
+
+As a designer, I want to be able to create a new hackathon, in order to begin its planning and preparation.
+
+1. The ___ clicks the "Hackathons" button in the Navbar
+2. TODO
+
+### US-37: Edit a hackathon
+
+As a ___, I want to be able to edit the details of some hackathon, in order to get it ready for its opening or to improve its details.
+
+1. The ___ clicks the "Hackathons" button in the Navbar
+2. TODO
+
+### US-38: Open a hackathon
+
+As a ___, I want to be able to open a hackathon, in order to allow participants to join it and take part in the event.
+
+1. The ___ clicks the "Hackathons" button in the Navbar
+2. TODO
+
+### US-39: Close a hackathon
+
+As a ___, I want to be able to close a hackathon, in order to prevent additional participants from joining.
+
+1. The ___ clicks the "Hackathons" button in the Navbar
+2. TODO
+
+### US-40: Finish a hackathon
+
+As a ___, I want to be able to finish a hackathon, in order to indicate that the event has ended and prevent enrolled participants from entering it.
+
+1. The ___ clicks the "Hackathons" button in the Navbar
+2. TODO
+
+### US-41: Change the hackathon phase
+
+As a ___, I want to be able to move from a hackathon phase to the following one, once the current phase activities have been finished.
+
+1. TODO
+
+### US-42: Create exploring groups
+
+As a ___, I want to be able to create exploring groups during hackathons, in order to let participants collaborate to create conceptual maps of seeds, to be presented to other participants.
+
+1. TODO
+
+### US-43: Manage conceptual map presentations
+
+As a ___, I want to be able to manage the conceptual maps presented by exploring groups, in order to ensure an ordered and .
+
+1. TODO
+
+### US-44: Create co-creation teams
+
+As a ___, I want to be able to create co-creation teams during hackathons based on participant's ratings, in order to let participants work on a seed they have liked to collaboratively create a SciArt flower.
+
+1. TODO
+
+### US-45: Evaluate team presentations
+
+As a ___, I want to be able to evaluate the presented flowers using a rubric, in order to determine which flowers will be selected to become fruits.
+
+1. TODO
+
+### US-46: Monitor the creation processes
+
+As a ___, I want to be able to monitor the conceptual map, flower and fruit creation processes, in order to give feedback to the participants and solve their doubts.
+
+1. TODO
+
+### US-47: Upload a SciArt product
+
+As a ___, I want to be able to upload seeds, flowers or fruits into the app, in order to incorporate already-existing products into the catalogue.
+
+1. TODO
+
+### US-48: Preview items before modifying them
+
+As a ___, I want to be able to preview the changes I have made to some edition, hackathon, or SciArt product before editing it or changing its state, in order to check how these changes will be seen by other users once applied.
+
+1. TODO
 
 TODO: COVER NOTIFICATIONS/REMIDERS

@@ -2,11 +2,13 @@ import { Server } from 'socket.io'
 import { initializeDiagramming, onConnectDiagramming, onDisconnectDiagramming } from './diagramming.js'
 import { onConnectGroupPresentations } from './groupPresentations.js'
 import { useJwtAuthorization } from './socketUtils.js'
+import { onConnectTeamPresentations } from './teamPresentations.js'
 
 const onConnect = (socket) => {
   console.log(`User connected: ${socket.id}`)
   onConnectDiagramming(socket)
   onConnectGroupPresentations(socket)
+  onConnectTeamPresentations(socket)
 }
 
 const onJoinRoom = (socket, room) => {
