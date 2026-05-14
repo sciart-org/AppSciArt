@@ -11,6 +11,7 @@ import WarningText from "../../../components/messages/WarningText";
 import MoveParticipantModal from "./components/MoveParticipantModal";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { useRef } from "react";
+import Loading from "../../../components/messages/Loading";
 
 export default function CreateTeams() {
   const {
@@ -27,6 +28,7 @@ export default function CreateTeams() {
   const [openNewTeamModal, setOpenNewTeamModal] = useState(false);
   const [hasConfirmedChange, setHasConfirmedChange] = useState(false);
   const [changingParticipant, setChangingParticipant] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const flowerSeeds = hackathonSeeds.filter((s) =>
     coCreationTeams.map((f) => f.seed.id).includes(s.id),
@@ -115,6 +117,10 @@ export default function CreateTeams() {
     });
   }, []);
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <div>
       <h2>Co-creation teams creation</h2>
@@ -133,6 +139,7 @@ export default function CreateTeams() {
       <ConfirmPhaseChangeModal
         openCondition={openNextPhaseModal}
         onConfirm={() => {
+          setLoading(true);
           setOpenNextPhaseModal(false);
           handleNextPhase();
         }}

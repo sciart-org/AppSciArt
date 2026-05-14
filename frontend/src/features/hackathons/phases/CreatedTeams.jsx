@@ -10,6 +10,7 @@ import RenderUrl from "../../../components/RenderUrl";
 import ConfirmDeliveryModal from "./components/ConfirmDeliveryModal";
 import DeliverButton from "./components/DeliverButton";
 import useFetcher from "../../../utils/useFetcher";
+import RedirectButton from "../../../components/buttons/RedirectButton";
 
 export default function CreatedTeams() {
   const { hackathon, participation, setParticipation } =
@@ -114,16 +115,26 @@ export default function CreatedTeams() {
       >
         Co-creation team
       </CreationProcessHeader>
-      <RenderUrl
-        url={participation?.teamFlower?.template}
-        style={{
-          height: "90vh",
-          border: "solid 1px rgba(191, 191, 191, 255)",
-          borderRadius: "1rem",
-          marginTop: "1rem",
-          width: "90vw",
-        }}
-      />
+      <div style={{ position: "relative", marginTop: "1rem" }}>
+        <RedirectButton
+          style={{
+            position: "absolute",
+            right: "4vw",
+            cursor: "pointer",
+          }}
+          url={participation?.teamFlower?.template}
+        />
+        <RenderUrl
+          url={participation?.teamFlower?.template}
+          style={{
+            height: "90vh",
+            border: "solid 1px rgba(191, 191, 191, 255)",
+            borderRadius: "1rem",
+            width: "85vw",
+            marginInline: "auto",
+          }}
+        />
+      </div>
       <DeliverButton
         isVisible={!participation?.isTeamSpeaker}
         itemToSubmit={"Flower"}

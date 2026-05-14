@@ -17,6 +17,9 @@ import "./diagramming.css";
 import CreateNodeButton from "./CreateNodeButton";
 import { FaRegSquare } from "react-icons/fa";
 import { RxText } from "react-icons/rx";
+import { AiOutlineFullscreen } from "react-icons/ai";
+import { AiOutlineFullscreenExit } from "react-icons/ai";
+import useScrollLock from "../../../../utils/useScrollLock";
 
 function findFirstMissingNode(list) {
   const numbers = Array.from({ length: list.length + 1 }, (_, i) => i);
@@ -35,6 +38,9 @@ const nodeTypes = { text: TextNode, annotation: AnnotationNode };
 export default function Diagram({ socket, room, editionMode = true, style }) {
   const [initialsLoaded, setInitialsLoaded] = useState(false);
   const { nodes, edges, setNodes, setEdges } = useContext(DiagramContext);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  useScrollLock(isFullScreen);
 
   const skipEmit = useRef(false);
 
@@ -127,35 +133,56 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
   };
 
   return (
-    <div className="diagram-container" style={style}>
-      <ReactFlow
-        nodes={nodes}
-        edges={getEdgesWithEnds()}
-        onNodesChange={editionMode ? onNodesChange : () => {}}
-        onEdgesChange={editionMode ? onEdgesChange : () => {}}
-        onConnect={editionMode ? onConnect : () => {}}
-        nodeTypes={nodeTypes}
-        connectionMode="loose"
-        nodesDraggable={editionMode}
-        nodesConnectable={editionMode}
-        elementsSelectable={editionMode}
-        fitView
-        style={{ marginBottom: "1rem" }}
+    <>
+      {isFullScreen && <div className="diagram-backdrop" />}
+      <div
+        className={`diagram-container ${isFullScreen ? "diagram-fullscreen" : ""}`}
+        style={style}
       >
-        <Background />
-        <Controls />
-        <MiniMap zoomable pannable nodeClassName={(node) => node.type} />
-        {editionMode && (
-          <div className="create-node-buttons-container">
-            <CreateNodeButton onClick={() => createNode("text")}>
-              <FaRegSquare size={"1.5rem"} />
-            </CreateNodeButton>
-            <CreateNodeButton onClick={() => createNode("annotation")}>
-              <RxText size={"1.5rem"} />
-            </CreateNodeButton>
-          </div>
-        )}
-      </ReactFlow>
-    </div>
+        <CreateNodeButton
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            zIndex: 10,
+          }}
+          onClick={() => setIsFullScreen(!isFullScreen)}
+        >
+          {isFullScreen ? (
+            <AiOutlineFullscreenExit size={"1.5rem"} />
+          ) : (
+            <AiOutlineFullscreen size={"1.5rem"} />
+          )}
+        </CreateNodeButton>
+        <ReactFlow
+          nodes={nodes}
+          edges={getEdgesWithEnds()}
+          onNodesChange={editionMode ? onNodesChange : () => {}}
+          onEdgesChange={editionMode ? onEdgesChange : () => {}}
+          onConnect={editionMode ? onConnect : () => {}}
+          nodeTypes={nodeTypes}
+          connectionMode="loose"
+          nodesDraggable={editionMode}
+          nodesConnectable={editionMode}
+          elementsSelectable={editionMode}
+          fitView
+          style={{ marginBottom: "1rem" }}
+        >
+          <Background />
+          <Controls />
+          <MiniMap zoomable pannable nodeClassName={(node) => node.type} />
+          {editionMode && (
+            <div className="create-node-buttons-container">
+              <CreateNodeButton onClick={() => createNode("text")}>
+                <FaRegSquare size={"1.5rem"} />
+              </CreateNodeButton>
+              <CreateNodeButton onClick={() => createNode("annotation")}>
+                <RxText size={"1.5rem"} />
+              </CreateNodeButton>
+            </div>
+          )}
+        </ReactFlow>
+      </div>
+    </>
   );
 }

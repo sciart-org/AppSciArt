@@ -137,7 +137,7 @@ export default function HackathonManagement({
 
   const phaseScreen = () => {
     if (selectedPhase > hackathonPhases.indexOf(hackathon.phase)) {
-      return <p>Phase not yet started</p>;
+      return <p className="empty-search">Phase not yet started</p>;
     }
 
     const screens = {

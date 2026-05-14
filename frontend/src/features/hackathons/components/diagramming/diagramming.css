@@ -1,10 +1,30 @@
 .diagram-container {
+  position: relative;
   width: 45vw;
   height: 75vh;
   border: 1px solid black;
   margin: 1rem auto;
   border: solid 1px rgba(191, 191, 191, 255);
   border-radius: 1rem;
+}
+
+.diagram-fullscreen {
+  position: fixed;
+  top: 5vh;
+  left: 5vw;
+  width: 90vw !important;
+  height: 90vh !important;
+  z-index: 9999 !important;
+  background-color: white;
+  margin: auto !important;
+}
+
+.diagram-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .create-node-button {
