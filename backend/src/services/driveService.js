@@ -220,8 +220,8 @@ const copyFileToFolder = async (fileId, folderId, newName) => {
   return res.data.id
 }
 
-const createFlowerFolder = async (folderName, flowersFolderId) => {
-  const flowerTemplateFileId = await findFileInFolder(flowersFolderId, 'flowerTemplate')
+const createFlowerFolder = async (folderName, flowersFolderId, hackathonFolderId) => {
+  const flowerTemplateFileId = await findFileInFolder(hackathonFolderId, 'flowerTemplate')
   const flowerFolder = await createFolderGeneric(folderName, flowersFolderId)
   const copiedFileId = await copyFileToFolder(flowerTemplateFileId, flowerFolder.data.id, 'flowerTemplate')
   await Promise.all([
@@ -306,7 +306,7 @@ export const createDriveFlower = async (hackathonDriveLink, teamNumber, seedTitl
   const folderName = parseFolderName(`Team ${teamNumber} - ${seedTitle}`)
   const hackathonFolderId = extractDriveFolderId(hackathonDriveLink)
   const flowersFolderId = await getOrCreateFolder(hackathonFolderId, 'flowers')
-  const flowerFolder = await createFlowerFolder(folderName, flowersFolderId)
+  const flowerFolder = await createFlowerFolder(folderName, flowersFolderId, hackathonFolderId)
   return createDriveFolderLink(flowerFolder.id)
 }
 

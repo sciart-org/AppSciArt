@@ -141,7 +141,7 @@ export default function CreateTeams() {
         onConfirm={() => {
           setLoading(true);
           setOpenNextPhaseModal(false);
-          handleNextPhase();
+          handleNextPhase({ onError: () => setLoading(false) });
         }}
         onCancel={() => setOpenNextPhaseModal(false)}
       >

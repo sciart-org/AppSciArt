@@ -9,7 +9,7 @@ const loadDriveAuthConfig = async () => {
   )
 
   const GOOGLE_REFRESH_TOKEN = await AppConfig.findByPk('GOOGLE_REFRESH_TOKEN').then(
-    (config) => config.value
+    (config) => config?.value
   )
 
   auth.setCredentials({

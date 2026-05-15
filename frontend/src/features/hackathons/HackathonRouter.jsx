@@ -80,13 +80,14 @@ export default function HackathonRouter() {
     );
   }
 
-  const handleNextPhase = () => {
+  const handleNextPhase = ({ onError = () => {} } = {}) => {
     fetcher({
       url: `hackathons/${hackathon.id}/next-phase?broadcast=ALL`,
       method: "POST",
       onSuccess: (updatedHackathon) => {
         setHackathon(updatedHackathon);
       },
+      onError,
     });
   };
 
