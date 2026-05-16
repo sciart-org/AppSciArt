@@ -79,11 +79,15 @@ export async function getParticipationById (userId, participationId) {
 
   const members = await getMembers(participation)
   const plainParticipation = toPlainObject(participation)
-  const [flowerWithTemplate] = await getFlowersWithTemplate([plainParticipation.teamFlower])
+
+  let flowerWithTemplate
+  if (plainParticipation.teamFlower?.id) {
+    [flowerWithTemplate] = await getFlowersWithTemplate([plainParticipation.teamFlower])
+  }
 
   return {
     ...plainParticipation,
-    teamFlower: flowerWithTemplate,
+    teamFlower: flowerWithTemplate ?? null,
     ...members
   }
 }
