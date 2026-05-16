@@ -175,6 +175,7 @@ export default function CreateTeams() {
           >
             {unassignedParticipants.map((p, i) => (
               <ParticipantCardWithRatings
+                key={p.id}
                 participant={p}
                 style={
                   i === unassignedParticipants.length - 1

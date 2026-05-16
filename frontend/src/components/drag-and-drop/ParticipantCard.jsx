@@ -48,7 +48,6 @@ export default function ParticipantCard({
           cursor: "grab",
           ...styleWithChildren,
         }}
-        onClick={toggle}
       >
         {participant.userProfile.name} {participant.userProfile.surname}
         {participant.roles ? " — " + participant.roles.join(", ") : null}
@@ -65,7 +64,9 @@ export default function ParticipantCard({
               />
             </label>
           )}
-          {children && <CollapsibleButton collapsed={collapsed} />}
+          {children && (
+            <CollapsibleButton collapsed={collapsed} toggle={toggle} />
+          )}
         </div>
       </div>
       {children && (
