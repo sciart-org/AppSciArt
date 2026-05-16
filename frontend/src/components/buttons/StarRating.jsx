@@ -2,17 +2,30 @@ import { RiStarSLine, RiStarSFill, RiStarHalfSFill } from "react-icons/ri";
 import "./StarRating.css";
 import { useEffect, useState } from "react";
 
-const StarWrapper = ({ children, starRating, setSelectedRating }) => {
+const StarWrapper = ({
+  children,
+  starRating,
+  setSelectedRating,
+  modifiable,
+}) => {
   return (
     <div>
       <div className="star-container">
         <div
           className="left-selector"
-          onClick={() => setSelectedRating(starRating - 0.5)}
+          style={modifiable ? {} : { cursor: "default" }}
+          onClick={() => {
+            if (!modifiable) return;
+            setSelectedRating(starRating - 0.5);
+          }}
         />
         <div
           className="right-selector"
-          onClick={() => setSelectedRating(starRating)}
+          style={modifiable ? {} : { cursor: "default" }}
+          onClick={() => {
+            if (!modifiable) return;
+            setSelectedRating(starRating);
+          }}
         />
         {children}
       </div>
@@ -20,8 +33,13 @@ const StarWrapper = ({ children, starRating, setSelectedRating }) => {
   );
 };
 
-export default function StarRating({ onChange }) {
-  const [selectedRating, setSelectedRating] = useState(0.5);
+export default function StarRating({
+  onChange = () => {},
+  initialRating = 0.5,
+  style,
+  modifiable = true,
+}) {
+  const [selectedRating, setSelectedRating] = useState(initialRating);
 
   useEffect(() => {
     if (!onChange) return;
@@ -29,10 +47,14 @@ export default function StarRating({ onChange }) {
   }, [selectedRating]);
 
   return (
-    <div className="rating-container">
+    <div className="rating-container" style={style}>
       {[1, 2, 3, 4, 5].map((s) => {
         return (
-          <StarWrapper starRating={s} setSelectedRating={setSelectedRating}>
+          <StarWrapper
+            starRating={s}
+            setSelectedRating={setSelectedRating}
+            modifiable={modifiable}
+          >
             {selectedRating >= s ? (
               <RiStarSFill className="star" />
             ) : selectedRating >= s - 0.5 ? (

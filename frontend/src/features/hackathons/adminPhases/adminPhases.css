@@ -90,7 +90,6 @@
 }
 
 .aggregation-section-header {
-  border-top: 1px solid #ccc;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -99,12 +98,16 @@
   text-align: justify;
 }
 
+.aggregation-members > :last-child {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 1rem !important;
+}
+
 .group-box-content:first-child {
   border-top: 0;
 }
 
 .group-box-item {
-  margin: 1rem;
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 1rem;

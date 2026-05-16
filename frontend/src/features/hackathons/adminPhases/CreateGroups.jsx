@@ -137,8 +137,16 @@ export default function CreateGroups() {
             data={null}
             style={{ height: "100%", maxHeight: "80vh", overflowY: "scroll" }}
           >
-            {unassignedParticipants.map((p) => (
-              <ParticipantCard key={p.id} participant={p} />
+            {unassignedParticipants.map((p, i) => (
+              <ParticipantCard
+                key={p.id}
+                participant={p}
+                style={
+                  i === unassignedParticipants.length - 1
+                    ? { padding: "1rem" }
+                    : undefined
+                }
+              />
             ))}
           </Column>
         </div>

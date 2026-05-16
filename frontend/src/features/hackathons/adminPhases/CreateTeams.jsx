@@ -13,6 +13,7 @@ import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/ad
 import { useRef } from "react";
 import Loading from "../../../components/messages/Loading";
 import { sortParticipantsBySurname } from "../../../utils/commonUtils";
+import ParticipantRatings from "./components/ParticipantRatings";
 
 export default function CreateTeams() {
   const {
@@ -21,6 +22,7 @@ export default function CreateTeams() {
     hackathonSeeds,
     coCreationTeams,
     updateParticipant,
+    socket,
   } = useContext(HackathonContext);
 
   const [error, setError] = useState(null);
@@ -30,6 +32,7 @@ export default function CreateTeams() {
   const [hasConfirmedChange, setHasConfirmedChange] = useState(false);
   const [changingParticipant, setChangingParticipant] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [ratings, setRatings] = useState(null);
 
   const flowerSeeds = hackathonSeeds.filter((s) =>
     coCreationTeams.map((f) => f.seed.id).includes(s.id),
@@ -44,14 +47,25 @@ export default function CreateTeams() {
   const { fetcher } = useFetcher(error, setError);
 
   const isCurrentPhase = hackathon.phase === "TEAM_CREATION";
+  const socketRoom = `${hackathon.id}/cluster/${0}`;
 
-  const getFullName = (member) => {
-    return member.userProfile.name + " " + member.userProfile.surname;
+  const ParticipantCardWithRatings = (props) => {
+    const p = props.participant;
+    return (
+      <ParticipantCard {...props}>
+        {ratings && ratings[p.userProfile.id] && (
+          <ParticipantRatings userRatings={ratings[p.userProfile.id]} />
+        )}
+      </ParticipantCard>
+    );
   };
 
-  const sortByName = (members) => {
-    return members.sort((a, b) => getFullName(a).localeCompare(getFullName(b)));
-  };
+  useEffect(() => {
+    socket.emit("get_ratings", socketRoom);
+    socket.on("ratings", (ratings) => {
+      setRatings(ratings);
+    });
+  }, []);
 
   const unassignedParticipants = sortParticipantsBySurname(
     hackathon.participations.filter(
@@ -159,8 +173,15 @@ export default function CreateTeams() {
             data={null}
             style={{ height: "100%", maxHeight: "80vh", overflowY: "scroll" }}
           >
-            {unassignedParticipants.map((p) => (
-              <ParticipantCard key={p.id} participant={p} />
+            {unassignedParticipants.map((p, i) => (
+              <ParticipantCardWithRatings
+                participant={p}
+                style={
+                  i === unassignedParticipants.length - 1
+                    ? { padding: "1rem" }
+                    : undefined
+                }
+              />
             ))}
           </Column>
         </div>
@@ -175,17 +196,18 @@ export default function CreateTeams() {
                 data={seed.id}
                 title={seed.title}
               >
-                {participantsForFlowerOfSeed(seed.id).map((p) => {
-                  return (
-                    <ParticipantCard
-                      key={p.id}
-                      participant={p}
-                      checkboxValue={!!p.isTeamSpeaker}
-                      onToggleCheckbox={handleToggleTeamSpeaker}
-                      isAssigned={true}
-                    />
-                  );
-                })}
+                {participantsForFlowerOfSeed(seed.id).length !== 0 &&
+                  participantsForFlowerOfSeed(seed.id).map((p) => {
+                    return (
+                      <ParticipantCardWithRatings
+                        key={p.id}
+                        participant={p}
+                        checkboxValue={!!p.isTeamSpeaker}
+                        onToggleCheckbox={handleToggleTeamSpeaker}
+                        isAssigned={true}
+                      />
+                    );
+                  })}
               </AggregationsSection>
             ))}
           </div>
