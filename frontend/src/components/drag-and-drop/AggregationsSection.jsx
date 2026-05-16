@@ -1,22 +1,23 @@
-import { useState } from "react";
+import useCollapsible from "../../utils/useCollapsible";
+import CollapsibleButton from "../buttons/CollapsibleButton";
+import CollapsibleWrapper from "../buttons/CollapsibleWrapper";
 import Column from "./Column";
 
 export default function AggregationsSection({ data, title, children }) {
-  const [collapsed, setCollapsed] = useState(true);
-
+  const { collapsed, toggle } = useCollapsible();
   return (
     <Column data={data}>
       <h4
         className="group-box-header aggregation-section-header"
-        onClick={() => setCollapsed((prev) => !prev)}
+        onClick={toggle}
       >
         {title}
-        <span style={{ fontSize: "0.8rem", color: "#888", marginLeft: "2rem" }}>
-          {collapsed ? "▶" : "▼"}
-        </span>
+        {children && <CollapsibleButton collapsed={collapsed} />}
       </h4>
-      <div style={{ minHeight: collapsed ? "3.5rem" : "0.5rem" }}>
-        {collapsed ? children : null}
+      <div className="aggregation-members">
+        <CollapsibleWrapper collapsed={collapsed}>
+          {children}
+        </CollapsibleWrapper>
       </div>
     </Column>
   );
