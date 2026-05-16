@@ -1,14 +1,16 @@
-export default function Loading({ style }) {
+import flowerJpg from "../../assets/logoFlowerBlack.png";
+import "./Loading.css";
+
+export default function Loading() {
   return (
-    <div
-      style={{
-        height: "100%",
-        alignContent: "center",
-        textAlign: "center",
-        ...style,
-      }}
-    >
-      <p>Loading...</p>
+    <div className="loading-container">
+      <img
+        src={flowerJpg}
+        className="spinner-flower"
+        alt="Loading"
+        style={{ width: "5rem" }}
+      />
+      <p className="loading-text">Loading</p>
     </div>
   );
 }
