@@ -10,6 +10,10 @@ import useFetcher from "../../../utils/useFetcher";
 import Loading from "../../../components/messages/Loading";
 import GoBack from "./components/GoBack";
 import RedirectButton from "../../../components/buttons/RedirectButton";
+import {
+  getFullUserName,
+  sortUsersBySurname,
+} from "../../../utils/commonUtils";
 
 export default function ManageTeams() {
   const { handleNextPhase, coCreationTeams, hackathon } =
@@ -78,29 +82,25 @@ export default function ManageTeams() {
                 )}
               </div>
 
-              <p className="manage-groups-seed">{team.seedTitle}</p>
+              <p className="manage-groups-seed">{team.seed.title}</p>
 
               <h4>Members</h4>
               <div className="manage-groups-members">
                 {team?.members?.length === 0 ? (
                   <p className="manage-groups-no-members">No members</p>
                 ) : (
-                  team?.members
-                    ?.sort((a, b) =>
-                      getFullName(a).localeCompare(getFullName(b)),
-                    )
-                    .map((m) => (
-                      <div key={m.id} className="manage-groups-member">
-                        <span className="manage-groups-member-name">
-                          {getFullName(m)}
+                  sortUsersBySurname(team?.members)?.map((m) => (
+                    <div key={m.id} className="manage-groups-member">
+                      <span className="manage-groups-member-name">
+                        {getFullUserName(m)}
+                      </span>
+                      {m.isTeamSpeaker && (
+                        <span className="manage-groups-voice-badge">
+                          Team speaker
                         </span>
-                        {m.isTeamSpeaker && (
-                          <span className="manage-groups-voice-badge">
-                            Team speaker
-                          </span>
-                        )}
-                      </div>
-                    ))
+                      )}
+                    </div>
+                  ))
                 )}
               </div>
             </div>
@@ -203,7 +203,7 @@ export default function ManageTeams() {
       <TeamHeader />
       <TeamFlowerDoc />
       <h3>Additional information</h3>
-      <p>Seed: {selectedTeam.seedTitle}</p>
+      <p>Seed: {selectedTeam.seed.title}</p>
       <SeedResources seed={teamFlower.seed} isHorizontal includePdf />
       <AsterButton
         onClick={() => setShowMap(!showMap)}

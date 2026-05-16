@@ -42,13 +42,13 @@ export function fileToBase64(file) {
 }
 
 export function getFormData(obj, overrides = {}) {
-  const withNullDefaults = ([key, value]) => [
-    key,
-    value === undefined || value === '' ? null : value
-  ];
+    const withNullDefaults = ([key, value]) => [
+        key,
+        value === undefined || value === '' ? null : value
+    ];
 
-  const entries = Object.entries(obj).map(withNullDefaults);
-  return { ...Object.fromEntries(entries), ...overrides };
+    const entries = Object.entries(obj).map(withNullDefaults);
+    return { ...Object.fromEntries(entries), ...overrides };
 }
 
 const resolveFormInputValue = async (input) => {
@@ -97,3 +97,23 @@ export function filterNotChangedFields(newValues, previousValues) {
         return editedFields;
     }, {});
 };
+
+export function getFullParticipantName(participant) {
+    if (!participant) return
+    return `${participant.userProfile.name} ${participant.userProfile.surname}`
+}
+
+export function getFullUserName(user) {
+    if (!user) return
+    return `${user.name} ${user.surname}`
+}
+
+export function sortParticipantsBySurname(participants) {
+    if (!participants) return
+    return participants.sort((a, b) => a.userProfile.surname.localeCompare(b.userProfile.surname))
+}
+
+export function sortUsersBySurname(users) {
+    if (!users) return
+    return users.sort((a, b) => a.surname.localeCompare(b.surname))
+}

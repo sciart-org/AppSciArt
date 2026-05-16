@@ -10,6 +10,10 @@ import GroupSeedResources from "../components/GroupSeedResources";
 import AsterButton from "../../../components/buttons/AsterButton";
 import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
 import GoBack from "./components/GoBack";
+import {
+  getFullUserName,
+  sortUsersBySurname,
+} from "../../../utils/commonUtils";
 
 export default function ManageGroups() {
   const { socket, hackathon, handleNextPhase, exploringGroups } =
@@ -29,9 +33,6 @@ export default function ManageGroups() {
   const isCurrentPhase = hackathon.phase === "GROUP_WORK";
 
   const groupRoom = `${hackathon?.id}/group/${selectedGroup?.id}`;
-  const getFullName = (member) => {
-    return member.name + " " + member.surname;
-  };
 
   useEffect(() => {
     if (!socket || !selectedGroup?.id) return;
@@ -96,22 +97,18 @@ export default function ManageGroups() {
                 {group?.members?.length === 0 ? (
                   <p className="manage-groups-no-members">No members</p>
                 ) : (
-                  group?.members
-                    ?.sort((a, b) =>
-                      getFullName(a).localeCompare(getFullName(b)),
-                    )
-                    .map((m) => (
-                      <div key={m.id} className="manage-groups-member">
-                        <span className="manage-groups-member-name">
-                          {getFullName(m)}
+                  sortUsersBySurname(group?.members)?.map((m) => (
+                    <div key={m.id} className="manage-groups-member">
+                      <span className="manage-groups-member-name">
+                        {getFullUserName(m)}
+                      </span>
+                      {m.isGroupVoice && (
+                        <span className="manage-groups-voice-badge">
+                          Group voice
                         </span>
-                        {m.isGroupVoice && (
-                          <span className="manage-groups-voice-badge">
-                            Group voice
-                          </span>
-                        )}
-                      </div>
-                    ))
+                      )}
+                    </div>
+                  ))
                 )}
               </div>
             </div>

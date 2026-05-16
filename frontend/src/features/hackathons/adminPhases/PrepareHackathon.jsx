@@ -7,6 +7,10 @@ import AsterTable from "../../../components/AsterTable";
 import useFetcher from "../../../utils/useFetcher";
 import { showSuccessMessage } from "../../../components/messages/Message";
 import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
+import {
+  getFullParticipantName,
+  sortParticipantsBySurname,
+} from "../../../utils/commonUtils";
 
 export default function PrepareHackathon() {
   const { hackathon, setHackathon, handleNextPhase, updateParticipant } =
@@ -54,7 +58,7 @@ export default function PrepareHackathon() {
     {
       key: "name",
       label: "Name",
-      render: (p) => `${p.userProfile?.name} ${p.userProfile?.surname}`,
+      render: (p) => getFullParticipantName(p),
     },
     { key: "email", label: "Email", render: (p) => p.userProfile?.email },
     {
@@ -107,7 +111,7 @@ export default function PrepareHackathon() {
         </div>
         <AsterTable
           columns={participantsColumns}
-          data={hackathon.participations}
+          data={sortParticipantsBySurname(hackathon.participations)}
           emptyMessage="No participants yet."
         />
       </section>

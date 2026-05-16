@@ -10,6 +10,7 @@ import MoveParticipantModal from "./components/MoveParticipantModal";
 import NewAggregationModal from "./components/NewAggregationModal";
 import AggregationsSection from "../../../components/drag-and-drop/AggregationsSection";
 import WarningText from "../../../components/messages/WarningText";
+import { sortParticipantsBySurname } from "../../../utils/commonUtils";
 
 export default function CreateGroups() {
   const {
@@ -38,22 +39,14 @@ export default function CreateGroups() {
 
   const { fetcher } = useFetcher(error, setError);
 
-  const getFullName = (member) => {
-    return member.userProfile.name + " " + member.userProfile.surname;
-  };
-
-  const sortByName = (members) => {
-    return members.sort((a, b) => getFullName(a).localeCompare(getFullName(b)));
-  };
-
-  const unassignedParticipants = sortByName(
+  const unassignedParticipants = sortParticipantsBySurname(
     hackathon.participations.filter(
       (p) => p.groupSeed == null || Object.keys(p.groupSeed).length === 0,
     ),
   );
 
   const participantsForSeed = (seedId) =>
-    sortByName(
+    sortParticipantsBySurname(
       hackathon.participations.filter((p) => p.groupSeed?.id === seedId),
     );
 
@@ -160,15 +153,16 @@ export default function CreateGroups() {
                 data={seed.id}
                 title={seed.title}
               >
-                {participantsForSeed(seed.id).map((p) => (
-                  <ParticipantCard
-                    key={p.id}
-                    participant={p}
-                    checkboxValue={!!p.isGroupVoice}
-                    onToggleCheckbox={handleToggleGroupVoice}
-                    isAssigned={true}
-                  />
-                ))}
+                {participantsForSeed(seed.id)?.length !== 0 &&
+                  participantsForSeed(seed.id).map((p) => (
+                    <ParticipantCard
+                      key={p.id}
+                      participant={p}
+                      checkboxValue={!!p.isGroupVoice}
+                      onToggleCheckbox={handleToggleGroupVoice}
+                      isAssigned={true}
+                    />
+                  ))}
               </AggregationsSection>
             ))}
           </div>

@@ -12,6 +12,7 @@ import MoveParticipantModal from "./components/MoveParticipantModal";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { useRef } from "react";
 import Loading from "../../../components/messages/Loading";
+import { sortParticipantsBySurname } from "../../../utils/commonUtils";
 
 export default function CreateTeams() {
   const {
@@ -52,14 +53,14 @@ export default function CreateTeams() {
     return members.sort((a, b) => getFullName(a).localeCompare(getFullName(b)));
   };
 
-  const unassignedParticipants = sortByName(
+  const unassignedParticipants = sortParticipantsBySurname(
     hackathon.participations.filter(
       (p) => p.teamFlower == null || Object.keys(p.teamFlower).length === 0,
     ),
   );
 
   const participantsForFlowerOfSeed = (seedId) =>
-    sortByName(
+    sortParticipantsBySurname(
       hackathon.participations.filter((p) => p.teamFlower?.seed?.id === seedId),
     );
 
@@ -71,7 +72,8 @@ export default function CreateTeams() {
 
   const changeFlower = (participant, seedId, team) => {
     const teamId = seedId === null ? null : team?.id;
-    if (participant?.teamFlower?.id === teamId) return;
+    const currentTeamId = participant?.teamFlower?.id ?? null;
+    if (currentTeamId === teamId) return;
     updateParticipant(participant.userProfile.id, { teamId });
   };
 
