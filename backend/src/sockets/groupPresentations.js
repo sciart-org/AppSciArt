@@ -1,5 +1,5 @@
 import { getHackathonExploringGroups, getConceptualMap } from '../services/groupsAndTeamsService.js'
-import { getUserIdFromSocket } from './socketUtils.js'
+import { getUserProfileIdFromSocket } from './socketUtils.js'
 
 const presentingGroups = {}
 const ratings = {}
@@ -15,7 +15,7 @@ async function getPreviousGroupSeeds (socket, clusterRoom) {
   for (const groupNumber of uniqueGroups) {
     const groupToSearchId = groups.find(g => g.number === groupNumber)?.id
     if (!groupToSearchId) continue
-    const conceptualMap = await getConceptualMap(getUserIdFromSocket(socket), groupToSearchId)
+    const conceptualMap = await getConceptualMap(await getUserProfileIdFromSocket(socket), groupToSearchId)
     previousSeeds.push({ ...conceptualMap.seed.toJSON(), groupNumber })
   }
   return previousSeeds
@@ -47,21 +47,21 @@ const getPresentingState = (clusterRoom, previousSeeds, userId = null) => {
 }
 
 export function onConnectGroupPresentations (socket) {
-  socket.on('get_group_presenting_state', (clusterRoom) => {
+  socket.on('get_group_presenting_state', async (clusterRoom) => {
     initGroups(clusterRoom)
-    const userId = getUserIdFromSocket(socket)
+    const userId = await getUserProfileIdFromSocket(socket)
     getPreviousGroupSeeds(socket, clusterRoom).then((previousSeeds) => {
       socket.emit('group_presenting_state', getPresentingState(clusterRoom, previousSeeds, userId))
     })
   })
 
-  socket.on('submit_ratings', (clusterRoom, submittedRatings) => {
+  socket.on('submit_ratings', async (clusterRoom, submittedRatings) => {
     const storedRatings = ratings[clusterRoom]
     if (submittedRatings.length < storedRatings.numberOfGroups) {
       socket.emit('error_message', 'You must rate all groups before submitting.')
       return
     }
-    const userId = getUserIdFromSocket(socket)
+    const userId = await getUserProfileIdFromSocket(socket)
     storedRatings.participantRatings[userId] = submittedRatings
     const hackathonId = clusterRoom.split('/cluster/')[0]
     socket.to(`${hackathonId}/staff`).emit('ratings', storedRatings.participantRatings)
@@ -92,6 +92,6 @@ export function onConnectGroupPresentations (socket) {
   })
 
   socket.on('get_ratings', (room) => {
-    socket.emit('ratings', ratings[room].participantRatings)
+    socket.emit('ratings', ratings[room]?.participantRatings)
   })
 }

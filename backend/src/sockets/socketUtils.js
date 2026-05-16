@@ -1,7 +1,14 @@
 import { bearerJwt } from '@oas-tools/auth/handlers'
+import * as UsersRepository from '../repositories/usersRepository.js'
 
-export const getUserIdFromSocket = (socket) => {
+const getUserIdFromSocket = (socket) => {
   return socket.request.user.sub || null
+}
+
+export const getUserProfileIdFromSocket = async (socket) => {
+  const authId = getUserIdFromSocket(socket)
+  const userProfile = await UsersRepository.getMinimalUserProfileByAuthId(authId)
+  return userProfile?.id
 }
 
 export const useJwtAuthorization = (io) => {
