@@ -34,7 +34,9 @@ export default function Editions() {
     return (
       <>
         <Header />
-        <Loading />
+        <div>
+          <Loading />
+        </div>
       </>
     );
   }

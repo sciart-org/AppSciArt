@@ -41,7 +41,9 @@ export default function HackathonCreate() {
     return (
       <>
         <h1>Create Hackathon</h1>
-        <Loading />
+        <div>
+          <Loading />
+        </div>
       </>
     );
   }

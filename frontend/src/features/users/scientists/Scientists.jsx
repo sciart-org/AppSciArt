@@ -60,7 +60,9 @@ export default function Scientists() {
     return (
       <>
         <h1>Scientists</h1>
-        <Loading />
+        <div>
+          <Loading />
+        </div>
       </>
     );
   }

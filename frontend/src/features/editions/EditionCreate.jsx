@@ -45,7 +45,9 @@ export default function EditionCreate() {
     return (
       <>
         <h1>Create Edition</h1>
-        <Loading />
+        <div>
+          <Loading />
+        </div>
       </>
     );
   }

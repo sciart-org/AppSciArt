@@ -112,7 +112,9 @@ export default function Collection({ itemName: itemNameRaw }) {
     return (
       <>
         <Header />
-        <Loading />
+        <div>
+          <Loading />
+        </div>
       </>
     );
   }
