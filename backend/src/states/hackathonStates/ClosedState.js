@@ -95,6 +95,8 @@ export class ClosedState extends HackathonState {
       await FlowersService.deleteUnassignedFlowersOfHackathon(this.hackathon.id)
       await FlowersService.setHackathonFlowersToInProgress(this.hackathon.id)
       broadcastTeamUpdate('ALL', this.hackathon.id, null, {})
+    } else if (nextPhase === 'TEAM_PRESENTATION') {
+      await FlowersService.createHackathonFlowerRubrics(this.hackathon.id)
     }
 
     if (nextState === 'FINISHED') {

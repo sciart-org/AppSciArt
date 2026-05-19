@@ -12,7 +12,12 @@ export default function AggregationsSection({ data, title, children }) {
         onClick={toggle}
       >
         {title}
-        {children && <CollapsibleButton collapsed={collapsed} />}
+        {children && (
+          <CollapsibleButton
+            collapsed={collapsed}
+            style={{ paddingLeft: "1rem" }}
+          />
+        )}
       </h4>
       <div className="aggregation-members">
         <CollapsibleWrapper collapsed={collapsed}>

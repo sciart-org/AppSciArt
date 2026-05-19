@@ -67,6 +67,28 @@ export const getFlowersWithTemplate = async (flowers) => {
   }))
 }
 
+export const getFlowerRubrics = async (evaluatorName, flowers) => {
+  return Promise.all(flowers.map(async (flower) => {
+    const plainFlower = toPlainObject(flower)
+    const noRubric = { flowerId: plainFlower.id, rubric: null }
+
+    if (!flower.driveLink) return noRubric
+
+    const flowerFolderId = extractDriveFolderId(flower.driveLink)
+    const rubricsFolderId = await findFileInFolder(flowerFolderId, 'rubrics')
+
+    if (!rubricsFolderId) return noRubric
+
+    const rubricName = `rubric-${parseFolderName(evaluatorName)}`
+    const rubricId = await findFileInFolder(rubricsFolderId, rubricName)
+
+    return {
+      flowerId: plainFlower.id,
+      rubric: rubricId ? getDocUrl(rubricId) : null
+    }
+  }))
+}
+
 const extractDriveFolderId = (driveLink) => {
   const match = driveLink.match(/[-\w]{25,}/)
   if (!match) return null
@@ -229,6 +251,30 @@ const createFlowerFolder = async (folderName, flowersFolderId, hackathonFolderId
     copiedFileId && createWriterLink(copiedFileId)
   ])
   return flowerFolder.data
+}
+
+export const createFlowerRubrics = async (evaluatorNames, hackathonDriveLink) => {
+  const hackathonFolderId = extractDriveFolderId(hackathonDriveLink)
+  const rubricTemplateFileId = await findFileInFolder(hackathonFolderId, 'rubricTemplate')
+  const flowersFolderId = await getOrCreateFolder(hackathonFolderId, 'flowers')
+  const flowerFolders = await drive.files.list({
+    q: `'${flowersFolderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+    fields: 'files(id, name)',
+    spaces: 'drive'
+  })
+  await Promise.all(
+    flowerFolders.data.files.map(async (flowerFolder) => {
+      const rubricsFolderId = await getOrCreateFolder(flowerFolder.id, 'rubrics')
+
+      await Promise.all(
+        evaluatorNames.map(async (evaluatorName) => {
+          const rubricName = `rubric-${parseFolderName(evaluatorName)}`
+          const copiedFileId = await copyFileToFolder(rubricTemplateFileId, rubricsFolderId, rubricName)
+          await createWriterLink(copiedFileId)
+        })
+      )
+    })
+  )
 }
 
 const createDriveFolderLink = (editionFolderId) => {

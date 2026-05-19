@@ -4,9 +4,8 @@ import useFetcher from "../../../utils/useFetcher";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { HackathonContext } from "../components/HackathonContext";
-import Flower from "../../../components/sciartProducts/Flower";
-import Loading from "../../../components/messages/Loading";
 import "./TeamPresentation.css";
+import FlowerPresentationCard from "./components/FlowerPresentationCard";
 
 export default function TeamPresentation() {
   const { hackathon, socket } = useContext(HackathonContext);
@@ -43,54 +42,6 @@ export default function TeamPresentation() {
     socket.emit("get_team_presenting_state", `${hackathonId}/cluster/${0}`);
   }, [socket, hackathonId]);
 
-  const getFullName = (m) => `${m.name} ${m.surname}`;
-
-  const SeedFlowerTitles = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          textAlign: "start",
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <h3 style={{ marginBottom: 0 }}>Flower:</h3>
-          <h3 style={{ fontWeight: "unset" }}>
-            {presentingTeam?.flowerTitle ?? "No title yet"}
-          </h3>
-        </div>
-        <div style={{ flex: 1 }}>
-          <h3 style={{ marginBottom: 0 }}>Original seed:</h3>
-          <h3 style={{ fontWeight: "unset" }}>{presentingTeam?.seed?.title}</h3>
-        </div>
-      </div>
-    );
-  };
-
-  const SeedFlowerAuthors = () => {
-    return (
-      <div
-        style={{
-          display: "flex",
-          textAlign: "start",
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <h3>Authors:</h3>
-          {presentingTeam?.members.map((m) => {
-            return <h3 className="member-name">{getFullName(m)}</h3>;
-          })}
-        </div>
-        <div style={{ flex: 1 }}>
-          <h3>Scientists:</h3>
-          {presentingTeam?.seed?.authors.map((m) => {
-            return <h3 className="member-name">{getFullName(m)}</h3>;
-          })}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div>
       <div className="groups-container">
@@ -106,13 +57,12 @@ export default function TeamPresentation() {
           </div>
         ))}
       </div>
-      <div className="team-presentation-container">
-        <Flower style={{ height: "50vh", marginRight: "2rem" }} />
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <SeedFlowerTitles />
-          <SeedFlowerAuthors />
-        </div>
-      </div>
+      <FlowerPresentationCard
+        flowerTitle={presentingTeam?.flowerTitle}
+        seedTitle={presentingTeam?.seed?.title}
+        flowerAuthors={presentingTeam?.members}
+        seedScientists={presentingTeam?.seed?.authors}
+      />
     </div>
   );
 }

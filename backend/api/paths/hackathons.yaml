@@ -210,6 +210,27 @@ participantsMe:
       default:
         description: Unexpected error
 
+evaluatorsMe:
+  x-router-controller: userHackathonsController
+  get:
+    tags: [User Hackathons]
+    summary: Get current user's evaluator role in a hackathon
+    operationId: getMyEvaluatorRole
+    parameters:
+      - name: hackathonId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Evaluator details
+      "404":
+        description: Resource not found
+      default:
+        description: Unexpected error
+
 participantsByUser:
   x-router-controller: userHackathonsController
   post:

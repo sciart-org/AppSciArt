@@ -17,8 +17,13 @@ export const getFlowersOfEdition = (editionId, isAdmin) => {
 }
 
 export const getFlowersOfHackathon = (hackathonId, isAdmin) => {
+  const attributes = ['id', 'title', 'mainImage', 'state']
+  if (isAdmin) {
+    attributes.push('driveLink')
+  }
+
   return Flower.scope([getRoleScope(isAdmin), 'withAuthors', { method: ['withSeedsOfHackathon', hackathonId] }]).findAll({
-    attributes: ['id', 'title', 'mainImage', 'state'],
+    attributes,
     order: [['createdAt', 'ASC']]
   })
 }

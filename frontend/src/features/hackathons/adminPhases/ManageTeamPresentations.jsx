@@ -5,6 +5,9 @@ import ConfirmPhaseChangeModal from "./components/ConfirmPhaseChangeModal";
 import Loading from "../../../components/messages/Loading";
 import ItemSelectionCard from "./components/ItemSelectionCard";
 import AsterButton from "../../../components/buttons/AsterButton";
+import useFetcher from "../../../utils/useFetcher";
+import RenderUrl from "../../../components/RenderUrl";
+import FlowerPresentationCard from "../phases/components/FlowerPresentationCard";
 
 export default function ManageTeamPresentations() {
   const { socket, handleNextPhase, hackathon, coCreationTeams } =
@@ -15,8 +18,20 @@ export default function ManageTeamPresentations() {
   const [changingTeam, setChangingTeam] = useState(null);
   const [openPhaseChangeModal, setOpenPhaseChangeModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [flowerRubrics, setFlowerRubrics] = useState(null);
+
+  const showingTeamNumber = viewingTeam ?? presentingTeam;
+  const showingTeam = coCreationTeams.find(
+    (t) => t.number === showingTeamNumber,
+  );
+  const showingRubric = flowerRubrics?.find(
+    (f) => f.flowerId === showingTeam.id,
+  );
 
   const socketRoom = `${hackathon.id}/cluster/${0}`;
+
+  const { fetcher } = useFetcher(error, setError);
 
   useEffect(() => {
     if (!socket || !hackathon?.id) return;
@@ -29,6 +44,13 @@ export default function ManageTeamPresentations() {
     });
     socket.emit("get_team_presenting_state", socketRoom);
   }, [socket, hackathon?.id]);
+
+  useEffect(() => {
+    fetcher({
+      url: `hackathons/${hackathon?.id}/evaluators/me`,
+      onSuccess: (data) => setFlowerRubrics(data.flowers),
+    });
+  }, []);
 
   const sendNewPresentingTeam = (team) => {
     setPresentingTeam(team.number);
@@ -89,9 +111,27 @@ export default function ManageTeamPresentations() {
           ))}
         </div>
 
-        <div className="rubric-container" style={{ flex: 1 }}>
-          <p>content</p>
-        </div>
+        {showingRubric?.rubric ? (
+          <div style={{ flex: 1 }}>
+            <RenderUrl
+              url={showingRubric?.rubric}
+              style={{
+                height: "90vh",
+                border: "solid 1px rgba(191, 191, 191, 255)",
+                borderRadius: "1rem",
+                width: "80vw",
+                marginInline: "auto",
+              }}
+            />
+          </div>
+        ) : (
+          <FlowerPresentationCard
+            flowerTitle={showingTeam.flowerTitle}
+            seedTitle={showingTeam.seed.title}
+            flowerAuthors={showingTeam.members}
+            seedScientists={showingTeam.seed.authors}
+          />
+        )}
       </div>
       <div>
         <p>Have all teams presented?</p>

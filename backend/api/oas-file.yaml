@@ -78,6 +78,8 @@ paths:
     $ref: "./paths/hackathons.yaml#/hackathonUsers"
   /hackathons/{hackathonId}/participants/me:
     $ref: "./paths/hackathons.yaml#/participantsMe"
+  /hackathons/{hackathonId}/evaluators/me:
+    $ref: "./paths/hackathons.yaml#/evaluatorsMe"
   /hackathons/{hackathonId}/participants/{userId}:
     $ref: "./paths/hackathons.yaml#/participantsByUser"
   /hackathons/{hackathonId}/clusters:

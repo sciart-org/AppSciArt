@@ -1,7 +1,7 @@
 import { checkExists } from '../validators/generalValidators.js'
 import { validateParticipantExists } from '../validators/hackathonValidators.js'
 import { validateConceptualMapIsFromHackathon, validateFlowerIsFromHackathon, validateFruitIsFromHackathon } from '../validators/productValidators.js'
-import { checkIsStaff } from '../validators/userValidators.js'
+import { checkHasRole, checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { mapGroupMember, mapTeamMember } from './mappers/participationMapper.js'
 import * as ParticipationsRepository from '../repositories/participationsRepository.js'
@@ -10,7 +10,7 @@ import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsReposit
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import { emitGroupRemovedToStaff, emitGroupUpdateToStaff, emitTeamUpdateToStaff } from '../sockets/hackathonPhases.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
-import { getFlowersWithTemplate } from './driveService.js'
+import { getFlowerRubrics, getFlowersWithTemplate } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
 import { ROLES } from './Roles.js'
 
@@ -96,6 +96,23 @@ export async function getParticipationById (userId, participationId) {
 export async function getParticipation (userId, hackathonId) {
   const participation = await validateParticipantExists(userId, hackathonId)
   return await getParticipationById(userId, participation.id)
+}
+
+export async function getEvaluatorDetails (user, hackathonId) {
+  const isEvaluator = await checkHasRole(user.id, ROLES.EVALUATOR, { hackathonId })
+  if (!isEvaluator) return { isEvaluator }
+
+  const hackathonFlowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, true)
+  const flowers = hackathonFlowers
+    ? await getFlowerRubrics(`${user.name} ${user.surname}`, hackathonFlowers)
+    : undefined
+
+  return { isEvaluator, flowers }
+}
+
+export async function getHackathonEvaluators (hackathonId) {
+  const evaluators = await HackathonsRepository.getEvaluatorsOfHackathon(hackathonId)
+  return evaluators
 }
 
 export async function updateParticipationById (currentUserId, participationId, body) {

@@ -21,6 +21,7 @@ export default function HackathonRouter() {
   const [hackathonSeeds, setHackathonSeeds] = useState([]);
   const [coCreationTeams, setCoCreationTeams] = useState([]);
   const [exploringGroups, setExploringGroups] = useState([]);
+  const [isEvaluatorOfHackathon, setIsEvaluatorOfHackathon] = useState(null);
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -29,15 +30,23 @@ export default function HackathonRouter() {
 
   useEffect(() => {
     fetcher({
+      url: `hackathons/${params.hackathonId}/evaluators/me`,
+      onSuccess: (data) => setIsEvaluatorOfHackathon(data.isEvaluator),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isEvaluatorOfHackathon === null) return;
+    fetcher({
       url: `hackathons/${params.hackathonId}`,
       onSuccess: (data) => {
-        if (!isStaff && !data.isEnrolled) {
+        if (!isStaff && !data.isEnrolled && !isEvaluatorOfHackathon) {
           navigate(`/unauthorized`);
         }
         setHackathon(data);
       },
     }).finally(() => setLoading(false));
-  }, []);
+  }, [isEvaluatorOfHackathon]);
 
   if (loading) {
     return <Loading />;
@@ -51,7 +60,7 @@ export default function HackathonRouter() {
     return <h2>This hackathon has finished. Thanks for coming!</h2>;
   }
 
-  if (!isStaff) {
+  if (!isStaff && !isEvaluatorOfHackathon) {
     return (
       <HackathonContext
         value={{

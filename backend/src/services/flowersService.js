@@ -104,3 +104,12 @@ export const setHackathonFlowersToInProgress = async (hackathonId) => {
     return f.save()
   }))
 }
+
+export const createHackathonFlowerRubrics = async (hackathonId) => {
+  const [hackathon, evaluators] = await Promise.all([
+    HackathonRepository.getHackathonById(null, hackathonId, INTERNAL_BACKEND_ROLE),
+    HackathonRepository.getEvaluatorsOfHackathon(hackathonId)
+  ])
+  const evaluatorNames = evaluators.map(e => `${e.user_profile.name} ${e.user_profile.surname}`)
+  await DriveService.createFlowerRubrics(evaluatorNames, hackathon.driveLink)
+}
