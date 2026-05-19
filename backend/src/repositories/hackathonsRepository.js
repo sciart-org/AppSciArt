@@ -16,7 +16,7 @@ const ongoingWhere = () => {
 }
 
 const isStaff = (role) => role.name === ROLES.STAFF.name
-const isEvaluator = (role) => role === ROLES.EVALUATOR.name
+const isEvaluator = (role) => role.name === ROLES.EVALUATOR.name
 
 const getRoleScope = (role) => {
   return role.name
@@ -56,7 +56,7 @@ export const getHackathonById = async (userId, hackathonId, role) => {
   const scopes = [
     getRoleScope(role),
     'withEdition',
-    isStaff(role)
+    (isStaff(role) || isEvaluator(role))
       ? 'withAllParticipations'
       : { method: ['withEnrollment', userId] }
   ]

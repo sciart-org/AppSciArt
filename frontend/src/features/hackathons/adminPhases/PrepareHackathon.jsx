@@ -11,10 +11,17 @@ import {
   getFullParticipantName,
   sortParticipantsBySurname,
 } from "../../../utils/commonUtils";
+import EditableFormCreator from "../../../components/form/EditableFormCreator";
+import EditableFormInput from "../../../components/form/EditableFormInput";
 
 export default function PrepareHackathon() {
-  const { hackathon, setHackathon, handleNextPhase, updateParticipant } =
-    useContext(HackathonContext);
+  const {
+    hackathon,
+    setHackathon,
+    handleNextPhase,
+    updateParticipant,
+    isEvaluatorOfHackathon,
+  } = useContext(HackathonContext);
 
   const isCurrentPhase = hackathon.phase === "PREPARING";
 
@@ -69,7 +76,11 @@ export default function PrepareHackathon() {
         <input
           type="checkbox"
           checked={p.hasConfirmedAssistance}
-          onChange={() => handleToggleConfirmed(p)}
+          onChange={() => {
+            if (isEvaluatorOfHackathon) return;
+            handleToggleConfirmed(p);
+          }}
+          style={{ cursor: isEvaluatorOfHackathon ? "default" : "pointer" }}
         />
       ),
     },
@@ -90,19 +101,33 @@ export default function PrepareHackathon() {
         ) : undefined}
       </ConfirmPhaseChangeModal>
 
-      <form onSubmit={handleSubmitLink} className="meet-link-form">
-        <FormInput
-          name="Meet Link"
-          type="text"
-          value={meetLink}
-          onChange={(e) =>
-            setMeetLink(e.target.value === "" ? null : e.target.value)
-          }
-        />
-        <AsterButton type="submit" className="meet-link-submit">
-          Submit
-        </AsterButton>
-      </form>
+      {isEvaluatorOfHackathon ? (
+        <div>
+          <h3 style={{ margin: 0, marginLeft: "-1rem", textAlign: "start" }}>
+            Meet link
+          </h3>
+          <p
+            style={{ cursor: "pointer" }}
+            onClick={() => window.open(meetLink, "_blank")}
+          >
+            {meetLink}
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmitLink} className="meet-link-form">
+          <FormInput
+            name="Meet Link"
+            type="text"
+            value={meetLink}
+            onChange={(e) =>
+              setMeetLink(e.target.value === "" ? null : e.target.value)
+            }
+          />
+          <AsterButton type="submit" className="meet-link-submit">
+            Submit
+          </AsterButton>
+        </form>
+      )}
 
       <section className="participants-section">
         <div className="participants-header">
@@ -116,7 +141,7 @@ export default function PrepareHackathon() {
         />
       </section>
 
-      {isCurrentPhase && (
+      {isCurrentPhase && !isEvaluatorOfHackathon && (
         <div className="create-groups-section">
           <p>Is everybody here?</p>
           <AsterButton onClick={() => setOpenModal(true)}>

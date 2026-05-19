@@ -5,7 +5,7 @@ import { notNull } from './modelUtils.js'
 
 const publicScope = {
   attributes: {
-    exclude: ['createdAt', 'updatedAt', 'isPrivate', 'internalName', 'driveLink', 'meetLink']
+    exclude: ['createdAt', 'updatedAt', 'isPrivate', 'internalName', 'driveLink']
   },
   where: { isPrivate: false, state: { [Op.ne]: 'PLANNED' } },
   order: [['startDate', 'ASC']]
@@ -81,6 +81,13 @@ export const Hackathon = sequelize.define(
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         },
+        order: [['startDate', 'ASC']]
+      },
+      evaluator: {
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        where: { isPrivate: false, state: { [Op.ne]: 'PLANNED' } },
         order: [['startDate', 'ASC']]
       },
       withEdition: {

@@ -150,6 +150,7 @@ export default function HackathonRouter() {
           exploringGroups,
           coCreationTeams,
           updateParticipant,
+          isEvaluatorOfHackathon
         }}
       >
         <HackathonManagement
