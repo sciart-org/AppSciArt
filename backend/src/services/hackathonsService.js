@@ -7,6 +7,7 @@ import { toPlainObject } from './mappers/utils.js'
 import * as HackathonRepository from '../repositories/hackathonsRepository.js'
 import { HackathonStates } from '../states/HackathonStates.js'
 import { Hackathon } from '../models/Hackathon.js'
+import { INTERNAL_BACKEND_ROLE } from './Roles.js'
 
 const getHackathonsWithLogo = async (hackathons) => {
   return await getEntitiesWithLogo(hackathons, Hackathon)
@@ -31,7 +32,7 @@ export async function getActiveHackathon (userId) {
     return null
   }
 
-  const hackathon = await HackathonRepository.getActiveHackathon(userId, await checkIsStaff(userId))
+  const hackathon = await HackathonRepository.getActiveHackathon(userId)
   if (!hackathon) return null
 
   const [hackathonWithLogo] = await getHackathonsWithLogo([hackathon])
@@ -39,9 +40,7 @@ export async function getActiveHackathon (userId) {
 }
 
 export async function getHackathons (userId) {
-  const isAdmin = await checkIsStaff(userId)
-
-  const hackathons = await HackathonRepository.getHackathons(userId, isAdmin)
+  const hackathons = await HackathonRepository.getHackathons(userId)
 
   const hackathonsWithLogo = await getHackathonsWithLogo(hackathons)
   return hackathonsWithLogo
@@ -136,7 +135,7 @@ export function getHackathonUsers (req, res) {
 
 export async function nextHackathonPhase (currentUserId, hackathonId) {
   errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot alter the state of a hackathon', 403)
-  const hackathon = await HackathonRepository.getHackathonById(currentUserId, hackathonId, true)
+  const hackathon = await HackathonRepository.getHackathonById(currentUserId, hackathonId, INTERNAL_BACKEND_ROLE)
 
   await HackathonStates.advancePhase(hackathon)
 

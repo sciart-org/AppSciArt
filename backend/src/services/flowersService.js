@@ -8,6 +8,7 @@ import { validateHackathonIsReadable } from '../validators/hackathonValidators.j
 import * as ParticipationsRepository from '../repositories/participationsRepository.js'
 import * as DriveService from '../services/driveService.js'
 import * as HackathonRepository from '../repositories/hackathonsRepository.js'
+import { INTERNAL_BACKEND_ROLE } from './Roles.js'
 
 export async function getFlowersByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
@@ -93,7 +94,7 @@ export const deleteUnassignedFlowersOfHackathon = async (hackathonId) => {
 export const setHackathonFlowersToInProgress = async (hackathonId) => {
   const [flowers, hackathon] = await Promise.all([
     FlowersRepository.getFlowersOfHackathon(hackathonId, true),
-    HackathonRepository.getHackathonById(null, hackathonId, true)
+    HackathonRepository.getHackathonById(null, hackathonId, INTERNAL_BACKEND_ROLE)
   ])
   await Promise.all(flowers.map(async (f, index) => {
     if (f.state !== 'IN_BLANK') return

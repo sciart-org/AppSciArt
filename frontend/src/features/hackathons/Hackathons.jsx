@@ -13,9 +13,9 @@ export default function Hackathons() {
   const { fetcher } = useFetcher(error, setError);
 
   const fetchHackathons = async () => {
-    const isAdmin = tokenService.getIsAdmin();
+    const isStaff = tokenService.getIsStaff();
     await fetcher({
-      url: `hackathons${isAdmin ? "" : "?filter=incoming"}`,
+      url: `hackathons${isStaff ? "" : "?filter=incoming"}`,
       onSuccess: (data) => setHackathons(data),
     }).finally(() => setLoading(false));
   };

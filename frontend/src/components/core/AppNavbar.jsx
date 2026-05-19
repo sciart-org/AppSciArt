@@ -51,7 +51,7 @@ export default function AppNavbar() {
     right: <Link to={"/profile"}>{username}</Link>,
   };
 
-  const adminLinks = {
+  const staffLinks = {
     left: (
       <Dropdown title="Users">
         <Link to={"/users/scientists"}>Scientists</Link>
@@ -65,7 +65,7 @@ export default function AppNavbar() {
       <div className="left-button-container">
         {permanentLinks.left}
         {user ? authenticatedLinks.left : guestLinks.left}
-        {user && user.roles.includes("administrator") && adminLinks.left}
+        {user && user.roles.includes("staff") && staffLinks.left}
       </div>
 
       <h2 style={{ textAlign: "center", flex: 1 }}>AppSciArt</h2>
@@ -73,7 +73,7 @@ export default function AppNavbar() {
       <div className="right-button-container">
         {permanentLinks.right}
         {user ? authenticatedLinks.right : guestLinks.right}
-        {user && user.roles.includes("administrator") && adminLinks.right}
+        {user && user.roles.includes("staff") && staffLinks.right}
       </div>
     </div>
   );

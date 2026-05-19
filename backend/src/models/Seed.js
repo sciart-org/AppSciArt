@@ -50,7 +50,7 @@ export const Seed = sequelize.define(
     defaultScope: publicScope,
     scopes: {
       public: publicScope,
-      admin: {
+      staff: {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         }

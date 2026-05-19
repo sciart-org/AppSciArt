@@ -1,24 +1,28 @@
 import { checkExists } from './generalValidators.js'
-import { Administrator } from '../models/roles/Administrator.js'
-import { Designer } from '../models/roles/Designer.js'
-import { Evaluator } from '../models/roles/Evaluator.js'
-import { Facilitator } from '../models/roles/Facilitator.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { Edition } from '../models/Edition.js'
+import { ROLES } from '../services/Roles.js'
 
-const checkHasRoleById = async (userId, Role, methodologyId) => {
+const checkHasRoleById = async (userId, Model, { methodologyId, hackathonId } = {}) => {
   if (!checkExists(userId)) {
     return false
   }
 
-  const whereClause = checkExists(methodologyId) ? { userProfileId: userId, methodologyId } : { userProfileId: userId }
-  const count = await Role.count({
-    where: whereClause
-  })
-  return (count > 0)
+  const isEvaluatorModel = ROLES.EVALUATOR.models.includes(Model)
+
+  if (isEvaluatorModel && !hackathonId) {
+    return false
+  }
+
+  const whereClause = isEvaluatorModel
+    ? { userProfileId: userId, hackathonId }
+    : { userProfileId: userId, ...(checkExists(methodologyId) && { methodologyId }) }
+
+  const count = await Model.count({ where: whereClause })
+  return count > 0
 }
 
-const checkIsInspiringScientist = async (userId, methodologyId) => {
+const checkIsInspiringScientist = async (userId, { methodologyId } = {}) => {
   if (!checkExists(userId)) {
     return false
   }
@@ -44,16 +48,19 @@ const checkIsInspiringScientist = async (userId, methodologyId) => {
   return (count > 0)
 }
 
-const checkHasAnyRole = async (userId, roles, methodologyId) => {
-  for (const r of roles) {
-    const hasRole = await checkHasRoleById(userId, r, methodologyId)
-    if (hasRole) return true
-  }
-  return false
+const checkHasAnyRole = async (userId, roles, { methodologyId, hackathonId } = {}) => {
+  const results = await Promise.all(
+    roles.map(role => checkHasRoleById(userId, role, { methodologyId, hackathonId }))
+  )
+  return results.some(Boolean)
 }
 
-const checkIsStaff = async (userId, methodologyId) => {
-  return checkHasAnyRole(userId, [Administrator, Designer, Evaluator, Facilitator], methodologyId)
+const checkIsStaff = async (userId, { methodologyId } = {}) => {
+  return checkHasRole(userId, ROLES.STAFF, { methodologyId })
 }
 
-export { checkHasRoleById, checkHasAnyRole, checkIsStaff, checkIsInspiringScientist }
+const checkHasRole = async (userId, Role, attributes = {}) => {
+  return checkHasAnyRole(userId, Role.models, attributes)
+}
+
+export { checkHasRole, checkIsStaff, checkIsInspiringScientist }

@@ -167,12 +167,12 @@ Participation.associate = (db) => {
         model: Fruit
       },
       {
-        model: Flower.scope([isAdmin ? 'admin' : 'public', 'withAuthors']),
+        model: Flower.scope([isAdmin ? 'staff' : 'public', 'withAuthors']),
         attributes: {
           exclude: ['title', 'mainImage', 'concept', 'seedId']
         },
         include: {
-          model: Seed.scope([isAdmin ? 'admin' : 'public', 'withAuthors']),
+          model: Seed.scope([isAdmin ? 'staff' : 'public', 'withAuthors']),
           attributes: {
             exclude: ['state', 'branchesOfKnowledge']
           },
@@ -189,7 +189,7 @@ Participation.associate = (db) => {
           exclude: ['seedId']
         },
         include: {
-          model: Seed.scope([isAdmin ? 'admin' : 'public', 'withAuthors']),
+          model: Seed.scope([isAdmin ? 'staff' : 'public', 'withAuthors']),
           attributes: {
             exclude: ['state', 'branchesOfKnowledge']
           }

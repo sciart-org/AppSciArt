@@ -2,13 +2,11 @@ import { jwtDecode } from 'jwt-decode'
 import { getUserFromJwt } from '../auth/signin.js'
 import { errorThrower } from './errorThrower.js'
 import { getJwt } from './authService.js'
-import { Administrator } from '../models/roles/Administrator.js'
-import { checkHasRoleById, checkIsInspiringScientist } from '../validators/userValidators.js'
-import { Designer } from '../models/roles/Designer.js'
-import { Evaluator } from '../models/roles/Evaluator.js'
-import { Facilitator } from '../models/roles/Facilitator.js'
+import { checkHasRole, checkIsInspiringScientist } from '../validators/userValidators.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
 import { checkExists } from '../validators/generalValidators.js'
+import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
+import { INTERNAL_ROLES, ROLES } from './Roles.js'
 
 export function getUsers (req, res) {
   res.send({
@@ -60,20 +58,23 @@ export async function getCurrentUser (req) {
 }
 
 export async function getUserRoles (userId) {
-  const [isAdministrator, isDesigner, isEvaluator, isFacilitator, isScientist] = await Promise.all([
-    checkHasRoleById(userId, Administrator),
-    checkHasRoleById(userId, Designer),
-    checkHasRoleById(userId, Evaluator),
-    checkHasRoleById(userId, Facilitator),
-    checkIsInspiringScientist(userId)
+  const [isAdministrator, isDesigner, isFacilitator, isScientist, evaluatorHackathons] = await Promise.all([
+    checkHasRole(userId, INTERNAL_ROLES.ADMIN),
+    checkHasRole(userId, INTERNAL_ROLES.DESIGNER),
+    checkHasRole(userId, INTERNAL_ROLES.FACILITATOR),
+    checkIsInspiringScientist(userId),
+    HackathonsRepository.getEvaluatorRolesOfUser(userId)
   ])
 
   const roles = []
-  if (isAdministrator) roles.push('administrator')
-  if (isDesigner) roles.push('designer')
-  if (isEvaluator) roles.push('evaluator')
-  if (isFacilitator) roles.push('facilitator')
+  if (isAdministrator || isDesigner || isFacilitator) {
+    roles.push(ROLES.STAFF.name)
+    if (isAdministrator) roles.push(INTERNAL_ROLES.ADMIN.name)
+    if (isDesigner) roles.push(INTERNAL_ROLES.DESIGNER.name)
+    if (isFacilitator) roles.push(INTERNAL_ROLES.FACILITATOR.name)
+  }
   if (isScientist) roles.push('inspiring_scientist')
+  if (evaluatorHackathons) roles.push(ROLES.EVALUATOR.name)
 
   return roles
 }

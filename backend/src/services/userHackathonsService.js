@@ -12,6 +12,7 @@ import { emitGroupRemovedToStaff, emitGroupUpdateToStaff, emitTeamUpdateToStaff 
 import * as FlowersRepository from '../repositories/flowersRepository.js'
 import { getFlowersWithTemplate } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
+import { ROLES } from './Roles.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
@@ -111,7 +112,7 @@ const checkMovingGroupVoice = async (currentUserId, hackathonId, participation, 
   if (group.participations.length === 1) {
     return
   }
-  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId, true)
+  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId)
   errorThrower(hackathon.phase !== 'GROUP_CREATION' && participation.isGroupVoice, 'You cannot move the group voice. Please assign a new group voice before moving the participant.', 400)
 }
 
@@ -123,7 +124,7 @@ const checkMovingTeamSpeaker = async (currentUserId, hackathonId, participation,
   if (teamFlower.participations.length === 1) {
     return
   }
-  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId, true)
+  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId)
   errorThrower(hackathon.phase !== 'TEAM_CREATION' && participation.isTeamSpeaker, 'You cannot move the team speaker. Please assign a new team speaker before moving the participant.', 400)
 }
 
@@ -142,12 +143,12 @@ const setRestOfTeamSpeakersToFalse = async (teamId, participationId) => {
 }
 
 const checkIsRemovingGroupVoiceOfCreatedGroup = async (currentUserId, hackathonId) => {
-  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId, true)
+  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId)
   errorThrower(hackathon.phase !== 'GROUP_CREATION', 'You must assign a new group voice.', 400)
 }
 
 const checkIsRemovingTeamSpeakerOfCreatedTeam = async (currentUserId, hackathonId) => {
-  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId, true)
+  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId)
   errorThrower(hackathon.phase !== 'TEAM_CREATION', 'You must assign a new team speaker.', 400)
 }
 

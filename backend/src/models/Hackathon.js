@@ -77,7 +77,7 @@ export const Hackathon = sequelize.define(
     defaultScope: publicScope,
     scopes: {
       public: publicScope,
-      admin: {
+      staff: {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         },
@@ -118,7 +118,7 @@ export const Hackathon = sequelize.define(
 )
 
 Hackathon.associate = (db) => {
-  const { Edition, Seed, HackathonSeeds, Participation, UserProfile, ConceptualMap } = db
+  const { Edition, Seed, HackathonSeeds, Participation, UserProfile, ConceptualMap, Evaluator } = db
   Hackathon.belongsTo(Edition)
   Edition.hasMany(Hackathon, notNull('editionId'))
 
@@ -147,9 +147,21 @@ Hackathon.associate = (db) => {
       {
         model: Participation,
         attributes: [],
-        required: true,
+        required: false,
+        where: { userProfileId: userId }
+      },
+      {
+        model: Evaluator,
+        attributes: [],
+        required: false,
         where: { userProfileId: userId }
       }
-    ]
+    ],
+    where: {
+      [Op.or]: [
+        { '$participations.userProfileId$': userId },
+        { '$evaluators.userProfileId$': userId }
+      ]
+    }
   }))
 }

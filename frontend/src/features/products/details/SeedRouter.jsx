@@ -12,7 +12,7 @@ export default function SeedRouter() {
   const [seed, setSeed] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const isAdmin = tokenService.getIsAdmin()
+  const isStaff = tokenService.getIsStaff()
   const user = tokenService.getUser()
   const isAuthor = seed?.authors?.some(author => author.id === user.id)
 
@@ -37,7 +37,7 @@ export default function SeedRouter() {
     return <Loading />;
   }
 
-  if (seed?.state !== "PUBLISHED" && (isAdmin || isAuthor)) {
+  if (seed?.state !== "PUBLISHED" && (isStaff || isAuthor)) {
     return <SeedCreation seed={seed} />;
   }
 

@@ -2,7 +2,7 @@ import { Flower } from '../models/Flower.js'
 
 const getRoleScope = (isAdmin = false) => {
   return isAdmin
-    ? 'admin'
+    ? 'staff'
     : 'public'
 }
 

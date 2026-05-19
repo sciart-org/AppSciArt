@@ -47,7 +47,7 @@ export const Flower = sequelize.define(
     defaultScope: publicScope,
     scopes: {
       public: publicScope,
-      admin: {
+      staff: {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         }
@@ -85,7 +85,7 @@ Flower.associate = (db) => {
     include: [
       {
         model: Seed.scope([
-          'admin',
+          'staff',
           { method: ['withHackathon', hackathonId] },
           'withAuthors'
         ]),
@@ -100,7 +100,7 @@ Flower.associate = (db) => {
     include: [
       {
         model: Seed.scope([
-          'admin',
+          'staff',
           { method: ['withEdition', editionId] }
         ]),
         required: true,

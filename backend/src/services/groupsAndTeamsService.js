@@ -9,6 +9,7 @@ import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as SeedsService from '../services/seedsService.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
 import { checkIsStaff } from '../validators/userValidators.js'
+import { ROLES } from './Roles.js'
 
 const defaultConceptualMap = {
   nodes: [
@@ -46,7 +47,7 @@ const buildExploringGroup = (map, groupNumber) => {
 }
 
 export async function getHackathonExploringGroups (hackathonId) {
-  const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
+  const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, ROLES.PUBLIC)
   errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
   if (hackathon.phase === 'GROUP_CREATION') {
     return await GroupsAndTeamsRepository.getConceptualMapsOfHackathon(hackathonId)
@@ -55,7 +56,7 @@ export async function getHackathonExploringGroups (hackathonId) {
 }
 
 export async function getHackathonCoCreationTeams (hackathonId) {
-  const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, false)
+  const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, ROLES.PUBLIC)
   errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
   if (hackathon.phase === 'TEAM_CREATION') {
     return await FlowersRepository.getFlowersOfHackathon(hackathonId, true)

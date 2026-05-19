@@ -2,7 +2,7 @@ import { Seed } from '../models/Seed.js'
 
 const getRoleScope = (isAdmin = false, userId = null) => {
   return isAdmin
-    ? 'admin'
+    ? 'staff'
     : userId
       ? { method: ['scientist', userId] }
       : 'public'

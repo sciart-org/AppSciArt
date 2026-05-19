@@ -10,7 +10,7 @@ import { HackathonContext } from "./components/HackathonContext";
 import Meet from "../home/components/Meet";
 
 export default function HackathonRouter() {
-  const isAdmin = tokenService.getIsAdmin();
+  const isStaff = tokenService.getIsStaff();
 
   const [loading, setLoading] = useState(true);
   const [hackathon, setHackathon] = useState(null);
@@ -31,7 +31,7 @@ export default function HackathonRouter() {
     fetcher({
       url: `hackathons/${params.hackathonId}`,
       onSuccess: (data) => {
-        if (!isAdmin && !data.isEnrolled) {
+        if (!isStaff && !data.isEnrolled) {
           navigate(`/unauthorized`);
         }
         setHackathon(data);
@@ -51,7 +51,7 @@ export default function HackathonRouter() {
     return <h2>This hackathon has finished. Thanks for coming!</h2>;
   }
 
-  if (!isAdmin) {
+  if (!isStaff) {
     return (
       <HackathonContext
         value={{

@@ -136,9 +136,9 @@ function App() {
     </>
   );
 
-  const adminRoutes = (
+  const staffRoutes = (
     <>
-      {user && user.roles.includes("administrator") && (
+      {user && user.roles.includes("staff") && (
         <>
           <Route path="/collections/seeds/create" element={<SeedCreator />} />
           <Route path="/users/scientists" element={<Scientists />} />
@@ -158,7 +158,7 @@ function App() {
           {publicRoutes}
           {unauthenticatedRoutes}
           {authenticatedRoutes}
-          {adminRoutes}
+          {staffRoutes}
         </Routes>
       </div>
       <AppFooter />

@@ -108,7 +108,7 @@ export default function EditionEdit({ edition: editingEdition }) {
           <EditionDetails edition={formData} />
         ) : (
           <EditionCard
-            forceNotAdmin={true}
+            forceNotStaff={true}
             edition={formData}
             style={{ marginTop: "4vh" }}
           />

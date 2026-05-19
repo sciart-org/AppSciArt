@@ -9,9 +9,9 @@ import logoFlowerBlack from "../../assets/logoFlowerBlack.png";
 export default function EditionCard(props) {
   const edition = props.edition;
   const isPublished = edition?.state === "PUBLISHED";
-  const forceNotAdmin = props.forceNotAdmin || false;
+  const forceNotStaff = props.forceNotStaff || false;
 
-  const isAdmin = !forceNotAdmin && tokenService.getIsAdmin();
+  const isStaff = !forceNotStaff && tokenService.getIsStaff();
 
   const includeAutoHeight = isPublished ? {} : { height: "auto" };
 
@@ -37,7 +37,7 @@ export default function EditionCard(props) {
           <h2 style={{ marginBottom: 0 }}>{edition?.name}</h2>
           <div className="card__meta">
             <h3 style={{ marginTop: 0, marginBottom: 0 }}>{edition?.year}</h3>
-            {isAdmin && (
+            {isStaff && (
               <span className={`badge badge--${edition?.state?.toLowerCase()}`}>
                 {parseEnumValue(edition?.state)}
               </span>
@@ -47,7 +47,7 @@ export default function EditionCard(props) {
             {edition?.shortDescription}
           </p>
         </div>
-        {isAdmin ? (
+        {isStaff ? (
           <AdminEditButton entityName="editions" entity={edition} />
         ) : (
           <AsterButton to={`/editions/${edition?.id}`}>Know more</AsterButton>

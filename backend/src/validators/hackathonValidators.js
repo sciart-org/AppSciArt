@@ -10,7 +10,7 @@ const validateIsVisibleOrStaff = async (userId, hackathon) => {
 }
 
 const validateHackathonExists = async (userId, hackathonId) => {
-  const hackathon = await HackathonRepository.getHackathonById(userId, hackathonId, await checkIsStaff(userId))
+  const hackathon = await HackathonRepository.getHackathonById(userId, hackathonId)
   errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
   return hackathon
 }

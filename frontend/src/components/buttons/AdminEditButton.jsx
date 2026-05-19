@@ -3,8 +3,8 @@ import tokenService from "../../utils/token.service";
 import AsterButton from "./AsterButton";
 
 export default function AdminEditButton({ entityName, entity }) {
-  const isAdmin = tokenService.getIsAdmin();
-  if (!isAdmin) return null;
+  const isStaff = tokenService.getIsStaff();
+  if (!isStaff) return null;
 
   const SecondaryButton = () => {
     if (entityName?.toLowerCase() === "edition") {

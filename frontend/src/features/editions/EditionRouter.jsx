@@ -11,7 +11,7 @@ export default function EditionRouter() {
   const [error, setError] = useState(null);
   const [edition, setEdition] = useState(null);
   const [loading, setLoading] = useState(true);
-  const isAdmin = tokenService.getIsAdmin();
+  const isStaff = tokenService.getIsStaff();
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -42,7 +42,7 @@ export default function EditionRouter() {
     );
   }
 
-  if (isAdmin && edition && edition?.state !== "PUBLISHED") {
+  if (isStaff && edition && edition?.state !== "PUBLISHED") {
     return <EditionEdit edition={edition} />;
   }
 

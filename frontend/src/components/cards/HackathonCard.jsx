@@ -9,9 +9,9 @@ import logoFlowerBlack from "../../assets/logoFlowerBlack.png";
 
 export default function HackathonCard({ hackathon, hideButton, ...props }) {
   const jwt = tokenService.getLocalAccessToken();
-  const forceNotAdmin = props.forceNotAdmin || false;
+  const forceNotStaff = props.forceNotStaff || false;
 
-  const isAdmin = !forceNotAdmin && tokenService.getIsAdmin();
+  const isStaff = !forceNotStaff && tokenService.getIsStaff();
 
   if (!hackathon) {
     return <></>;
@@ -70,7 +70,7 @@ export default function HackathonCard({ hackathon, hideButton, ...props }) {
             <text>{hackathon?.description}</text>
           </div>
         </div>
-        {isAdmin ? (
+        {isStaff ? (
           <AdminEditButton entityName="hackathons" entity={hackathon} />
         ) : (
           <JoinButton />

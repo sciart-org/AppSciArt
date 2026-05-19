@@ -116,7 +116,7 @@ export default function HackathonEdit({ hackathon: editingHackathon }) {
           <HackathonDescription hackathon={formData} />
         ) : (
           <HackathonCard
-            forceNotAdmin={true}
+            forceNotStaff={true}
             hackathon={formData}
             style={{ marginTop: "4vh" }}
           />

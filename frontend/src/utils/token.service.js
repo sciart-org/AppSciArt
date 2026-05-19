@@ -39,9 +39,14 @@ class TokenService {
     return JSON.parse(localStorage.getItem("user"));
   }
 
-  getIsAdmin() {
+  getIsStaff() {
     const user = this.getUser()
-    return user?.roles.includes("administrator")
+    return user?.roles.includes("staff")
+  }
+
+  getIsEvaluator() {
+    const user = this.getUser()
+    return user?.roles.includes("evaluator")
   }
 
   setUser(user) {
