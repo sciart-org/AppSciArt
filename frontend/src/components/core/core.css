@@ -1,50 +1,50 @@
 #navbar,
 #footer {
-    outline: solid;
-    outline-color: rgb(200, 200, 200);
-    outline-width: 1px;
-    width: 96vw;
-    padding-left: 2vw;
-    padding-right: 2vw;
+  outline: solid;
+  outline-color: var(--aster-light-gray);
+  outline-width: 1px;
+  width: 96vw;
+  padding-left: 2vw;
+  padding-right: 2vw;
 }
 
 #footer {
-    width: 100vw;
-    margin-top: 5vh;
-    height: 20rem;
-    display: flex;
-    overflow: hidden;
-    align-items: center;
-    position: relative;
+  width: 100vw;
+  margin-top: 5vh;
+  height: 20rem;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  position: relative;
 }
 
 #footer p {
-    text-align: start;
-    margin: 0;
-    font-size: medium;
+  text-align: start;
+  margin: 0;
+  font-size: medium;
 }
 
 .footer-text-container {
-    height: 100%;
-    margin-left: 5vw;
-    margin-right: 5vw;
+  height: 100%;
+  margin-left: 5vw;
+  margin-right: 5vw;
 }
 
 #footer .social-networks {
-    position: absolute;
-    right: 7vw;
-    bottom: 5vh;
+  position: absolute;
+  right: 7vw;
+  bottom: 5vh;
 }
 
 #navbar {
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-#navbar>* {
-    flex: 5;
+#navbar > * {
+  flex: 5;
 }
 
 .left-button-container,
@@ -56,37 +56,37 @@
   justify-content: flex-end;
 }
 
-.left-button-container>*,
-.right-button-container>* {
+.left-button-container > *,
+.right-button-container > * {
   margin-left: 0.5vw;
   margin-right: 0.5vw;
 }
 
 .collections-container {
-    display: flex;
-    justify-items: center;
-    position: relative;
+  display: flex;
+  justify-items: center;
+  position: relative;
 }
 
 .collections-dropdown {
-    position: absolute;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    z-index: 1000;
-    top: 1.75rem;
-    left: -0.25rem;
-    border: 0.1rem solid rgb(200, 200, 200);
-    border-radius: 0.5rem;
-    width: 7rem;
+  position: absolute;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  top: 1.75rem;
+  left: -0.25rem;
+  border: 0.1rem solid var(--aster-light-gray);
+  border-radius: 0.5rem;
+  width: 7rem;
 }
 
 .collections-dropdown > * {
-    padding: 0.5rem;
-    text-align: start;
-    border-bottom: 0.1rem solid rgb(200, 200, 200);
+  padding: 0.5rem;
+  text-align: start;
+  border-bottom: 0.1rem solid var(--aster-light-gray);
 }
 
 .collections-dropdown > *:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }

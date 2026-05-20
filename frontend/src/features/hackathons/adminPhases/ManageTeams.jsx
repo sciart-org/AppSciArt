@@ -161,7 +161,7 @@ export default function ManageTeams() {
           url={teamFlower?.template}
           style={{
             height: "90vh",
-            border: "solid 1px rgba(191, 191, 191, 255)",
+            border: "solid 1px var(--aster-dark-gray)",
             borderRadius: "1rem",
             width: "85vw",
             marginInline: "auto",

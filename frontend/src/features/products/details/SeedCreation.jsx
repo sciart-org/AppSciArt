@@ -16,7 +16,7 @@ export default function SeedCreation({ seed }) {
           width: "75vw",
           height: "95vh",
           margin: "auto",
-          border: "1px solid rgb(200, 200, 200)",
+          border: "1px solid var(--aster-light-gray)",
         }}
       />
     </div>

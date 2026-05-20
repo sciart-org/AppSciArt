@@ -14,7 +14,7 @@ export default function EditableFormCreator({
         <div
           className="details-container"
           style={{
-            border: "1px solid rgb(200, 200, 200)",
+            border: "1px solid var(--aster-light-gray)",
             borderRadius: "1rem",
             paddingTop: isEditable ? "1.2rem" : 0,
           }}

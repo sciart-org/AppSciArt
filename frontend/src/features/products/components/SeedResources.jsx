@@ -8,7 +8,7 @@ import Seed from "../../../components/sciartProducts/Seed";
 const getComponentProps = (url) => {
   const style = isValidUrl(url)
     ? {}
-    : { cursor: "default", color: "rgb(200, 200, 200)" };
+    : { cursor: "default", color: "var(--aster-light-gray)" };
   const onClick = isValidUrl(url) ? () => window.open(url, "_blank") : () => {};
   return { style, onClick };
 };

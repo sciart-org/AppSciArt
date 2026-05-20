@@ -13,6 +13,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --aster-light-gray: rgb(200, 200, 200);
+  --aster-gray: rgb(230, 230, 230);
+  --aster-dark-gray: rgba(191, 191, 191, 255);
 }
 
 input {
@@ -115,7 +118,7 @@ hr {
   clear: both;
   display: block;
   width: 90vw;
-  background-color: rgb(200, 200, 200);
+  background-color: var(--aster-gray);
   height: 1px;
   margin-top: 4vh;
 }

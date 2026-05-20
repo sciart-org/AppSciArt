@@ -5,11 +5,11 @@
 }
 
 .participant-list-button:hover:not(:disabled) {
-  background-color: rgb(230, 230, 230);
+  background-color: var(--aster-gray);
 }
 
 .participant-list-button:disabled {
-  color: rgb(200, 200, 200);
+  color: var(--aster-light-gray);
   cursor: default;
 }
 

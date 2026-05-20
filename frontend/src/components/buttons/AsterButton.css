@@ -1,17 +1,21 @@
 .aster-button {
-  background-color:rgb(230, 230, 230);
+  background-color: var(--aster-gray);
   display: inline-block;
   width: 18rem;
   align-content: center;
   padding: 1rem;
   border: none;
-  outline: none;
   justify-self: center;
   transition: transform 0.05s ease-in-out;
 }
 
+.aster-button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+  outline-offset: 2px;
+}
+
 .aster-button:disabled {
-  background-color: rgb(200, 200, 200);
+  background-color: var(--aster-light-gray);
   opacity: 0.6;
   pointer-events: none;
   cursor: not-allowed;
@@ -21,8 +25,9 @@
   transform: scale(1.01, 1.01);
 }
 
-.aster-button-hover, .aster-button:hover {
-  background-color: rgba(191, 191, 191, 255);
+.aster-button-hover,
+.aster-button:hover {
+  background-color: var(--aster-dark-gray);
 }
 
 .aster-button > * {

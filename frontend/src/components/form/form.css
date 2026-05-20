@@ -71,7 +71,7 @@ input[type="checkbox"]:focus {
 
 input:disabled,
 textarea:disabled {
-  background-color: rgb(230, 230, 230);
+  background-color: var(--aster-gray);
 }
 
 .input-box-container,

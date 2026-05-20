@@ -1,7 +1,7 @@
 .carousel-container {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgb(230, 230, 230);
+  border-bottom: 1px solid var(--aster-gray);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 

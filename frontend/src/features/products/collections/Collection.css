@@ -1,67 +1,67 @@
 .collection-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .collection-item {
-    display: flex;
-    border: 1px solid rgb(200, 200, 200);
-    border-radius: 1rem;
-    justify-self: center;
-    align-items: center;
-    width: 25vw;
-    margin-bottom: 2.5rem;
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  border: 1px solid var(--aster-light-gray);
+  border-radius: 1rem;
+  justify-self: center;
+  align-items: center;
+  width: 25vw;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .collection-item h2 {
-    min-height: 3em;
-    line-height: 1.5em;
-    align-content: center;
+  min-height: 3em;
+  line-height: 1.5em;
+  align-content: center;
 }
 
 .collection-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .collection-header-container h2 {
-    margin: 0;
+  margin: 0;
 }
 
 .collection-grid img {
-    max-width: 20vw;
-    max-height: 40vh;
-    object-fit: contain;
+  max-width: 20vw;
+  max-height: 40vh;
+  object-fit: contain;
 }
 
 .collection-item-details {
-    width: 20vw;
+  width: 20vw;
 }
 
 .collection-item-details > * {
-    text-align: start;
+  text-align: start;
 }
 
 .collection-item-details h4 {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .collection-item-details p {
-    margin-top: 0
+  margin-top: 0;
 }
 
 .collection-grid button {
-    margin: 1rem;
-    margin-top: auto;
-    width: 20vw;
+  margin: 1rem;
+  margin-top: auto;
+  width: 20vw;
 }
 
 .edition-picker {
-    font-size: 1.5rem;
-    width: 30rem;
-    margin-left: 1rem;
+  font-size: 1.5rem;
+  width: 30rem;
+  margin-left: 1rem;
 }
