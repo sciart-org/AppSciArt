@@ -2,6 +2,8 @@ import "./form.css";
 import "../buttons/AsterButton.css";
 import { toCamelCase } from "../../utils/commonUtils";
 import ImageRenderer from "../ImageRenderer";
+import { PiEyeClosedBold, PiEyeBold } from "react-icons/pi";
+import { useState } from "react";
 
 const InputComponent = ({
   name,
@@ -63,6 +65,33 @@ const InputComponent = ({
           style={style}
           {...props}
         />
+      </div>
+    );
+  }
+
+  if (type === "password") {
+    const [visible, setVisible] = useState(false);
+    return (
+      <div className="password-input-wrapper">
+        <input
+          type={visible ? "text" : "password"}
+          name={toCamelCase(name)}
+          placeholder={placeholder ?? name + "..."}
+          value={value}
+          min={min ?? undefined}
+          max={max ?? undefined}
+          style={style}
+          {...props}
+        />
+        <button
+          type="button"
+          className="password-toggle-btn"
+          onClick={() => setVisible((v) => !v)}
+          tabIndex={-1}
+          aria-label={visible ? "Hide password" : "Show password"}
+        >
+          {visible ? <PiEyeClosedBold size={18} /> : <PiEyeBold size={18} />}
+        </button>
       </div>
     );
   }
