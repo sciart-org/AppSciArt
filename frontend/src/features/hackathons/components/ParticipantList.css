@@ -9,7 +9,7 @@
 }
 
 .participant-list-button:disabled {
-  color: var(--aster-light-gray);
+  color: var(--aster-mid-gray);
   cursor: default;
 }
 

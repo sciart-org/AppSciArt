@@ -1,4 +1,3 @@
-import { Link } from "react-router";
 import tokenService from "../../utils/token.service";
 import AsterButton from "../buttons/AsterButton";
 import "./Card.css";
@@ -6,6 +5,7 @@ import ImageRenderer from "../ImageRenderer";
 import AdminEditButton from "../buttons/AdminEditButton";
 import { formatReadableDate, parseEnumValue } from "../../utils/commonUtils";
 import logoFlowerBlack from "../../assets/logoFlowerBlack.png";
+import AsterLink from "../buttons/AsterLink";
 
 export default function HackathonCard({ hackathon, hideButton, ...props }) {
   const jwt = tokenService.getLocalAccessToken();
@@ -39,12 +39,12 @@ export default function HackathonCard({ hackathon, hideButton, ...props }) {
           <text>Join this hackathon!</text>
         </AsterButton>
         {!jwt && (
-          <Link
+          <AsterLink
             to={"/signin"}
             style={{ marginTop: "-1vh", marginBottom: "1vh" }}
           >
             Log in
-          </Link>
+          </AsterLink>
         )}
       </div>
     );

@@ -25,7 +25,7 @@ export default function SeedDetails({ seed, setSeed }) {
     const baseStyle = { width: "30vw", paddingLeft: "5vw" };
     const style = jwt
       ? { ...baseStyle }
-      : { ...baseStyle, color: "var(--aster-light-gray)" };
+      : { ...baseStyle, color: "var(--aster-mid-gray)" };
 
     const onClick = jwt
       ? seed?.isLiked

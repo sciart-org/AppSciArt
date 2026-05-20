@@ -5,7 +5,7 @@
 
 .collection-item {
   display: flex;
-  border: 1px solid var(--aster-light-gray);
+  border: 1px solid var(--aster-mid-gray);
   border-radius: 1rem;
   justify-self: center;
   align-items: center;

@@ -4,8 +4,12 @@ import RegistrationForm from "./components/RegistrationForm.jsx";
 import { RegistrationContext } from "./context/RegistrationContext.jsx";
 import tokenService from "../../utils/token.service.js";
 import useFetcher from "../../utils/useFetcher.js";
-import { itemsToUpperCase, toEnumValue, validateEmail } from "../../utils/commonUtils.js";
-import { Link } from "react-router";
+import {
+  itemsToUpperCase,
+  toEnumValue,
+  validateEmail,
+} from "../../utils/commonUtils.js";
+import AsterLink from "../../components/buttons/AsterLink.jsx";
 
 export default function Register() {
   const [error, setError] = useState(null);
@@ -25,9 +29,9 @@ export default function Register() {
   const { refreshSession, setJustRegistered } = useContext(RegistrationContext);
 
   const signUp = async () => {
-    if(!validateEmail(formData.email)) {
-      setError("Invalid email format")
-      return
+    if (!validateEmail(formData.email)) {
+      setError("Invalid email format");
+      return;
     }
     await fetcher({
       url: "register?method=direct",
@@ -54,9 +58,9 @@ export default function Register() {
       <h1>Register now</h1>
       <div style={{ margin: "2rem" }}>
         <h3 style={{ margin: 0 }}>Already a member of AppSciArt?</h3>
-        <Link to={"/signin"} style={{ margin: 0 }}>
+        <AsterLink to={"/signin"} style={{ margin: 0 }}>
           Log in
-        </Link>
+        </AsterLink>
       </div>
       <div style={{ flex: 1 }}>
         <RegistrationForm

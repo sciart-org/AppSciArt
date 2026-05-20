@@ -4,8 +4,8 @@ import Providers from "./components/Providers";
 import AsterButton from "../../components/buttons/AsterButton";
 import FormInput from "../../components/form/FormInput";
 import useFetcher from "../../utils/useFetcher";
-import { Link } from "react-router";
 import Loading from "../../components/messages/Loading";
+import AsterLink from "../../components/buttons/AsterLink";
 
 export default function Login() {
   const [error, setError] = useState(null);
@@ -53,9 +53,9 @@ export default function Login() {
       <h1>Log in now</h1>
       <div style={{ margin: "2rem" }}>
         <h3 style={{ margin: 0 }}>Not a member of AppSciArt?</h3>
-        <Link to={"/signup"} style={{ margin: 0 }}>
+        <AsterLink to={"/signup"} style={{ margin: 0 }}>
           Register
-        </Link>
+        </AsterLink>
       </div>
       <div style={{ flex: 1 }}>
         <form onSubmit={handleSubmit} className="register-form">

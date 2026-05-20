@@ -1,12 +1,12 @@
 .table {
-  border: 1px solid var(--aster-light-gray);
+  border: 1px solid var(--aster-mid-gray);
   border-radius: 1rem;
   width: 85vw;
   margin: auto;
 }
 
 .table-row {
-  border-bottom: 1px solid var(--aster-light-gray);
+  border-bottom: 1px solid var(--aster-mid-gray);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -27,7 +27,7 @@
 }
 
 .table > * > * {
-  border-left: 1px solid var(--aster-light-gray);
+  border-left: 1px solid var(--aster-mid-gray);
 }
 
 .table > * > *:first-child {

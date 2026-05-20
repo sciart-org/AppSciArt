@@ -1,8 +1,8 @@
 .register-form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
 }
 
 .register-form .input-box-container > * {
@@ -10,14 +10,27 @@
 }
 
 .register-form > .aster-button {
-    margin-top: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+.sign-up-icon-button {
+  background: none;
+  border: 0.1em solid var(--aster-dark-gray);
+  border-radius: 50%;
+  padding: 0.5em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-up-icon-button:focus,
+.sign-up-icon-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--button-select-focus);
 }
 
 .sign-up-icon {
-    cursor: pointer;
-    border: 0.1em solid #747775;
-    border-radius: 50%;
-    width: 3.5em;
-    height: 3.5em;
-    padding: 0.5em;
+  width: 3.5em;
+  height: 3.5em;
 }

@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { useDropdown } from "../../utils/useDropdown";
-import { Link } from "react-router";
 import "../core/core.css";
 import { IoChevronDown } from "react-icons/io5";
+import AsterLink from "./AsterLink";
 
 export default function Dropdown({ children, title, style }) {
   const [showCollections, setShowDropdown] = useState(false);
@@ -10,7 +10,7 @@ export default function Dropdown({ children, title, style }) {
   useDropdown(dropdownref, () => setShowDropdown(false));
 
   return (
-    <Link
+    <AsterLink
       onClick={(e) => {
         e.preventDefault();
         setShowDropdown(!showCollections);
@@ -25,6 +25,6 @@ export default function Dropdown({ children, title, style }) {
           {children}
         </div>
       )}
-    </Link>
+    </AsterLink>
   );
 }

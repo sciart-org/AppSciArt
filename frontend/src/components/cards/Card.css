@@ -1,6 +1,6 @@
 .card {
   display: flex;
-  border: 1px solid var(--aster-light-gray);
+  border: 1px solid var(--aster-mid-gray);
   justify-self: center;
   padding: 0;
   width: 70vw;

@@ -6,6 +6,7 @@ export default function AsterButton(props) {
 
   return (
     <button
+      tabIndex={0}
       className={"aster-button " + (props.className || "")}
       style={{ ...props.style }}
       disabled={props.disabled}

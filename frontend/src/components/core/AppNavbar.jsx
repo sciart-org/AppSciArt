@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
 import tokenService from "../../utils/token.service";
 import "./core.css";
 import Dropdown from "../buttons/Dropdown";
+import AsterLink from "../buttons/AsterLink";
 
 export default function AppNavbar() {
   const [username, setUsername] = useState("");
@@ -19,19 +19,19 @@ export default function AppNavbar() {
   const permanentLinks = {
     left: (
       <>
-        <Link to={"/"}>Home</Link>
+        <AsterLink to={"/"}>Home</AsterLink>
         <Dropdown title="Collections">
-          <Link to={"/collections/seeds"}>Seeds</Link>
-          <Link to={"/collections/flowers"}>Flowers</Link>
-          <Link to={"/collections/fruits"}>Fruits</Link>
+          <AsterLink to={"/collections/seeds"}>Seeds</AsterLink>
+          <AsterLink to={"/collections/flowers"}>Flowers</AsterLink>
+          <AsterLink to={"/collections/fruits"}>Fruits</AsterLink>
         </Dropdown>
-        <Link to={"/hackathons"}>Hackathons</Link>
-        <Link to={"/editions"}>Editions</Link>
+        <AsterLink to={"/hackathons"}>Hackathons</AsterLink>
+        <AsterLink to={"/editions"}>Editions</AsterLink>
       </>
     ),
     right: (
       <>
-        <Link to={"/about-the-hackathon"}>Our format</Link>
+        <AsterLink to={"/about-the-hackathon"}>Our format</AsterLink>
       </>
     ),
   };
@@ -40,21 +40,21 @@ export default function AppNavbar() {
     left: null,
     right: (
       <>
-        <Link to={"/signin"}>Log in</Link>
-        <Link to={"/signup"}>Register</Link>
+        <AsterLink to={"/signin"}>Log in</AsterLink>
+        <AsterLink to={"/signup"}>Register</AsterLink>
       </>
     ),
   };
 
   const authenticatedLinks = {
     left: null,
-    right: <Link to={"/profile"}>{username}</Link>,
+    right: <AsterLink to={"/profile"}>{username}</AsterLink>,
   };
 
   const staffLinks = {
     left: (
       <Dropdown title="Users">
-        <Link to={"/users/scientists"}>Scientists</Link>
+        <AsterLink to={"/users/scientists"}>Scientists</AsterLink>
       </Dropdown>
     ),
     right: null,

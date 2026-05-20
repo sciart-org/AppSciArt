@@ -1,9 +1,9 @@
-import { Link } from "react-router";
+import AsterLink from "../../../../components/buttons/AsterLink";
 
 export default function GoBack({ onClick }) {
   return (
     <div style={{ position: "relative", height: 0, width: "10rem" }}>
-      <Link
+      <AsterLink
         style={{ position: "absolute", top: "-2rem", left: "1rem" }}
         onClick={(e) => {
           e.preventDefault();
@@ -11,7 +11,7 @@ export default function GoBack({ onClick }) {
         }}
       >
         {"<"} Go back
-      </Link>
+      </AsterLink>
     </div>
   );
 }

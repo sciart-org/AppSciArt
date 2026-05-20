@@ -9,13 +9,8 @@
   transition: transform 0.05s ease-in-out;
 }
 
-.aster-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-  outline-offset: 2px;
-}
-
 .aster-button:disabled {
-  background-color: var(--aster-light-gray);
+  background-color: var(--aster-gray);
   opacity: 0.6;
   pointer-events: none;
   cursor: not-allowed;

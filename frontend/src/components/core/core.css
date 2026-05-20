@@ -1,7 +1,7 @@
 #navbar,
 #footer {
   outline: solid;
-  outline-color: var(--aster-light-gray);
+  outline-color: var(--aster-mid-gray);
   outline-width: 1px;
   width: 96vw;
   padding-left: 2vw;
@@ -76,7 +76,7 @@
   z-index: 1000;
   top: 1.75rem;
   left: -0.25rem;
-  border: 0.1rem solid var(--aster-light-gray);
+  border: 0.1rem solid var(--aster-mid-gray);
   border-radius: 0.5rem;
   width: 7rem;
 }
@@ -84,7 +84,7 @@
 .collections-dropdown > * {
   padding: 0.5rem;
   text-align: start;
-  border-bottom: 0.1rem solid var(--aster-light-gray);
+  border-bottom: 0.1rem solid var(--aster-mid-gray);
 }
 
 .collections-dropdown > *:last-child {
