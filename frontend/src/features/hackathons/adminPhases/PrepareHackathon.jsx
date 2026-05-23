@@ -11,8 +11,7 @@ import {
   getFullParticipantName,
   sortParticipantsBySurname,
 } from "../../../utils/commonUtils";
-import EditableFormCreator from "../../../components/form/EditableFormCreator";
-import EditableFormInput from "../../../components/form/EditableFormInput";
+import Clickable from "../../../components/buttons/Clickable";
 
 export default function PrepareHackathon() {
   const {
@@ -104,12 +103,9 @@ export default function PrepareHackathon() {
           <h3 style={{ margin: 0, marginLeft: "-1rem", textAlign: "start" }}>
             Meet link
           </h3>
-          <p
-            style={{ cursor: "pointer" }}
-            onClick={() => window.open(meetLink, "_blank")}
-          >
-            {meetLink}
-          </p>
+          <Clickable onClick={() => window.open(meetLink, "_blank")}>
+            <p>{meetLink}</p>
+          </Clickable>
         </div>
       ) : (
         <form onSubmit={handleSubmitLink} className="meet-link-form">

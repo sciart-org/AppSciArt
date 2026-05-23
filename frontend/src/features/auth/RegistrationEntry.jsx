@@ -8,7 +8,7 @@ import CompleteRegistration from "./CompleteRegistration";
 import Register from "./Register";
 import { RegistrationContext } from "./context/RegistrationContext";
 import "./auth.css";
-import ClickableText from "../../components/buttons/ClickableText";
+import Clickable from "../../components/buttons/Clickable";
 import { scrollToTop } from "../../utils/commonUtils";
 
 const mockHackathon = {
@@ -56,13 +56,11 @@ export default function RegistrationEntry(props) {
             </AsterButton>
           </div>
         </div>
-        <ClickableText onClick={() => setMaybeLater(false)}>
+        <Clickable onClick={() => setMaybeLater(false)}>
           <IoChevronBack size={"3.25vh"} />
           <text style={{ fontSize: "larger" }}>Join a hackathon</text>
-        </ClickableText>
-        <ClickableText onClick={() => (window.location.href = "/")}>
-          Home
-        </ClickableText>
+        </Clickable>
+        <Clickable onClick={() => (window.location.href = "/")}>Home</Clickable>
       </div>
     );
   }

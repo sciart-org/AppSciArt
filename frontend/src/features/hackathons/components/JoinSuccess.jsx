@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AsterButton from "../../../components/buttons/AsterButton";
-import ClickableText from "../../../components/buttons/ClickableText";
+import Clickable from "../../../components/buttons/Clickable";
 import useFetcher from "../../../utils/useFetcher";
 import Carousel from "../../home/components/Carousel";
 import Loading from "../../../components/messages/Loading";
@@ -51,12 +51,12 @@ export default function JoinSuccess({ hackathonId }) {
           onClickItem={(o) => navigate(`/seeds/${o.id}`)}
         />
       </div>
-      <ClickableText
+      <Clickable
         onClick={() => (window.location.href = "/")}
         style={{ marginTop: "5vh" }}
       >
         Home
-      </ClickableText>
+      </Clickable>
     </div>
   );
 }
