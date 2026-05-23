@@ -12,8 +12,13 @@ import ChangePresenterModal from "./components/ChangePresenterModal";
 import ItemSelectionCard from "./components/ItemSelectionCard";
 
 export default function ManageGroupPresentations() {
-  const { socket, hackathon, handleNextPhase, exploringGroups } =
-    useContext(HackathonContext);
+  const {
+    socket,
+    hackathon,
+    handleNextPhase,
+    exploringGroups,
+    isEvaluatorOfHackathon,
+  } = useContext(HackathonContext);
 
   const [presentingGroup, setPresentingGroup] = useState(null);
   const [viewingGroup, setViewingGroup] = useState(null);
@@ -154,7 +159,11 @@ export default function ManageGroupPresentations() {
               presentingItem={presentingGroup}
               viewingItem={viewingGroup}
               onView={() => setViewingGroup(group.number)}
-              onChangePresenting={() => setChangingGroup(group)}
+              onChangePresenting={() => {
+                if (isEvaluatorOfHackathon) return;
+                setChangingGroup(group);
+              }}
+              canChangePresenting={!isEvaluatorOfHackathon}
             />
           ))}
         </div>
@@ -165,17 +174,20 @@ export default function ManageGroupPresentations() {
           </DiagramContext>
         </div>
       </div>
-      <div>
-        <p>Have all groups presented?</p>
-        <AsterButton
-          onClick={() => {
-            socket.emit("enable_ratings_submission", socketRoom);
-            setCanSubmitRatings(true);
-          }}
-        >
-          Start ratings submission
-        </AsterButton>
-      </div>
+      {!isEvaluatorOfHackathon && (
+        <div>
+          <p>Have all groups presented?</p>
+          <AsterButton
+            onClick={() => {
+              if (isEvaluatorOfHackathon) return;
+              socket.emit("enable_ratings_submission", socketRoom);
+              setCanSubmitRatings(true);
+            }}
+          >
+            Start ratings submission
+          </AsterButton>
+        </div>
+      )}
     </>
   );
 }

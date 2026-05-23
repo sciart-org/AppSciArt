@@ -8,6 +8,7 @@ export default function ItemSelectionCard({
   viewingItem,
   onView = () => {},
   onChangePresenting = () => {},
+  canChangePresenting = false,
 }) {
   const isPresenting = presentingItem === itemNumber;
   const isViewing = viewingItem === itemNumber;
@@ -56,17 +57,21 @@ export default function ItemSelectionCard({
           ▶ Now presenting
         </AsterButton>
       ) : (
-        <AsterButton
-          onClick={onChangePresenting}
-          style={{
-            fontSize: "0.8rem",
-            width: "auto",
-            height: "2rem",
-            paddingBlock: 0,
-          }}
-        >
-          Set as presenting
-        </AsterButton>
+        <>
+          {canChangePresenting && (
+            <AsterButton
+              onClick={onChangePresenting}
+              style={{
+                fontSize: "0.8rem",
+                width: "auto",
+                height: "2rem",
+                paddingBlock: 0,
+              }}
+            >
+              Set as presenting
+            </AsterButton>
+          )}
+        </>
       )}
     </div>
   );
