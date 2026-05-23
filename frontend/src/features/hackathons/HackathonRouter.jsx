@@ -90,6 +90,7 @@ export default function HackathonRouter() {
   }
 
   const handleNextPhase = ({ onError = () => {} } = {}) => {
+    if (isEvaluatorOfHackathon) return;
     fetcher({
       url: `hackathons/${hackathon.id}/next-phase?broadcast=ALL`,
       method: "POST",

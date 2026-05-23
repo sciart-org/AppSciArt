@@ -16,8 +16,13 @@ import {
 } from "../../../utils/commonUtils";
 
 export default function ManageGroups() {
-  const { socket, hackathon, handleNextPhase, exploringGroups } =
-    useContext(HackathonContext);
+  const {
+    socket,
+    hackathon,
+    handleNextPhase,
+    exploringGroups,
+    isEvaluatorOfHackathon,
+  } = useContext(HackathonContext);
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,8 +67,9 @@ export default function ManageGroups() {
       <>
         <h2>Groups follow-up</h2>
         <ConfirmPhaseChangeModal
-          openCondition={openModal}
+          openCondition={openModal && !isEvaluatorOfHackathon}
           onConfirm={() => {
+            if (isEvaluatorOfHackathon) return;
             setOpenModal(false);
             handleNextPhase();
           }}
@@ -120,9 +126,11 @@ export default function ManageGroups() {
               {`${exploringGroups.filter((g) => g.isDelivered).length} / ${exploringGroups.length} conceptual maps `}
               delivered
             </p>
-            <AsterButton onClick={() => setOpenModal(true)}>
-              Start presentations
-            </AsterButton>
+            {!isEvaluatorOfHackathon && (
+              <AsterButton onClick={() => setOpenModal(true)}>
+                Start presentations
+              </AsterButton>
+            )}
           </>
         )}
       </>
@@ -134,6 +142,7 @@ export default function ManageGroups() {
   }
 
   const undeliverGroupMap = async () => {
+    if (isEvaluatorOfHackathon) return;
     await fetcher({
       url: `exploring-groups/${selectedGroup.id}/conceptual-map/reopen?broadcast=ALL`,
       method: "PATCH",
@@ -180,7 +189,7 @@ export default function ManageGroups() {
             />
           </DiagramContext>
         </div>
-        {isCurrentPhase && (
+        {isCurrentPhase && !isEvaluatorOfHackathon && (
           <>
             <p>Do they need to modify it?</p>
             <AsterButton onClick={undeliverGroupMap}>
