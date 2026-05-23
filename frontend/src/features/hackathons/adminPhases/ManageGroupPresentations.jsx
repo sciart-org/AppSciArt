@@ -113,10 +113,15 @@ export default function ManageGroupPresentations() {
             <RatingCard key={group.id} group={group} ratings={ratings} />
           ))}
         </div>
-        {isCurrentPhase && (
+        {isCurrentPhase && !isEvaluatorOfHackathon && (
           <>
             <p>All ratings submitted?</p>
-            <AsterButton onClick={() => setOpenPhaseChangeModal(true)}>
+            <AsterButton
+              onClick={() => {
+                if (isEvaluatorOfHackathon) return;
+                setOpenPhaseChangeModal(true);
+              }}
+            >
               Create teams
             </AsterButton>
           </>
