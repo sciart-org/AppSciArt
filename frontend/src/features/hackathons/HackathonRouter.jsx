@@ -125,14 +125,26 @@ export default function HackathonRouter() {
   const updateParticipant = async (
     participantId,
     newParticipant,
-    broadcast = "ALL",
+    { broadcast = "ALL", optimistic = true } = {},
   ) => {
+    let previousHackathon;
+    if (optimistic) {
+      previousHackathon = structuredClone(hackathon);
+      const existing = hackathon.participations.find(
+        (p) => p.userProfile.id === participantId,
+      );
+      const merged = { ...existing, ...newParticipant };
+      updateParticipationState(merged);
+    }
     await fetcher({
       url: `hackathons/${hackathon.id}/participants/${participantId}?broadcast=${broadcast}`,
       method: "PUT",
       body: newParticipant,
       onSuccess: (updatedParticipation) => {
         updateParticipationState(updatedParticipation);
+      },
+      onError: () => {
+        if (optimistic) setHackathon(previousHackathon);
       },
     });
   };
@@ -150,7 +162,7 @@ export default function HackathonRouter() {
           exploringGroups,
           coCreationTeams,
           updateParticipant,
-          isEvaluatorOfHackathon
+          isEvaluatorOfHackathon,
         }}
       >
         <HackathonManagement

@@ -54,10 +54,8 @@ export default function PrepareHackathon() {
   const handleToggleConfirmed = (participant) => {
     updateParticipant(
       participant.userProfile.id,
-      {
-        hasConfirmedAssistance: !participant.hasConfirmedAssistance,
-      },
-      "STAFF",
+      { hasConfirmedAssistance: !participant.hasConfirmedAssistance },
+      { broadcast: "STAFF" },
     );
   };
 

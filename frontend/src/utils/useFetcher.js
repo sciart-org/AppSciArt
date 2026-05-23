@@ -72,6 +72,7 @@ export default function useFetcher(error, setError) {
             })
             .catch((error) => {
                 setError(error.message)
+                onError()
             });
     }
 
