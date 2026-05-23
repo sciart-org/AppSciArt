@@ -5,7 +5,7 @@ export default function AsterTable({
   data,
   emptyMessage = "No data found.",
 }) {
-  if (data.length === 0) return <p className="empty-search">{emptyMessage}</p>;
+  if (data?.length === 0) return <p className="empty-search">{emptyMessage}</p>;
 
   return (
     <table className="aster-table">
@@ -19,7 +19,7 @@ export default function AsterTable({
         </tr>
       </thead>
       <tbody>
-        {data.map((row, i) => (
+        {data?.map((row, i) => (
           <tr key={row.id ?? i}>
             {columns.map((col) => (
               <td key={col.key} style={{ width: col.width }}>

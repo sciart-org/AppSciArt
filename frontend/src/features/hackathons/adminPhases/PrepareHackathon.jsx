@@ -67,7 +67,7 @@ export default function PrepareHackathon() {
     { key: "email", label: "Email", render: (p) => p.userProfile?.email },
     {
       key: "confirmed",
-      label: "",
+      label: "Assisting",
       width: "2rem",
       render: (p) => (
         <input
@@ -77,7 +77,11 @@ export default function PrepareHackathon() {
             if (isEvaluatorOfHackathon) return;
             handleToggleConfirmed(p);
           }}
-          style={{ cursor: isEvaluatorOfHackathon ? "default" : "pointer" }}
+          style={{
+            cursor: isEvaluatorOfHackathon ? "default" : "pointer",
+            marginInline: "auto",
+            display: "block",
+          }}
         />
       ),
     },
@@ -116,6 +120,7 @@ export default function PrepareHackathon() {
             onChange={(e) =>
               setMeetLink(e.target.value === "" ? null : e.target.value)
             }
+            style={{ minWidth: "30vw" }}
           />
           <AsterButton type="submit" className="meet-link-submit">
             Submit
