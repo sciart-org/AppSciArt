@@ -30,6 +30,7 @@ export default function HackathonManagement({
     setSocket,
     exploringGroups,
     coCreationTeams,
+    isEvaluatorOfHackathon,
   } = useContext(HackathonContext);
 
   const [error, setError] = useState(null);
@@ -136,16 +137,38 @@ export default function HackathonManagement({
   }, [socket]);
 
   const phaseScreen = () => {
-    if (selectedPhase > hackathonPhases.indexOf(hackathon.phase)) {
+    const isFuturePhase =
+      selectedPhase > hackathonPhases.indexOf(hackathon.phase);
+    const isPastPhase =
+      selectedPhase < hackathonPhases.indexOf(hackathon.phase);
+
+    if (isFuturePhase) {
       return <p className="empty-search">Phase not yet started</p>;
     }
 
     const screens = {
       PREPARING: <PrepareHackathon />,
-      GROUP_CREATION: <CreateGroups />,
+      GROUP_CREATION: isEvaluatorOfHackathon ? (
+        <h2>
+          {isPastPhase
+            ? "Exploring groups already created"
+            : "Creating exploring groups..."}
+        </h2>
+      ) : (
+        <CreateGroups />
+      ),
       GROUP_WORK: <ManageGroups />,
       GROUP_PRESENTATION: <ManageGroupPresentations />,
       TEAM_CREATION: <CreateTeams />,
+      TEAM_CREATION: isEvaluatorOfHackathon ? (
+        <h2>
+          {isPastPhase
+            ? "Co-creation teams already created"
+            : "Creating co-creation teams..."}
+        </h2>
+      ) : (
+        <CreateTeams />
+      ),
       TEAM_WORK: <ManageTeams />,
       TEAM_PRESENTATION: <ManageTeamPresentations />,
     };
