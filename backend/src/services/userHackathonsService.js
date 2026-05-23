@@ -121,7 +121,7 @@ export async function updateParticipationById (currentUserId, participationId, b
   return await updateParticipation(currentUserId, participation, body)
 }
 
-const checkMovingGroupVoice = async (currentUserId, hackathonId, participation, previousGroupId) => {
+const checkMovingGroupVoice = async (hackathonState, participation, previousGroupId) => {
   if (!participation.isGroupVoice || previousGroupId === null) {
     return
   }
@@ -129,11 +129,10 @@ const checkMovingGroupVoice = async (currentUserId, hackathonId, participation, 
   if (group.participations.length === 1) {
     return
   }
-  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId)
-  errorThrower(hackathon.phase !== 'GROUP_CREATION' && participation.isGroupVoice, 'You cannot move the group voice. Please assign a new group voice before moving the participant.', 400)
+  errorThrower(hackathonState !== 'GROUP_CREATION' && participation.isGroupVoice, 'You cannot move the group voice. Please assign a new group voice before moving the participant.', 400)
 }
 
-const checkMovingTeamSpeaker = async (currentUserId, hackathonId, participation, previousTeamId) => {
+const checkMovingTeamSpeaker = async (hackathonState, participation, previousTeamId) => {
   if (!participation.isTeamSpeaker || previousTeamId === null) {
     return
   }
@@ -141,8 +140,7 @@ const checkMovingTeamSpeaker = async (currentUserId, hackathonId, participation,
   if (teamFlower.participations.length === 1) {
     return
   }
-  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId)
-  errorThrower(hackathon.phase !== 'TEAM_CREATION' && participation.isTeamSpeaker, 'You cannot move the team speaker. Please assign a new team speaker before moving the participant.', 400)
+  errorThrower(hackathonState !== 'TEAM_CREATION' && participation.isTeamSpeaker, 'You cannot move the team speaker. Please assign a new team speaker before moving the participant.', 400)
 }
 
 const setRestOfGroupVoiceToFalse = async (groupId, participationId) => {
@@ -159,22 +157,12 @@ const setRestOfTeamSpeakersToFalse = async (teamId, participationId) => {
   ))
 }
 
-const checkIsRemovingGroupVoiceOfCreatedGroup = async (currentUserId, hackathonId) => {
-  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId)
-  errorThrower(hackathon.phase !== 'GROUP_CREATION', 'You must assign a new group voice.', 400)
-}
-
-const checkIsRemovingTeamSpeakerOfCreatedTeam = async (currentUserId, hackathonId) => {
-  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId)
-  errorThrower(hackathon.phase !== 'TEAM_CREATION', 'You must assign a new team speaker.', 400)
-}
-
-const validateGroupIsValid = async (currentUserId, participation, body) => {
+const validateGroupIsValid = async (hackathonState, participation, body) => {
   const previousGroupId = participation.groupId
   const hackathonId = participation.hackathonId
 
   if (body.groupId !== undefined) {
-    await checkMovingGroupVoice(currentUserId, hackathonId, participation, previousGroupId)
+    await checkMovingGroupVoice(hackathonState, participation, previousGroupId)
     body.isGroupVoice = false
   }
 
@@ -188,16 +176,16 @@ const validateGroupIsValid = async (currentUserId, participation, body) => {
     await setRestOfGroupVoiceToFalse(previousGroupId, participation.id)
   }
   if (body.isGroupVoice === false && body.groupId === undefined) {
-    await checkIsRemovingGroupVoiceOfCreatedGroup(currentUserId, hackathonId)
+    errorThrower(hackathonState !== 'GROUP_CREATION', 'You must assign a new group voice.', 400)
   }
 }
 
-const validateTeamIsValid = async (currentUserId, participation, body) => {
+const validateTeamIsValid = async (hackathonState, participation, body) => {
   const previousTeamId = participation.teamId
   const hackathonId = participation.hackathonId
 
   if (body.teamId !== undefined) {
-    await checkMovingTeamSpeaker(currentUserId, hackathonId, participation, previousTeamId)
+    await checkMovingTeamSpeaker(hackathonState, participation, previousTeamId)
     body.isTeamSpeaker = false
   }
 
@@ -212,16 +200,16 @@ const validateTeamIsValid = async (currentUserId, participation, body) => {
   }
 
   if (body.isTeamSpeaker === false && body.teamId === undefined) {
-    await checkIsRemovingTeamSpeakerOfCreatedTeam(currentUserId, hackathonId)
+    errorThrower(hackathonState !== 'TEAM_CREATION', 'You must assign a new team speaker.', 400)
   }
 }
 
-const validateCanUpdateParticipation = async (currentUserId, participation, body) => {
+const validateCanUpdateParticipation = async (hackathonPhase, participation, body) => {
   const { fruitId } = body
   const hackathonId = participation.hackathonId
 
-  await validateGroupIsValid(currentUserId, participation, body)
-  await validateTeamIsValid(currentUserId, participation, body)
+  await validateGroupIsValid(hackathonPhase, participation, body)
+  await validateTeamIsValid(hackathonPhase, participation, body)
 
   if (fruitId) await validateFruitIsFromHackathon(fruitId, hackathonId)
 }
@@ -238,13 +226,15 @@ const removeGroupIfEmpty = async (groupId, hackathonId) => {
 async function updateParticipation (currentUserId, participation, body) {
   const previousGroupId = participation.groupId
   const hackathonId = participation.hackathonId
+  const hackathon = await HackathonsRepository.getHackathonById(currentUserId, hackathonId)
+  const hackathonPhase = hackathon.phase
 
-  await validateCanUpdateParticipation(currentUserId, participation, body)
+  await validateCanUpdateParticipation(hackathonPhase, participation, body)
 
   const { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId } = body
   const participationBody = { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId }
 
-  if (groupId === null) {
+  if (groupId === null && hackathonPhase !== 'GROUP_CREATION') {
     await removeGroupIfEmpty(previousGroupId, hackathonId)
   }
 
