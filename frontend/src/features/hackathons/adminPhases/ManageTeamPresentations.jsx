@@ -10,8 +10,13 @@ import RenderUrl from "../../../components/RenderUrl";
 import FlowerPresentationCard from "../phases/components/FlowerPresentationCard";
 
 export default function ManageTeamPresentations() {
-  const { socket, handleNextPhase, hackathon, coCreationTeams } =
-    useContext(HackathonContext);
+  const {
+    socket,
+    handleNextPhase,
+    hackathon,
+    coCreationTeams,
+    isEvaluatorOfHackathon,
+  } = useContext(HackathonContext);
 
   const [presentingTeam, setPresentingTeam] = useState(null);
   const [viewingTeam, setViewingTeam] = useState(null);
@@ -105,8 +110,12 @@ export default function ManageTeamPresentations() {
               itemNumber={team.number}
               presentingItem={presentingTeam}
               viewingItem={viewingTeam}
-              onChangePresenting={() => setChangingTeam(team)}
+              onChangePresenting={() => {
+                if (isEvaluatorOfHackathon) return;
+                setChangingTeam(team);
+              }}
               onView={() => setViewingTeam(team.number)}
+              canChangePresenting={!isEvaluatorOfHackathon}
             />
           ))}
         </div>
@@ -133,10 +142,12 @@ export default function ManageTeamPresentations() {
           />
         )}
       </div>
-      <div>
-        <p>Have all teams presented?</p>
-        <AsterButton onClick={() => {}}>Finish hackathon!</AsterButton>
-      </div>
+      {!isEvaluatorOfHackathon && (
+        <div>
+          <p>Have all teams presented?</p>
+          <AsterButton onClick={() => {}}>Finish hackathon!</AsterButton>
+        </div>
+      )}{" "}
     </>
   );
 }
