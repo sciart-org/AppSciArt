@@ -21,6 +21,7 @@ export const INTERNAL_BACKEND_ROLE = {
 }
 
 export const getUserRole = async (userId, { hackathonId } = {}) => {
+  if (!userId) return ROLES.PUBLIC
   const [isStaff, isEvaluator] = await Promise.all([
     checkHasRole(userId, ROLES.STAFF),
     checkHasRole(userId, ROLES.EVALUATOR, { hackathonId })

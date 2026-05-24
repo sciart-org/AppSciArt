@@ -102,7 +102,7 @@ export async function getEvaluatorDetails (user, hackathonId) {
   const isEvaluator = await checkHasRole(user.id, ROLES.EVALUATOR, { hackathonId })
   if (!isEvaluator) return { isEvaluator }
 
-  const hackathonFlowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, true)
+  const hackathonFlowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, { role: ROLES.EVALUATOR })
   const flowers = hackathonFlowers
     ? await getFlowerRubrics(`${user.name} ${user.surname}`, hackathonFlowers)
     : undefined
@@ -136,7 +136,7 @@ const checkMovingTeamSpeaker = async (hackathonState, participation, previousTea
   if (!participation.isTeamSpeaker || previousTeamId === null) {
     return
   }
-  const teamFlower = await FlowersRepository.getFlowerWithSeedById(previousTeamId, true)
+  const teamFlower = await FlowersRepository.getFlowerWithSeedById(previousTeamId, { role: ROLES.STAFF })
   if (teamFlower.participations.length === 1) {
     return
   }

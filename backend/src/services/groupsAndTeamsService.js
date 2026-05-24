@@ -9,7 +9,7 @@ import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as SeedsService from '../services/seedsService.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
 import { checkIsStaff } from '../validators/userValidators.js'
-import { ROLES } from './Roles.js'
+import { INTERNAL_BACKEND_ROLE, ROLES } from './Roles.js'
 
 const defaultConceptualMap = {
   nodes: [
@@ -55,13 +55,13 @@ export async function getHackathonExploringGroups (hackathonId) {
   return await getHackathonExploringGroupsAfterCreation(hackathonId)
 }
 
-export async function getHackathonCoCreationTeams (hackathonId) {
-  const hackathon = await HackathonsRepository.getHackathonById(null, hackathonId, ROLES.PUBLIC)
+export async function getHackathonCoCreationTeams (userId, hackathonId) {
+  const hackathon = await HackathonsRepository.getHackathonById(userId, hackathonId)
   errorThrower(!checkExists(hackathon), 'Hackathon not found', 404)
   if (hackathon.phase === 'TEAM_CREATION') {
-    return await FlowersRepository.getFlowersOfHackathon(hackathonId, true)
+    return await FlowersRepository.getFlowersOfHackathon(hackathonId, { userId })
   }
-  return await getHackathonCoCreationTeamsAfterCreation(hackathonId)
+  return await getHackathonCoCreationTeamsAfterCreation(userId, hackathonId)
 }
 
 async function getHackathonExploringGroupsAfterCreation (hackathonId) {
@@ -69,8 +69,8 @@ async function getHackathonExploringGroupsAfterCreation (hackathonId) {
   return conceptualMaps.map((map, index) => buildExploringGroup(map, index + 1))
 }
 
-async function getHackathonCoCreationTeamsAfterCreation (hackathonId) {
-  const flowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, true)
+async function getHackathonCoCreationTeamsAfterCreation (userId, hackathonId) {
+  const flowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, { userId })
   return flowers.map((flower, index) => buildCoCreationTeam(flower, index + 1))
 }
 
@@ -123,7 +123,7 @@ export function updateExploringGroup (req, res) {
 export async function getCoCreationTeamDetails (teamId) {
   if (!teamId) return null
 
-  const flower = await FlowersRepository.getFlowerWithSeedById(teamId, true)
+  const flower = await FlowersRepository.getFlowerWithSeedById(teamId, { role: ROLES.STAFF })
   if (!flower) return null
   const teamNumber = await getTeamNumber(flower)
 
@@ -132,7 +132,7 @@ export async function getCoCreationTeamDetails (teamId) {
 
 export const getTeamNumber = async (flower) => {
   const { hackathonId } = flower.participations[0]
-  const allFlowers = await FlowersRepository.getFlowersOfHackathon(hackathonId)
+  const allFlowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, { role: INTERNAL_BACKEND_ROLE })
   return allFlowers.findIndex(m => m.id === flower.id) + 1
 }
 
@@ -182,7 +182,7 @@ export async function submitConceptualMap (userId, groupId, map) {
 export async function submitFlower (userId, teamId) {
   const userParticipation = await checkUserIsTeamSpeaker(userId, teamId)
 
-  const flowerToUpdate = await FlowersRepository.getFlowerWithSeedById(teamId, true)
+  const flowerToUpdate = await FlowersRepository.getFlowerWithSeedById(teamId, { role: ROLES.STAFF })
   await deliverFlower(flowerToUpdate)
 
   return userParticipation.id
@@ -191,7 +191,7 @@ export async function submitFlower (userId, teamId) {
 export async function reopenFlower (userId, teamId) {
   errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot reopen flowers', 403)
 
-  const flowerToUpdate = await FlowersRepository.getFlowerWithSeedById(teamId, true)
+  const flowerToUpdate = await FlowersRepository.getFlowerWithSeedById(teamId, { role: ROLES.STAFF })
   errorThrower(!checkExists(flowerToUpdate), 'Flower not found', 404)
   const isDelivered = flowerToUpdate?.state === 'IN_REVIEW' || flowerToUpdate?.state === 'PUBLISHED'
   errorThrower(!isDelivered, 'Flower already open', 409)

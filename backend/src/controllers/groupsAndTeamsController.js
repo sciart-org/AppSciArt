@@ -14,7 +14,8 @@ export const getHackathonExploringGroups = withErrorHandler(async (req, res) => 
 
 export const getHackathonCoCreationTeams = withErrorHandler(async (req, res) => {
   const { hackathonId } = req.params
-  const coCreationTeams = await service.getHackathonCoCreationTeams(hackathonId)
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  const coCreationTeams = await service.getHackathonCoCreationTeams(currentUser?.id, hackathonId)
   return res.status(200).send(coCreationTeams)
 })
 

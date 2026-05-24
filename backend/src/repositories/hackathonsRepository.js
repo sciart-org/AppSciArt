@@ -19,7 +19,7 @@ const isStaff = (role) => role.name === ROLES.STAFF.name
 const isEvaluator = (role) => role.name === ROLES.EVALUATOR.name
 
 const getRoleScope = (role) => {
-  return role.name
+  return role.name || ROLES.PUBLIC.name
 }
 
 const withEnrollmentScope = (userId, role) => {
