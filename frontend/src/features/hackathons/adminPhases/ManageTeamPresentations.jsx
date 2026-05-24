@@ -79,7 +79,9 @@ export default function ManageTeamPresentations() {
           handleNextPhase();
         }}
         onCancel={() => setOpenPhaseChangeModal(false)}
-      />
+      >
+        <p>The hackathon will be finished.</p>
+      </ConfirmPhaseChangeModal>
       <div style={{ display: "flex", height: "100%", paddingInline: "2rem" }}>
         <ChangePresenterModal
           openCondition={changingTeam !== null}
@@ -145,9 +147,16 @@ export default function ManageTeamPresentations() {
       {!isEvaluatorOfHackathon && (
         <div>
           <p>Have all teams presented?</p>
-          <AsterButton onClick={() => {}}>Finish hackathon!</AsterButton>
+          <AsterButton
+            onClick={() => {
+              if (isEvaluatorOfHackathon) return;
+              setOpenPhaseChangeModal(true);
+            }}
+          >
+            Finish hackathon!
+          </AsterButton>
         </div>
-      )}{" "}
+      )}
     </>
   );
 }
