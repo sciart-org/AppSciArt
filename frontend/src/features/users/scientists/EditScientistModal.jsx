@@ -12,17 +12,17 @@ export default function EditScientistModal({
   const [allEditions, setAllEditions] = useState([]);
   const [editionSelection, setEditionSelection] = useState({});
 
-  useEffect(() => {
-    if (!allEditions || allEditions.length === 0) return;
-    const initialSelectedEditions = {};
-    allEditions
-      .sort((a, b) => a.year - b.year)
-      .map((e) => {
-        const isIncluded = scientist?.editions?.includes(e.name);
-        initialSelectedEditions[e.id] = isIncluded;
-      });
-    setEditionSelection(initialSelectedEditions);
-  }, [allEditions, scientist]);
+  const handleEditionChange = (edition, newValue) => {
+    const isEnrolled = scientist?.editions?.includes(edition.name);
+    let valueToAssign = undefined;
+    if (isEnrolled !== newValue) {
+      valueToAssign = newValue;
+    }
+    setEditionSelection({
+      ...editionSelection,
+      [edition.id]: valueToAssign,
+    });
+  };
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -66,14 +66,17 @@ export default function EditScientistModal({
         }}
       >
         <div style={{ textAlign: "start" }}>
-          {Object.entries(editionSelection).map(([key, value]) => {
-            const currentEdition = allEditions.filter((e) => e.id === key)[0];
+          {Object.entries(allEditions).map(([_, edition]) => {
+            const currentEdition = allEditions.filter((e) => e === edition)[0];
             const isClosed = ["CLOSED", "PUBLISHED"].includes(
               currentEdition.state,
             );
+            const value =
+              editionSelection[edition.id] ??
+              scientist?.editions?.includes(edition.name);
             return (
               <div
-                key={key}
+                key={edition.id}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -84,9 +87,7 @@ export default function EditScientistModal({
                   type="checkbox"
                   checked={value}
                   disabled={isClosed}
-                  onChange={() =>
-                    setEditionSelection({ ...editionSelection, [key]: !value })
-                  }
+                  onChange={() => handleEditionChange(edition, !value)}
                   style={{
                     height: "1rem",
                     width: "1rem",
@@ -98,7 +99,10 @@ export default function EditScientistModal({
             );
           })}
         </div>
-        <SubmitCancelButtons submitText="Save" />
+        <SubmitCancelButtons
+          onCancel={() => setOpenModal(false)}
+          submitText="Save"
+        />
       </form>
     </Modal>
   );

@@ -57,10 +57,6 @@ scientistEditions:
     responses:
       "200":
         description: New scientist editions
-        content:
-          application/json:
-            schema:
-              $ref: "../components/schemas/edition.yaml#/EditionList"
 
 scientistMeEditionSeeds:
   x-router-controller: scientistsController

@@ -49,7 +49,7 @@ export default function Scientists() {
       render: (s) => (
         <CiEdit
           size="1.5rem"
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", marginInline: "auto", display: "block" }}
           onClick={() => setEditingScientist(s)}
         />
       ),

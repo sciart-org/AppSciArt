@@ -109,9 +109,8 @@ export const completeScientistInvitationIfPresent = async (user) => {
 
 export const modifyScientistEditions = async (currentUserId, scientistId, editions) => {
   errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot update this resource', 403)
-  const editionDesiredEnrollments = Object.entries(editions)
-  for (const [key, value] of editionDesiredEnrollments) {
-    await handleEditionEnrollment(scientistId, key, value)
+  for (const [editionId, value] of Object.entries(editions)) {
+    await handleEditionEnrollment(scientistId, editionId, value)
   }
   return { message: 'Editions modified successfully' }
 }
