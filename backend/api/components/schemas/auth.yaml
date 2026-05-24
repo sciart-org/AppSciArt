@@ -4,7 +4,7 @@ SignUpRequest:
   properties:
     email:
       type: string
-      format: email
+      pattern: '^[a-zA-Z0-9._%+-ñÑáéíóúüÁÉÍÓÚÜ]+@[a-zA-Z0-9.-ñÑáéíóúüÁÉÍÓÚÜ]+\.[a-zA-Z]{2,}$'
     name:
       type: string
       maxLength: 50
@@ -39,7 +39,7 @@ QuickSignUpRequest:
   properties:
     email:
       type: string
-      format: email
+      pattern: '^[a-zA-Z0-9._%+-ñÑáéíóúüÁÉÍÓÚÜ]+@[a-zA-Z0-9.-ñÑáéíóúüÁÉÍÓÚÜ]+\.[a-zA-Z]{2,}$'
     name:
       type: string
       maxLength: 50
@@ -74,7 +74,7 @@ CompleteSignUpRequest:
   properties:
     email:
       type: string
-      format: email
+      pattern: '^[a-zA-Z0-9._%+-ñÑáéíóúüÁÉÍÓÚÜ]+@[a-zA-Z0-9.-ñÑáéíóúüÁÉÍÓÚÜ]+\.[a-zA-Z]{2,}$'
     name:
       type: string
       maxLength: 50
@@ -110,7 +110,7 @@ SignInRequest:
   properties:
     email:
       type: string
-      format: email
+      pattern: '^[a-zA-Z0-9._%+-ñÑáéíóúüÁÉÍÓÚÜ]+@[a-zA-Z0-9.-ñÑáéíóúüÁÉÍÓÚÜ]+\.[a-zA-Z]{2,}$'
     password:
       type: string
       format: password

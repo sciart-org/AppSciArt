@@ -199,7 +199,7 @@ editionScientists:
             properties:
               email:
                 type: string
-                format: email
+                pattern: '^[a-zA-Z0-9._%+-ñÑáéíóúüÁÉÍÓÚÜ]+@[a-zA-Z0-9.-ñÑáéíóúüÁÉÍÓÚÜ]+\.[a-zA-Z]{2,}$'
                 nullable: false
     responses:
       "200":
