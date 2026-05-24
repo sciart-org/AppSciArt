@@ -16,8 +16,12 @@ import {
 } from "../../../utils/commonUtils";
 
 export default function ManageTeams() {
-  const { handleNextPhase, coCreationTeams, hackathon } =
-    useContext(HackathonContext);
+  const {
+    handleNextPhase,
+    coCreationTeams,
+    hackathon,
+    isEvaluatorOfHackathon,
+  } = useContext(HackathonContext);
   const [selectedTeamId, setSelectedTeamId] = useState(null);
   const selectedTeam =
     coCreationTeams?.find((t) => t.id === selectedTeamId) ?? null;
@@ -106,13 +110,18 @@ export default function ManageTeams() {
             </div>
           ))}
         </div>
-        {isCurrentPhase && (
+        {isCurrentPhase && !isEvaluatorOfHackathon && (
           <>
             <p>
               {`${coCreationTeams.filter((t) => t.isDelivered).length} / ${coCreationTeams.length} flowers `}
               delivered
             </p>
-            <AsterButton onClick={() => setOpenModal(true)}>
+            <AsterButton
+              onClick={() => {
+                if (isEvaluatorOfHackathon) return;
+                setOpenModal(true);
+              }}
+            >
               Start presentations
             </AsterButton>
           </>
