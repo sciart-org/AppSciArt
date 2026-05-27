@@ -25,7 +25,7 @@ export default function Scientists() {
         setScientists(data);
       },
     }).finally(() => setLoading(false));
-  }, [showEditModal]);
+  }, [showEditModal, showInviteModal]);
 
   const scientistsColumns = [
     { key: "name", label: "Name", render: (s) => `${s.name} ${s.surname}` },

@@ -57,6 +57,8 @@ scientistEditions:
     responses:
       "200":
         description: New scientist editions
+      "409":
+        description: Scientist has seeds in this edition
 
 scientistMeEditionSeeds:
   x-router-controller: scientistsController

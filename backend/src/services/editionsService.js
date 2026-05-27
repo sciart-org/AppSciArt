@@ -16,11 +16,11 @@ export async function getEditions (userId, state) {
   const whereClause = {}
 
   if (!showPlannedEditions) {
-    whereClause.state = state
-      ? { [Op.and]: [state, { [Op.ne]: 'PLANNED' }] }
+    whereClause.state = state?.length > 0
+      ? { [Op.and]: [{ [Op.in]: state }, { [Op.ne]: 'PLANNED' }] }
       : { [Op.ne]: 'PLANNED' }
-  } else if (state) {
-    whereClause.state = state
+  } else if (state?.length > 0) {
+    whereClause.state = { [Op.in]: state }
   }
 
   const editions = await Edition.findAll({

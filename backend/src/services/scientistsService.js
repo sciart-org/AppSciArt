@@ -8,7 +8,7 @@ import * as UsersRepository from '../repositories/usersRepository.js'
 import * as AuthRepository from '../repositories/authRepository.js'
 import * as ScientistsRepository from '../repositories/scientistsRepository.js'
 import * as emailService from '../emails/emailService.js'
-import * as scientistsMappers from './mappers/scientistMapper.js'
+import * as SeedsRepository from '../repositories/seedsRepository.js'
 
 export async function getScientistOpenEditions (userId) {
   errorThrower(!(await checkIsInspiringScientist(userId)), 'You are not an inspiring scientist', 403)
@@ -34,44 +34,38 @@ export async function getScientistSeedsOfEdition (userId, editionId) {
 
 export async function getScientists (currentUserId, editionId = null) {
   errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot access this resource', 403)
-  const scientistOfNotClosedEditions = scientistsMappers.mapScientistsOfOpenEditions(
-    await ScientistsRepository.getScientistsOfOpenEditions(editionId)
-  )
-  const scientistOfClosedEditions = (await ScientistsRepository.getScientistsOfClosedEditions(editionId)).map(s => s.toJSON())
-
-  const mergedScientists = []
-  for (const scientist of scientistsMappers.mapScientistEditions(scientistOfClosedEditions)) {
-    mergedScientists.push(scientist)
-  }
-
-  for (const scientist of scientistOfNotClosedEditions) {
-    const existing = mergedScientists.find(s => s.id === scientist.id)
-
-    if (existing) {
-      existing.editions = [...new Set([...existing.editions, ...(scientist.editions || [])])]
-    } else {
-      mergedScientists.push(scientist)
-    }
-  }
-  return mergedScientists
+  const scientists = await ScientistsRepository.getScientistsOfEdition(editionId)
+  return scientists
 }
 
-export async function inviteScientist (currentUserId, email, editionId, seedId) {
+export async function inviteScientistByUserProfileId (currentUserId, userProfileId, editionId, seedId = undefined) {
+  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot invite scientists', 403)
+  const userProfile = await UsersRepository.getUserProfileById(userProfileId)
+  errorThrower(!checkExists(userProfile), 'User not found', 404)
+  await inviteExistingUser(userProfile, editionId, seedId)
+  return userProfile.email
+}
+
+export async function inviteScientistByEmail (currentUserId, email, editionId, seedId = undefined) {
   errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot invite scientists', 403)
   const userProfile = await UsersRepository.getUserProfileByEmail(email)
-  const editionName = (await Edition.findByPk(editionId, { attributes: ['name'] })).name
 
   if (checkExists(userProfile)) {
-    const isAlreadyInvited = await inviteExistingUser(userProfile, editionId, seedId)
-    if (isAlreadyInvited) {
-      // emailService.sendScientistInvitedEmail(email, editionName)
-    }
+    await inviteExistingUser(userProfile, editionId, seedId)
     return
   }
 
   const earlySignUpId = await inviteNonExistingUser(email, editionId, seedId)
+  return earlySignUpId
+}
+
+export async function sendScientistInvitationEmail (editionId, destinationEmail, sendEmail, earlySignUpId = undefined) {
+  const editionName = (await Edition.findByPk(editionId, { attributes: ['name'] })).name
   if (checkExists(earlySignUpId)) {
-    emailService.sendScientistPreRegistrationEmail(email, earlySignUpId, editionName)
+    return emailService.sendScientistPreRegistrationEmail(destinationEmail, earlySignUpId, editionName)
+  }
+  if (sendEmail) {
+    // return emailService.sendScientistInvitedEmail(destinationEmail, editionName)
   }
 }
 
@@ -80,10 +74,9 @@ const inviteExistingUser = async (user, editionId, seedId) => {
   if (!isAlreadyInvited) {
     await ScientistsRepository.addScientistToEdition(user, editionId)
   }
-  if (seedId) {
+  if (checkExists(seedId)) {
     await ScientistsRepository.addSeedToScientist(user, seedId)
   }
-  return isAlreadyInvited
 }
 
 const inviteNonExistingUser = async (email, editionId, seedId) => {
@@ -125,6 +118,12 @@ const handleEditionEnrollment = async (scientistId, editionId, toBeEnrolled) => 
   const scientistIsEnrolled = await ScientistsRepository.isScientistEnrolledToEdition(scientist, editionId)
 
   if (scientistIsEnrolled && !toBeEnrolled) {
+    const seedsOfScientistInEdition = await SeedsRepository.getSeedsOfScientist(scientistId, editionId, true)
+    errorThrower(
+      checkExists(seedsOfScientistInEdition),
+      'This scientist has already created seeds in this edition',
+      409
+    )
     await ScientistsRepository.removeScientistFromEdition(scientist, editionId)
   } else if (!scientistIsEnrolled && toBeEnrolled) {
     await ScientistsRepository.addScientistToEdition(scientist, editionId)

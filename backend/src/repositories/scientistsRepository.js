@@ -1,8 +1,8 @@
-import { Op } from 'sequelize'
 import { Edition } from '../models/Edition.js'
 import { ScientistInvitation } from '../models/roles/ScientistInvitation.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { Seed } from '../models/Seed.js'
+import { ROLES } from '../services/Roles.js'
 
 export async function getScientistInvitation (email, editionId, seedId) {
   return await ScientistInvitation.findOrCreate({ where: { email, editionId, seedId } })
@@ -40,47 +40,19 @@ export async function addSeedToScientist (scientist, seedId) {
   return await scientist.addSeed(seedId)
 }
 
-export async function getScientistsOfOpenEditions (editionId) {
-  const whereClauseClosed = editionId
-    ? { id: editionId, state: { [Op.notIn]: ['CLOSED', 'PUBLISHED'] } }
-    : { state: { [Op.notIn]: ['CLOSED', 'PUBLISHED'] } }
+export async function getScientistsOfEdition (editionId) {
+  const whereClause = editionId
+    ? { id: editionId }
+    : { }
 
-  return await UserProfile.findAll({
-    attributes: ['id', 'name', 'surname', 'email'],
+  return await UserProfile.scope(ROLES.PUBLIC.name).findAll({
     include: [
       {
         model: Edition,
-        where: whereClauseClosed,
+        where: whereClause,
         through: { attributes: [] },
         attributes: ['name'],
         required: true
-      }
-    ]
-  })
-}
-
-export async function getScientistsOfClosedEditions (editionId) {
-  const whereClauseNotClosed = editionId
-    ? { id: editionId, state: { [Op.in]: ['CLOSED', 'PUBLISHED'] } }
-    : { state: { [Op.in]: ['CLOSED', 'PUBLISHED'] } }
-
-  return await UserProfile.findAll({
-    attributes: ['id', 'name', 'surname', 'email'],
-    include: [
-      {
-        model: Seed,
-        through: { attributes: [] },
-        attributes: ['id'],
-        required: true,
-        include: [
-          {
-            model: Edition,
-            attributes: ['name'],
-            through: { attributes: [] },
-            required: true,
-            where: whereClauseNotClosed
-          }
-        ]
       }
     ]
   })

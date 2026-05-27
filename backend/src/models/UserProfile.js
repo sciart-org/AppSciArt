@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 
 export const UserProfile = sequelize.define(
@@ -63,6 +63,16 @@ export const UserProfile = sequelize.define(
     }
   },
   {
+    defaultScope: {
+      attributes: {
+        exclude: ['authId']
+      }
+    },
+    scopes: {
+      public: {
+        attributes: ['id', 'name', 'surname', 'email']
+      }
+    },
     schema: 'profiles',
     timestamps: false,
     indexes: [
@@ -73,6 +83,15 @@ export const UserProfile = sequelize.define(
     ]
   }
 )
+
+UserProfile.prototype.toJSON = function () {
+  const values = Model.prototype.toJSON.call(this)
+
+  return {
+    ...values,
+    editions: values?.editions?.map(e => e.name)
+  }
+}
 
 UserProfile.associate = (db) => {
   const { Edition, UserProfile, SeedLikes, SeedScientists, ScientistEditions, Seed } = db

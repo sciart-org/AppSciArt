@@ -40,3 +40,20 @@
   flex-direction: row;
   justify-content: center;
 }
+
+.seed-creation-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.seed-creation-form > * {
+  width: 100%;
+  align-items: start;
+}
+
+.seed-creation-form .multiple-select {
+  width: 100%;
+  display: block;
+}

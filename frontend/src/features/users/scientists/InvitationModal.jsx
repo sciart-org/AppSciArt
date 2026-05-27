@@ -1,51 +1,72 @@
 import { useEffect, useState } from "react";
 import Modal from "../../../components/Modal";
 import FormInput from "../../../components/form/FormInput";
-import { validateEmail } from "../../../utils/commonUtils";
+import { getFullUserName, validateEmail } from "../../../utils/commonUtils";
 import useFetcher from "../../../utils/useFetcher";
 import EditionPicker from "../../products/collections/components/EditionPicker";
 import SubmitCancelButtons from "../../../components/buttons/SubmitCancelButtons";
+import FormSelect from "../../../components/form/FormSelect";
 
 export default function InvitationModal({ openModal, setOpenModal }) {
-  const [scientistEmail, setScientistEmail] = useState("");
-  const [selectedEdition, setSelectedEdition] = useState(null);
   const [allEditions, setAllEditions] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [error, setError] = useState(null);
+  const [showUsers, setShowUsers] = useState(false);
+
+  const [formData, setFormData] = useState({
+    selectedEditionId: undefined,
+    userProfileId: undefined,
+    email: undefined,
+    sendEmail: false,
+  });
+
+  const selectedUserName = getFullUserName(
+    allUsers.find((user) => user.id === formData.userProfileId),
+  );
+  const selectedEditionName = allEditions.find(
+    (edition) => edition.id === formData.selectedEditionId,
+  );
 
   const { fetcher } = useFetcher(error, setError);
 
   useEffect(() => {
     fetcher({
-      url: "editions",
+      url: "editions?state=ACTIVE&state=PLANNED",
       onSuccess: (data) => {
         setAllEditions(data);
-        if (!data.length > 0) {
-          return;
-        }
-        setSelectedEdition(data[0]);
       },
-      onError: () => {
-        setAllEditions([]);
+    });
+    fetcher({
+      url: "users",
+      onSuccess: (data) => {
+        setAllUsers(data);
       },
     });
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateEmail(scientistEmail)) {
-      window.alert("Invalid email format.");
-      return;
-    }
-    if (!selectedEdition) {
+
+    if (!formData.selectedEditionId) {
       window.alert("Select an edition.");
       return;
     }
+
+    if (!showUsers && !validateEmail(scientistEmail)) {
+      window.alert("Invalid email format.");
+      return;
+    }
+
+    const body = {
+      ...formData,
+      sendEmail: undefined,
+      selectedEditionId: undefined,
+    };
+
     fetcher({
-      url: `editions/${selectedEdition?.id}/scientists`,
+      url: `editions/${formData.selectedEditionId}/scientists?sendEmail=${formData.sendEmail}`,
       method: "POST",
-      body: {
-        email: scientistEmail,
-      },
+      body,
       onSuccess: () => {
         setOpenModal(false);
       },
@@ -60,39 +81,75 @@ export default function InvitationModal({ openModal, setOpenModal }) {
         onSubmit={handleSubmit}
         className="seed-creation-form"
         style={{
-          width: "80%",
+          width: "90%",
           margin: "auto",
           marginTop: "1rem",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <text>Edition:</text>
-          <EditionPicker
-            selectedEdition={selectedEdition}
-            setSelectedEdition={setSelectedEdition}
-            allEditions={allEditions}
-            size={"small"}
-            style={{ alignItems: "center" }}
-          />
-        </div>
-        <FormInput
-          name={"Scientist email:"}
-          placeholder={"Enter scientist email"}
-          value={scientistEmail}
-          onChange={(e) => setScientistEmail(e.target.value)}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
+        <h3 style={{ textAlign: "start", margin: 0 }}>Edition</h3>
+        <EditionPicker
+          selectedEdition={selectedEditionName}
+          setSelectedEdition={(e) =>
+            setFormData({
+              ...formData,
+              selectedEditionId: e.id,
+            })
+          }
+          allEditions={allEditions}
+          size={"small"}
         />
-        <SubmitCancelButtons />
+        <FormInput
+          name={"Scientist already registered?"}
+          type={"checkbox"}
+          value={showUsers}
+          onChange={() => setShowUsers(!showUsers)}
+          style={{ marginBlock: 0 }}
+        />
+        {showUsers ? (
+          <FormSelect
+            name={"User"}
+            placeholder={"Select user..."}
+            value={selectedUserName}
+            setValue={(e) =>
+              setFormData({
+                ...formData,
+                email: undefined,
+                userProfileId: allUsers.find(
+                  (user) => getFullUserName(user) === e,
+                ).id,
+              })
+            }
+            options={allUsers.map((user) => getFullUserName(user))}
+            clearable={false}
+          />
+        ) : (
+          <FormInput
+            name={"Scientist email"}
+            placeholder={"Enter scientist email"}
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                email: e.target.value,
+                userProfileId: undefined,
+              })
+            }
+            style={{ width: "100%" }}
+          />
+        )}
+        <FormInput
+          name={"Send invitation email?"}
+          type={"checkbox"}
+          value={formData.sendEmail}
+          onChange={() =>
+            setFormData({
+              ...formData,
+              sendEmail: !formData.sendEmail,
+            })
+          }
+          style={{ marginBlock: 0 }}
+        />
+        <SubmitCancelButtons onCancel={() => setOpenModal(false)} />
       </form>
     </Modal>
   );

@@ -1,13 +1,18 @@
+import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/usersService.js'
+import { checkExists } from '../validators/generalValidators.js'
 import { withErrorHandler } from './errorHandling.js'
 
 export const getHealth = withErrorHandler(async (req, res) => {
   return res.status(200).send({ status: 'ok' })
 })
 
-export function getUsers (req, res) {
-  service.getUsers(req, res)
-}
+export const getUsers = withErrorHandler(async (req, res) => {
+  const currentUser = await service.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const users = await service.getUsers(currentUser.id)
+  return res.status(200).send(users)
+})
 
 export function createUser (req, res) {
   service.createUser(req, res)

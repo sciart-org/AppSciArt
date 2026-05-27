@@ -54,9 +54,23 @@ export function getEditionMethodology (req, res) {
 export const inviteScientistToEdition = withErrorHandler(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
   const editionId = req.params.editionId
-  const email = req.body.email
-  await ScientistsService.inviteScientist(currentUser?.id, email, editionId, null)
+  const { email, userProfileId } = req.body
+  const { sendEmail } = req.query
+  let destinationEmail = email
+  let earlySignUpId
+
+  errorThrower(!(checkExists(email) || checkExists(userProfileId)), 'Either a user or an email must be specified', 400)
+
+  if (checkExists(userProfileId)) {
+    destinationEmail = await ScientistsService.inviteScientistByUserProfileId(currentUser.id, userProfileId, editionId)
+  } else {
+    earlySignUpId = await ScientistsService.inviteScientistByEmail(currentUser.id, email, editionId, null)
+  }
+
+  await ScientistsService.sendScientistInvitationEmail(editionId, destinationEmail, sendEmail, earlySignUpId)
+
   return res.status(200).send({ message: 'Scientist invited successfully' })
 })
 
