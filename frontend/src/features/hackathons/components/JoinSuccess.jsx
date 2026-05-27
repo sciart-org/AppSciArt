@@ -21,9 +21,6 @@ export default function JoinSuccess({ hackathonId }) {
       onSuccess: (data) => {
         setHackathonSeeds(data);
       },
-      onError: () => {
-        setHackathonSeeds([]);
-      },
     }).finally(() => setLoading(false));
   }, [hackathonId]);
 

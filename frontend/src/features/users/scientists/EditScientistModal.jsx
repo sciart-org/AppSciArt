@@ -32,9 +32,6 @@ export default function EditScientistModal({
       onSuccess: (data) => {
         setAllEditions(data);
       },
-      onError: () => {
-        setAllEditions([]);
-      },
     });
   }, []);
 
@@ -94,13 +91,16 @@ export default function EditScientistModal({
                     marginRight: "1rem",
                   }}
                 />
-                {currentEdition?.name} {isClosed ? "(Enrollment closed)" : ""}
+                {currentEdition?.name} {isClosed ? "(Edition finished)" : ""}
               </div>
             );
           })}
         </div>
         <SubmitCancelButtons
-          onCancel={() => setOpenModal(false)}
+          onCancel={() => {
+            setOpenModal(false);
+            setEditionSelection([]);
+          }}
           submitText="Save"
         />
       </form>

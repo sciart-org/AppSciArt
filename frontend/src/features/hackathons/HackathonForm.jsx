@@ -37,9 +37,6 @@ export default function HackathonForm({
       onSuccess: (data) => {
         setAllEditions(data);
       },
-      onError: () => {
-        setAllEditions([]);
-      },
     });
   }, []);
 

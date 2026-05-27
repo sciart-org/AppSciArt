@@ -28,9 +28,6 @@ export default function HomeRouter() {
       onSuccess: (data) => {
         setEditions(data);
       },
-      onError: () => {
-        setEditions([]);
-      },
     }).finally(() => setLoadingEditions(false));
   }, []);
 

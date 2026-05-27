@@ -37,9 +37,6 @@ export default function SeedCreator() {
 
         setSelectedEdition(data[0]);
       },
-      onError: () => {
-        setAllEditions([]);
-      },
     });
   }, []);
 
