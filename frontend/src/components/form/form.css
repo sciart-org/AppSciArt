@@ -10,6 +10,24 @@
   font-family: "Poppins", system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
+.multiple-select input:focus,
+.multiple-select input:focus-visible {
+  outline: none !important;
+}
+
+.multiple-select .css-t3ipsp-control:focus-within {
+  box-shadow: none !important;
+  border-color: #ccc !important;
+  outline: 2px solid var(--button-select-focus) !important;
+  outline-offset: 2px;
+}
+
+.multiple-select .css-t3ipsp-control:not(:focus-within) {
+  box-shadow: none !important;
+  border-color: #ccc !important;
+  outline: none !important;
+}
+
 input:not([type="checkbox"]),
 select,
 textarea {

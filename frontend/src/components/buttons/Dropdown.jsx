@@ -11,10 +11,7 @@ export default function Dropdown({ children, title, style }) {
 
   return (
     <AsterLink
-      onClick={(e) => {
-        e.preventDefault();
-        setShowDropdown(!showCollections);
-      }}
+      onClick={() => setShowDropdown(!showCollections)}
       className="collections-container"
       ref={dropdownref}
     >

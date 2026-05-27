@@ -64,22 +64,29 @@ button:hover {
   border-color: #646cff;
 }
 
-button:focus,
 button:focus-visible {
   outline: none !important;
   box-shadow: inset 0 0 0 3px var(--button-select-focus);
 }
 
-a:focus,
+button:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 a:focus-visible,
-input:focus,
 input:focus-visible,
-select:focus,
 select:focus-visible,
-textarea:focus,
 textarea:focus-visible {
   outline: 2px solid var(--button-select-focus) !important;
   outline-offset: 2px;
+}
+
+a:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible) {
+  outline: none !important;
 }
 
 @media (prefers-color-scheme: light) {

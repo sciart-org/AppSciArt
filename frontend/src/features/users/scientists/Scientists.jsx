@@ -7,6 +7,7 @@ import "../users.css";
 import InvitationModal from "./InvitationModal";
 import EditScientistModal from "./EditScientistModal";
 import AsterTable from "../../../components/AsterTable";
+import AsterLink from "../../../components/buttons/AsterLink";
 
 export default function Scientists() {
   const [scientists, setScientists] = useState([]);
@@ -47,11 +48,13 @@ export default function Scientists() {
       label: "Actions",
       width: "4rem",
       render: (s) => (
-        <CiEdit
-          size="1.5rem"
-          style={{ cursor: "pointer", marginInline: "auto", display: "block" }}
+        <AsterLink
           onClick={() => setEditingScientist(s)}
-        />
+          aria-label="Edit scientist"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          <CiEdit size="1.5rem" color="black" />
+        </AsterLink>
       ),
     },
   ];
