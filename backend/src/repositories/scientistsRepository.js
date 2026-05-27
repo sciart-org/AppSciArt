@@ -48,7 +48,7 @@ export async function getScientistsOfEdition (editionId) {
   return await UserProfile.scope(ROLES.PUBLIC.name).findAll({
     include: [
       {
-        model: Edition,
+        model: Edition.scope(ROLES.STAFF.name),
         where: whereClause,
         through: { attributes: [] },
         attributes: ['name'],

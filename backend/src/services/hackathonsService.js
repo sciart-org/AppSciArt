@@ -49,7 +49,7 @@ export async function getHackathons (userId) {
 export async function createHackathon (userId, body) {
   errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create a hackathon', 403)
   const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink } = body
-  const edition = await validateIsActive(editionId)
+  const edition = await validateIsActive(editionId, userId)
   await validateHackathonNameUnique(internalName)
   if (type !== 'ON_SITE') {
     errorThrower(!meetLink, 'A meet link is needed for online or hybrid hackathons', 400)
@@ -89,7 +89,7 @@ export async function updateHackathon (currentUserId, hackathonId, body) {
   errorThrower(!isPreparing && !isOnSite && noMeetLink, 'A meet link is needed for online or hybrid hackathons', 400)
 
   if (editionId) {
-    edition = await validateIsActive(editionId)
+    edition = await validateIsActive(editionId, currentUserId)
     await moveDriveFolder(hackathon.driveLink, edition.driveLink)
   }
 

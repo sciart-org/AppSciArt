@@ -2,11 +2,12 @@ import { jwtDecode } from 'jwt-decode'
 import { getUserFromJwt } from '../auth/signin.js'
 import { errorThrower } from './errorThrower.js'
 import { getJwt } from './authService.js'
-import { checkHasRole, checkIsInspiringScientist, checkIsStaff } from '../validators/userValidators.js'
+import { checkHasRole, checkIsStaff } from '../validators/userValidators.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
 import { checkExists } from '../validators/generalValidators.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import { INTERNAL_ROLES, ROLES } from './Roles.js'
+import * as ScientistsRepository from '../repositories/scientistsRepository.js'
 
 export async function getUsers (currentUserId) {
   errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot access this resource', 403)
@@ -58,11 +59,11 @@ export async function getCurrentUser (req) {
 }
 
 export async function getUserRoles (userId) {
-  const [isAdministrator, isDesigner, isFacilitator, isScientist, evaluatorHackathons] = await Promise.all([
+  const [isAdministrator, isDesigner, isFacilitator, scientistEditions, evaluatorHackathons] = await Promise.all([
     checkHasRole(userId, INTERNAL_ROLES.ADMIN),
     checkHasRole(userId, INTERNAL_ROLES.DESIGNER),
     checkHasRole(userId, INTERNAL_ROLES.FACILITATOR),
-    checkIsInspiringScientist(userId),
+    ScientistsRepository.getEditionsOfScientist(userId),
     HackathonsRepository.getEvaluatorRolesOfUser(userId)
   ])
 
@@ -73,7 +74,7 @@ export async function getUserRoles (userId) {
     if (isDesigner) roles.push(INTERNAL_ROLES.DESIGNER.name)
     if (isFacilitator) roles.push(INTERNAL_ROLES.FACILITATOR.name)
   }
-  if (isScientist) roles.push('inspiring_scientist')
+  if (scientistEditions) roles.push(ROLES.SCIENTIST.name)
   if (evaluatorHackathons) roles.push(ROLES.EVALUATOR.name)
 
   return roles

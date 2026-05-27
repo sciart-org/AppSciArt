@@ -4,9 +4,10 @@ import { checkExists } from '../validators/generalValidators.js'
 import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { Edition } from '../models/Edition.js'
 import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
+import * as EditionsRepository from '../repositories/editionsRepository.js'
+import { ROLES } from './Roles.js'
 
 const checkSeedExists = async (seedId) => {
   const exists = await SeedsRepository.getMinimalSeedUnrestricted(seedId)
@@ -29,7 +30,7 @@ export async function getSeedsByHackathon (userId, hackathonId) {
 export async function createSeed (userId, title, editionId, template) {
   errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create this resource', 403)
 
-  const edition = await Edition.findByPk(editionId)
+  const edition = await EditionsRepository.getMinimalEdition(editionId, { role: ROLES.STAFF })
   errorThrower(!checkExists(edition), 'Edition not found', 404)
 
   const newSeed = await Seed.create({

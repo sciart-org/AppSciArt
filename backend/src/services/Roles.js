@@ -13,7 +13,8 @@ export const INTERNAL_ROLES = {
 export const ROLES = {
   STAFF: { name: 'staff', models: [Administrator, Designer, Facilitator] },
   EVALUATOR: { name: 'evaluator', models: [Evaluator] },
-  PUBLIC: { name: 'public', models: [] }
+  PUBLIC: { name: 'public', models: [] },
+  SCIENTIST: { name: 'inspiring_scientist', models: [] }
 }
 
 export const INTERNAL_BACKEND_ROLE = {

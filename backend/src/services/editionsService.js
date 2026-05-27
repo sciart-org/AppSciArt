@@ -1,36 +1,18 @@
 import { Edition } from '../models/Edition.js'
 import { checkIsStaff } from '../validators/userValidators.js'
-import { validateCanBeAnnounced, validateCanEditEdition, validateCanSeeEdition, validateEditionNameUnique } from '../validators/editionValidators.js'
-import { includeEditionFruits } from './includes/editionIncludes.js'
+import { validateEditionNameUnique } from '../validators/editionValidators.js'
 import { errorThrower } from './errorThrower.js'
 import { createDriveEdition, createEditionFolderName, getEntitiesWithLogo, updateFolderName, uploadImg } from './driveService.js'
-import { Op } from 'sequelize'
+import * as EditionsRepository from '../repositories/editionsRepository.js'
+import { checkExists } from '../validators/generalValidators.js'
+import { ROLES } from './Roles.js'
 
 const getEditionsWithLogo = async (editions) => {
   return await getEntitiesWithLogo(editions, Edition)
 }
 
 export async function getEditions (userId, state) {
-  const showPlannedEditions = await checkIsStaff(userId)
-
-  const whereClause = {}
-
-  if (!showPlannedEditions) {
-    whereClause.state = state?.length > 0
-      ? { [Op.and]: [{ [Op.in]: state }, { [Op.ne]: 'PLANNED' }] }
-      : { [Op.ne]: 'PLANNED' }
-  } else if (state?.length > 0) {
-    whereClause.state = { [Op.in]: state }
-  }
-
-  const editions = await Edition.findAll({
-    attributes: {
-      exclude: ['longDescription', 'catalogLink']
-    },
-    where: whereClause,
-    order: [['year', 'DESC']]
-  })
-
+  const editions = await EditionsRepository.getEditions(state, { userId })
   const editionsWithLogo = await getEditionsWithLogo(editions)
   return editionsWithLogo
 }
@@ -51,16 +33,16 @@ export async function createEdition (userId, body) {
 }
 
 export async function getEditionDetails (userId, editionId) {
-  await validateCanSeeEdition(userId, editionId)
-  const edition = await Edition.findByPk(editionId, {
-    include: includeEditionFruits
-  })
+  const edition = await EditionsRepository.getEditionDetails(editionId, { userId })
+  errorThrower(!checkExists(edition), 'Edition not found', 404)
   const editionsWithLogo = await getEditionsWithLogo([edition])
   return editionsWithLogo[0]
 }
 
 export async function updateEdition (currentUserId, editionId, body) {
-  const edition = await validateCanEditEdition(currentUserId, editionId)
+  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot edit this edition', 403)
+  const edition = await EditionsRepository.getMinimalEdition(editionId, { role: ROLES.STAFF })
+  errorThrower(!checkExists(edition), 'Edition not found', 404)
 
   const { name, year, logo, shortDescription, longDescription } = body
 
@@ -106,7 +88,11 @@ export function getEditionMethodology (req, res) {
 }
 
 export async function announceEdition (currentUserId, editionId) {
-  const edition = await validateCanBeAnnounced(currentUserId, editionId)
+  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot announce this edition', 403)
+  const edition = await EditionsRepository.getEditionDetails(editionId, { role: ROLES.STAFF })
+  errorThrower(!checkExists(edition), 'Edition not found', 404)
+  errorThrower(edition.state !== 'PLANNED', 'This edition is already announced', 400)
+
   edition.state = 'ACTIVE'
   await edition.save()
   return edition

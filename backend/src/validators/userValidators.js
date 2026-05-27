@@ -3,7 +3,7 @@ import { UserProfile } from '../models/UserProfile.js'
 import { Edition } from '../models/Edition.js'
 import { ROLES } from '../services/Roles.js'
 
-const checkHasRoleById = async (userId, Model, { methodologyId, hackathonId } = {}) => {
+const checkHasRoleById = async (userId, Model, { hackathonId } = {}) => {
   if (!checkExists(userId)) {
     return false
   }
@@ -16,14 +16,14 @@ const checkHasRoleById = async (userId, Model, { methodologyId, hackathonId } = 
 
   const whereClause = isEvaluatorModel
     ? { userProfileId: userId, hackathonId }
-    : { userProfileId: userId, ...(checkExists(methodologyId) && { methodologyId }) }
+    : { userProfileId: userId }
 
   const count = await Model.count({ where: whereClause })
   return count > 0
 }
 
-const checkIsInspiringScientist = async (userId, { methodologyId } = {}) => {
-  if (!checkExists(userId)) {
+const checkIsInspiringScientist = async (userId, { editionId } = {}) => {
+  if (!checkExists(userId) || !editionId) {
     return false
   }
 
@@ -33,16 +33,8 @@ const checkIsInspiringScientist = async (userId, { methodologyId } = {}) => {
     },
     include: [{
       model: Edition,
-      required: true
-      /*
-      include: [{
-        model: Methodology,
-        required: true,
-        where: {
-          methodologyId
-        }
-      }]
-      */
+      required: true,
+      where: { id: editionId }
     }]
   })
   return (count > 0)
@@ -60,6 +52,9 @@ const checkIsStaff = async (userId, { methodologyId } = {}) => {
 }
 
 const checkHasRole = async (userId, Role, attributes = {}) => {
+  if (Role === ROLES.SCIENTIST) {
+    return checkIsInspiringScientist(userId, attributes)
+  }
   return checkHasAnyRole(userId, Role.models, attributes)
 }
 

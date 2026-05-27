@@ -3,12 +3,13 @@ import { errorThrower } from '../services/errorThrower.js'
 import { Edition } from '../models/Edition.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { Op } from 'sequelize'
 import * as UsersRepository from '../repositories/usersRepository.js'
 import * as AuthRepository from '../repositories/authRepository.js'
 import * as ScientistsRepository from '../repositories/scientistsRepository.js'
 import * as emailService from '../emails/emailService.js'
 import * as SeedsRepository from '../repositories/seedsRepository.js'
+import * as EditionsRepository from '../repositories/editionsRepository.js'
+import { INTERNAL_BACKEND_ROLE } from './Roles.js'
 
 export async function getScientistOpenEditions (userId) {
   errorThrower(!(await checkIsInspiringScientist(userId)), 'You are not an inspiring scientist', 403)
@@ -60,7 +61,8 @@ export async function inviteScientistByEmail (currentUserId, email, editionId, s
 }
 
 export async function sendScientistInvitationEmail (editionId, destinationEmail, sendEmail, earlySignUpId = undefined) {
-  const editionName = (await Edition.findByPk(editionId, { attributes: ['name'] })).name
+  const edition = await EditionsRepository.getMinimalEdition(editionId, { role: INTERNAL_BACKEND_ROLE })
+  const editionName = edition.name
   if (checkExists(earlySignUpId)) {
     return emailService.sendScientistPreRegistrationEmail(destinationEmail, earlySignUpId, editionName)
   }
@@ -109,9 +111,7 @@ export const modifyScientistEditions = async (currentUserId, scientistId, editio
 }
 
 const handleEditionEnrollment = async (scientistId, editionId, toBeEnrolled) => {
-  const edition = await Edition.findByPk(editionId, {
-    where: { state: { [Op.notIn]: ['CLOSED', 'PUBLISHED'] } }
-  })
+  const edition = await EditionsRepository.getEditionDetails(editionId, { states: ['PLANNED', 'ACTIVE'], userId: scientistId })
   if (!checkExists(edition)) return
   const scientist = await UsersRepository.getMinimalUserProfile(scientistId)
 

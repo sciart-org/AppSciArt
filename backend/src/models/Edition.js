@@ -1,5 +1,13 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, Op } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
+
+const publicScope = {
+  attributes: { exclude: ['createdAt', 'updatedAt', 'driveLink', 'longDescription', 'catalogLink'] },
+  where: {
+    state: { [Op.ne]: 'PLANNED' }
+  },
+  order: [['year', 'DESC']]
+}
 
 export const Edition = sequelize.define(
   'editions',
@@ -40,8 +48,21 @@ export const Edition = sequelize.define(
     }
   },
   {
-    defaultScope: {
-      attributes: { exclude: ['createdAt', 'updatedAt', 'driveLink'] }
+    defaultScope: publicScope,
+    scopes: {
+      public: publicScope,
+      staff: {
+        attributes: { exclude: ['createdAt', 'updatedAt', 'longDescription', 'catalogLink'] },
+        order: [['year', 'DESC']]
+      },
+      detail: {
+        attributes: { include: ['longDescription', 'catalogLink'] }
+      },
+      inState: (state) => ({
+        where: {
+          state: { [Op.in]: state }
+        }
+      })
     }
   }
 )
@@ -60,10 +81,33 @@ Edition.prototype.toJSON = function () {
 }
 
 Edition.associate = (db) => {
-  const { UserProfile, ScientistEditions, Seed, SeedEditions } = db
+  const { UserProfile, ScientistEditions, Seed, SeedEditions, Flower, Fruit } = db
   Edition.belongsToMany(UserProfile, { through: ScientistEditions })
 
   Edition.belongsToMany(Seed, { through: SeedEditions })
+
+  Edition.addScope('withFruits', {
+    include: [{
+      model: Seed,
+      attributes: ['id'],
+      required: false,
+      through: { attributes: [] },
+      include: [
+        {
+          model: Flower,
+          attributes: ['id'],
+          required: false,
+          include: [
+            {
+              model: Fruit,
+              attributes: ['id', 'title', 'mainImage'],
+              required: false
+            }
+          ]
+        }
+      ]
+    }]
+  })
 
   //  Edition.belongsTo(Methodology)
   //  Methodology.hasMany(Edition)
