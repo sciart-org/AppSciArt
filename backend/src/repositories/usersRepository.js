@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { UserProfile } from '../models/UserProfile.js'
 import { ROLES } from '../services/Roles.js'
 
@@ -30,6 +31,8 @@ export async function getUserProfileById (userId) {
   return UserProfile.findByPk(userId)
 }
 
-export function getUserProfiles () {
-  return UserProfile.scope(ROLES.PUBLIC.name).findAll()
+export function getAuthenticatedUserProfiles () {
+  return UserProfile.scope(ROLES.PUBLIC.name).findAll({
+    where: { authId: { [Op.not]: null } }
+  })
 }

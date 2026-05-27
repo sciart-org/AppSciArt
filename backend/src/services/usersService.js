@@ -10,7 +10,7 @@ import { INTERNAL_ROLES, ROLES } from './Roles.js'
 
 export async function getUsers (currentUserId) {
   errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot access this resource', 403)
-  const userProfiles = await UsersRepository.getUserProfiles()
+  const userProfiles = await UsersRepository.getAuthenticatedUserProfiles()
   return userProfiles
 }
 
