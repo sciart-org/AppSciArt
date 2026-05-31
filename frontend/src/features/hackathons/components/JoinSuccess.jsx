@@ -36,7 +36,7 @@ export default function JoinSuccess({ hackathonId }) {
       </div>
       <div style={{ marginTop: "10vh" }}>
         <h3>Curious to see what you will be working on?</h3>
-        <AsterButton to="/collections/seeds">Seed collection</AsterButton>
+        <AsterButton to="/seeds">Seed collection</AsterButton>
       </div>
       <div>
         <p>See an example here</p>

@@ -9,15 +9,15 @@ export default function EditionCollectionButtons({ editionId }) {
     <>
       <h2>Explore all collections</h2>
       <div className="edition-collections-container">
-        <AsterButton to={`/collections/seeds?editionId=${editionId}`}>
+        <AsterButton to={`/seeds?editionId=${editionId}`}>
           <Seed style={{ width: "10rem" }} />
           <p>Seeds</p>
         </AsterButton>
-        <AsterButton to={`/collections/flowers?editionId=${editionId}`}>
+        <AsterButton to={`/flowers?editionId=${editionId}`}>
           <Flower style={{ width: "10rem" }} />
           <p>Flowers</p>
         </AsterButton>
-        <AsterButton to={`/collections/fruits?editionId=${editionId}`}>
+        <AsterButton to={`/fruits?editionId=${editionId}`}>
           <Fruit style={{ width: "10rem" }} />
           <p>Fruits</p>
         </AsterButton>

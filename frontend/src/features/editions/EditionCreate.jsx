@@ -3,7 +3,7 @@ import useFetcher from "../../utils/useFetcher";
 import { fileToBase64 } from "../../utils/commonUtils";
 import { useNavigate } from "react-router";
 import Loading from "../../components/messages/Loading";
-import EditionsForm from "./EditionForm";
+import EditionForm from "./EditionForm";
 
 export default function EditionCreate() {
   const [formData, setFormData] = useState({});
@@ -55,7 +55,7 @@ export default function EditionCreate() {
   return (
     <div>
       <h1>Create Edition</h1>
-      <EditionsForm
+      <EditionForm
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
         formData={formData}

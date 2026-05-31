@@ -21,9 +21,9 @@ export default function AppNavbar() {
       <>
         <AsterLink to={"/"}>Home</AsterLink>
         <Dropdown title="Collections">
-          <AsterLink to={"/collections/seeds"}>Seeds</AsterLink>
-          <AsterLink to={"/collections/flowers"}>Flowers</AsterLink>
-          <AsterLink to={"/collections/fruits"}>Fruits</AsterLink>
+          <AsterLink to={"/seeds"}>Seeds</AsterLink>
+          <AsterLink to={"/flowers"}>Flowers</AsterLink>
+          <AsterLink to={"/fruits"}>Fruits</AsterLink>
         </Dropdown>
         <AsterLink to={"/hackathons"}>Hackathons</AsterLink>
         <AsterLink to={"/editions"}>Editions</AsterLink>

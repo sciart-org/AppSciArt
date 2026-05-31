@@ -1,11 +1,7 @@
 import EditableFormCreator from "../../components/form/EditableFormCreator";
 import EditableFormInput from "../../components/form/EditableFormInput";
 
-export default function EditionsForm({
-  formData,
-  isEditable = true,
-  ...props
-}) {
+export default function EditionForm({ formData, isEditable = true, ...props }) {
   return (
     <EditableFormCreator isEditable={isEditable} {...props}>
       <div className="input-box-container">

@@ -81,18 +81,9 @@ function App() {
           />
         }
       />
-      <Route
-        path="/collections/seeds"
-        element={<Collection itemName="seed" />}
-      />
-      <Route
-        path="/collections/flowers"
-        element={<Collection itemName="flower" />}
-      />
-      <Route
-        path="/collections/fruits"
-        element={<Collection itemName="fruit" />}
-      />
+      <Route path="/seeds" element={<Collection itemName="seed" />} />
+      <Route path="/flowers" element={<Collection itemName="flower" />} />
+      <Route path="/fruits" element={<Collection itemName="fruit" />} />
       <Route path="/seeds/:seedId" element={<SeedRouter />} />
       <Route path="/flowers/:flowerId" element={<FlowerDetails />} />
       <Route path="/fruits/:fruitId" element={<FruitDetails />} />
@@ -141,7 +132,7 @@ function App() {
     <>
       {user && user.roles.includes("staff") && (
         <>
-          <Route path="/collections/seeds/create" element={<SeedCreator />} />
+          <Route path="/seeds/create" element={<SeedCreator />} />
           <Route path="/users/scientists" element={<Scientists />} />
           <Route path="/editions/create" element={<EditionCreate />} />
           <Route path="/hackathons/create" element={<HackathonCreate />} />

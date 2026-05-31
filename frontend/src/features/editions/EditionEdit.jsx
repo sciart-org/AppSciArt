@@ -14,7 +14,7 @@ import "./EditionDetails.css";
 import EditionDetails from "./EditionDetails";
 import EditionCard from "../../components/cards/EditionCard";
 import SelectorBar from "../../components/buttons/SelectorBar";
-import EditionsForm from "./EditionForm";
+import EditionForm from "./EditionForm";
 import { EditionActionButton } from "./components/EditionActionButton";
 
 export default function EditionEdit({ edition: editingEdition }) {
@@ -131,7 +131,7 @@ export default function EditionEdit({ edition: editingEdition }) {
         >
           Preview
         </AsterButton>
-        <EditionsForm
+        <EditionForm
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}
           formData={formData}
