@@ -3,6 +3,7 @@ import FormSelect from "../../../../components/form/FormSelect";
 import Modal from "../../../../components/Modal";
 import AsterButton from "../../../../components/buttons/AsterButton";
 import { showErrorMessage } from "../../../../components/messages/Message";
+import SubmitCancelButtons from "../../../../components/buttons/SubmitCancelButtons";
 
 export default function NewAggregationModal({
   openCondition,
@@ -96,24 +97,13 @@ export default function NewAggregationModal({
           multiple={true}
           style={{ width: "100%" }}
         />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "1rem",
+        <SubmitCancelButtons
+          submitText="Confirm"
+          onCancel={() => {
+            onClose();
+            setSelection({});
           }}
-        >
-          <AsterButton type="submit">Confirm</AsterButton>
-          <AsterButton
-            type="secondary"
-            onClick={() => {
-              onClose();
-              setSelection({});
-            }}
-          >
-            Cancel
-          </AsterButton>
-        </div>
+        />
       </form>
     </Modal>
   );
