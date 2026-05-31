@@ -35,7 +35,7 @@ const validateHackathonIsOpen = async (userId, hackathonId) => {
 
 const validateHackathonNameUnique = async (internalName, editingHackathonId = null) => {
   const count = await HackathonRepository.countExistingHackathonsWithAttributes({
-    internalName,
+    internalName: { [Op.iLike]: internalName },
     ...(editingHackathonId && { id: { [Op.ne]: editingHackathonId } })
   })
 

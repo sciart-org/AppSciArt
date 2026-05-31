@@ -64,3 +64,7 @@ export const getSeedsOfScientist = (userProfileId, editionId, isAdmin) => {
     ]
   })
 }
+
+export const countExistingSeedsWithAttributes = (attributes) => {
+  return Seed.unscoped().count({ where: attributes })
+}

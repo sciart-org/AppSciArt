@@ -44,6 +44,8 @@ seeds:
           application/json:
             schema:
               $ref: "../components/schemas/seed.yaml#/SeedDetails"
+      "409":
+        description: Group already created for this seed
 
 seedById:
   x-router-controller: seedsController

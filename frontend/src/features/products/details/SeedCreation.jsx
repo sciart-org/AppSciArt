@@ -5,15 +5,25 @@ import SelectorBar from "../../../components/buttons/SelectorBar";
 import CreationProcessHeader from "../../../components/CreationProcessHeader";
 import RenderUrl from "../../../components/RenderUrl";
 import SeedForm from "../creators/components/SeedForm";
-import { getFormData, handleFormInputChange, scrollToTop } from "../../../utils/commonUtils";
+import {
+  filterNotChangedFields,
+  getFormData,
+  handleFormInputChange,
+  scrollToTop,
+} from "../../../utils/commonUtils";
 import Loading from "../../../components/messages/Loading";
+import useFetcher from "../../../utils/useFetcher";
 
 export default function SeedCreation({ seed: creatingSeed }) {
   const [showTemplate, setShowTemplate] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState(null);
 
-  const [formData, setFormData] = useState(getFormData(creatingSeed));
+  const [seed, setSeed] = useState(creatingSeed);
+  const [formData, setFormData] = useState(getFormData(seed));
+
+  const { fetcher } = useFetcher(error, setError);
 
   const SeedTemplate = () => {
     return (
@@ -24,10 +34,10 @@ export default function SeedCreation({ seed: creatingSeed }) {
             right: "4vw",
             cursor: "pointer",
           }}
-          url={creatingSeed?.template}
+          url={seed?.template}
         />
         <RenderUrl
-          url={creatingSeed?.template}
+          url={seed?.template}
           style={{
             height: "90vh",
             border: "solid 1px var(--aster-dark-gray)",
@@ -46,8 +56,35 @@ export default function SeedCreation({ seed: creatingSeed }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!isEditing) {
+      setIsEditing(true);
+      return;
+    }
+
     setLoading(true);
-    // TODO: update seed
+    const body = filterNotChangedFields(formData, seed);
+    if (Object.keys(body).length === 0) {
+      setIsEditing(false);
+      setLoading(false);
+      return;
+    }
+
+    fetcher({
+      url: `seeds/${seed.id}`,
+      method: "PUT",
+      body: body,
+      onSuccess: (data) => {
+        setFormData(getFormData(data));
+        setSeed((prev) => ({ ...prev, ...data }));
+      },
+      onError: () => {
+        setFormData(getFormData(seed));
+      },
+    }).finally(() => {
+      setIsEditing(false);
+      setLoading(false);
+    });
   };
 
   if (loading) {
@@ -57,7 +94,7 @@ export default function SeedCreation({ seed: creatingSeed }) {
   return (
     <div>
       <CreationProcessHeader>
-        Seed: {creatingSeed?.title || "New Seed"}
+        Seed: {seed?.title || "New Seed"}
       </CreationProcessHeader>
       <SelectorBar style={{ marginBottom: "4vh", width: "85vw" }}>
         <AsterButton
@@ -85,7 +122,7 @@ export default function SeedCreation({ seed: creatingSeed }) {
             isEditable={isEditing}
             onCancel={() => {
               setIsEditing(false);
-              setFormData(getFormData(creatingSeed));
+              setFormData(getFormData(seed));
             }}
           />
           <div

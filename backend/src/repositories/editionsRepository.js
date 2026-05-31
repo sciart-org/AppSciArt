@@ -1,4 +1,5 @@
 import { Edition } from '../models/Edition.js'
+import { Seed } from '../models/Seed.js'
 import { getUserRole, ROLES } from '../services/Roles.js'
 
 export const getRoleScope = (role) => {
@@ -32,5 +33,17 @@ export const getMinimalEditionByAttributes = async (attributes, { role, userId }
   return Edition.scope([getRoleScope(role)]).findOne({
     where: attributes,
     attributes: ['id', 'name']
+  })
+}
+
+export const getEditionsOfSeed = async (seedId, { role, userId }) => {
+  role ??= await getUserRole(userId)
+  return Edition.scope([getRoleScope(role)]).findAll({
+    include: {
+      model: Seed.scope([getRoleScope(role)]),
+      where: { id: seedId },
+      attributes: [],
+      through: { attributes: [] }
+    }
   })
 }

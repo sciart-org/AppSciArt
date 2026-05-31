@@ -22,10 +22,12 @@ export const getSeeds = withErrorHandler(async (req, res) => {
 })
 
 export const createSeed = withErrorHandler(async (req, res) => {
-  const { title, editionId, mainImage, branchesOfKnowledge } = req.body
-  const body = { title, editionId, mainImage, branchesOfKnowledge }
   const currentUser = await UsersService.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
+  const { title, editionId, mainImage, branchesOfKnowledge } = req.body
+  const body = { title, editionId, mainImage, branchesOfKnowledge }
+
   const createdSeed = await service.createSeed(currentUser.id, body)
   const [fullSeed] = await service.getFullSeedsDetails([createdSeed])
   return res.status(201).send(fullSeed)
@@ -38,9 +40,18 @@ export const getSeedDetails = withErrorHandler(async (req, res) => {
   return res.status(200).send(seed)
 })
 
-export function updateSeed (req, res) {
-  service.updateSeed(req, res)
-}
+export const updateSeed = withErrorHandler(async (req, res) => {
+  const currentUser = await UsersService.getCurrentUserProfile(req)
+  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+
+  const { title, mainImage, branchesOfKnowledge, videoLink, presentationLink, podcastLink } = req.body
+  const body = { title, mainImage, branchesOfKnowledge, videoLink, presentationLink, podcastLink }
+
+  const updatedSeed = await service.updateSeed(currentUser.id, req.params.seedId, body)
+
+  const [fullSeed] = await service.getFullSeedsDetails([updatedSeed])
+  return res.status(200).send(fullSeed)
+})
 
 export function deleteSeed (req, res) {
   service.deleteSeed(req, res)

@@ -7,8 +7,10 @@ import { errorThrower } from './errorThrower.js'
 import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as EditionsRepository from '../repositories/editionsRepository.js'
-import { ROLES } from './Roles.js'
-import { createDriveSeed, getEntitiesWithImage, getProductsWithTemplate } from './driveService.js'
+import { INTERNAL_BACKEND_ROLE, ROLES } from './Roles.js'
+import { createDriveSeed, getEntitiesWithImage, getProductsWithTemplate, parseFolderName, updateFolderName, uploadImg } from './driveService.js'
+import * as ScientistsRepository from '../repositories/scientistsRepository.js'
+import { validateSeedNameUnique } from '../validators/productValidators.js'
 
 const getSeedsWithTemplate = (seeds) => {
   return getProductsWithTemplate(seeds, 'seedTemplate')
@@ -53,6 +55,8 @@ export async function createSeed (userId, body) {
   const edition = await EditionsRepository.getEditionDetails(editionId, { role: ROLES.STAFF })
   errorThrower(!checkExists(edition), 'Edition not found', 404)
 
+  await validateSeedNameUnique(title)
+
   const driveLink = await createDriveSeed(edition.driveLink, title, mainImage)
   const newSeed = await Seed.create({ title, branchesOfKnowledge, driveLink })
   await newSeed.addEdition(edition)
@@ -88,10 +92,33 @@ export async function getSeedConceptualMapIds (userId, seedId) {
   return conceptualMapsIds
 }
 
-export function updateSeed (req, res) {
-  res.send({
-    message: 'This is the mockup controller for updateSeed'
-  })
+export async function updateSeed (userId, seedId, body) {
+  const isStaff = await checkIsStaff(userId)
+  const scientistEditions = await ScientistsRepository.getEditionsOfScientist(userId)
+  const seedEditions = await EditionsRepository.getEditionsOfSeed(seedId, { role: INTERNAL_BACKEND_ROLE })
+  const isScientist = seedEditions.some(edition => scientistEditions.map(e => e.id).includes(edition.id))
+  errorThrower(!(isScientist || isStaff), 'Unauthorized: You cannot edit this resource', 403)
+  const { title, mainImage, branchesOfKnowledge, videoLink, presentationLink, podcastLink } = body
+
+  const seedToUpdate = await SeedsRepository.getSeedById(seedId, userId, true)
+
+  if (title) {
+    await validateSeedNameUnique(title, seedId)
+    const newFolderName = parseFolderName(title)
+    await updateFolderName(seedToUpdate.driveLink, newFolderName)
+  }
+
+  if (mainImage) {
+    await uploadImg(mainImage, seedToUpdate.driveLink, 'mainImage.png')
+  }
+
+  const seedBody = { title, branchesOfKnowledge, videoLink, presentationLink, podcastLink }
+  if (Object.values(seedBody).some(v => v !== undefined)) {
+    await seedToUpdate.update(seedBody)
+  }
+
+  const [fullSeed] = await getFullSeedsDetails([seedToUpdate])
+  return fullSeed
 }
 
 export function deleteSeed (req, res) {

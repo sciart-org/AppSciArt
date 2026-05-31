@@ -103,6 +103,8 @@ export default function EditableFormInput({ style, ...props }) {
     );
   };
 
+  const value = props.type === "select" && Array.isArray(props.value) ? props.value.join(", ") : props.value;
+
   return (
     <StyleWrapper style={style}>
       <div style={{ display: "flex" }}>
@@ -113,7 +115,7 @@ export default function EditableFormInput({ style, ...props }) {
         className={`${!props.value || showFullContent ? "" : "editor-preview"}`}
       >
         <p className="justified-text" style={{ margin: "0 0 0 1rem" }}>
-          {props.value ?? "No content yet"}
+          {value ?? "No content yet"}
         </p>
       </div>
     </StyleWrapper>

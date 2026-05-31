@@ -5,6 +5,8 @@ import { checkExists } from './generalValidators.js'
 import { checkIsStaff } from './userValidators.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
+import * as SeedsRepository from '../repositories/seedsRepository.js'
+import { Op } from 'sequelize'
 
 const validateIsPublicOrStaff = async (userId, product) => {
   return errorThrower(product.state !== 'PUBLISHED' && !(await checkIsStaff(userId)), 'Unauthorized: You cannot access this resource', 403)
@@ -33,4 +35,13 @@ export const validateFruitIsFromHackathon = async (fruitId, hackathonId) => {
   errorThrower(!checkExists(fruit), 'This fruit does not belong to the current hackathon', 403)
 }
 
-export { validateIsPublicOrStaff }
+const validateSeedNameUnique = async (title, editingSeedId = null) => {
+  const count = await SeedsRepository.countExistingSeedsWithAttributes({
+    title: { [Op.iLike]: title },
+    ...(editingSeedId && { id: { [Op.ne]: editingSeedId } })
+  })
+
+  errorThrower(count > 0, `Seed named '${title}' already exists`, 409)
+}
+
+export { validateIsPublicOrStaff, validateSeedNameUnique }
