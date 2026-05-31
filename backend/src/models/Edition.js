@@ -100,7 +100,7 @@ Edition.associate = (db) => {
           include: [
             {
               model: Fruit,
-              attributes: ['id', 'title', 'mainImage'],
+              attributes: ['id', 'title'],
               required: false
             }
           ]

@@ -16,7 +16,7 @@ export const getSeedsOfEdition = async (editionId, isAdmin) => {
     { method: ['withEdition', editionId] },
     'withAuthors'
   ]).findAll({
-    attributes: ['id', 'title', 'mainImage', 'branchesOfKnowledge']
+    attributes: ['id', 'title', 'branchesOfKnowledge']
   })
 }
 
@@ -25,7 +25,7 @@ export const getSeedsOfHackathon = (hackathonId, isAdmin) => {
     getRoleScope(isAdmin),
     { method: ['withHackathon', hackathonId] }
   ]).findAll({
-    attributes: ['id', 'title', 'mainImage', 'state']
+    attributes: ['id', 'title', 'state']
   })
 }
 
@@ -43,7 +43,7 @@ export const getMinimalSeedById = (seedId, userId, isAdmin) => {
 
 export const getSeedsOfScientist = (userProfileId, editionId, isAdmin) => {
   return Seed.scope([getRoleScope(isAdmin), 'withAuthors']).findAll({
-    attributes: ['id', 'title', 'mainImage', 'state'],
+    attributes: ['id', 'title', 'state'],
     include: [
       {
         model: UserProfile,

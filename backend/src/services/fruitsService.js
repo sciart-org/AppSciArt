@@ -13,7 +13,7 @@ export async function getFruitsByEdition (userId, editionId) {
   const showUnpublished = await checkIsStaff(userId)
   return await Fruit.findAll({
     where: showUnpublished ? {} : filterPublished,
-    attributes: ['id', 'title', 'mainImage', 'state'],
+    attributes: ['id', 'title', 'state'],
     include: [
       {
         model: Flower,

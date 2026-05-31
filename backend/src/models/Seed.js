@@ -20,9 +20,6 @@ export const Seed = sequelize.define(
     title: {
       type: DataTypes.STRING
     },
-    mainImage: {
-      type: DataTypes.STRING
-    },
     state: {
       type: DataTypes.ENUM('IN_BLANK', 'IN_PROGRESS', 'IN_REVIEW', 'PUBLISHED'),
       allowNull: false,

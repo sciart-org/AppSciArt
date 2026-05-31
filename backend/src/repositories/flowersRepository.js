@@ -15,14 +15,14 @@ export const getFlowerWithSeedById = async (flowerId, { role, userId }) => {
 export const getFlowersOfEdition = async (editionId, { role, userId }) => {
   role ??= await getUserRole(userId)
   return Flower.scope([getRoleScope(role), 'withAuthors', { method: ['withSeedsOfEdition', editionId] }]).findAll({
-    attributes: ['id', 'title', 'mainImage', 'state']
+    attributes: ['id', 'title', 'state']
   })
 }
 
 export const getFlowersOfHackathon = async (hackathonId, { role, userId }) => {
   role ??= await getUserRole(userId, { hackathonId })
 
-  const attributes = ['id', 'title', 'mainImage', 'state']
+  const attributes = ['id', 'title', 'state']
   if (role === ROLES.STAFF || role === ROLES.EVALUATOR) {
     attributes.push('driveLink')
   }

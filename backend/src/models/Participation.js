@@ -169,7 +169,7 @@ Participation.associate = (db) => {
       {
         model: Flower.scope([isAdmin ? 'staff' : 'public', 'withAuthors']),
         attributes: {
-          exclude: ['title', 'mainImage', 'concept', 'seedId']
+          exclude: ['title', 'concept', 'seedId']
         },
         include: {
           model: Seed.scope([isAdmin ? 'staff' : 'public', 'withAuthors']),

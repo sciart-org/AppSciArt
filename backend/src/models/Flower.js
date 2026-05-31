@@ -21,9 +21,6 @@ export const Flower = sequelize.define(
     title: {
       type: DataTypes.STRING
     },
-    mainImage: {
-      type: DataTypes.STRING
-    },
     concept: {
       type: DataTypes.TEXT
     },
@@ -96,7 +93,7 @@ Flower.associate = (db) => {
   }))
 
   Flower.addScope('withSeedsOfEdition', (editionId) => ({
-    attributes: ['id', 'title', 'mainImage', 'state'],
+    attributes: ['id', 'title', 'state'],
     include: [
       {
         model: Seed.scope([

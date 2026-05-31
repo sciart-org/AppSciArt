@@ -45,7 +45,7 @@ ConceptualMap.associate = (db) => {
     include: [
       {
         model: Seed.scope('public'),
-        attributes: ['id', 'mainImage', 'title']
+        attributes: ['id', 'title']
       }
     ]
   })

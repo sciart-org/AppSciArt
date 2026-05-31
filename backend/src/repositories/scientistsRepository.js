@@ -60,7 +60,7 @@ export async function addSeedToScientist (scientist, seedId) {
 export async function getScientistsOfEdition (editionId) {
   const whereClause = editionId
     ? { id: editionId }
-    : { }
+    : {}
 
   return await UserProfile.scope(ROLES.PUBLIC.name).findAll({
     include: [
@@ -77,7 +77,7 @@ export async function getScientistsOfEdition (editionId) {
 
 export async function getScientistSeedsOfEdition (scientistId, editionId) {
   return await Seed.scope(ROLES.STAFF.name).findAll({
-    attributes: ['id', 'title', 'mainImage'],
+    attributes: ['id', 'title'],
     include: [
       {
         model: UserProfile,
