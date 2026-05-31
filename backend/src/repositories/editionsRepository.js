@@ -6,7 +6,7 @@ export const getRoleScope = (role) => {
   return ROLES.STAFF.name
 }
 
-export const getEditions = async (states = [], { role, userId }) => {
+export const getEditions = async ({ states = [], role, userId } = {}) => {
   role ??= await getUserRole(userId)
   const scopes = [getRoleScope(role)]
   if (states?.length > 0) scopes.push({ method: ['inState', states] })

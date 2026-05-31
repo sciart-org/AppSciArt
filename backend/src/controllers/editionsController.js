@@ -8,7 +8,10 @@ import { checkExists } from '../validators/generalValidators.js'
 export const getEditions = withErrorHandler(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
 
-  const { state } = req.query
+  let { state } = req.query
+  if (checkExists(state) && !Array.isArray(state)) {
+    state = [state]
+  }
 
   const editions = await service.getEditions(currentUser?.id, state)
   return res.status(200).send(editions)

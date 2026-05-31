@@ -11,8 +11,8 @@ const getEditionsWithLogo = async (editions) => {
   return await getEntitiesWithImage(editions, Edition)
 }
 
-export async function getEditions (userId, state) {
-  const editions = await EditionsRepository.getEditions(state, { userId })
+export async function getEditions (userId, states) {
+  const editions = await EditionsRepository.getEditions({ states, userId })
   const editionsWithLogo = await getEditionsWithLogo(editions)
   return editionsWithLogo
 }
