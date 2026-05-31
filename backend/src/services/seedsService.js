@@ -2,12 +2,27 @@ import { Seed } from '../models/Seed.js'
 import { validateCanSeeEdition } from '../validators/editionValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { validateHackathonIsReadable } from '../validators/hackathonValidators.js'
-import { checkIsStaff } from '../validators/userValidators.js'
+import { checkIsInspiringScientist, checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from './errorThrower.js'
 import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as EditionsRepository from '../repositories/editionsRepository.js'
 import { ROLES } from './Roles.js'
+import { createDriveSeed, getEntitiesWithImage, getProductsWithTemplate } from './driveService.js'
+
+const getSeedsWithTemplate = (seeds) => {
+  return getProductsWithTemplate(seeds, 'seedTemplate')
+}
+
+const getSeedsWithImage = async (seeds) => {
+  return await getEntitiesWithImage(seeds, Seed, 'mainImage')
+}
+
+export const getFullSeedsDetails = async (seeds) => {
+  const seedsWithTemplate = await getSeedsWithTemplate(seeds)
+  const seedsWithTemplateAndImage = await getSeedsWithImage(seedsWithTemplate)
+  return seedsWithTemplateAndImage
+}
 
 const checkSeedExists = async (seedId) => {
   const exists = await SeedsRepository.getMinimalSeedUnrestricted(seedId)
@@ -18,27 +33,32 @@ const checkSeedExists = async (seedId) => {
 export async function getSeedsByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
   const isAdmin = await checkIsStaff(userId)
-  return await SeedsRepository.getSeedsOfEdition(editionId, isAdmin)
+  const seeds = await SeedsRepository.getSeedsOfEdition(editionId, isAdmin)
+  return await getFullSeedsDetails(seeds)
 }
 
 export async function getSeedsByHackathon (userId, hackathonId) {
   await validateHackathonIsReadable(userId, hackathonId)
   const isAdmin = await checkIsStaff(userId)
-  return await SeedsRepository.getSeedsOfHackathon(hackathonId, isAdmin)
+  const seeds = await SeedsRepository.getSeedsOfHackathon(hackathonId, isAdmin)
+  return await getFullSeedsDetails(seeds)
 }
 
-export async function createSeed (userId, title, editionId, template) {
-  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create this resource', 403)
+export async function createSeed (userId, body) {
+  const { title, editionId, mainImage, branchesOfKnowledge } = body
+  const isStaff = await checkIsStaff(userId)
+  const isScientist = await checkIsInspiringScientist(userId, { editionId })
+  errorThrower(!(isScientist || isStaff), 'Unauthorized: You cannot create this resource', 403)
 
-  const edition = await EditionsRepository.getMinimalEdition(editionId, { role: ROLES.STAFF })
+  const edition = await EditionsRepository.getEditionDetails(editionId, { role: ROLES.STAFF })
   errorThrower(!checkExists(edition), 'Edition not found', 404)
 
-  const newSeed = await Seed.create({
-    title,
-    template
-  })
-
+  const driveLink = await createDriveSeed(edition.driveLink, title, mainImage)
+  const newSeed = await Seed.create({ title, branchesOfKnowledge, driveLink })
   await newSeed.addEdition(edition)
+  if (isScientist) {
+    await newSeed.addUser_profile(userId)
+  }
 
   return newSeed
 }
@@ -51,7 +71,8 @@ export async function getSeedDetails (userId, seedId) {
     await checkSeedExists(seedId)
   }
 
-  return seed
+  const [fullSeed] = await getFullSeedsDetails([seed])
+  return fullSeed
 }
 
 export async function getSeedConceptualMapIds (userId, seedId) {

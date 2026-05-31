@@ -2,7 +2,7 @@ import { Edition } from '../models/Edition.js'
 import { ScientistInvitation } from '../models/roles/ScientistInvitation.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { Seed } from '../models/Seed.js'
-import { ROLES } from '../services/Roles.js'
+import { INTERNAL_BACKEND_ROLE, ROLES } from '../services/Roles.js'
 
 export async function getScientistInvitation (email, editionId, seedId) {
   return await ScientistInvitation.findOrCreate({ where: { email, editionId, seedId } })
@@ -36,6 +36,23 @@ export async function isScientistEnrolledToEdition (scientist, editionId) {
   return (await scientist.getEditions()).some(e => e.id === editionId)
 }
 
+export function getEditionsOfScientist (scientistId, { states = [] } = {}) {
+  const scopes = [INTERNAL_BACKEND_ROLE.name]
+  if (states?.length > 0) scopes.push({ method: ['inState', states] })
+
+  return Edition.scope(scopes).findAll({
+    include: [
+      {
+        model: UserProfile,
+        where: { id: scientistId },
+        through: { attributes: [] },
+        attributes: [],
+        required: true
+      }
+    ]
+  })
+}
+
 export async function addSeedToScientist (scientist, seedId) {
   return await scientist.addSeed(seedId)
 }
@@ -59,7 +76,7 @@ export async function getScientistsOfEdition (editionId) {
 }
 
 export async function getScientistSeedsOfEdition (scientistId, editionId) {
-  return await Seed.findAll({
+  return await Seed.scope(ROLES.STAFF.name).findAll({
     attributes: ['id', 'title', 'mainImage'],
     include: [
       {

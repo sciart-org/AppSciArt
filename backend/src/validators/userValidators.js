@@ -1,7 +1,6 @@
 import { checkExists } from './generalValidators.js'
-import { UserProfile } from '../models/UserProfile.js'
-import { Edition } from '../models/Edition.js'
 import { ROLES } from '../services/Roles.js'
+import * as ScientistsRepository from '../repositories/scientistsRepository.js'
 
 const checkHasRoleById = async (userId, Model, { hackathonId } = {}) => {
   if (!checkExists(userId)) {
@@ -23,21 +22,13 @@ const checkHasRoleById = async (userId, Model, { hackathonId } = {}) => {
 }
 
 const checkIsInspiringScientist = async (userId, { editionId } = {}) => {
-  if (!checkExists(userId) || !editionId) {
+  if (!checkExists(userId)) {
     return false
   }
-
-  const count = await UserProfile.count({
-    where: {
-      id: userId
-    },
-    include: [{
-      model: Edition,
-      required: true,
-      where: { id: editionId }
-    }]
-  })
-  return (count > 0)
+  const editions = await ScientistsRepository.getEditionsOfScientist(userId)
+  return editionId
+    ? editions.some(e => e.id === editionId)
+    : editions.length > 0
 }
 
 const checkHasAnyRole = async (userId, roles, { methodologyId, hackathonId } = {}) => {

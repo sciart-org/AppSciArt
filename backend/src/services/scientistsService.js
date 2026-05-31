@@ -1,7 +1,5 @@
 import { checkIsInspiringScientist, checkIsStaff } from '../validators/userValidators.js'
 import { errorThrower } from '../services/errorThrower.js'
-import { Edition } from '../models/Edition.js'
-import { UserProfile } from '../models/UserProfile.js'
 import { checkExists } from '../validators/generalValidators.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
 import * as AuthRepository from '../repositories/authRepository.js'
@@ -9,28 +7,18 @@ import * as ScientistsRepository from '../repositories/scientistsRepository.js'
 import * as emailService from '../emails/emailService.js'
 import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as EditionsRepository from '../repositories/editionsRepository.js'
-import { INTERNAL_BACKEND_ROLE } from './Roles.js'
+import { INTERNAL_BACKEND_ROLE, ROLES } from './Roles.js'
+import { getFullSeedsDetails } from './seedsService.js'
 
 export async function getScientistOpenEditions (userId) {
   errorThrower(!(await checkIsInspiringScientist(userId)), 'You are not an inspiring scientist', 403)
-  return await Edition.findAll({
-    where: {
-      state: 'PLANNED'
-    },
-    include: [
-      {
-        model: UserProfile,
-        where: { id: userId },
-        attributes: [],
-        required: true
-      }
-    ]
-  })
+  return await ScientistsRepository.getEditionsOfScientist(userId, ['PLANNED'])
 }
 
 export async function getScientistSeedsOfEdition (userId, editionId) {
-  errorThrower(!(await checkIsInspiringScientist(userId)), 'You are not an inspiring scientist', 403)
-  return await ScientistsRepository.getScientistSeedsOfEdition(userId, editionId)
+  errorThrower(!(await checkIsInspiringScientist(userId, { editionId })), 'You are not an inspiring scientist of this edition', 403)
+  const seeds = await ScientistsRepository.getScientistSeedsOfEdition(userId, editionId, { role: ROLES.STAFF })
+  return await getFullSeedsDetails(seeds)
 }
 
 export async function getScientists (currentUserId, editionId = null) {

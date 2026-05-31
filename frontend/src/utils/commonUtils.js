@@ -59,7 +59,8 @@ const resolveFormInputValue = async (input) => {
 
 export async function handleFormInputChange(e, setFormData) {
     const newValue = await resolveFormInputValue(e.target);
-    setFormData((prev) => ({ ...prev, [e.target.name]: newValue }));
+    const camelCaseName = toCamelCase(e.target.name);
+    setFormData((prev) => ({ ...prev, [camelCaseName]: newValue }));
 };
 
 export function formatReadableDate(date) {

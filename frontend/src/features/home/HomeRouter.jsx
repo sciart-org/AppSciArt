@@ -13,7 +13,7 @@ export default function HomeRouter() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeHackathon, setActiveHackathon] = useState(null);
-  const [scientistEdition, setScientistEdition] = useState(null);
+  const [scientistEditions, setScientistEditions] = useState(null);
   const [editions, setEditions] = useState([]);
   const [loadingEditions, setLoadingEditions] = useState(true);
 
@@ -46,11 +46,7 @@ export default function HomeRouter() {
     fetcher({
       url: "scientists/me/editions",
       onSuccess: (data) => {
-        if (data.length > 1) {
-          //Not yet implemented
-          return;
-        }
-        setScientistEdition(data[0] || null);
+        setScientistEditions(data);
       },
     });
   }, [activeHackathon]);
@@ -66,10 +62,10 @@ export default function HomeRouter() {
         loading={loadingEditions}
         onClickItem={(o) => navigate(`editions/${o?.id}`)}
       />
-      {activeHackathon ? (
+      {activeHackathon && activeHackathon.state !== "FINISHED" ? (
         <ParticipantHome hackathon={activeHackathon} />
-      ) : scientistEdition ? (
-        <ScientistHome edition={scientistEdition} />
+      ) : scientistEditions ? (
+        <ScientistHome editions={scientistEditions} />
       ) : (
         <Home />
       )}

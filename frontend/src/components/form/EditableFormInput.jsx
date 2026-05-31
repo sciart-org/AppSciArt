@@ -31,7 +31,9 @@ export default function EditableFormInput({ style, ...props }) {
         <FormSelect
           {...props}
           style={style}
-          setValue={(v) => simulateInputChange("type", v, handleInputChange)}
+          setValue={(v) =>
+            simulateInputChange(props.name, v, handleInputChange)
+          }
         />
       </StyleWrapper>
     );

@@ -58,12 +58,12 @@ const createWriterLink = async (id) => {
   })
 }
 
-export const getFlowersWithTemplate = async (flowers) => {
-  return Promise.all(flowers.map(async (flower) => {
-    if (!flower.driveLink) return { ...toPlainObject(flower), template: null }
-    const folderId = extractDriveFolderId(flower.driveLink)
-    const templateId = await findFileInFolder(folderId, 'flowerTemplate')
-    return { ...toPlainObject(flower), template: templateId ? getDocUrl(templateId) : null }
+export const getProductsWithTemplate = async (products, templateName) => {
+  return Promise.all(products.map(async (product) => {
+    if (!product.driveLink) return { ...toPlainObject(product), template: null }
+    const folderId = extractDriveFolderId(product.driveLink)
+    const templateId = await findFileInFolder(folderId, templateName)
+    return { ...toPlainObject(product), template: templateId ? getDocUrl(templateId) : null }
   }))
 }
 
@@ -130,15 +130,15 @@ const findFileInFolder = async (folderId, fileName, exact = false) => {
   return res.data.files[0]?.id ?? null
 }
 
-export const getLogoFromDrive = async (driveLink) => {
+export const getImgFromDrive = async (driveLink, imageName = 'logo') => {
   const folderId = extractDriveFolderId(driveLink)
-  const logoId = await findFileInFolder(folderId, 'logo')
-  return logoId ? getImgUrl(logoId) : null
+  const imageId = await findFileInFolder(folderId, imageName)
+  return imageId ? getImgUrl(imageId) : null
 }
 
-const deleteOldImg = async (newImgId, folderId) => {
+const deleteOldImg = async (newImgId, folderId, imageName) => {
   const existingFiles = await drive.files.list({
-    q: `'${folderId}' in parents and name = 'logo.png' and trashed = false`,
+    q: `'${folderId}' in parents and name = '${imageName}' and trashed = false`,
     fields: 'files(id, name)',
     spaces: 'drive'
   })
@@ -151,13 +151,13 @@ const deleteOldImg = async (newImgId, folderId) => {
   }
 }
 
-export const uploadImg = async (imgB64, driveLink) => {
+export const uploadImg = async (imgB64, driveLink, imageName = 'logo.png') => {
   if (!imgB64) return null
   const folderId = extractDriveFolderId(driveLink)
 
   const media = buildImgMedia(imgB64)
   const fileMetadata = {
-    name: 'logo.png',
+    name: imageName,
     parents: [folderId]
   }
 
@@ -169,7 +169,7 @@ export const uploadImg = async (imgB64, driveLink) => {
 
   const newImgId = uploadedImg.data.id
 
-  await deleteOldImg(newImgId, folderId)
+  await deleteOldImg(newImgId, folderId, imageName)
 
   return getImgUrl(newImgId)
 }
@@ -292,7 +292,7 @@ export const updateFolderName = async (driveLink, newName) => {
   })
 }
 
-export const getEntitiesWithLogo = async (entitiesList, Model) => {
+export const getEntitiesWithImage = async (entitiesList, Model, imageName = 'logo') => {
   const validEntities = entitiesList.filter(Boolean)
   const driveLinks = await Model.unscoped().findAll({
     where: { id: validEntities.map(e => e.id) },
@@ -302,14 +302,14 @@ export const getEntitiesWithLogo = async (entitiesList, Model) => {
   return Promise.all(
     validEntities.map(async (entity) => {
       const driveLink = driveLinkMap[entity.id]
-      if (!driveLink) return { ...toPlainObject(entity), logo: null }
+      if (!driveLink) return { ...toPlainObject(entity), [imageName]: null }
       try {
-        const logo = await getLogoFromDrive(driveLink)
-        return { ...toPlainObject(entity), logo }
+        const image = await getImgFromDrive(driveLink, imageName)
+        return { ...toPlainObject(entity), [imageName]: image }
       } catch (err) {
         if (err.status === 401 || err.message === 'REAUTH_REQUIRED') {
-          console.warn('Drive auth expired, skipping logo for entity:', entity.id)
-          return { ...toPlainObject(entity), logo: null }
+          console.warn('Drive auth expired, skipping image for entity:', entity.id)
+          return { ...toPlainObject(entity), [imageName]: null }
         }
         throw err
       }
@@ -330,8 +330,13 @@ const createEmptyDoc = async (folderId, name) => {
 export const createDriveEdition = async (year, name, logo) => {
   const folderName = createEditionFolderName(year, name)
   const editionFolder = await createEditionFolder(folderName)
-  const driveLink = createDriveFolderLink(editionFolder.id)
-  await uploadImg(logo, driveLink)
+  const editionFolderId = editionFolder.id
+  const driveLink = createDriveFolderLink(editionFolderId)
+  await Promise.all([
+    createFolderGeneric('seeds', editionFolderId),
+    uploadImg(logo, driveLink),
+    createEmptyDoc(editionFolderId, 'seedTemplate')
+  ])
   return driveLink
 }
 
@@ -339,12 +344,32 @@ export const createDriveHackathon = async (editionDriveLink, internalName, logo)
   const folderName = parseFolderName(internalName)
   const editionFolderId = extractDriveFolderId(editionDriveLink)
   const hackathonFolder = await createHackathonFolder(folderName, editionFolderId)
-  await createFolderGeneric('flowers', hackathonFolder.id)
   const driveLink = createDriveFolderLink(hackathonFolder.id)
   await Promise.all([
+    createFolderGeneric('flowers', hackathonFolder.id),
     uploadImg(logo, driveLink),
     createEmptyDoc(hackathonFolder.id, 'flowerTemplate')
   ])
+  return driveLink
+}
+
+export const createDriveSeed = async (editionDriveLink, seedTitle, mainImage = undefined) => {
+  const folderName = parseFolderName(seedTitle)
+  const editionFolderId = extractDriveFolderId(editionDriveLink)
+  const editionSeedsFolderId = await getOrCreateFolder(editionFolderId, 'seeds')
+  const seedFolder = await createFolderGeneric(folderName, editionSeedsFolderId)
+  const seedFolderId = seedFolder.data.id
+  const driveLink = createDriveFolderLink(seedFolderId)
+  const seedTemplateFileId = await findFileInFolder(editionFolderId, 'seedTemplate')
+  const tasks = [
+    createReaderLink(seedFolderId),
+    createFolderGeneric('images', seedFolderId),
+    copyFileToFolder(seedTemplateFileId, seedFolderId, 'seedTemplate')
+  ]
+  if (mainImage) {
+    tasks.push(uploadImg(mainImage, driveLink, 'mainImage.png'))
+  }
+  await Promise.all(tasks)
   return driveLink
 }
 

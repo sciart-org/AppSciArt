@@ -2,7 +2,7 @@ import { validateCanEditHackathon, validateHackathonIsReadable, validateHackatho
 import { errorThrower } from './errorThrower.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsActive } from '../validators/editionValidators.js'
-import { createDriveHackathon, getEntitiesWithLogo, moveDriveFolder, parseFolderName, updateFolderName, uploadImg } from './driveService.js'
+import { createDriveHackathon, getEntitiesWithImage, moveDriveFolder, parseFolderName, updateFolderName, uploadImg } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
 import * as HackathonRepository from '../repositories/hackathonsRepository.js'
 import { HackathonStates } from '../states/HackathonStates.js'
@@ -10,7 +10,7 @@ import { Hackathon } from '../models/Hackathon.js'
 import { INTERNAL_BACKEND_ROLE } from './Roles.js'
 
 const getHackathonsWithLogo = async (hackathons) => {
-  return await getEntitiesWithLogo(hackathons, Hackathon)
+  return await getEntitiesWithImage(hackathons, Hackathon)
 }
 
 export async function getClosestHackathon (userId) {

@@ -2,13 +2,13 @@ import { Edition } from '../models/Edition.js'
 import { checkIsStaff } from '../validators/userValidators.js'
 import { validateEditionNameUnique } from '../validators/editionValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { createDriveEdition, createEditionFolderName, getEntitiesWithLogo, updateFolderName, uploadImg } from './driveService.js'
+import { createDriveEdition, createEditionFolderName, getEntitiesWithImage, updateFolderName, uploadImg } from './driveService.js'
 import * as EditionsRepository from '../repositories/editionsRepository.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { ROLES } from './Roles.js'
 
 const getEditionsWithLogo = async (editions) => {
-  return await getEntitiesWithLogo(editions, Edition)
+  return await getEntitiesWithImage(editions, Edition)
 }
 
 export async function getEditions (userId, state) {

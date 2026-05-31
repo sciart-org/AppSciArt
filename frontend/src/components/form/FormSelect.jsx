@@ -1,4 +1,5 @@
 import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import "./form.css";
 
 export default function FormSelect({
@@ -12,24 +13,15 @@ export default function FormSelect({
   placeholder,
   clearable = true,
   className,
+  creatable = false,
 }) {
-  const newOptions = options.map((o) => {
-    return {
-      value: o,
-      label: o,
-    };
-  });
+  const newOptions = options?.map((o) => ({ value: o, label: o }));
 
   const newValues =
     value == null
       ? null
       : multiple
-        ? value.map((v) => {
-            return {
-              label: v,
-              value: v,
-            };
-          })
+        ? value.map((v) => ({ label: v, value: v }))
         : { label: value, value };
 
   const handleSelectChange = (v) => {
@@ -40,17 +32,25 @@ export default function FormSelect({
         : setValue(v.value);
   };
 
+  const SelectComponent = creatable ? CreatableSelect : Select;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", ...style }}>
       <div style={{ display: "flex" }}>
         <h3 style={{ margin: 0 }}>{name}</h3>
         {required && <span style={{ color: "red", marginLeft: "3px" }}>*</span>}
       </div>
-      <Select
+      <SelectComponent
         className={"multiple-select " + className}
         value={newValues}
         onChange={handleSelectChange}
         options={newOptions}
+        noOptionsMessage={() => null}
+        components={
+          creatable && !options?.length
+            ? { DropdownIndicator: null }
+            : undefined
+        }
         isMulti={multiple}
         isClearable={clearable}
         clearValue={() => setValue(null)}

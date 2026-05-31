@@ -74,8 +74,8 @@ export async function getUserRoles (userId) {
     if (isDesigner) roles.push(INTERNAL_ROLES.DESIGNER.name)
     if (isFacilitator) roles.push(INTERNAL_ROLES.FACILITATOR.name)
   }
-  if (scientistEditions) roles.push(ROLES.SCIENTIST.name)
-  if (evaluatorHackathons) roles.push(ROLES.EVALUATOR.name)
+  if (checkExists(scientistEditions)) roles.push(ROLES.SCIENTIST.name)
+  if (checkExists(evaluatorHackathons)) roles.push(ROLES.EVALUATOR.name)
 
   return roles
 }

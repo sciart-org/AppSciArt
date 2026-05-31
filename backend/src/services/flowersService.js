@@ -10,6 +10,10 @@ import * as DriveService from '../services/driveService.js'
 import * as HackathonRepository from '../repositories/hackathonsRepository.js'
 import { INTERNAL_BACKEND_ROLE, ROLES } from './Roles.js'
 
+export const getFlowersWithTemplate = (flowers) => {
+  return DriveService.getProductsWithTemplate(flowers, 'flowerTemplate')
+}
+
 export async function getFlowersByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
   return await FlowersRepository.getFlowersOfEdition(editionId, { userId })
@@ -53,7 +57,7 @@ export async function getFlowerDetails (userId, flowerId) {
     return flower
   }
 
-  const [flowerWithTemplate] = await DriveService.getFlowersWithTemplate([flower])
+  const [flowerWithTemplate] = await getFlowersWithTemplate([flower])
   return flowerWithTemplate
 }
 

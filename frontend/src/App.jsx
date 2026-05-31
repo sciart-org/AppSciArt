@@ -29,6 +29,7 @@ import EditionCreate from "./features/editions/EditionCreate";
 import HackathonCreate from "./features/hackathons/HackathonCreate";
 import HackathonRouter from "./features/hackathons/HackathonRouter";
 import { scrollToTop } from "./utils/commonUtils";
+import CreateSeed from "./features/products/creators/CreateSeed";
 
 function App() {
   const [user, setUser] = useState(tokenService.getUser());
@@ -149,6 +150,14 @@ function App() {
     </>
   );
 
+  const scientistRoutes = (
+    <>
+      {user && user.roles.includes("inspiring_scientist") && (
+        <Route path="/seeds/create" element={<CreateSeed />} />
+      )}
+    </>
+  );
+
   return (
     <ScrollToTopWrapper>
       <Message />
@@ -158,6 +167,7 @@ function App() {
           {publicRoutes}
           {unauthenticatedRoutes}
           {authenticatedRoutes}
+          {scientistRoutes}
           {staffRoutes}
         </Routes>
       </div>

@@ -1,45 +1,69 @@
 import { useEffect, useState } from "react";
 import AsterButton from "../../components/buttons/AsterButton";
 import useFetcher from "../../utils/useFetcher";
-import SeedCard from "../../components/cards/SeedCard.jsx";
+import ScientistSeedCard from "../../components/cards/ScientistSeedCard.jsx";
 
-export default function ScientistHome({ edition }) {
+export default function ScientistHome({ editions }) {
   const [error, setError] = useState(null);
-  const [seeds, setSeeds] = useState(null);
-
+  const [editionSeeds, setEditionSeeds] = useState(null);
   const { fetcher } = useFetcher(error, setError);
 
   useEffect(() => {
-    if (!edition?.id) return;
-    fetcher({
-      url: `scientists/me/editions/${edition?.id}/seeds`,
-      onSuccess: (data) => {
-        setSeeds(data || []);
-      },
-    });
-  }, [edition]);
+    if (!editions?.length) return;
+    Promise.all(
+      editions.map((edition) =>
+        fetcher({
+          url: `scientists/me/editions/${edition.id}/seeds`,
+          onSuccess: (data) => {
+            setEditionSeeds((prev) => ({ ...prev, [edition.id]: data }));
+          },
+        }),
+      ),
+    );
+  }, [editions]);
 
   return (
-    <>
+    <div style={{ margin: "0 auto" }}>
       <h1>Welcome!</h1>
-      <h2>
-        You have been invited to participate in {edition?.name} as an Inspiring
-        Scientist!
-      </h2>
-      <h3>Your seeds:</h3>
-      <p>
-        {seeds
-          ? seeds.length === 0
-            ? "No seeds"
-            : seeds.map((s) => <SeedCard seed={s} style={{ margin: "auto" }} />)
-          : "Loading..."}
-      </p>
-      <AsterButton disabled={true} style={{ width: "10rem" }}>
-        Create seed
-      </AsterButton>
-      <p>
-        This feature is not yet available! Contact our team to create a new seed
-      </p>
-    </>
+      {editions?.length === 1 ? (
+        <h2>
+          You have been invited to participate in {editions[0].name} as an
+          Inspiring Scientist!
+        </h2>
+      ) : (
+        <h2>You have been invited to participate as an Inspiring Scientist!</h2>
+      )}
+
+      {editions?.map((edition) => (
+        <div
+          key={edition.id}
+          style={{
+            width: "70vw",
+            marginInline: "auto",
+            marginBlock: "1rem",
+          }}
+        >
+          {editions.length > 1 && <h2>{edition.name}</h2>}
+
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {!editionSeeds ? (
+              <p>Loading...</p>
+            ) : editionSeeds[edition.id]?.length === 0 ? (
+              <p className="empty-search">No seeds</p>
+            ) : (
+              editionSeeds[edition.id]?.map((s) => (
+                <ScientistSeedCard key={s.id} seed={s} />
+              ))
+            )}
+          </div>
+        </div>
+      ))}
+
+      <div style={{ marginTop: "2rem" }}>
+        <AsterButton style={{ width: "10rem" }} to="/seeds/create">
+          Create seed
+        </AsterButton>
+      </div>
+    </div>
   );
 }

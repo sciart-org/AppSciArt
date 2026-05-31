@@ -10,9 +10,10 @@ import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsReposit
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import { emitGroupRemovedToStaff, emitGroupUpdateToStaff, emitTeamUpdateToStaff } from '../sockets/hackathonPhases.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
-import { getFlowerRubrics, getFlowersWithTemplate } from './driveService.js'
+import { getFlowerRubrics } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
 import { ROLES } from './Roles.js'
+import { getFlowersWithTemplate } from './flowersService.js'
 
 export function getUserEnrolledHackathons (req, res) {
   res.send({
