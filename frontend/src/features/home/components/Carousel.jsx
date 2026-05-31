@@ -59,6 +59,7 @@ export default function Carousel({
         small={small}
         animating={animating}
         handleSlide={handleSlide}
+        showButtons={!noItems}
       >
         {shownObjects.map((o) => (
           <div

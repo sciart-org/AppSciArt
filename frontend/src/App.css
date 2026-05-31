@@ -25,9 +25,8 @@
 }
 
 .empty-search {
-  color: #bbb;
-  margin: 0.5rem 0 0 0;
-  padding-left: 1rem;
+  color: var(--aster-mid-gray);
+  margin: 0;
 }
 
 @keyframes logo-spin {

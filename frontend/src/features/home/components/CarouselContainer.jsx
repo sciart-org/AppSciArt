@@ -34,8 +34,7 @@ export default function CarouselContainer({
                 ? "disable-select carousel-button left small"
                 : "disable-select carousel-button left"
             }
-            size={"10vh"}
-            color="rgba(0,0,0,0.35)"
+            size={"8vh"}
             onClick={() => handleSlide("left")}
           />
           <GrCaretNext
@@ -44,8 +43,7 @@ export default function CarouselContainer({
                 ? "disable-select carousel-button right small"
                 : "disable-select carousel-button right"
             }
-            size={"10vh"}
-            color="rgba(0,0,0,0.35)"
+            size={"8vh"}
             onClick={() => handleSlide("right")}
           />
         </>

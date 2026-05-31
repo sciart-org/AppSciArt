@@ -61,6 +61,7 @@
   position: absolute;
   cursor: pointer;
   transition: transform 0.15s ease-in-out;
+  color: var(--aster-dark-gray);
 }
 
 .carousel-button.right {
