@@ -3,7 +3,7 @@ require('dotenv-flow').config()
 module.exports = {
   development: {
     url: process.env.DATABASE_URL,
-    dialect: 'postgres',
+    dialect: 'postgres'
   },
   production: {
     url: process.env.DATABASE_URL,

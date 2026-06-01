@@ -36,3 +36,8 @@ backend/.env**
 backend/logs
 
 node_modules
+**/supabase/.branches
+**/supabase/.temp
+**/supabase/.env.keys
+**/supabase/.env.local
+**/supabase/.env.*.local
