@@ -2,6 +2,8 @@ import { DataTypes } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { Seed } from './Seed.js'
 import { notNull } from './modelUtils.js'
+import { ROLES } from '../services/Roles.js'
+import { getSeedRoleScope } from '../repositories/seedsRepository.js'
 
 export const ConceptualMap = sequelize.define(
   'conceptual_maps',
@@ -44,7 +46,7 @@ ConceptualMap.associate = (db) => {
     attributes: ['id', 'seedId', 'map', 'isDelivered'],
     include: [
       {
-        model: Seed.scope('public'),
+        model: Seed.scope(getSeedRoleScope(ROLES.PUBLIC)),
         attributes: ['id', 'title']
       }
     ]
@@ -55,7 +57,7 @@ ConceptualMap.associate = (db) => {
     include: [
       {
         model: Seed.scope([
-          'public',
+          getSeedRoleScope(ROLES.PUBLIC),
           { method: ['withHackathon', hackathonId] }
         ]),
         required: true,

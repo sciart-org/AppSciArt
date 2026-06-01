@@ -2,7 +2,7 @@ import { Edition } from '../models/Edition.js'
 import { ScientistInvitation } from '../models/roles/ScientistInvitation.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { Seed } from '../models/Seed.js'
-import { INTERNAL_BACKEND_ROLE, ROLES } from '../services/Roles.js'
+import { getUserRole, INTERNAL_BACKEND_ROLE, ROLES } from '../services/Roles.js'
 import { SeedScientists } from '../models/intermediate/SeedScientists.js'
 import { checkExists } from '../validators/generalValidators.js'
 
@@ -77,8 +77,14 @@ export async function getScientistsOfEdition (editionId) {
   })
 }
 
-export async function getScientistSeedsOfEdition (scientistId, editionId) {
-  return await Seed.scope(ROLES.STAFF.name).findAll({
+export async function getScientistSeedsOfEdition (scientistId, editionId, { role, userId }) {
+  role ??= await getUserRole(userId)
+  if (role === ROLES.SCIENTIST) {
+    role = ROLES.STAFF.name
+  } else {
+    role = role.name
+  }
+  return await Seed.scope(role).findAll({
     attributes: ['id', 'title'],
     include: [
       {
@@ -88,7 +94,7 @@ export async function getScientistSeedsOfEdition (scientistId, editionId) {
         required: true
       },
       {
-        model: Edition,
+        model: Edition.unscoped(),
         where: { id: editionId },
         attributes: [],
         required: true

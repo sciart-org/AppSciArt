@@ -1,33 +1,33 @@
 import { Flower } from '../models/Flower.js'
 import { getUserRole, ROLES } from '../services/Roles.js'
 
-export const getRoleScope = (role) => {
+export const getFlowerRoleScope = (role) => {
   if (!role || role === ROLES.PUBLIC) return ROLES.PUBLIC.name
   return ROLES.STAFF.name
 }
 
 export const getFlowerWithSeedById = async (flowerId, { role, userId }) => {
   role ??= await getUserRole(userId)
-  const scopes = [getRoleScope(role), 'withSeeds', 'withAuthors']
+  const scopes = [getFlowerRoleScope(role), 'withSeeds', 'withAuthors']
   return Flower.scope(scopes).findByPk(flowerId)
 }
 
 export const getFlowersOfEdition = async (editionId, { role, userId }) => {
   role ??= await getUserRole(userId)
-  return Flower.scope([getRoleScope(role), 'withAuthors', { method: ['withSeedsOfEdition', editionId] }]).findAll({
+  return Flower.scope([getFlowerRoleScope(role), 'withAuthors', { method: ['withSeedsOfEdition', editionId] }]).findAll({
     attributes: ['id', 'title', 'state']
   })
 }
 
 export const getFlowersOfHackathon = async (hackathonId, { role, userId }) => {
-  role ??= await getUserRole(userId, { hackathonId })
+  role ??= await getUserRole(userId)
 
   const attributes = ['id', 'title', 'state']
   if (role === ROLES.STAFF || role === ROLES.EVALUATOR) {
     attributes.push('driveLink')
   }
 
-  return Flower.scope([getRoleScope(role), 'withAuthors', { method: ['withSeedsOfHackathon', hackathonId] }]).findAll({
+  return Flower.scope([getFlowerRoleScope(role), 'withAuthors', { method: ['withSeedsOfHackathon', hackathonId] }]).findAll({
     attributes,
     order: [['createdAt', 'ASC']]
   })

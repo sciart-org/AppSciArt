@@ -2,6 +2,8 @@ import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { Seed } from './Seed.js'
 import { notNull } from './modelUtils.js'
+import { getSeedRoleScope } from '../repositories/seedsRepository.js'
+import { ROLES } from '../services/Roles.js'
 
 const publicScope = {
   attributes: {
@@ -82,7 +84,7 @@ Flower.associate = (db) => {
     include: [
       {
         model: Seed.scope([
-          'staff',
+          getSeedRoleScope(ROLES.PUBLIC),
           { method: ['withHackathon', hackathonId] },
           'withAuthors'
         ]),
@@ -97,7 +99,7 @@ Flower.associate = (db) => {
     include: [
       {
         model: Seed.scope([
-          'staff',
+          getSeedRoleScope(ROLES.PUBLIC),
           { method: ['withEdition', editionId] }
         ]),
         required: true,
@@ -109,7 +111,7 @@ Flower.associate = (db) => {
   Flower.addScope('withSeeds', {
     include: [
       {
-        model: Seed.scope(['withAuthors', 'public']),
+        model: Seed.scope(['withAuthors', getSeedRoleScope(ROLES.PUBLIC)]),
         required: true
       }
     ]
