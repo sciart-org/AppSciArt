@@ -1,6 +1,9 @@
+import dotenvFlow from 'dotenv-flow'
 import { Sequelize, Model } from 'sequelize'
 
-export const sequelize = new Sequelize(process.env.DATABASE_URL_PRODUCTION, {
+dotenvFlow.config()
+
+export const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
   dialectOptions: {
     ssl: {

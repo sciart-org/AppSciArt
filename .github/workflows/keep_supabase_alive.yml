@@ -25,4 +25,4 @@ jobs:
       - name: Run Keep Alive Script
         run: node backend/scripts/keep-supabase-alive.js
         env:
-          DATABASE_URL_PRODUCTION: ${{ secrets.DATABASE_URL_PRODUCTION }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL_PRODUCTION }}

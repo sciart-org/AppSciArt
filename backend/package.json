@@ -5,14 +5,17 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server.js",
-    "dev": "node --watch src/server.js",
+    "test": "cross-env NODE_ENV=test echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=production node src/server.js",
+    "dev": "cross-env NODE_ENV=development node --watch src/server.js",
     "create-migration": "npx sequelize-cli migration:generate --name",
-    "migrate": "npx sequelize-cli db:migrate",
-    "create-seed": "npx sequelize-cli seed:generate --name",
-    "seed": "npx sequelize-cli db:seed:all",
-    "unseed": "npx sequelize-cli db:seed:undo:all"
+    "migrate": "cross-env NODE_ENV=development npx sequelize-cli db:migrate",
+    "migrate:prod": "cross-env NODE_ENV=production npx sequelize-cli db:migrate",
+    "create-seed": "cross-env NODE_ENV=development npx sequelize-cli seed:generate --name",
+    "seed": "cross-env NODE_ENV=development npx sequelize-cli db:seed:all",
+    "seed:prod": "cross-env NODE_ENV=production npx sequelize-cli db:seed:all",
+    "unseed": "cross-env NODE_ENV=development npx sequelize-cli db:seed:undo:all",
+    "unseed:prod": "cross-env NODE_ENV=production npx sequelize-cli db:seed:undo:all"
   },
   "repository": {
     "type": "git",
@@ -33,6 +36,7 @@
   },
   "homepage": "https://github.com/sciart-org/AppSciArt#readme",
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "sequelize-cli": "^6.6.3",
     "standard": "17.1.2"
   },
@@ -46,6 +50,7 @@
     "@supabase/supabase-js": "^2.49.8",
     "cors": "2.8.5",
     "dotenv": "16.5.0",
+    "dotenv-flow": "^4.1.0",
     "ejs": "^3.1.10",
     "express": "5.1.0",
     "googleapis": "^105.0.0",
