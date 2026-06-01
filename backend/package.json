@@ -9,6 +9,7 @@
     "app": "cross-env NODE_ENV=development node --watch src/server.js",
     "app:dev": "cross-env NODE_ENV=development node --watch src/server.js",
     "app:test": "cross-env NODE_ENV=testing node --watch src/server.js",
+    "start": "cross-env NODE_ENV=production node src/server.js",
     "migrate": "cross-env NODE_ENV=development npx sequelize-cli db:migrate",
     "migrate:dev": "cross-env NODE_ENV=development npx sequelize-cli db:migrate",
     "migrate:test": "cross-env NODE_ENV=testing npx sequelize-cli db:migrate",
