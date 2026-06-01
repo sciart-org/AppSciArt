@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext } from "react";
 import { DiagramContext } from "./DiagramContext";
 import CustomNode from "./CustomNode";
 

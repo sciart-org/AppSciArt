@@ -43,6 +43,10 @@ export default function SeedCreator() {
   const params = useParams();
   const editionId = params.editionId;
 
+  const handleChange = () => {
+    // TODO: remove this screen
+  };
+
   const [submissionBody, setSubmissionBody] = useState({
     title: "",
     addingEmail: "",

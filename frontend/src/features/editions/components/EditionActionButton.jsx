@@ -46,7 +46,6 @@ const EditionActionModal = () => {
 
 export const EditionActionButton = ({ edition, ...props }) => {
   const [error, setError] = useState(null);
-  const [message, setMessage] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const { fetcher } = useFetcher(error, setError);

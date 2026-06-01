@@ -7,7 +7,7 @@ export default function MoveParticipantModal({
   onCancel,
   changingSeedTitle,
   aggregationName,
-  aggregationNumber
+  aggregationNumber,
 }) {
   const lowerCaseName = aggregationName.toLowerCase();
 

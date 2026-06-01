@@ -159,7 +159,6 @@ export default function HackathonManagement({
       ),
       GROUP_WORK: <ManageGroups />,
       GROUP_PRESENTATION: <ManageGroupPresentations />,
-      TEAM_CREATION: <CreateTeams />,
       TEAM_CREATION: isEvaluatorOfHackathon ? (
         <h2>
           {isPastPhase

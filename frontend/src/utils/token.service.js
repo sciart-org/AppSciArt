@@ -9,7 +9,7 @@ class TokenService {
   getLocalAccessToken() {
     const rawJwt = localStorage.getItem("jwt");
     if (!rawJwt || rawJwt === "undefined") {
-      return null
+      return null;
     }
     const jwt = JSON.parse(localStorage.getItem("jwt"));
     return jwt ? jwt : null;
@@ -40,13 +40,13 @@ class TokenService {
   }
 
   getIsStaff() {
-    const user = this.getUser()
-    return user?.roles.includes("staff")
+    const user = this.getUser();
+    return user?.roles.includes("staff");
   }
 
   getIsEvaluator() {
-    const user = this.getUser()
-    return user?.roles.includes("evaluator")
+    const user = this.getUser();
+    return user?.roles.includes("evaluator");
   }
 
   setUser(user) {

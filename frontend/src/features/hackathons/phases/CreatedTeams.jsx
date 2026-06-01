@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import ParticipantList from "../components/ParticipantList";
 import AsterButton from "../../../components/buttons/AsterButton";
 import "./phases.css";

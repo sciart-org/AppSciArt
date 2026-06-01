@@ -87,10 +87,7 @@ export default function GroupPresentation() {
       setCanSubmitRatings(true);
     });
 
-    socket.emit(
-      "get_group_presenting_state",
-      `${hackathonId}/cluster/${0}`,
-    );
+    socket.emit("get_group_presenting_state", `${hackathonId}/cluster/${0}`);
   }, [socket, hackathonId]);
 
   if (ratingsSubmitted) {

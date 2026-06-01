@@ -1,9 +1,12 @@
 import { FaInstagram, FaFacebook, FaLink } from "react-icons/fa6";
-import './SocialNetworks.css'
+import "./SocialNetworks.css";
 
 export default function SocialNetworks(props) {
   return (
-    <div style={{ ...props.style }} className={props.className + " social-networks"}>
+    <div
+      style={{ ...props.style }}
+      className={props.className + " social-networks"}
+    >
       <FaInstagram
         onClick={() =>
           window.open("https://www.instagram.com/asterproyecto", "_blank")
@@ -13,7 +16,7 @@ export default function SocialNetworks(props) {
         onClick={() =>
           window.open(
             "https://www.facebook.com/Proyecto-ASTER-109935918470222",
-            "_blank"
+            "_blank",
           )
         }
       />

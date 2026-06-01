@@ -52,7 +52,7 @@ export default function InvitationModal({ openModal, setOpenModal }) {
       return;
     }
 
-    if (!showUsers && !validateEmail(scientistEmail)) {
+    if (!showUsers && !validateEmail(formData.email)) {
       window.alert("Invalid email format.");
       return;
     }

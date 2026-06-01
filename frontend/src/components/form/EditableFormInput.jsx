@@ -20,6 +20,7 @@ const StyleWrapper = ({ children, style }) => {
 
 export default function EditableFormInput({ style, ...props }) {
   const { handleInputChange, isEditable } = useContext(FormContext);
+  const [isOpen, setIsOpen] = useState(false);
 
   if (isEditable && props.customEditable) {
     return <StyleWrapper>{props.children}</StyleWrapper>;
@@ -87,7 +88,6 @@ export default function EditableFormInput({ style, ...props }) {
     );
   }
 
-  const [isOpen, setIsOpen] = useState(false);
   const showFullContent = !props.collapsible || isOpen;
 
   const ToggleButton = () => {
@@ -103,7 +103,10 @@ export default function EditableFormInput({ style, ...props }) {
     );
   };
 
-  const value = props.type === "select" && Array.isArray(props.value) ? props.value.join(", ") : props.value;
+  const value =
+    props.type === "select" && Array.isArray(props.value)
+      ? props.value.join(", ")
+      : props.value;
 
   return (
     <StyleWrapper style={style}>

@@ -9,7 +9,10 @@ export default function CollectionsPagination({
   itemComponent: ItemComponent,
 }) {
   const [currentPage, setCurrentPage] = useState(0);
-  const shownItems = items.slice(currentPage * itemsNumber, currentPage * itemsNumber + itemsNumber);
+  const shownItems = items.slice(
+    currentPage * itemsNumber,
+    currentPage * itemsNumber + itemsNumber,
+  );
   const totalPages = Math.ceil(items.length / itemsNumber);
 
   const nextPage = () => {

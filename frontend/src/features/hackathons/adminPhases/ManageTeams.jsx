@@ -35,10 +35,6 @@ export default function ManageTeams() {
 
   const isCurrentPhase = hackathon.phase === "TEAM_WORK";
 
-  const getFullName = (member) => {
-    return member.name + " " + member.surname;
-  };
-
   const fetchFlower = async () => {
     await fetcher({
       url: `flowers/${selectedTeam.id}`,

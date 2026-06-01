@@ -10,10 +10,10 @@
   },
   "lint-staged": {
     "frontend/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix --cwd frontend"
+      "npm run lint:fix --prefix frontend"
     ],
     "backend/**/*.js": [
-      "eslint --fix --cwd backend"
+      "npm run lint:fix --prefix backend"
     ]
   }
 }

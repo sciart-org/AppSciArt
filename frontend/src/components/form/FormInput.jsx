@@ -16,6 +16,8 @@ const InputComponent = ({
   style,
   ...props
 }) => {
+  const [visible, setVisible] = useState(false);
+
   if (multiline) {
     return (
       <textarea
@@ -70,7 +72,6 @@ const InputComponent = ({
   }
 
   if (type === "password") {
-    const [visible, setVisible] = useState(false);
     return (
       <div className="password-input-wrapper">
         <input

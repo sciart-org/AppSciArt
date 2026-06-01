@@ -38,7 +38,7 @@ export default function ScientistEmailForm({
               new Set([
                 ...submissionBody.scientistsToInvite,
                 submissionBody.addingEmail,
-              ])
+              ]),
             ),
             addingEmail: "",
           });

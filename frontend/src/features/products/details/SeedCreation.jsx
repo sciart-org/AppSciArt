@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import AsterButton from "../../../components/buttons/AsterButton";
 import RedirectButton from "../../../components/buttons/RedirectButton";
 import SelectorBar from "../../../components/buttons/SelectorBar";
