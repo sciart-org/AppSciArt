@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "test": "npx playwright test",
     "dev": "VITE_API_URL='http://localhost:3000' vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -24,6 +25,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react-swc": "^3.8.0",
