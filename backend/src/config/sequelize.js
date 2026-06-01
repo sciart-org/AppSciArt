@@ -1,18 +1,13 @@
 import dotenvFlow from 'dotenv-flow'
 import { Sequelize, Model } from 'sequelize'
+import configStack from '../config/config.cjs'
 
 dotenvFlow.config()
 
-export const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  },
-  logging: console.log
-})
+const env = process.env.NODE_ENV || 'development'
+const dbConfig = configStack[env]
+
+export const sequelize = new Sequelize(dbConfig.url, dbConfig)
 
 Model.prototype.toJSON = function () {
   const raw = this.get()
