@@ -25,7 +25,7 @@ const readEmail = (templateName, data) => {
 export const sendQuickRegisterEmail = (email, preRegistrationId) => {
   const completeRegistrationUrl = FRONTEND_URL + '/signup/complete/' + preRegistrationId
   const html = readEmail('quick-register', { completeRegistrationUrl })
-  const { data, error } = sendEmail({
+  const { error } = sendEmail({
     recipient: email,
     subject: 'Welcome to AppSciArt!',
     html
@@ -36,7 +36,7 @@ export const sendQuickRegisterEmail = (email, preRegistrationId) => {
 export const sendScientistPreRegistrationEmail = (email, preRegistrationId, editionName) => {
   const completeRegistrationUrl = FRONTEND_URL + '/signup/complete/' + preRegistrationId
   const html = readEmail('scientist-pre-registration', { completeRegistrationUrl, editionName })
-  const { _, error } = sendEmail({
+  const { error } = sendEmail({
     recipient: email,
     subject: 'Welcome to AppSciArt!',
     html
@@ -47,7 +47,7 @@ export const sendScientistPreRegistrationEmail = (email, preRegistrationId, edit
 export const sendCompleteRegistrationEmail = (email, name) => {
   const homeUrl = FRONTEND_URL
   const html = readEmail('completed-registration', { homeUrl, name })
-  const { _, error } = sendEmail({
+  const { error } = sendEmail({
     recipient: email,
     subject: "You're All Set!",
     html

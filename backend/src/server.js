@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import db from './models/index.js'
+import './models/index.js'
 import http from 'http'
 import express, { json } from 'express'
 import { corsMiddleware } from './middlewares/cors.js'

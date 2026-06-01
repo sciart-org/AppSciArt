@@ -12,9 +12,9 @@ export function customErrorHandler (req, res, next) {
     let userMessage = ''
 
     for (const line of lines) {
-      const match = line.match(/#\/(?:anyOf\/\d+\/)?properties\/([^\/\s]+)\/?[^ ]* > (.+)/)
+      const match = line.match(/#\/(?:anyOf\/\d+\/)?(?:properties\/)?([^/\s]+)?[^ ]* > (.+)/)
       if (match) {
-        const [_, field, message] = match
+        const [, field, message] = match
         const friendlyField = field.charAt(0).toUpperCase() + field.slice(1)
         if (!userMessage.includes(`${friendlyField} ${message}. `)) {
           userMessage += `${friendlyField} ${message}. `
