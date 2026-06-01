@@ -1,18 +1,23 @@
 import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
 import { UserProfile } from '../models/UserProfile.js'
+import { getUserRole, ROLES } from '../services/Roles.js'
 
-const getRoleScope = (isAdmin = false, userId = null) => {
-  return isAdmin
-    ? 'staff'
-    : userId
-      ? { method: ['scientist', userId] }
-      : 'public'
+const getSeedRoleScope = (role, userId = undefined) => {
+  if (role === ROLES.SCIENTIST) {
+    return userId ? { method: ['scientist', userId] } : ROLES.PUBLIC.name
+  }
+  if (role === ROLES.EVALUATOR) {
+    return ROLES.STAFF.name
+  }
+  return role.name
 }
 
-export const getSeedsOfEdition = async (editionId, isAdmin) => {
+export const getSeedsOfEdition = async (editionId, { role, userId }) => {
+  role ??= await getUserRole(userId)
+
   return Seed.scope([
-    getRoleScope(isAdmin),
+    getSeedRoleScope(role, userId),
     { method: ['withEdition', editionId] },
     'withAuthors'
   ]).findAll({
@@ -20,36 +25,37 @@ export const getSeedsOfEdition = async (editionId, isAdmin) => {
   })
 }
 
-export const getSeedsOfHackathon = (hackathonId, isAdmin) => {
+export const getSeedsOfHackathon = async (hackathonId, { role, userId }) => {
+  role ??= await getUserRole(userId)
   return Seed.scope([
-    getRoleScope(isAdmin),
+    getSeedRoleScope(role, userId),
     { method: ['withHackathon', hackathonId] }
   ]).findAll({
     attributes: ['id', 'title', 'state']
   })
 }
 
-export const getSeedById = (seedId, userId, isAdmin) => {
-  return Seed.scope([getRoleScope(isAdmin, userId), 'withAuthors']).findByPk(seedId)
+export const getSeedById = async (seedId, { role, userId }) => {
+  role ??= await getUserRole(userId)
+  return Seed.scope([getSeedRoleScope(role, userId), 'withAuthors']).findByPk(seedId)
 }
 
-export const getMinimalSeedUnrestricted = (seedId) => {
-  return Seed.unscoped().findByPk(seedId, { attributes: ['id'] })
+export const getMinimalSeedById = async (seedId, { role, userId }) => {
+  role ??= await getUserRole(userId)
+  return Seed.scope(getSeedRoleScope(role, userId)).findByPk(seedId, { attributes: ['id'] })
 }
 
-export const getMinimalSeedById = (seedId, userId, isAdmin) => {
-  return Seed.scope(getRoleScope(isAdmin, userId)).findByPk(seedId, { attributes: ['id'] })
-}
+export const getSeedsOfScientist = async (scientistId, editionId, { role, userId }) => {
+  role ??= await getUserRole(userId)
 
-export const getSeedsOfScientist = (userProfileId, editionId, isAdmin) => {
-  return Seed.scope([getRoleScope(isAdmin), 'withAuthors']).findAll({
+  return Seed.scope([getSeedRoleScope(role, userId), 'withAuthors']).findAll({
     attributes: ['id', 'title', 'state'],
     include: [
       {
         model: UserProfile,
         attributes: [],
         required: true,
-        where: { id: userProfileId },
+        where: { id: scientistId },
         through: { attributes: [] }
       },
       ...(editionId

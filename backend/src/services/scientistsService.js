@@ -106,7 +106,7 @@ const handleEditionEnrollment = async (scientistId, editionId, toBeEnrolled) => 
   const scientistIsEnrolled = await ScientistsRepository.isScientistEnrolledToEdition(scientist, editionId)
 
   if (scientistIsEnrolled && !toBeEnrolled) {
-    const seedsOfScientistInEdition = await SeedsRepository.getSeedsOfScientist(scientistId, editionId, true)
+    const seedsOfScientistInEdition = await SeedsRepository.getSeedsOfScientist(scientistId, { role: ROLES.STAFF })
     errorThrower(
       checkExists(seedsOfScientistInEdition),
       'This scientist has already created seeds in this edition',

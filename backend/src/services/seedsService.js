@@ -7,7 +7,7 @@ import { errorThrower } from './errorThrower.js'
 import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as EditionsRepository from '../repositories/editionsRepository.js'
-import { INTERNAL_BACKEND_ROLE, ROLES } from './Roles.js'
+import { ROLES } from './Roles.js'
 import { createDriveSeed, getEntitiesWithImage, getProductsWithTemplate, parseFolderName, updateFolderName, uploadImg } from './driveService.js'
 import * as ScientistsRepository from '../repositories/scientistsRepository.js'
 import { validateSeedNameUnique } from '../validators/productValidators.js'
@@ -26,23 +26,15 @@ export const getFullSeedsDetails = async (seeds) => {
   return seedsWithTemplateAndImage
 }
 
-const checkSeedExists = async (seedId) => {
-  const exists = await SeedsRepository.getMinimalSeedUnrestricted(seedId)
-  errorThrower(checkExists(exists), 'Unauthorized: You cannot access this seed', 403)
-  errorThrower(true, 'Seed not found', 404)
-}
-
 export async function getSeedsByEdition (userId, editionId) {
   await validateCanSeeEdition(userId, editionId)
-  const isAdmin = await checkIsStaff(userId)
-  const seeds = await SeedsRepository.getSeedsOfEdition(editionId, isAdmin)
+  const seeds = await SeedsRepository.getSeedsOfEdition(editionId, { userId })
   return await getFullSeedsDetails(seeds)
 }
 
 export async function getSeedsByHackathon (userId, hackathonId) {
   await validateHackathonIsReadable(userId, hackathonId)
-  const isAdmin = await checkIsStaff(userId)
-  const seeds = await SeedsRepository.getSeedsOfHackathon(hackathonId, isAdmin)
+  const seeds = await SeedsRepository.getSeedsOfHackathon(hackathonId, { userId })
   return await getFullSeedsDetails(seeds)
 }
 
@@ -68,39 +60,30 @@ export async function createSeed (userId, body) {
 }
 
 export async function getSeedDetails (userId, seedId) {
-  const isAdmin = await checkIsStaff(userId)
-  const seed = await SeedsRepository.getSeedById(seedId, userId, isAdmin)
-
-  if (!checkExists(seed)) {
-    await checkSeedExists(seedId)
-  }
-
+  const seed = await SeedsRepository.getSeedById(seedId, { userId })
+  errorThrower(!checkExists(seed), 'Seed not found', 404)
   const [fullSeed] = await getFullSeedsDetails([seed])
   return fullSeed
 }
 
 export async function getSeedConceptualMapIds (userId, seedId) {
-  const isAdmin = await checkIsStaff(userId)
-  const seed = await SeedsRepository.getMinimalSeedById(seedId, userId, isAdmin)
-
-  if (!checkExists(seed)) {
-    await checkSeedExists(seedId)
-  }
-
+  const seed = await SeedsRepository.getMinimalSeedById(seedId, { userId })
+  errorThrower(!checkExists(seed), 'Seed not found', 404)
   const conceptualMapsIds = await GroupsAndTeamsRepository.getDeliveredMapIdsOfSeed(seedId)
-
   return conceptualMapsIds
 }
 
 export async function updateSeed (userId, seedId, body) {
-  const isStaff = await checkIsStaff(userId)
-  const scientistEditions = await ScientistsRepository.getEditionsOfScientist(userId)
-  const seedEditions = await EditionsRepository.getEditionsOfSeed(seedId, { role: INTERNAL_BACKEND_ROLE })
-  const isScientist = seedEditions.some(edition => scientistEditions.map(e => e.id).includes(edition.id))
-  errorThrower(!(isScientist || isStaff), 'Unauthorized: You cannot edit this resource', 403)
-  const { title, mainImage, branchesOfKnowledge, videoLink, presentationLink, podcastLink } = body
+  const seedToUpdate = await SeedsRepository.getSeedById(seedId, { userId })
+  errorThrower(!checkExists(seedToUpdate), 'Seed not found', 404)
 
-  const seedToUpdate = await SeedsRepository.getSeedById(seedId, userId, true)
+  const isStaff = await checkIsStaff(userId)
+  const isScientist = await ScientistsRepository.isScientistOfSeed(userId, seedId)
+
+  errorThrower(!(isScientist || isStaff), 'Unauthorized: You cannot edit this seed', 403)
+  errorThrower(!isStaff && seedToUpdate.state !== 'IN_PROGRESS', 'Unauthorized: You cannot edit a published seed', 403)
+
+  const { title, mainImage, branchesOfKnowledge, videoLink, presentationLink, podcastLink } = body
 
   if (title) {
     await validateSeedNameUnique(title, seedId)

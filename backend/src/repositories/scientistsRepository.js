@@ -3,6 +3,8 @@ import { ScientistInvitation } from '../models/roles/ScientistInvitation.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { Seed } from '../models/Seed.js'
 import { INTERNAL_BACKEND_ROLE, ROLES } from '../services/Roles.js'
+import { SeedScientists } from '../models/intermediate/SeedScientists.js'
+import { checkExists } from '../validators/generalValidators.js'
 
 export async function getScientistInvitation (email, editionId, seedId) {
   return await ScientistInvitation.findOrCreate({ where: { email, editionId, seedId } })
@@ -93,4 +95,11 @@ export async function getScientistSeedsOfEdition (scientistId, editionId) {
       }
     ]
   })
+}
+
+export async function isScientistOfSeed (scientistId, seedId) {
+  const record = await SeedScientists.findOne({
+    where: { seedId, userProfileId: scientistId }
+  })
+  return checkExists(record)
 }

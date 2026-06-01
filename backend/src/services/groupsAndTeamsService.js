@@ -78,7 +78,7 @@ export async function createExploringGroup (userId, hackathonId, seedId) {
   errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create exploring groups', 403)
   const existingGroup = await GroupsAndTeamsRepository.getConceptualMapOfSeedInHackathon(seedId, hackathonId)
   errorThrower(checkExists(existingGroup), 'A group already exists for this seed', 409)
-  const seedsOfHackathon = await SeedsRepository.getSeedsOfHackathon(hackathonId)
+  const seedsOfHackathon = await SeedsRepository.getSeedsOfHackathon(hackathonId, { role: ROLES.STAFF })
   errorThrower(!seedsOfHackathon.map(s => s.id).includes(seedId), 'The seed does not belong to this hackathon', 400)
   return await GroupsAndTeamsRepository.createConceptualMapOfSeed(seedId)
 }
@@ -87,7 +87,7 @@ export async function createCoCreationTeam (userId, hackathonId, seedId) {
   errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create co-creation teams', 403)
   const existingTeam = await FlowersRepository.getFlowerOfSeedInHackathon(seedId, hackathonId)
   errorThrower(checkExists(existingTeam), 'A team already exists for this seed', 409)
-  const seedsOfHackathon = await SeedsRepository.getSeedsOfHackathon(hackathonId)
+  const seedsOfHackathon = await SeedsRepository.getSeedsOfHackathon(hackathonId, { role: ROLES.STAFF })
   errorThrower(!seedsOfHackathon.map(s => s.id).includes(seedId), 'The seed does not belong to this hackathon', 400)
   return await FlowersRepository.createFlowerOfSeed(seedId)
 }

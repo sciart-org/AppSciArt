@@ -94,7 +94,7 @@ Seed.associate = (db) => {
   Seed.addScope('withEdition', (editionId) => ({
     include: [
       {
-        model: Edition,
+        model: Edition.unscoped(),
         where: editionId ? { id: editionId } : null,
         attributes: [],
         through: { attributes: [] }
@@ -115,6 +115,9 @@ Seed.associate = (db) => {
   }))
 
   Seed.addScope('scientist', (scientistId) => ({
+    attributes: {
+      exclude: ['createdAt', 'updatedAt']
+    },
     where: {
       [Op.or]: [
         { state: 'PUBLISHED' },
