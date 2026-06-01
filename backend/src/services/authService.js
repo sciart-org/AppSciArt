@@ -1,12 +1,12 @@
 import { signInEmail } from '../auth/signin.js'
 import { signUpEmail, signUpGoogle } from '../auth/signup.js'
 import { UserProfile } from '../models/UserProfile.js'
-import { EarlySignup } from '../models/EarlySignup.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { getUserRoles } from './usersService.js'
 import { sendQuickRegisterEmail } from '../emails/emailService.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
+import * as AuthRepository from '../repositories/authRepository.js'
 
 export async function login ({ email, password }) {
   const { data, error } = await signInEmail(email, password)
@@ -55,12 +55,12 @@ export async function googleRegister () {
 
 export async function quickRegister (email) {
   const existingUser = await UsersRepository.getUserProfileByEmail(email)
-  const existingEarlySignup = await EarlySignup.findOne({ where: { email } })
+  const existingEarlySignup = await AuthRepository.getPreRegistration(email)
 
   const alreadyRegistered = existingUser !== null || existingEarlySignup !== null
   errorThrower(alreadyRegistered, 'Account with that email already registered.', 400)
 
-  const preRegistration = await EarlySignup.create({ email })
+  const preRegistration = await AuthRepository.preRegisterUser(email)
   sendQuickRegisterEmail(email, preRegistration?.id)
   return { message: 'Pre-registered successfully' }
 }
@@ -79,16 +79,16 @@ export async function completeRegistration (body) {
 }
 
 export async function getEarlySignup (id) {
-  const earlySignup = await EarlySignup.findByPk(id)
+  const earlySignup = await AuthRepository.getPreRegistrationById(id)
   return earlySignup
 }
 
 export async function removeEarlySignupByEmail (email) {
-  await EarlySignup.destroy({ where: { email } })
+  await AuthRepository.removePreRegistrationByEmail(email)
 }
 
 async function getEarlySignupByEmail (email) {
-  const earlySignup = await EarlySignup.findOne({ where: { email } })
+  const earlySignup = await AuthRepository.getPreRegistration(email)
   return earlySignup
 }
 
