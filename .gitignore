@@ -25,6 +25,12 @@ frontend/*.sln
 frontend/*.sw?
 .DS_Store
 
+frontend/test-results/
+frontend/playwright-report/
+frontend/blob-report/
+frontend/playwright/.cache/
+frontend/playwright/.auth/
+
 backend/node_modules
 backend/.env**
 backend/logs
