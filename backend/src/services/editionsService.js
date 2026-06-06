@@ -1,8 +1,7 @@
 import { Edition } from '../models/Edition.js'
-import { checkIsStaff } from '../validators/userValidators.js'
 import { validateEditionNameUnique } from '../validators/editionValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { createDriveEdition, createEditionFolderName, getEntitiesWithImage, updateFolderName, uploadImg } from './driveService.js'
+import { createEditionFolderName, getEntitiesWithImage, updateFolderName, uploadImg } from './driveService.js'
 import * as EditionsRepository from '../repositories/editionsRepository.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { ROLES } from './Roles.js'
@@ -17,17 +16,14 @@ export async function getEditions (userId, states) {
   return editionsWithLogo
 }
 
-export async function createEdition (userId, body) {
-  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create an edition', 403)
-  const { name, year, logo, shortDescription, longDescription } = body
-  await validateEditionNameUnique(name)
-  const driveLink = await createDriveEdition(year, name, logo)
+export async function createEdition (editionBody) {
+  const { name, year, shortDescription, longDescription, driveLink } = editionBody
   const createdEdition = await Edition.create({
     name,
     year,
-    driveLink,
     shortDescription,
-    longDescription
+    longDescription,
+    driveLink
   })
   return createdEdition
 }

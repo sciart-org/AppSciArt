@@ -58,6 +58,13 @@ const createWriterLink = async (id) => {
   })
 }
 
+export const deleteDriveFolder = async (folderId) => {
+  if (!folderId) return
+  await drive.files.delete({
+    fileId: folderId
+  })
+}
+
 export const getProductsWithTemplate = async (products, templateName) => {
   return Promise.all(products.map(async (product) => {
     if (!product.driveLink) return { ...toPlainObject(product), template: null }
@@ -337,7 +344,7 @@ export const createDriveEdition = async (year, name, logo) => {
     uploadImg(logo, driveLink),
     createEmptyDoc(editionFolderId, 'seedTemplate')
   ])
-  return driveLink
+  return { driveLink, folderId: editionFolderId }
 }
 
 export const createDriveHackathon = async (editionDriveLink, internalName, logo) => {

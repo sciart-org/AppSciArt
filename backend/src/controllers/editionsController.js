@@ -4,6 +4,8 @@ import * as ScientistsService from '../services/scientistsService.js'
 import { withController } from './controllerHandlers.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
+import { createDriveEdition, deleteDriveFolder } from '../services/driveService.js'
+import { validateEditionNameUnique } from '../validators/editionValidators.js'
 import { validateStaff } from '../middlewares/authMiddleware.js'
 
 export const getEditions = withController(async (req, res) => {
@@ -19,10 +21,17 @@ export const getEditions = withController(async (req, res) => {
 })
 
 export const createEdition = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
-  const createdEdition = await service.createEdition(currentUser?.id, req.body)
-  return res.status(201).send(createdEdition)
+  await validateStaff(req)
+  const { name, year, shortDescription, longDescription, logo } = req.body
+  await validateEditionNameUnique(name)
+  const { driveLink, folderId } = await createDriveEdition(year, name, logo)
+  try {
+    const createdEdition = await service.createEdition({ name, year, shortDescription, longDescription, driveLink })
+    return res.status(201).send(createdEdition)
+  } catch (error) {
+    await deleteDriveFolder(folderId)
+    throw error
+  }
 })
 
 export const getEditionDetails = withController(async (req, res) => {
