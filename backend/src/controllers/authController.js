@@ -7,13 +7,13 @@ import * as scientistsService from '../services/scientistsService.js'
 import * as usersService from '../services/usersService.js'
 import * as emailService from '../emails/emailService.js'
 
-export const login = withController(async (req, res, addAfterCommit) => {
+export const login = withController(async (req, res) => {
   const { email, password } = req.body
   const result = await service.login({ email, password })
   return res.status(201).send(result)
 })
 
-export const register = withController(async (req, res) => {
+export const register = withController(async (req, res, addAfterCommit) => {
   const { method } = req.query
 
   if (method === 'direct') {
@@ -25,8 +25,9 @@ export const register = withController(async (req, res) => {
   }
 
   if (method === 'quick') {
-    const result = await service.quickRegister(req.body.email)
-    return res.status(201).send(result)
+    const preRegistration = await service.quickRegister(req.body.email)
+    addAfterCommit(() => emailService.sendQuickRegisterEmail(req.body.email, preRegistration?.id))
+    return res.status(201).send({ message: 'Pre-registered successfully' })
   }
 
   return res.status(400).send({
@@ -52,7 +53,7 @@ export const registerProvider = withController(async (req, res) => {
   })
 })
 
-export const completeRegistration = withController(async (req, res) => {
+export const completeRegistration = withController(async (req, res, addAfterCommit) => {
   const validationError = authBodyValidator(req.body)
   errorThrower(checkExists(validationError), validationError, 400)
 
@@ -63,7 +64,7 @@ export const completeRegistration = withController(async (req, res) => {
   if (hasBeenInvited) {
     result.roles = await usersService.getUserRoles(createdUser.id)
   }
-  emailService.sendCompleteRegistrationEmail(req.body.email, createdUser.name)
+  addAfterCommit(() => emailService.sendCompleteRegistrationEmail(req.body.email, createdUser.name))
   return res.status(201).send(result)
 })
 

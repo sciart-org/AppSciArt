@@ -4,7 +4,6 @@ import { UserProfile } from '../models/UserProfile.js'
 import { errorThrower } from './errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import { getUserRoles } from './usersService.js'
-import { sendQuickRegisterEmail } from '../emails/emailService.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
 import * as AuthRepository from '../repositories/authRepository.js'
 
@@ -61,8 +60,7 @@ export async function quickRegister (email) {
   errorThrower(alreadyRegistered, 'Account with that email already registered.', 400)
 
   const preRegistration = await AuthRepository.preRegisterUser(email)
-  sendQuickRegisterEmail(email, preRegistration?.id)
-  return { message: 'Pre-registered successfully' }
+  return preRegistration
 }
 
 export async function completeRegistration (body) {

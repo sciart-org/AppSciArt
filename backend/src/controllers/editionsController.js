@@ -80,7 +80,9 @@ export const inviteScientistToEdition = withController(async (req, res, addAfter
     earlySignUpId = await ScientistsService.inviteScientistByEmail(email, editionId, null)
   }
 
-  await ScientistsService.sendScientistInvitationEmail(editionId, destinationEmail, sendEmail, earlySignUpId)
+  addAfterCommit(() =>
+    ScientistsService.sendScientistInvitationEmail(editionId, destinationEmail, sendEmail, earlySignUpId)
+  )
 
   return res.status(200).send({ message: 'Scientist invited successfully' })
 })
