@@ -1,4 +1,4 @@
-import { withErrorHandler } from './errorHandling.js'
+import { withErrorHandler } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import * as service from '../services/scientistsService.js'
 import { errorThrower } from '../services/errorThrower.js'

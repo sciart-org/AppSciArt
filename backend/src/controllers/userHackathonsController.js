@@ -1,5 +1,5 @@
 import * as service from '../services/userHackathonsService.js'
-import { withErrorHandler } from './errorHandling.js'
+import { withErrorHandler } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import { validateHackathonIsOpen } from '../validators/hackathonValidators.js'
 import { checkExists } from '../validators/generalValidators.js'

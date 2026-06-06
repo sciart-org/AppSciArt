@@ -1,5 +1,5 @@
 import * as service from '../services/groupsAndTeamsService.js'
-import { withErrorHandler } from './errorHandling.js'
+import { withErrorHandler } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import * as UserHackathonsService from '../services/userHackathonsService.js'
 import { broadcastGroupUpdate, broadcastParticipationUpdate, broadcastTeamUpdate } from '../sockets/hackathonPhases.js'
@@ -98,7 +98,7 @@ export const getConceptualMap = withErrorHandler(async (req, res) => {
   return res.status(200).send(conceptualMap)
 })
 
-export const submitConceptualMap = withErrorHandler(async (req, res) => {
+export const submitConceptualMap = withErrorHandler(async (req, res, addAfterCommit) => {
   const groupId = req.params.groupId
   const mapToSubmit = req.body
   const broadcast = req.query.broadcast
@@ -107,7 +107,11 @@ export const submitConceptualMap = withErrorHandler(async (req, res) => {
 
   const updatedParticipationId = await service.submitConceptualMap(currentUser?.id, groupId, mapToSubmit)
   const updatedParticipation = await UserHackathonsService.getParticipationById(currentUser?.id, updatedParticipationId)
-  broadcastGroupUpdate(broadcast, updatedParticipation.hackathonId, groupId, { isDelivered: updatedParticipation.conceptualMap.isDelivered })
+
+  addAfterCommit(() =>
+    broadcastGroupUpdate(broadcast, updatedParticipation.hackathonId, groupId, { isDelivered: updatedParticipation.conceptualMap.isDelivered })
+  )
+
   return res.status(200).send(updatedParticipation)
 })
 

@@ -1,6 +1,6 @@
 import * as service from '../services/fruitsService.js'
 import * as UsersService from '../services/usersService.js'
-import { withErrorHandler } from './errorHandling.js'
+import { withErrorHandler } from './controllerHandlers.js'
 
 export const getFruitsByEdition = withErrorHandler(async (req, res) => {
   const editionId = req.query.editionId

@@ -1,7 +1,7 @@
 import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/usersService.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { withErrorHandler } from './errorHandling.js'
+import { withErrorHandler } from './controllerHandlers.js'
 
 export const getHealth = withErrorHandler(async (req, res) => {
   return res.status(200).send({ status: 'ok' })

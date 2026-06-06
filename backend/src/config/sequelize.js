@@ -1,6 +1,10 @@
 import dotenvFlow from 'dotenv-flow'
 import { Sequelize, Model } from 'sequelize'
 import configStack from '../config/config.cjs'
+import cls from 'cls-hooked'
+
+const namespace = cls.createNamespace('transactions')
+Sequelize.useCLS(namespace)
 
 dotenvFlow.config()
 

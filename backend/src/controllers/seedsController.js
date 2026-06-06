@@ -2,7 +2,7 @@ import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/seedsService.js'
 import * as UsersService from '../services/usersService.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { withErrorHandler } from './errorHandling.js'
+import { withErrorHandler } from './controllerHandlers.js'
 
 export const getSeeds = withErrorHandler(async (req, res) => {
   const editionId = req.query.editionId
