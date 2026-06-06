@@ -1,8 +1,8 @@
 import * as service from '../services/fruitsService.js'
 import * as UsersService from '../services/usersService.js'
-import { withErrorHandler } from './controllerHandlers.js'
+import { withController } from './controllerHandlers.js'
 
-export const getFruitsByEdition = withErrorHandler(async (req, res) => {
+export const getFruitsByEdition = withController(async (req, res) => {
   const editionId = req.query.editionId
   const currentUser = await UsersService.getCurrentUserProfile(req)
   const fruits = await service.getFruitsByEdition(currentUser?.id, editionId)
@@ -13,7 +13,7 @@ export function createFruit (req, res) {
   service.createFruit(req, res)
 }
 
-export const getFruitDetails = withErrorHandler(async (req, res) => {
+export const getFruitDetails = withController(async (req, res) => {
   const fruitId = req.params.fruitId
   const currentUser = await UsersService.getCurrentUserProfile(req)
   const fruit = await service.getFruitDetails(currentUser?.id, fruitId)

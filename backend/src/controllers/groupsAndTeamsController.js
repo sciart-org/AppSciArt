@@ -1,25 +1,25 @@
 import * as service from '../services/groupsAndTeamsService.js'
-import { withErrorHandler } from './controllerHandlers.js'
+import { withController } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import * as UserHackathonsService from '../services/userHackathonsService.js'
 import { broadcastGroupUpdate, broadcastParticipationUpdate, broadcastTeamUpdate } from '../sockets/hackathonPhases.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 
-export const getHackathonExploringGroups = withErrorHandler(async (req, res) => {
+export const getHackathonExploringGroups = withController(async (req, res) => {
   const { hackathonId } = req.params
   const exploringGroups = await service.getHackathonExploringGroups(hackathonId)
   return res.status(200).send(exploringGroups)
 })
 
-export const getHackathonCoCreationTeams = withErrorHandler(async (req, res) => {
+export const getHackathonCoCreationTeams = withController(async (req, res) => {
   const { hackathonId } = req.params
   const currentUser = await UsersService.getCurrentUserProfile(req)
   const coCreationTeams = await service.getHackathonCoCreationTeams(currentUser?.id, hackathonId)
   return res.status(200).send(coCreationTeams)
 })
 
-export const createExploringGroup = withErrorHandler(async (req, res) => {
+export const createExploringGroup = withController(async (req, res) => {
   const { hackathonId } = req.params
   const { participantIds, seedId } = req.body
   const { broadcast } = req.query
@@ -41,7 +41,7 @@ export const createExploringGroup = withErrorHandler(async (req, res) => {
   return res.status(201).send(await service.getExploringGroupDetails(createdExploringGroup.id))
 })
 
-export const getExploringGroupDetails = withErrorHandler(async (req, res) => {
+export const getExploringGroupDetails = withController(async (req, res) => {
   const { groupId } = req.params
   const exploringGroup = await service.getExploringGroupDetails(groupId)
   return res.status(200).send(exploringGroup)
@@ -55,7 +55,7 @@ export function updateExploringGroup (req, res) {
   service.updateExploringGroup(req, res)
 }
 
-export const createCoCreationTeam = withErrorHandler(async (req, res) => {
+export const createCoCreationTeam = withController(async (req, res) => {
   const { hackathonId } = req.params
   const { participantIds, seedId } = req.body
   const { broadcast } = req.query
@@ -77,7 +77,7 @@ export const createCoCreationTeam = withErrorHandler(async (req, res) => {
   return res.status(201).send(await service.getCoCreationTeamDetails(createdCoCreationTeam.id))
 })
 
-export const getCoCreationTeamDetails = withErrorHandler(async (req, res) => {
+export const getCoCreationTeamDetails = withController(async (req, res) => {
   const { teamId } = req.params
   const coCreationTeam = await service.getCoCreationTeamDetails(teamId)
   return res.status(200).send(coCreationTeam)
@@ -91,14 +91,14 @@ export function updateCoCreationTeam (req, res) {
   service.updateCoCreationTeam(req, res)
 }
 
-export const getConceptualMap = withErrorHandler(async (req, res) => {
+export const getConceptualMap = withController(async (req, res) => {
   const groupId = req.params.groupId
   const currentUser = await UsersService.getCurrentUserProfile(req)
   const conceptualMap = await service.getConceptualMap(currentUser?.id, groupId)
   return res.status(200).send(conceptualMap)
 })
 
-export const submitConceptualMap = withErrorHandler(async (req, res, addAfterCommit) => {
+export const submitConceptualMap = withController(async (req, res, addAfterCommit) => {
   const groupId = req.params.groupId
   const mapToSubmit = req.body
   const broadcast = req.query.broadcast
@@ -115,7 +115,7 @@ export const submitConceptualMap = withErrorHandler(async (req, res, addAfterCom
   return res.status(200).send(updatedParticipation)
 })
 
-export const reopenConceptualMap = withErrorHandler(async (req, res) => {
+export const reopenConceptualMap = withController(async (req, res) => {
   const groupId = req.params.groupId
   const broadcast = req.query.broadcast
   const currentUser = await UsersService.getCurrentUserProfile(req)
@@ -126,7 +126,7 @@ export const reopenConceptualMap = withErrorHandler(async (req, res) => {
   return res.status(200).send(updatedConceptualMap)
 })
 
-export const submitFlower = withErrorHandler(async (req, res) => {
+export const submitFlower = withController(async (req, res) => {
   const teamId = req.params.teamId
   const broadcast = req.query.broadcast
   const currentUser = await UsersService.getCurrentUserProfile(req)
@@ -142,7 +142,7 @@ export const submitFlower = withErrorHandler(async (req, res) => {
   return res.status(200).send(updatedParticipation)
 })
 
-export const reopenFlower = withErrorHandler(async (req, res) => {
+export const reopenFlower = withController(async (req, res) => {
   const teamId = req.params.teamId
   const broadcast = req.query.broadcast
   const currentUser = await UsersService.getCurrentUserProfile(req)

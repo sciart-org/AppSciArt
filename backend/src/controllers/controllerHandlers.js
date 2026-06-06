@@ -16,19 +16,14 @@ export const withErrorHandler = (f) => {
 
 export const withTransaction = (f) => {
   return async (req, res) => {
-    const t = await sequelize.transaction()
-    req.transaction = t
-
     const afterCommitStack = []
     const addAfterCommit = (fn) => afterCommitStack.push(fn)
 
-    try {
+    await sequelize.transaction(async (t) => {
+      req.transaction = t
       await f(req, res, addAfterCommit)
-      await t.commit()
-      for (const fn of afterCommitStack) await fn()
-    } catch (error) {
-      if (!t.finished) await t.rollback()
-      throw error
-    }
+    })
+
+    for (const fn of afterCommitStack) await fn()
   }
 }

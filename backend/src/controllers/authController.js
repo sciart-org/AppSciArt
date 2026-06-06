@@ -2,18 +2,18 @@ import * as service from '../services/authService.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { authBodyValidator } from '../validators/authValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { withErrorHandler } from './controllerHandlers.js'
+import { withController } from './controllerHandlers.js'
 import * as scientistsService from '../services/scientistsService.js'
 import * as usersService from '../services/usersService.js'
 import * as emailService from '../emails/emailService.js'
 
-export const login = withErrorHandler(async (req, res) => {
+export const login = withController(async (req, res, addAfterCommit) => {
   const { email, password } = req.body
   const result = await service.login({ email, password })
   return res.status(201).send(result)
 })
 
-export const register = withErrorHandler(async (req, res) => {
+export const register = withController(async (req, res) => {
   const { method } = req.query
 
   if (method === 'direct') {
@@ -39,7 +39,7 @@ const getBodyAttributes = (req) => {
   return { email, password, name, surname, gender, ageRange, affiliations, areasOfInterest }
 }
 
-export const registerProvider = withErrorHandler(async (req, res) => {
+export const registerProvider = withController(async (req, res) => {
   const { provider } = req.query
 
   if (provider === 'google') {
@@ -52,7 +52,7 @@ export const registerProvider = withErrorHandler(async (req, res) => {
   })
 })
 
-export const completeRegistration = withErrorHandler(async (req, res) => {
+export const completeRegistration = withController(async (req, res) => {
   const validationError = authBodyValidator(req.body)
   errorThrower(checkExists(validationError), validationError, 400)
 
@@ -67,7 +67,7 @@ export const completeRegistration = withErrorHandler(async (req, res) => {
   return res.status(201).send(result)
 })
 
-export const getEarlySignup = withErrorHandler(async (req, res) => {
+export const getEarlySignup = withController(async (req, res) => {
   const result = await service.getEarlySignup(req.params.earlySignupId)
   return res.status(200).send(result)
 })

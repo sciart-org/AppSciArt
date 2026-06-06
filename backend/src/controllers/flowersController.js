@@ -2,9 +2,9 @@ import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/flowersService.js'
 import * as UsersService from '../services/usersService.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { withErrorHandler } from './controllerHandlers.js'
+import { withController } from './controllerHandlers.js'
 
-export const getFlowers = withErrorHandler(async (req, res) => {
+export const getFlowers = withController(async (req, res) => {
   const editionId = req.query.editionId
   const hackathonId = req.query.hackathonId
   const currentUser = await UsersService.getCurrentUserProfile(req)
@@ -25,7 +25,7 @@ export function createFlower (req, res) {
   service.createFlower(req, res)
 }
 
-export const getFlowerDetails = withErrorHandler(async (req, res) => {
+export const getFlowerDetails = withController(async (req, res) => {
   const flowerId = req.params.flowerId
   const currentUser = await UsersService.getCurrentUserProfile(req)
   const flower = await service.getFlowerDetails(currentUser?.id, flowerId)

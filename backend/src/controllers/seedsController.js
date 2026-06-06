@@ -2,9 +2,9 @@ import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/seedsService.js'
 import * as UsersService from '../services/usersService.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { withErrorHandler } from './controllerHandlers.js'
+import { withController } from './controllerHandlers.js'
 
-export const getSeeds = withErrorHandler(async (req, res) => {
+export const getSeeds = withController(async (req, res) => {
   const editionId = req.query.editionId
   const hackathonId = req.query.hackathonId
   const currentUser = await UsersService.getCurrentUserProfile(req)
@@ -21,7 +21,7 @@ export const getSeeds = withErrorHandler(async (req, res) => {
   return res.status(200).send(seeds)
 })
 
-export const createSeed = withErrorHandler(async (req, res) => {
+export const createSeed = withController(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
 
@@ -33,14 +33,14 @@ export const createSeed = withErrorHandler(async (req, res) => {
   return res.status(201).send(fullSeed)
 })
 
-export const getSeedDetails = withErrorHandler(async (req, res) => {
+export const getSeedDetails = withController(async (req, res) => {
   const seedId = req.params.seedId
   const currentUser = await UsersService.getCurrentUserProfile(req)
   const seed = await service.getSeedDetails(currentUser?.id, seedId)
   return res.status(200).send(seed)
 })
 
-export const updateSeed = withErrorHandler(async (req, res) => {
+export const updateSeed = withController(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
 
@@ -61,7 +61,7 @@ export function publishSeed (req, res) {
   service.publishSeed(req, res)
 }
 
-export const getSeedConceptualMapsIds = withErrorHandler(async (req, res) => {
+export const getSeedConceptualMapsIds = withController(async (req, res) => {
   const seedId = req.params.seedId
   const currentUser = await UsersService.getCurrentUserProfile(req)
   const conceptualMapsIds = await service.getSeedConceptualMapIds(currentUser?.id, seedId)

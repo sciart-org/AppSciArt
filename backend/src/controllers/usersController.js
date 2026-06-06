@@ -1,13 +1,13 @@
 import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/usersService.js'
 import { checkExists } from '../validators/generalValidators.js'
-import { withErrorHandler } from './controllerHandlers.js'
+import { withController } from './controllerHandlers.js'
 
-export const getHealth = withErrorHandler(async (req, res) => {
+export const getHealth = withController(async (req, res) => {
   return res.status(200).send({ status: 'ok' })
 })
 
-export const getUsers = withErrorHandler(async (req, res) => {
+export const getUsers = withController(async (req, res) => {
   const currentUser = await service.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
   const users = await service.getUsers(currentUser.id)
@@ -26,7 +26,7 @@ export function editUser (req, res) {
   service.editUser(req, res)
 }
 
-export const getCurrentUser = withErrorHandler(async (req, res) => {
+export const getCurrentUser = withController(async (req, res) => {
   const userData = await service.getCurrentUser(req)
   const userProfile = await service.getCurrentUserProfile(req)
   const roles = await service.getUserRoles(userProfile.id)

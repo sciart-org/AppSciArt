@@ -1,5 +1,5 @@
 import * as service from '../services/userHackathonsService.js'
-import { withErrorHandler } from './controllerHandlers.js'
+import { withController } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import { validateHackathonIsOpen } from '../validators/hackathonValidators.js'
 import { checkExists } from '../validators/generalValidators.js'
@@ -10,7 +10,7 @@ export function getUserEnrolledHackathons (req, res) {
   service.getUserEnrolledHackathons(req, res)
 }
 
-export const joinHackathon = withErrorHandler(async (req, res) => {
+export const joinHackathon = withController(async (req, res) => {
   const { roles, interests } = req.body
   const { hackathonId, userId } = req.params
   const currentUser = await UsersService.getCurrentUserProfile(req)
@@ -20,7 +20,7 @@ export const joinHackathon = withErrorHandler(async (req, res) => {
   return res.status(201).send(participation)
 })
 
-export const joinMeHackathon = withErrorHandler(async (req, res) => {
+export const joinMeHackathon = withController(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
   req.params = { ...req.params, userId: currentUser.id }
@@ -35,7 +35,7 @@ export function joinCluster (req, res) {
   service.joinCluster(req, res)
 }
 
-export const getMyHackathonParticipation = withErrorHandler(async (req, res) => {
+export const getMyHackathonParticipation = withController(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
 
@@ -45,7 +45,7 @@ export const getMyHackathonParticipation = withErrorHandler(async (req, res) => 
   return res.status(200).send(participation)
 })
 
-export const getMyEvaluatorRole = withErrorHandler(async (req, res) => {
+export const getMyEvaluatorRole = withController(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
 
@@ -55,7 +55,7 @@ export const getMyEvaluatorRole = withErrorHandler(async (req, res) => {
   return res.status(200).send(evaluator)
 })
 
-export const getHackathonEvaluators = withErrorHandler(async (req, res) => {
+export const getHackathonEvaluators = withController(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
 
@@ -65,7 +65,7 @@ export const getHackathonEvaluators = withErrorHandler(async (req, res) => {
   return res.status(200).send(evaluator)
 })
 
-export const updateParticipation = withErrorHandler(async (req, res) => {
+export const updateParticipation = withController(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
   errorThrower(!checkExists(currentUser), 'Authentication required', 401)
 
