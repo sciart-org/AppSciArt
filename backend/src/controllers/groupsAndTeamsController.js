@@ -18,7 +18,7 @@ export const getHackathonCoCreationTeams = withController(async (req, res) => {
   return res.status(200).send(coCreationTeams)
 })
 
-export const createExploringGroup = withController(async (req, res) => {
+export const createExploringGroup = withController(async (req, res, addAfterCommit) => {
   const { hackathonId } = req.params
   const { participantIds, seedId } = req.body
   const { broadcast } = req.query
@@ -29,13 +29,13 @@ export const createExploringGroup = withController(async (req, res) => {
 
   await Promise.all(participantIds.map(async participationId => {
     const updatedParticipation = await UserHackathonsService.updateParticipationById(currentUser?.id, participationId, { groupId: createdExploringGroup.id })
-    broadcastParticipationUpdate(broadcast, hackathonId, participationId, updatedParticipation)
+    addAfterCommit(() => broadcastParticipationUpdate(broadcast, hackathonId, participationId, updatedParticipation))
   }))
 
   const updatedParticipation = await UserHackathonsService.updateParticipationById(currentUser?.id, participantIds[0], { isGroupVoice: true })
-  broadcastParticipationUpdate(broadcast, hackathonId, participantIds[0], updatedParticipation)
+  addAfterCommit(() => broadcastParticipationUpdate(broadcast, hackathonId, participantIds[0], updatedParticipation))
 
-  broadcastGroupUpdate(broadcast === 'NONE' ? 'NONE' : 'STAFF', hackathonId, createdExploringGroup.id, createdExploringGroup)
+  addAfterCommit(() => broadcastGroupUpdate(broadcast === 'NONE' ? 'NONE' : 'STAFF', hackathonId, createdExploringGroup.id, createdExploringGroup))
   return res.status(201).send(await service.getExploringGroupDetails(createdExploringGroup.id))
 })
 
@@ -53,7 +53,7 @@ export function updateExploringGroup (req, res) {
   service.updateExploringGroup(req, res)
 }
 
-export const createCoCreationTeam = withController(async (req, res) => {
+export const createCoCreationTeam = withController(async (req, res, addAfterCommit) => {
   const { hackathonId } = req.params
   const { participantIds, seedId } = req.body
   const { broadcast } = req.query
@@ -64,13 +64,13 @@ export const createCoCreationTeam = withController(async (req, res) => {
 
   await Promise.all(participantIds.map(async participationId => {
     const updatedParticipation = await UserHackathonsService.updateParticipationById(currentUser?.id, participationId, { teamId: createdCoCreationTeam.id })
-    broadcastParticipationUpdate(broadcast, hackathonId, participationId, updatedParticipation)
+    addAfterCommit(() => broadcastParticipationUpdate(broadcast, hackathonId, participationId, updatedParticipation))
   }))
 
   const updatedParticipation = await UserHackathonsService.updateParticipationById(currentUser?.id, participantIds[0], { isTeamSpeaker: true })
-  broadcastParticipationUpdate(broadcast, hackathonId, participantIds[0], updatedParticipation)
+  addAfterCommit(() => broadcastParticipationUpdate(broadcast, hackathonId, participantIds[0], updatedParticipation))
 
-  broadcastTeamUpdate(broadcast === 'NONE' ? 'NONE' : 'STAFF', hackathonId, createdCoCreationTeam.id, createdCoCreationTeam)
+  addAfterCommit(() => broadcastTeamUpdate(broadcast === 'NONE' ? 'NONE' : 'STAFF', hackathonId, createdCoCreationTeam.id, createdCoCreationTeam))
   return res.status(201).send(await service.getCoCreationTeamDetails(createdCoCreationTeam.id))
 })
 
@@ -104,25 +104,23 @@ export const submitConceptualMap = withController(async (req, res, addAfterCommi
   const updatedParticipationId = await service.submitConceptualMap(currentUser?.id, groupId, mapToSubmit)
   const updatedParticipation = await UserHackathonsService.getParticipationById(currentUser?.id, updatedParticipationId)
 
-  addAfterCommit(() =>
-    broadcastGroupUpdate(broadcast, updatedParticipation.hackathonId, groupId, { isDelivered: updatedParticipation.conceptualMap.isDelivered })
-  )
+  addAfterCommit(() => broadcastGroupUpdate(broadcast, updatedParticipation.hackathonId, groupId, { isDelivered: updatedParticipation.conceptualMap.isDelivered }))
 
   return res.status(200).send(updatedParticipation)
 })
 
-export const reopenConceptualMap = withController(async (req, res) => {
+export const reopenConceptualMap = withController(async (req, res, addAfterCommit) => {
   await validateStaff(req)
 
   const groupId = req.params.groupId
   const broadcast = req.query.broadcast
 
   const { map: updatedConceptualMap, hackathonId } = await service.reopenConceptualMap(groupId)
-  broadcastGroupUpdate(broadcast, hackathonId, groupId, { isDelivered: updatedConceptualMap.isDelivered })
+  addAfterCommit(() => broadcastGroupUpdate(broadcast, hackathonId, groupId, { isDelivered: updatedConceptualMap.isDelivered }))
   return res.status(200).send(updatedConceptualMap)
 })
 
-export const submitFlower = withController(async (req, res) => {
+export const submitFlower = withController(async (req, res, addAfterCommit) => {
   const teamId = req.params.teamId
   const broadcast = req.query.broadcast
   const currentUser = await validateAuthenticated(req)
@@ -133,11 +131,11 @@ export const submitFlower = withController(async (req, res) => {
   const flowerState = updatedParticipation?.teamFlower?.state
   const isDelivered = flowerState === 'IN_REVIEW' || flowerState === 'PUBLISHED'
 
-  broadcastTeamUpdate(broadcast, updatedParticipation.hackathonId, teamId, { isDelivered })
+  addAfterCommit(() => broadcastTeamUpdate(broadcast, updatedParticipation.hackathonId, teamId, { isDelivered }))
   return res.status(200).send(updatedParticipation)
 })
 
-export const reopenFlower = withController(async (req, res) => {
+export const reopenFlower = withController(async (req, res, addAfterCommit) => {
   await validateStaff(req)
 
   const teamId = req.params.teamId
@@ -146,6 +144,6 @@ export const reopenFlower = withController(async (req, res) => {
   const { flower: updatedFlower, hackathonId } = await service.reopenFlower(teamId)
   const isDelivered = updatedFlower?.state === 'IN_REVIEW' || updatedFlower?.state === 'PUBLISHED'
 
-  broadcastTeamUpdate(broadcast, hackathonId, teamId, { isDelivered })
+  addAfterCommit(() => broadcastTeamUpdate(broadcast, hackathonId, teamId, { isDelivered }))
   return res.status(200).send(updatedFlower)
 })

@@ -40,7 +40,7 @@ export const getHackathonDetails = withController(async (req, res) => {
   return res.status(200).send(hackathon)
 })
 
-export const updateHackathon = withController(async (req, res) => {
+export const updateHackathon = withController(async (req, res, addAfterCommit) => {
   const currentUser = await validateAuthenticated(req)
 
   const hackathonId = req.params.hackathonId
@@ -48,7 +48,7 @@ export const updateHackathon = withController(async (req, res) => {
   const { broadcast } = req.query
 
   const updatedHackathon = await service.updateHackathon(currentUser?.id, hackathonId, hackathon)
-  broadcastHackathonUpdate(broadcast, hackathonId, updatedHackathon)
+  addAfterCommit(() => broadcastHackathonUpdate(broadcast, hackathonId, updatedHackathon))
 
   return res.status(200).send(updatedHackathon)
 })
@@ -65,14 +65,14 @@ export function getHackathonUsers (req, res) {
   service.getHackathonUsers(req, res)
 }
 
-export const nextHackathonPhase = withController(async (req, res) => {
+export const nextHackathonPhase = withController(async (req, res, addAfterCommit) => {
   const currentUser = await validateStaff(req)
 
   const hackathonId = req.params.hackathonId
   const { broadcast } = req.query
 
   const updatedHackathon = await service.nextHackathonPhase(currentUser?.id, hackathonId)
-  broadcastHackathonUpdate(broadcast, hackathonId, updatedHackathon)
+  addAfterCommit(() => broadcastHackathonUpdate(broadcast, hackathonId, updatedHackathon))
 
   return res.status(200).send(updatedHackathon)
 })

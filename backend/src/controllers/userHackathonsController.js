@@ -60,7 +60,7 @@ export const getHackathonEvaluators = withController(async (req, res) => {
   return res.status(200).send(evaluator)
 })
 
-export const updateParticipation = withController(async (req, res) => {
+export const updateParticipation = withController(async (req, res, addAfterCommit) => {
   const currentUser = await validateStaff(req)
 
   const { hackathonId, userId } = req.params
@@ -69,7 +69,7 @@ export const updateParticipation = withController(async (req, res) => {
 
   const updatedParticipation = await service.updateParticipationByUserAndHackathon(currentUser.id, userId, hackathonId, participation)
 
-  broadcastParticipationUpdate(broadcast, hackathonId, updatedParticipation.id, updatedParticipation)
+  addAfterCommit(() => broadcastParticipationUpdate(broadcast, hackathonId, updatedParticipation.id, updatedParticipation))
 
   return res.status(200).send(updatedParticipation)
 })
