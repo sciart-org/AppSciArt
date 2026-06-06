@@ -3,11 +3,14 @@
     "dev:back": "npm run dev --prefix backend",
     "dev:front": "npm run dev --prefix frontend",
     "dev": "npm run dev:back & npm run dev:front", 
+    "test:dev": "npm run test:dev --prefix backend & npm run dev:front",
     "test:back": "npm run test --prefix backend",
     "test:front": "npm run test --prefix frontend",
     "lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
     "lint:fix": "npm run lint:fix --prefix backend && npm run lint:fix --prefix frontend",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:ui": "npm run db:ui --prefix backend",
+    "db:ui:test": "npm run db:ui:test --prefix backend"
   },
   "devDependencies": {
     "husky": "^9.1.7",

@@ -17,7 +17,9 @@
     "db:seed:test": "cross-env NODE_ENV=testing npx sequelize-cli db:seed:all",
     "db:seed:undo": "cross-env NODE_ENV=development npx sequelize-cli db:seed:undo:all",
     "db:migration:create": "npx sequelize-cli migration:generate --name",
-    "db:seed:create": "npx sequelize-cli seed:generate --name"
+    "db:seed:create": "npx sequelize-cli seed:generate --name",
+    "db:ui": "open-cli http://localhost:54323",
+    "db:ui:test": "open-cli http://localhost:54323"
   },
   "repository": {
     "type": "git",
@@ -39,6 +41,7 @@
   "homepage": "https://github.com/sciart-org/AppSciArt#readme",
   "devDependencies": {
     "cross-env": "^10.1.0",
+    "open-cli": "^9.0.0",
     "sequelize-cli": "^6.6.3",
     "standard": "17.1.2"
   },
