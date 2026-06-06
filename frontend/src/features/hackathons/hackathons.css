@@ -13,10 +13,9 @@
 
 .hackathon-list-group > h2 {
   display: flex;
-  font-weight: 600;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--aster-mid-gray);
 }
 
 .hackathon-edition-group {
