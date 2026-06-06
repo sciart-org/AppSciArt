@@ -113,6 +113,15 @@ export const setHackathonFlowersToInProgress = async (hackathonId) => {
   }))
 }
 
+export const setHackathonFlowersToInReview = async (hackathonId) => {
+  const flowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, { role: INTERNAL_BACKEND_ROLE })
+  await Promise.all(flowers.map(async (f) => {
+    if (f.state !== 'IN_PROGRESS') return
+    f.state = 'IN_REVIEW'
+    return f.save()
+  }))
+}
+
 export const createHackathonFlowerRubrics = async (hackathonId) => {
   const [hackathon, evaluators] = await Promise.all([
     HackathonRepository.getHackathonById(null, hackathonId, INTERNAL_BACKEND_ROLE),
