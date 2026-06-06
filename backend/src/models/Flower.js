@@ -1,16 +1,38 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, Op } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { Seed } from './Seed.js'
 import { notNull } from './modelUtils.js'
 import { getSeedRoleScope } from '../repositories/seedsRepository.js'
 import { ROLES } from '../services/Roles.js'
+import { Participation } from './Participation.js'
 
-const publicScope = {
+const publicScope = (hackathonId, userId) => ({
   attributes: {
     exclude: ['createdAt', 'updatedAt', 'state', 'driveLink']
   },
-  where: { state: 'PUBLISHED' }
-}
+  where: hackathonId && userId
+    ? {
+        [Op.or]: [
+          { state: 'PUBLISHED' },
+          {
+            state: 'IN_REVIEW',
+            '$participations.hackathonId$': hackathonId,
+            '$participations.userProfileId$': userId
+          }
+        ]
+      }
+    : { state: 'PUBLISHED' },
+  ...(hackathonId && userId
+    ? {
+        include: [{
+          model: Participation,
+          attributes: [],
+          required: false,
+          where: { hackathonId, userProfileId: userId }
+        }]
+      }
+    : {})
+})
 
 export const Flower = sequelize.define(
   'flowers',
@@ -43,7 +65,7 @@ export const Flower = sequelize.define(
       }
     }
   }, {
-    defaultScope: publicScope,
+    defaultScope: publicScope(),
     scopes: {
       public: publicScope,
       staff: {

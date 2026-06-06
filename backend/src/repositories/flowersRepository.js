@@ -1,8 +1,10 @@
 import { Flower } from '../models/Flower.js'
 import { getUserRole, ROLES } from '../services/Roles.js'
 
-export const getFlowerRoleScope = (role) => {
-  if (!role || role === ROLES.PUBLIC) return ROLES.PUBLIC.name
+export const getFlowerRoleScope = (role, { hackathonId, userId } = {}) => {
+  if (!role || role === ROLES.PUBLIC) {
+    return { method: ['public', hackathonId, userId] }
+  }
   return ROLES.STAFF.name
 }
 
@@ -27,7 +29,7 @@ export const getFlowersOfHackathon = async (hackathonId, { role, userId }) => {
     attributes.push('driveLink')
   }
 
-  return Flower.scope([getFlowerRoleScope(role), 'withAuthors', { method: ['withSeedsOfHackathon', hackathonId] }]).findAll({
+  return Flower.scope([getFlowerRoleScope(role, { hackathonId, userId }), 'withAuthors', { method: ['withSeedsOfHackathon', hackathonId] }]).findAll({
     attributes,
     order: [['createdAt', 'ASC']]
   })
