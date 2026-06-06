@@ -42,13 +42,14 @@ export const getEditionDetails = withController(async (req, res) => {
 })
 
 export const updateEdition = withController(async (req, res) => {
-  await validateStaff(req)
+  const currentUser = await validateStaff(req)
 
   const editionId = req.params.editionId
   const edition = req.body
 
   const updatedEdition = await service.updateEdition(editionId, edition)
-  return res.status(200).send(updatedEdition)
+  const editionDetails = await service.getEditionDetails(currentUser.id, updatedEdition.id)
+  return res.status(200).send(editionDetails)
 })
 
 export function deleteEdition (req, res) {

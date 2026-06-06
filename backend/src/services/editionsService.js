@@ -35,7 +35,7 @@ export async function getEditionDetails (userId, editionId) {
   return editionsWithLogo[0]
 }
 
-export async function updateEdition (currentUserId, editionId, body) {
+export async function updateEdition (editionId, body) {
   const edition = await EditionsRepository.getMinimalEdition(editionId, { role: ROLES.STAFF })
   errorThrower(!checkExists(edition), 'Edition not found', 404)
 
@@ -61,7 +61,7 @@ export async function updateEdition (currentUserId, editionId, body) {
     await uploadImg(logo, edition.driveLink)
   }
 
-  return getEditionDetails(currentUserId, editionId)
+  return edition
 }
 
 export function deleteEdition (req, res) {
