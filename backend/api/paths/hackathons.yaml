@@ -788,6 +788,15 @@ flowerSubmit:
         required: false
         schema:
           $ref: "../components/schemas/common.yaml#/Broadcast"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
     responses:
       "200":
         description: Flower submitted

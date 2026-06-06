@@ -11,6 +11,7 @@ import ConfirmDeliveryModal from "./components/ConfirmDeliveryModal";
 import DeliverButton from "./components/DeliverButton";
 import useFetcher from "../../../utils/useFetcher";
 import RedirectButton from "../../../components/buttons/RedirectButton";
+import FormInput from "../../../components/form/FormInput";
 
 export default function CreatedTeams() {
   const { hackathon, participation, setParticipation } =
@@ -22,6 +23,7 @@ export default function CreatedTeams() {
   const [showMap, setShowMap] = useState(false);
   const [openSubmitModal, setOpenSubmitModal] = useState(false);
   const [error, setError] = useState(null);
+  const [flowerTitle, setFlowerTitle] = useState(null);
 
   const { fetcher } = useFetcher(error, setError);
 
@@ -89,9 +91,12 @@ export default function CreatedTeams() {
 
   const submitFlower = () => {
     if (!participation?.isTeamSpeaker) return;
+    const body = flowerTitle ? { title: flowerTitle } : undefined;
+
     fetcher({
       url: `co-creation-teams/${participation?.teamFlower?.id}/flower/submit?broadcast=ALL`,
       method: "PATCH",
+      body,
       onSuccess: (data) => {
         setParticipation(data);
       },
@@ -108,7 +113,17 @@ export default function CreatedTeams() {
           setOpenSubmitModal(false);
         }}
         onCancel={() => setOpenSubmitModal(false)}
-      />
+      >
+        <div style={{ margin: "1rem" }}>
+          <FormInput
+            name={"Flower title"}
+            type={"text"}
+            value={flowerTitle}
+            onChange={(e) => setFlowerTitle(e.target.value)}
+            required={true}
+          />
+        </div>
+      </ConfirmDeliveryModal>
       <CreationProcessHeader
         members={participation?.teamMembers}
         scientists={seed?.authors}

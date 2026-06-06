@@ -158,12 +158,15 @@ const deliverMap = async (mapToUpdate, mapData = undefined) => {
   await mapToUpdate.save()
 }
 
-const deliverFlower = async (flowerToUpdate) => {
+const deliverFlower = async (flowerToUpdate, flowerTitle = null) => {
   errorThrower(!checkExists(flowerToUpdate), 'Flower not found', 404)
   const isDelivered = flowerToUpdate?.state === 'IN_REVIEW' || flowerToUpdate?.state === 'PUBLISHED'
 
   errorThrower(isDelivered, 'Flower already delivered', 409)
   flowerToUpdate.state = 'IN_REVIEW'
+  if (flowerTitle) {
+    flowerToUpdate.title = flowerTitle
+  }
   await flowerToUpdate.save()
 }
 
@@ -176,11 +179,11 @@ export async function submitConceptualMap (userId, groupId, map) {
   return userParticipation.id
 }
 
-export async function submitFlower (userId, teamId) {
+export async function submitFlower (userId, teamId, flowerTitle = null) {
   const userParticipation = await checkUserIsTeamSpeaker(userId, teamId)
 
   const flowerToUpdate = await FlowersRepository.getFlowerWithSeedById(teamId, { role: ROLES.STAFF })
-  await deliverFlower(flowerToUpdate)
+  await deliverFlower(flowerToUpdate, flowerTitle)
 
   return userParticipation.id
 }

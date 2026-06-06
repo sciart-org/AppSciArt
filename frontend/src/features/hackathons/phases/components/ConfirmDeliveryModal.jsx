@@ -6,6 +6,7 @@ export default function ConfirmDeliveryModal({
   itemToSubmit,
   onDeliver,
   onCancel,
+  children = undefined,
 }) {
   const itemLowerCase = itemToSubmit.toLowerCase();
   return (
@@ -15,6 +16,7 @@ export default function ConfirmDeliveryModal({
         Are you sure you want to submit your {itemLowerCase}? {"\n"} This cannot
         be undone
       </p>
+      {children}
       <div
         style={{
           display: "flex",

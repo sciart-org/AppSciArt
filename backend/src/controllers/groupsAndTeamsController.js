@@ -125,7 +125,9 @@ export const submitFlower = withController(async (req, res, addAfterCommit) => {
   const broadcast = req.query.broadcast
   const currentUser = await validateAuthenticated(req)
 
-  const updatedParticipationId = await service.submitFlower(currentUser?.id, teamId)
+  const { title } = req.body
+
+  const updatedParticipationId = await service.submitFlower(currentUser?.id, teamId, title)
   const updatedParticipation = await UserHackathonsService.getParticipationById(currentUser?.id, updatedParticipationId)
 
   const flowerState = updatedParticipation?.teamFlower?.state
