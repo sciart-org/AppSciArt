@@ -38,7 +38,7 @@ export const UserProfile = sequelize.define(
       type: DataTypes.ENUM('MALE', 'FEMALE', 'OTHER')
     },
     ageRange: {
-      type: DataTypes.ENUM('17_OR_LESS', '18-24', '25-34', '35-44', '45-54', '55-64', '65_OR_MORE')
+      type: DataTypes.ENUM('17_OR_LESS', '18_24', '25_34', '35_44', '45_54', '55_64', '65_OR_MORE')
     },
     rangeSetAt: {
       type: DataTypes.DATEONLY
