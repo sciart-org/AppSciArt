@@ -35,13 +35,16 @@ const storeEmptyRooms = () => {
   }
 }
 
-export const storeAndDeleteAllGroupsOfHackathon = (hackathonId) => {
+export const storeAndDeleteAllGroupsOfHackathon = async (hackathonId) => {
   const inMemoryGroups = Object.keys(rooms)
-  inMemoryGroups.filter(group => group.split('/group/')[0] === hackathonId).forEach(group => {
-    storeMapOfGroup(group).then(() => {
-      delete rooms[group]
-    })
-  })
+  await Promise.all(
+    inMemoryGroups
+      .filter(group => group.split('/group/')[0] === hackathonId)
+      .map(async group => {
+        await storeMapOfGroup(group)
+        delete rooms[group]
+      })
+  )
 }
 
 const storeMapOfGroup = async (group) => {

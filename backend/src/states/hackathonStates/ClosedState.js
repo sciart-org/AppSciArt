@@ -87,7 +87,7 @@ export class ClosedState extends HackathonState {
     } else if (nextPhase === 'GROUP_WORK') {
       await GroupsAndTeamsService.deleteUnassignedConceptualMapsOfHackathon(this.hackathon.id)
     } else if (nextPhase === 'GROUP_PRESENTATION') {
-      storeAndDeleteAllGroupsOfHackathon(this.hackathon.id)
+      await storeAndDeleteAllGroupsOfHackathon(this.hackathon.id)
       await GroupsAndTeamsService.deliverAllConceptualMapsOfHackathon(this.hackathon.id)
     } else if (nextPhase === 'TEAM_CREATION') {
       await FlowersService.createFlowersOfHackathon(this.hackathon.id)
