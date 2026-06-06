@@ -1,6 +1,5 @@
-import { validateCanEditHackathon, validateHackathonIsReadable, validateHackathonNameUnique } from '../validators/hackathonValidators.js'
+import { validateHackathonExists, validateHackathonIsReadable, validateHackathonNameUnique } from '../validators/hackathonValidators.js'
 import { errorThrower } from './errorThrower.js'
-import { checkIsStaff } from '../validators/userValidators.js'
 import { validateIsActive } from '../validators/editionValidators.js'
 import { createDriveHackathon, getEntitiesWithImage, moveDriveFolder, parseFolderName, updateFolderName, uploadImg } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
@@ -47,7 +46,6 @@ export async function getHackathons (userId) {
 }
 
 export async function createHackathon (userId, body) {
-  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create a hackathon', 403)
   const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink } = body
   const edition = await validateIsActive(editionId, userId)
   await validateHackathonNameUnique(internalName)
@@ -78,7 +76,7 @@ export async function getHackathonDetails (hackathonId, userId) {
 }
 
 export async function updateHackathon (currentUserId, hackathonId, body) {
-  const hackathon = await validateCanEditHackathon(currentUserId, hackathonId)
+  const hackathon = await validateHackathonExists(currentUserId, hackathonId)
 
   const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink } = body
   let edition
@@ -134,7 +132,6 @@ export function getHackathonUsers (req, res) {
 }
 
 export async function nextHackathonPhase (currentUserId, hackathonId) {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot alter the state of a hackathon', 403)
   const hackathon = await HackathonRepository.getHackathonById(currentUserId, hackathonId, INTERNAL_BACKEND_ROLE)
 
   await HackathonStates.advancePhase(hackathon)

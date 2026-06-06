@@ -2,15 +2,14 @@ import { jwtDecode } from 'jwt-decode'
 import { getUserFromJwt } from '../auth/signin.js'
 import { errorThrower } from './errorThrower.js'
 import { getJwt } from './authService.js'
-import { checkHasRole, checkIsStaff } from '../validators/userValidators.js'
+import { checkHasRole } from '../validators/userValidators.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
 import { checkExists } from '../validators/generalValidators.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
 import { INTERNAL_ROLES, ROLES } from './Roles.js'
 import * as ScientistsRepository from '../repositories/scientistsRepository.js'
 
-export async function getUsers (currentUserId) {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot access this resource', 403)
+export async function getUsers () {
   const userProfiles = await UsersRepository.getAuthenticatedUserProfiles()
   return userProfiles
 }

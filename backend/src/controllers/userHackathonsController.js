@@ -2,9 +2,8 @@ import * as service from '../services/userHackathonsService.js'
 import { withController } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import { validateHackathonIsOpen } from '../validators/hackathonValidators.js'
-import { checkExists } from '../validators/generalValidators.js'
-import { errorThrower } from '../services/errorThrower.js'
 import { broadcastParticipationUpdate } from '../sockets/hackathonPhases.js'
+import { validateAuthenticated, validateStaff } from '../middlewares/authMiddleware.js'
 
 export function getUserEnrolledHackathons (req, res) {
   service.getUserEnrolledHackathons(req, res)
@@ -21,8 +20,7 @@ export const joinHackathon = withController(async (req, res) => {
 })
 
 export const joinMeHackathon = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateAuthenticated(req)
   req.params = { ...req.params, userId: currentUser.id }
   return await joinHackathon(req, res)
 })
@@ -36,8 +34,7 @@ export function joinCluster (req, res) {
 }
 
 export const getMyHackathonParticipation = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateAuthenticated(req)
 
   const { hackathonId } = req.params
   const participation = await service.getParticipation(currentUser.id, hackathonId)
@@ -46,8 +43,7 @@ export const getMyHackathonParticipation = withController(async (req, res) => {
 })
 
 export const getMyEvaluatorRole = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateAuthenticated(req)
 
   const { hackathonId } = req.params
   const evaluator = await service.getEvaluatorDetails(currentUser, hackathonId)
@@ -56,8 +52,7 @@ export const getMyEvaluatorRole = withController(async (req, res) => {
 })
 
 export const getHackathonEvaluators = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  await validateAuthenticated(req)
 
   const { hackathonId } = req.params
   const evaluator = await service.getHackathonEvaluators(hackathonId)
@@ -66,8 +61,7 @@ export const getHackathonEvaluators = withController(async (req, res) => {
 })
 
 export const updateParticipation = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateStaff(req)
 
   const { hackathonId, userId } = req.params
   const participation = req.body

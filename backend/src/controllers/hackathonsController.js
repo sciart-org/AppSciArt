@@ -1,9 +1,8 @@
 import * as service from '../services/hackathonsService.js'
 import { withController } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
-import { errorThrower } from '../services/errorThrower.js'
-import { checkExists } from '../validators/generalValidators.js'
 import { broadcastHackathonUpdate } from '../sockets/hackathonPhases.js'
+import { validateAuthenticated, validateStaff } from '../middlewares/authMiddleware.js'
 
 export const getHackathons = withController(async (req, res) => {
   const { filter } = req.query
@@ -29,8 +28,7 @@ export const getHackathons = withController(async (req, res) => {
 })
 
 export const createHackathon = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateStaff(req)
   const createdHackathon = await service.createHackathon(currentUser?.id, req.body)
   return res.status(201).send(createdHackathon)
 })
@@ -43,8 +41,7 @@ export const getHackathonDetails = withController(async (req, res) => {
 })
 
 export const updateHackathon = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateAuthenticated(req)
 
   const hackathonId = req.params.hackathonId
   const hackathon = req.body
@@ -69,8 +66,7 @@ export function getHackathonUsers (req, res) {
 }
 
 export const nextHackathonPhase = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateStaff(req)
 
   const hackathonId = req.params.hackathonId
   const { broadcast } = req.query

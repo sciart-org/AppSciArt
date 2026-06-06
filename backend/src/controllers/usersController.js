@@ -1,6 +1,5 @@
-import { errorThrower } from '../services/errorThrower.js'
+import { validateStaff } from '../middlewares/authMiddleware.js'
 import * as service from '../services/usersService.js'
-import { checkExists } from '../validators/generalValidators.js'
 import { withController } from './controllerHandlers.js'
 
 export const getHealth = withController(async (req, res) => {
@@ -8,9 +7,8 @@ export const getHealth = withController(async (req, res) => {
 })
 
 export const getUsers = withController(async (req, res) => {
-  const currentUser = await service.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
-  const users = await service.getUsers(currentUser.id)
+  await validateStaff(req)
+  const users = await service.getUsers()
   return res.status(200).send(users)
 })
 

@@ -1,8 +1,7 @@
 import { withController } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import * as service from '../services/scientistsService.js'
-import { errorThrower } from '../services/errorThrower.js'
-import { checkExists } from '../validators/generalValidators.js'
+import { validateStaff } from '../middlewares/authMiddleware.js'
 
 export const getMyScientistEditions = withController(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
@@ -18,22 +17,20 @@ export const getMyEditionSeeds = withController(async (req, res) => {
 })
 
 export const getScientists = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!currentUser, 'Authentication required', 401)
+  await validateStaff(req)
 
   const editionId = req.query.editionId
 
-  const scientists = await service.getScientists(currentUser?.id, editionId)
+  const scientists = await service.getScientists(editionId)
   return res.status(200).send(scientists)
 })
 
 export const modifyScientistEditions = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  await validateStaff(req)
 
   const scientistId = req.params.scientistId
   const editions = req.body
 
-  const enrollments = await service.modifyScientistEditions(currentUser?.id, scientistId, editions)
+  const enrollments = await service.modifyScientistEditions(scientistId, editions)
   return res.status(200).send(enrollments)
 })

@@ -40,7 +40,6 @@ export async function getEditionDetails (userId, editionId) {
 }
 
 export async function updateEdition (currentUserId, editionId, body) {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot edit this edition', 403)
   const edition = await EditionsRepository.getMinimalEdition(editionId, { role: ROLES.STAFF })
   errorThrower(!checkExists(edition), 'Edition not found', 404)
 
@@ -87,8 +86,7 @@ export function getEditionMethodology (req, res) {
   })
 }
 
-export async function announceEdition (currentUserId, editionId) {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot announce this edition', 403)
+export async function announceEdition (editionId) {
   const edition = await EditionsRepository.getEditionDetails(editionId, { role: ROLES.STAFF })
   errorThrower(!checkExists(edition), 'Edition not found', 404)
   errorThrower(edition.state !== 'PLANNED', 'This edition is already announced', 400)

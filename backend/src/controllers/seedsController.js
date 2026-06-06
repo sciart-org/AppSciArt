@@ -1,3 +1,4 @@
+import { validateAuthenticated } from '../middlewares/authMiddleware.js'
 import { errorThrower } from '../services/errorThrower.js'
 import * as service from '../services/seedsService.js'
 import * as UsersService from '../services/usersService.js'
@@ -22,8 +23,7 @@ export const getSeeds = withController(async (req, res) => {
 })
 
 export const createSeed = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateAuthenticated(req)
 
   const { title, editionId, mainImage, branchesOfKnowledge } = req.body
   const body = { title, editionId, mainImage, branchesOfKnowledge }
@@ -41,8 +41,7 @@ export const getSeedDetails = withController(async (req, res) => {
 })
 
 export const updateSeed = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateAuthenticated(req)
 
   const { title, mainImage, branchesOfKnowledge, videoLink, presentationLink, podcastLink } = req.body
   const body = { title, mainImage, branchesOfKnowledge, videoLink, presentationLink, podcastLink }

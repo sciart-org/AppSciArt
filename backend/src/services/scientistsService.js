@@ -1,4 +1,4 @@
-import { checkIsInspiringScientist, checkIsStaff } from '../validators/userValidators.js'
+import { checkIsInspiringScientist } from '../validators/userValidators.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
 import * as UsersRepository from '../repositories/usersRepository.js'
@@ -21,22 +21,19 @@ export async function getScientistSeedsOfEdition (userId, editionId) {
   return await getFullSeedsDetails(seeds)
 }
 
-export async function getScientists (currentUserId, editionId = null) {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot access this resource', 403)
+export async function getScientists (editionId = null) {
   const scientists = await ScientistsRepository.getScientistsOfEdition(editionId)
   return scientists
 }
 
-export async function inviteScientistByUserProfileId (currentUserId, userProfileId, editionId, seedId = undefined) {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot invite scientists', 403)
+export async function inviteScientistByUserProfileId (userProfileId, editionId, seedId = undefined) {
   const userProfile = await UsersRepository.getUserProfileById(userProfileId)
   errorThrower(!checkExists(userProfile), 'User not found', 404)
   await inviteExistingUser(userProfile, editionId, seedId)
   return userProfile.email
 }
 
-export async function inviteScientistByEmail (currentUserId, email, editionId, seedId = undefined) {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot invite scientists', 403)
+export async function inviteScientistByEmail (email, editionId, seedId = undefined) {
   const userProfile = await UsersRepository.getUserProfileByEmail(email)
 
   if (checkExists(userProfile)) {
@@ -90,8 +87,7 @@ export const completeScientistInvitationIfPresent = async (user) => {
   return invitations.length > 0
 }
 
-export const modifyScientistEditions = async (currentUserId, scientistId, editions) => {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot update this resource', 403)
+export const modifyScientistEditions = async (scientistId, editions) => {
   for (const [editionId, value] of Object.entries(editions)) {
     await handleEditionEnrollment(scientistId, editionId, value)
   }

@@ -117,7 +117,6 @@ export async function getHackathonEvaluators (hackathonId) {
 }
 
 export async function updateParticipationById (currentUserId, participationId, body) {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot edit participations', 403)
   const participation = await ParticipationsRepository.getMinimalParticipation(participationId)
   return await updateParticipation(currentUserId, participation, body)
 }
@@ -247,7 +246,6 @@ async function updateParticipation (currentUserId, participation, body) {
 }
 
 export async function updateParticipationByUserAndHackathon (currentUserId, userId, hackathonId, body) {
-  errorThrower(!(await checkIsStaff(currentUserId)), 'Unauthorized: You cannot edit participations', 403)
   const participation = await validateParticipantExists(userId, hackathonId)
   return await updateParticipation(currentUserId, participation, body)
 }

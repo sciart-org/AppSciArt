@@ -3,8 +3,7 @@ import { withController } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import * as UserHackathonsService from '../services/userHackathonsService.js'
 import { broadcastGroupUpdate, broadcastParticipationUpdate, broadcastTeamUpdate } from '../sockets/hackathonPhases.js'
-import { errorThrower } from '../services/errorThrower.js'
-import { checkExists } from '../validators/generalValidators.js'
+import { validateAuthenticated, validateStaff } from '../middlewares/authMiddleware.js'
 
 export const getHackathonExploringGroups = withController(async (req, res) => {
   const { hackathonId } = req.params
@@ -24,10 +23,9 @@ export const createExploringGroup = withController(async (req, res) => {
   const { participantIds, seedId } = req.body
   const { broadcast } = req.query
 
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateStaff(req)
 
-  const createdExploringGroup = await service.createExploringGroup(currentUser?.id, hackathonId, seedId)
+  const createdExploringGroup = await service.createExploringGroup(hackathonId, seedId)
 
   await Promise.all(participantIds.map(async participationId => {
     const updatedParticipation = await UserHackathonsService.updateParticipationById(currentUser?.id, participationId, { groupId: createdExploringGroup.id })
@@ -60,10 +58,9 @@ export const createCoCreationTeam = withController(async (req, res) => {
   const { participantIds, seedId } = req.body
   const { broadcast } = req.query
 
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateStaff(req)
 
-  const createdCoCreationTeam = await service.createCoCreationTeam(currentUser?.id, hackathonId, seedId)
+  const createdCoCreationTeam = await service.createCoCreationTeam(hackathonId, seedId)
 
   await Promise.all(participantIds.map(async participationId => {
     const updatedParticipation = await UserHackathonsService.updateParticipationById(currentUser?.id, participationId, { teamId: createdCoCreationTeam.id })
@@ -102,8 +99,7 @@ export const submitConceptualMap = withController(async (req, res, addAfterCommi
   const groupId = req.params.groupId
   const mapToSubmit = req.body
   const broadcast = req.query.broadcast
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateAuthenticated(req)
 
   const updatedParticipationId = await service.submitConceptualMap(currentUser?.id, groupId, mapToSubmit)
   const updatedParticipation = await UserHackathonsService.getParticipationById(currentUser?.id, updatedParticipationId)
@@ -116,12 +112,12 @@ export const submitConceptualMap = withController(async (req, res, addAfterCommi
 })
 
 export const reopenConceptualMap = withController(async (req, res) => {
+  await validateStaff(req)
+
   const groupId = req.params.groupId
   const broadcast = req.query.broadcast
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
 
-  const { map: updatedConceptualMap, hackathonId } = await service.reopenConceptualMap(currentUser?.id, groupId)
+  const { map: updatedConceptualMap, hackathonId } = await service.reopenConceptualMap(groupId)
   broadcastGroupUpdate(broadcast, hackathonId, groupId, { isDelivered: updatedConceptualMap.isDelivered })
   return res.status(200).send(updatedConceptualMap)
 })
@@ -129,8 +125,7 @@ export const reopenConceptualMap = withController(async (req, res) => {
 export const submitFlower = withController(async (req, res) => {
   const teamId = req.params.teamId
   const broadcast = req.query.broadcast
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  const currentUser = await validateAuthenticated(req)
 
   const updatedParticipationId = await service.submitFlower(currentUser?.id, teamId)
   const updatedParticipation = await UserHackathonsService.getParticipationById(currentUser?.id, updatedParticipationId)
@@ -143,12 +138,12 @@ export const submitFlower = withController(async (req, res) => {
 })
 
 export const reopenFlower = withController(async (req, res) => {
+  await validateStaff(req)
+
   const teamId = req.params.teamId
   const broadcast = req.query.broadcast
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
 
-  const { flower: updatedFlower, hackathonId } = await service.reopenFlower(currentUser?.id, teamId)
+  const { flower: updatedFlower, hackathonId } = await service.reopenFlower(teamId)
   const isDelivered = updatedFlower?.state === 'IN_REVIEW' || updatedFlower?.state === 'PUBLISHED'
 
   broadcastTeamUpdate(broadcast, hackathonId, teamId, { isDelivered })

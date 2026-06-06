@@ -8,7 +8,6 @@ import * as ParticipationsRepository from '../repositories/participationsReposit
 import * as SeedsRepository from '../repositories/seedsRepository.js'
 import * as SeedsService from '../services/seedsService.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
-import { checkIsStaff } from '../validators/userValidators.js'
 import { INTERNAL_BACKEND_ROLE, ROLES } from './Roles.js'
 
 const defaultConceptualMap = {
@@ -74,8 +73,7 @@ async function getHackathonCoCreationTeamsAfterCreation (userId, hackathonId) {
   return flowers.map((flower, index) => buildCoCreationTeam(flower, index + 1))
 }
 
-export async function createExploringGroup (userId, hackathonId, seedId) {
-  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create exploring groups', 403)
+export async function createExploringGroup (hackathonId, seedId) {
   const existingGroup = await GroupsAndTeamsRepository.getConceptualMapOfSeedInHackathon(seedId, hackathonId)
   errorThrower(checkExists(existingGroup), 'A group already exists for this seed', 409)
   const seedsOfHackathon = await SeedsRepository.getSeedsOfHackathon(hackathonId, { role: ROLES.STAFF })
@@ -83,8 +81,7 @@ export async function createExploringGroup (userId, hackathonId, seedId) {
   return await GroupsAndTeamsRepository.createConceptualMapOfSeed(seedId)
 }
 
-export async function createCoCreationTeam (userId, hackathonId, seedId) {
-  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot create co-creation teams', 403)
+export async function createCoCreationTeam (hackathonId, seedId) {
   const existingTeam = await FlowersRepository.getFlowerOfSeedInHackathon(seedId, hackathonId)
   errorThrower(checkExists(existingTeam), 'A team already exists for this seed', 409)
   const seedsOfHackathon = await SeedsRepository.getSeedsOfHackathon(hackathonId, { role: ROLES.STAFF })
@@ -188,9 +185,7 @@ export async function submitFlower (userId, teamId) {
   return userParticipation.id
 }
 
-export async function reopenFlower (userId, teamId) {
-  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot reopen flowers', 403)
-
+export async function reopenFlower (teamId) {
   const flowerToUpdate = await FlowersRepository.getFlowerWithSeedById(teamId, { role: ROLES.STAFF })
   errorThrower(!checkExists(flowerToUpdate), 'Flower not found', 404)
   const isDelivered = flowerToUpdate?.state === 'IN_REVIEW' || flowerToUpdate?.state === 'PUBLISHED'
@@ -211,9 +206,7 @@ export async function deliverAllConceptualMapsOfHackathon (hackathonId) {
   }))
 }
 
-export async function reopenConceptualMap (userId, groupId) {
-  errorThrower(!(await checkIsStaff(userId)), 'Unauthorized: You cannot reopen conceptual maps', 403)
-
+export async function reopenConceptualMap (groupId) {
   const mapToUpdate = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(groupId)
   errorThrower(!checkExists(mapToUpdate), 'Group not found', 404)
   errorThrower(!mapToUpdate.isDelivered, 'Conceptual map already open', 409)

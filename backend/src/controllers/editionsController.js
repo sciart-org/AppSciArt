@@ -4,6 +4,7 @@ import * as ScientistsService from '../services/scientistsService.js'
 import { withController } from './controllerHandlers.js'
 import { errorThrower } from '../services/errorThrower.js'
 import { checkExists } from '../validators/generalValidators.js'
+import { validateStaff } from '../middlewares/authMiddleware.js'
 
 export const getEditions = withController(async (req, res) => {
   const currentUser = await UsersService.getCurrentUserProfile(req)
@@ -32,13 +33,12 @@ export const getEditionDetails = withController(async (req, res) => {
 })
 
 export const updateEdition = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+  await validateStaff(req)
 
   const editionId = req.params.editionId
   const edition = req.body
 
-  const updatedEdition = await service.updateEdition(currentUser?.id, editionId, edition)
+  const updatedEdition = await service.updateEdition(editionId, edition)
   return res.status(200).send(updatedEdition)
 })
 
@@ -54,9 +54,8 @@ export function getEditionMethodology (req, res) {
   service.getEditionMethodology(req, res)
 }
 
-export const inviteScientistToEdition = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
+export const inviteScientistToEdition = withController(async (req, res, addAfterCommit) => {
+  await validateStaff(req)
 
   const editionId = req.params.editionId
   const { email, userProfileId } = req.body
@@ -67,9 +66,9 @@ export const inviteScientistToEdition = withController(async (req, res) => {
   errorThrower(!(checkExists(email) || checkExists(userProfileId)), 'Either a user or an email must be specified', 400)
 
   if (checkExists(userProfileId)) {
-    destinationEmail = await ScientistsService.inviteScientistByUserProfileId(currentUser.id, userProfileId, editionId)
+    destinationEmail = await ScientistsService.inviteScientistByUserProfileId(userProfileId, editionId)
   } else {
-    earlySignUpId = await ScientistsService.inviteScientistByEmail(currentUser.id, email, editionId, null)
+    earlySignUpId = await ScientistsService.inviteScientistByEmail(email, editionId, null)
   }
 
   await ScientistsService.sendScientistInvitationEmail(editionId, destinationEmail, sendEmail, earlySignUpId)
@@ -78,11 +77,9 @@ export const inviteScientistToEdition = withController(async (req, res) => {
 })
 
 export const announceEdition = withController(async (req, res) => {
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  errorThrower(!checkExists(currentUser), 'Authentication required', 401)
-
+  await validateStaff(req)
   const editionId = req.params.editionId
 
-  const announcedEdition = await service.announceEdition(currentUser?.id, editionId)
+  const announcedEdition = await service.announceEdition(editionId)
   return res.status(200).send(announcedEdition)
 })
