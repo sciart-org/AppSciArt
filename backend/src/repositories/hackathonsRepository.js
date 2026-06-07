@@ -18,7 +18,8 @@ const ongoingWhere = () => {
 const isStaff = (role) => role.name === ROLES.STAFF.name
 const isEvaluator = (role) => role.name === ROLES.EVALUATOR.name
 
-const getRoleScope = (role) => {
+const getHackathonRoleScope = (role) => {
+  if (role === ROLES.SCIENTIST) return ROLES.PUBLIC.name
   return role.name || ROLES.PUBLIC.name
 }
 
@@ -35,7 +36,7 @@ export const getIncomingHackathons = (userId) =>
 export const getActiveHackathon = async (userId, role) => {
   role ??= await getUserRole(userId)
   const scopes = [
-    getRoleScope(role),
+    getHackathonRoleScope(role),
     'withEdition',
     isStaff(role)
       ? 'withAllParticipations'
@@ -47,14 +48,14 @@ export const getActiveHackathon = async (userId, role) => {
 
 export const getHackathons = async (userId, hackathonId, role) => {
   role ??= await getUserRole(userId, { hackathonId })
-  const scopes = [getRoleScope(role), 'withEdition', ...withEnrollmentScope(userId, role)]
+  const scopes = [getHackathonRoleScope(role), 'withEdition', ...withEnrollmentScope(userId, role)]
   return Hackathon.scope(scopes).findAll()
 }
 
 export const getHackathonById = async (userId, hackathonId, role) => {
   role ??= await getUserRole(userId, { hackathonId })
   const scopes = [
-    getRoleScope(role),
+    getHackathonRoleScope(role),
     'withEdition',
     (isStaff(role) || isEvaluator(role))
       ? 'withAllParticipations'
