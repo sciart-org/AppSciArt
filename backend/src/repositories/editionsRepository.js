@@ -29,9 +29,11 @@ export const getEditionDetails = async (editionId, { states = [], role, userId }
 
 export const getMinimalEdition = async (editionId, { role, userId }) => {
   role ??= await getUserRole(userId)
-  return Edition.scope([getRoleScope(role)]).findByPk(editionId, {
-    attributes: ['id', 'name', 'state']
-  })
+  const attributes = ['id', 'name', 'state', 'year']
+  if (role === ROLES.STAFF) {
+    attributes.push('driveLink')
+  }
+  return Edition.scope([getRoleScope(role)]).findByPk(editionId, { attributes })
 }
 
 export const getMinimalEditionByAttributes = async (attributes, { role, userId }) => {
