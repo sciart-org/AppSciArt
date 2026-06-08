@@ -1,12 +1,16 @@
 import { Flower } from '../models/Flower.js'
 import { getUserRole, ROLES } from '../services/Roles.js'
 
-export const getFlowerRoleScope = (role, { hackathonId, userId } = {}) => {
-  if (!role || role === ROLES.PUBLIC) {
-    return { method: ['public', hackathonId, userId] }
-  }
-  return ROLES.STAFF.name
-}
+const FLOWER_SCOPE_BY_ROLE = new Map([
+  [ROLES.PUBLIC, ROLES.PUBLIC],
+  [ROLES.PARTICIPANT, ROLES.PARTICIPANT],
+  [ROLES.EVALUATOR, ROLES.STAFF],
+  [ROLES.SCIENTIST, ROLES.STAFF],
+  [ROLES.STAFF, ROLES.STAFF]
+])
+
+export const getFlowerRoleScope = (role) =>
+  FLOWER_SCOPE_BY_ROLE.get(role)?.name ?? ROLES.PUBLIC.name
 
 export const getFlowerWithSeedById = async (flowerId, { role, userId }) => {
   role ??= await getUserRole(userId)
@@ -22,14 +26,15 @@ export const getFlowersOfEdition = async (editionId, { role, userId }) => {
 }
 
 export const getFlowersOfHackathon = async (hackathonId, { role, userId }) => {
-  role ??= await getUserRole(userId)
+  role ??= await getUserRole(userId, { hackathonId })
 
   const attributes = ['id', 'title', 'state']
   if (role === ROLES.STAFF || role === ROLES.EVALUATOR) {
     attributes.push('driveLink')
   }
 
-  return Flower.scope([getFlowerRoleScope(role, { hackathonId, userId }), 'withAuthors', { method: ['withSeedsOfHackathon', hackathonId] }]).findAll({
+  return Flower.scope(getFlowerRoleScope(role, { hackathonId, userId }), 'withAuthors', { method: ['withSeedsOfHackathon', hackathonId] }
+  ).findAll({
     attributes,
     order: [['createdAt', 'ASC']]
   })

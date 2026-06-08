@@ -2,10 +2,16 @@ import { Edition } from '../models/Edition.js'
 import { Seed } from '../models/Seed.js'
 import { getUserRole, ROLES } from '../services/Roles.js'
 
-export const getRoleScope = (role) => {
-  if (!role || role === ROLES.PUBLIC) return ROLES.PUBLIC.name
-  return ROLES.STAFF.name
-}
+const EDIION_SCOPE_BY_ROLE = new Map([
+  [ROLES.PUBLIC, ROLES.PUBLIC],
+  [ROLES.PARTICIPANT, ROLES.PUBLIC],
+  [ROLES.EVALUATOR, ROLES.STAFF],
+  [ROLES.SCIENTIST, ROLES.STAFF],
+  [ROLES.STAFF, ROLES.STAFF]
+])
+
+export const getRoleScope = (role) =>
+  EDIION_SCOPE_BY_ROLE.get(role)?.name ?? ROLES.PUBLIC.name
 
 export const getEditions = async ({ states = [], role, userId } = {}) => {
   role ??= await getUserRole(userId)

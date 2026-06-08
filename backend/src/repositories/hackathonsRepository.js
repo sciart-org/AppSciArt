@@ -18,10 +18,16 @@ const ongoingWhere = () => {
 const isStaff = (role) => role.name === ROLES.STAFF.name
 const isEvaluator = (role) => role.name === ROLES.EVALUATOR.name
 
-const getHackathonRoleScope = (role) => {
-  if (role === ROLES.SCIENTIST) return ROLES.PUBLIC.name
-  return role.name || ROLES.PUBLIC.name
-}
+const HACKATHON_SCOPE_BY_ROLE = new Map([
+  [ROLES.PUBLIC, ROLES.PUBLIC],
+  [ROLES.PARTICIPANT, ROLES.PUBLIC],
+  [ROLES.EVALUATOR, ROLES.EVALUATOR],
+  [ROLES.SCIENTIST, ROLES.PUBLIC],
+  [ROLES.STAFF, ROLES.STAFF]
+])
+
+export const getHackathonRoleScope = (role) =>
+  HACKATHON_SCOPE_BY_ROLE.get(role)?.name ?? ROLES.PUBLIC.name
 
 const withEnrollmentScope = (userId, role) => {
   return !isStaff(role) ? [{ method: ['withEnrollment', userId] }] : []

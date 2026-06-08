@@ -2,37 +2,14 @@ import { DataTypes, Model, Op } from 'sequelize'
 import { sequelize } from '../config/sequelize.js'
 import { Seed } from './Seed.js'
 import { notNull } from './modelUtils.js'
-import { getSeedRoleScope } from '../repositories/seedsRepository.js'
-import { ROLES } from '../services/Roles.js'
-import { Participation } from './Participation.js'
+import { ROLE_SCOPE_NAMES } from '../services/RoleScopeNames.js'
 
-const publicScope = (hackathonId, userId) => ({
+const publicScope = {
   attributes: {
     exclude: ['createdAt', 'updatedAt', 'state', 'driveLink']
   },
-  where: hackathonId && userId
-    ? {
-        [Op.or]: [
-          { state: 'PUBLISHED' },
-          {
-            state: 'IN_REVIEW',
-            '$participations.hackathonId$': hackathonId,
-            '$participations.userProfileId$': userId
-          }
-        ]
-      }
-    : { state: 'PUBLISHED' },
-  ...(hackathonId && userId
-    ? {
-        include: [{
-          model: Participation,
-          attributes: [],
-          required: false,
-          where: { hackathonId, userProfileId: userId }
-        }]
-      }
-    : {})
-})
+  where: { state: 'PUBLISHED' }
+}
 
 export const Flower = sequelize.define(
   'flowers',
@@ -65,12 +42,23 @@ export const Flower = sequelize.define(
       }
     }
   }, {
-    defaultScope: publicScope(),
+    defaultScope: publicScope,
     scopes: {
       public: publicScope,
       staff: {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
+        }
+      },
+      participant: {
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'state', 'driveLink']
+        },
+        where: {
+          [Op.or]: [
+            { state: 'PUBLISHED' },
+            { state: 'IN_REVIEW' }
+          ]
         }
       }
     },
@@ -106,7 +94,7 @@ Flower.associate = (db) => {
     include: [
       {
         model: Seed.scope([
-          getSeedRoleScope(ROLES.PUBLIC),
+          ROLE_SCOPE_NAMES.PUBLIC,
           { method: ['withHackathon', hackathonId] },
           'withAuthors'
         ]),
@@ -121,7 +109,7 @@ Flower.associate = (db) => {
     include: [
       {
         model: Seed.scope([
-          getSeedRoleScope(ROLES.PUBLIC),
+          ROLE_SCOPE_NAMES.PUBLIC,
           { method: ['withEdition', editionId] }
         ]),
         required: true,
@@ -133,7 +121,7 @@ Flower.associate = (db) => {
   Flower.addScope('withSeeds', {
     include: [
       {
-        model: Seed.scope(['withAuthors', getSeedRoleScope(ROLES.PUBLIC)]),
+        model: Seed.scope(['withAuthors', ROLE_SCOPE_NAMES.PUBLIC]),
         required: true
       }
     ]

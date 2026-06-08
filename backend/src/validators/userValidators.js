@@ -1,6 +1,7 @@
 import { checkExists } from './generalValidators.js'
 import { ROLES } from '../services/Roles.js'
 import * as ScientistsRepository from '../repositories/scientistsRepository.js'
+import * as ParticipationsRepository from '../repositories/participationsRepository.js'
 
 const checkHasRoleById = async (userId, Model, { hackathonId } = {}) => {
   if (!checkExists(userId)) {
@@ -31,6 +32,14 @@ const checkIsInspiringScientist = async (userId, { editionId } = {}) => {
     : editions.length > 0
 }
 
+const checkIsParticipantOfHackathon = async (userId, { hackathonId } = {}) => {
+  if (!checkExists(userId)) {
+    return false
+  }
+  const participation = await ParticipationsRepository.getMinimalParticipationOfUserInHackathon(userId, { hackathonId })
+  return !!participation
+}
+
 const checkHasAnyRole = async (userId, roles, { methodologyId, hackathonId } = {}) => {
   const results = await Promise.all(
     roles.map(role => checkHasRoleById(userId, role, { methodologyId, hackathonId }))
@@ -45,6 +54,9 @@ const checkIsStaff = async (userId, { methodologyId } = {}) => {
 const checkHasRole = async (userId, Role, attributes = {}) => {
   if (Role === ROLES.SCIENTIST) {
     return checkIsInspiringScientist(userId, attributes)
+  }
+  if (Role === ROLES.PARTICIPANT) {
+    return checkIsParticipantOfHackathon(userId, attributes)
   }
   return checkHasAnyRole(userId, Role.models, attributes)
 }

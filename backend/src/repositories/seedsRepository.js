@@ -3,14 +3,19 @@ import { Seed } from '../models/Seed.js'
 import { UserProfile } from '../models/UserProfile.js'
 import { getUserRole, ROLES } from '../services/Roles.js'
 
+const SEED_SCOPE_BY_ROLE = new Map([
+  [ROLES.PUBLIC, ROLES.PUBLIC],
+  [ROLES.PARTICIPANT, ROLES.PUBLIC],
+  [ROLES.EVALUATOR, ROLES.STAFF],
+  [ROLES.SCIENTIST, ROLES.PUBLIC],
+  [ROLES.STAFF, ROLES.STAFF]
+])
+
 export const getSeedRoleScope = (role, userId = undefined) => {
-  if (role === ROLES.SCIENTIST) {
-    return userId ? { method: ['scientist', userId] } : ROLES.PUBLIC.name
+  if (userId && role === ROLES.SCIENTIST) {
+    return { method: ['scientist', userId] }
   }
-  if (role === ROLES.EVALUATOR) {
-    return ROLES.STAFF.name
-  }
-  return role.name
+  return SEED_SCOPE_BY_ROLE.get(role)?.name ?? ROLES.PUBLIC.name
 }
 
 export const getSeedsOfEdition = async (editionId, { role, userId } = {}) => {
