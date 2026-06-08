@@ -16,10 +16,11 @@
     "db:seed": "cross-env NODE_ENV=development npx sequelize-cli db:seed:all",
     "db:seed:test": "cross-env NODE_ENV=testing npx sequelize-cli db:seed:all",
     "db:seed:undo": "cross-env NODE_ENV=development npx sequelize-cli db:seed:undo:all",
+    "db:seed:test:undo": "cross-env NODE_ENV=testing npx sequelize-cli db:seed:undo:all",
     "db:migration:create": "npx sequelize-cli migration:generate --name",
     "db:seed:create": "npx sequelize-cli seed:generate --name",
     "db:ui": "open-cli http://localhost:54323",
-    "db:ui:test": "open-cli http://localhost:54323"
+    "db:ui:test": "open-cli http://localhost:54333"
   },
   "repository": {
     "type": "git",
