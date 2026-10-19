@@ -92,7 +92,7 @@ export const getEvaluatorRolesOfUser = (userId) => {
   return Evaluator.findAll({
     where: { userProfileId: userId },
     include: {
-      model: Hackathon.unscoped(),
+      model: Hackathon.unscoped(), // TODO
       attributes: [],
       where: ongoingWhere(),
       required: true

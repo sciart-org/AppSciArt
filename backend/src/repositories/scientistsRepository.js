@@ -94,7 +94,7 @@ export async function getScientistSeedsOfEdition (scientistId, editionId, { role
         required: true
       },
       {
-        model: Edition.unscoped(),
+        model: Edition.unscoped(), // TODO
         where: { id: editionId },
         attributes: [],
         required: true
