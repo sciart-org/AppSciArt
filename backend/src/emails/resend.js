@@ -1,6 +1,7 @@
 import { Resend } from 'resend'
 
 const RESEND_KEY = process.env.RESEND_KEY
+const EMAIL_REDIRECT_TO = process.env.NODE_ENV !== 'production' ? process.env.EMAIL_REDIRECT_TO : undefined
 let resend
 if (RESEND_KEY) {
   resend = new Resend(RESEND_KEY)
@@ -18,7 +19,7 @@ export const sendEmail = async ({ recipient, subject, html }) => {
   }
   const { data, error } = await resend.emails.send({
     from: 'AppSciArt <info@appsciart.ovh>',
-    to: [recipient],
+    to: [EMAIL_REDIRECT_TO || recipient],
     subject,
     html
   })
