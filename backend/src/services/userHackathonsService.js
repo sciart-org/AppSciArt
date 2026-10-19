@@ -214,13 +214,14 @@ const validateCanUpdateParticipation = async (hackathonPhase, participation, bod
   if (fruitId) await validateFruitIsFromHackathon(fruitId, hackathonId)
 }
 
-const removeGroupIfEmpty = async (groupId, hackathonId) => {
+const removeGroupIfEmpty = async (groupId) => {
   const group = await GroupsAndTeamsRepository.getConceptualMapWithParticipants(groupId)
 
   if (group?.participations.length === 1) {
     await GroupsAndTeamsRepository.deleteConceptualMap(groupId)
-    emitGroupRemovedToStaff(hackathonId, groupId)
+    return true
   }
+  return false
 }
 
 async function updateParticipation (currentUserId, participation, body) {
@@ -235,7 +236,10 @@ async function updateParticipation (currentUserId, participation, body) {
   const participationBody = { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId }
 
   if (groupId === null && hackathonPhase !== 'GROUP_CREATION') {
-    await removeGroupIfEmpty(previousGroupId, hackathonId)
+    const removed = await removeGroupIfEmpty(previousGroupId)
+    if (removed) {
+      emitGroupRemovedToStaff(hackathonId, previousGroupId)
+    }
   }
 
   if (Object.values(participationBody).some(v => v !== undefined)) {
