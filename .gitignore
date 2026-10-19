@@ -35,9 +35,22 @@ backend/node_modules
 backend/.env**
 backend/logs
 
+docs/*
+!docs/diagrams/
+docs/memoir
+
 node_modules
+
+**/tmp
+
+.vscode/
+
 **/supabase/.branches
 **/supabase/.temp
 **/supabase/.env.keys
 **/supabase/.env.local
 **/supabase/.env.*.local
+
+# Claude Code personal settings and local analyses
+.claude/settings.local.json
+.claude/analysis/
