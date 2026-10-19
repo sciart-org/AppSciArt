@@ -21,6 +21,11 @@ export function customErrorHandler (req, res, next) {
         }
       }
     }
+
+    if (!userMessage) {
+      userMessage = 'Something went wrong. Please try again.'
+    }
+
     return res.send({
       error: userMessage
     })
