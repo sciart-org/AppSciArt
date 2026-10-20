@@ -7,7 +7,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node src/server.js",
     "dev": "cross-env NODE_ENV=development node --watch src/server.js",
-    "test": "cross-env NODE_ENV=testing echo \"Error: no test specified\" && exit 1",
+    "test": "cross-env NODE_ENV=testing vitest run",
     "test:dev": "cross-env NODE_ENV=testing node --watch src/server.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -20,7 +20,8 @@
     "db:migration:create": "npx sequelize-cli migration:generate --name",
     "db:seed:create": "npx sequelize-cli seed:generate --name",
     "db:ui": "open-cli http://localhost:54323",
-    "db:ui:test": "open-cli http://localhost:54333"
+    "db:ui:test": "open-cli http://localhost:54333",
+    "test:watch": "cross-env NODE_ENV=testing vitest"
   },
   "repository": {
     "type": "git",
@@ -44,7 +45,10 @@
     "cross-env": "^10.1.0",
     "open-cli": "^9.0.0",
     "sequelize-cli": "^6.6.3",
-    "standard": "17.1.2"
+    "socket.io-client": "^4.8.4",
+    "standard": "17.1.2",
+    "supertest": "^7.3.1",
+    "vitest": "^5.0.5"
   },
   "eslintConfig": {
     "extends": "standard"
