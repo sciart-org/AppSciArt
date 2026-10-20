@@ -3,6 +3,7 @@ import { stateSharedWithApp } from '../native.js'
 
 export const FOLDER_MIME = 'application/vnd.google-apps.folder'
 export const DOCUMENT_MIME = 'application/vnd.google-apps.document'
+export const PNG_MIME = 'image/png'
 
 const filesById = stateSharedWithApp('driveFiles', () => new Map())
 
@@ -105,6 +106,8 @@ export const createFolder = (name, parentId) =>
   storeFile({ name, mimeType: FOLDER_MIME, parents: parentId ? [parentId] : [] })
 
 export const createDocument = (name, parentId) => storeFile({ name, mimeType: DOCUMENT_MIME, parents: [parentId] })
+
+export const createImage = (name, parentId) => storeFile({ name, mimeType: PNG_MIME, parents: [parentId] })
 
 export const folderLink = (folderId) => `https://drive.google.com/drive/folders/${folderId}`
 

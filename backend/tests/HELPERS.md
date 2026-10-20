@@ -86,7 +86,7 @@ its fields). Every option has a sensible default. Without options, a fixture cre
 attribute filled in.
 
 ### Editions
-`anEdition({ state, name, year, shortDescription, longDescription, catalogLink })`. Shortcuts:
+`anEdition({ state, name, year, shortDescription, longDescription, catalogLink, logo })`. Shortcuts:
 
 | Fixture | Edition state |
 |---|---|
@@ -96,7 +96,8 @@ attribute filled in.
 | `aPublishedEdition(o)` | published (`PUBLISHED`), with a catalogue link |
 
 To create an incomplete edition, pass `null` for a field, e.g. `aNotAnnouncedEdition({ longDescription: null })`.
-Every edition gets its empty seed master template.
+Every edition gets its empty seed master template and a logo image in its Drive folder. Pass `logo: false` for an
+edition without a logo.
 
 ### Inspiring scientists and seeds
 - `aScientistOf(edition, user)`: `user` is invited to `edition` as inspiring scientist. Returns `user`.

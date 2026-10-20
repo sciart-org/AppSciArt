@@ -1,10 +1,11 @@
 import { query } from '../db.js'
 import {
-  childNamed, createDocument, createFolder, driveApi, folderIdFromLink, folderLink, DOCUMENT_MIME
+  childNamed, createDocument, createFolder, createImage, driveApi, folderIdFromLink, folderLink, DOCUMENT_MIME
 } from '../fakes/driveStore.js'
 
 export const SEED_TEMPLATE = 'seedTemplate'
 export const FLOWER_TEMPLATE = 'flowerTemplate'
+export const LOGO_IMAGE = 'logo.png'
 
 const rootFolderId = () => process.env.DRIVE_FOLDER_ID
 
@@ -18,11 +19,12 @@ const copyTemplateInto = async (sourceFolderId, templateName, targetFolderId) =>
   await driveApi.files.copy({ fileId: master.id, requestBody: { name: templateName, parents: [targetFolderId] } })
 }
 
-export const createEditionFolders = ({ year, name }) => {
+export const createEditionFolders = ({ year, name, logo }) => {
   const editionsFolder = existingOrNewFolder(rootFolderId(), 'editions')
   const editionFolder = createFolder(`${year}-${slug(name)}`, editionsFolder.id)
   createFolder('seeds', editionFolder.id)
   createDocument(SEED_TEMPLATE, editionFolder.id)
+  if (logo) createImage(LOGO_IMAGE, editionFolder.id)
   return folderLink(editionFolder.id)
 }
 

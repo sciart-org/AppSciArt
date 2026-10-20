@@ -7,7 +7,8 @@ export const anEdition = ({
   year = new Date().getFullYear(),
   shortDescription = 'A short description of the edition',
   longDescription = 'A long description of the edition, with everything about it.',
-  catalogLink = state === 'PUBLISHED' ? `https://example.com/catalogue-${uniqueSuffix()}.pdf` : null
+  catalogLink = state === 'PUBLISHED' ? `https://example.com/catalogue-${uniqueSuffix()}.pdf` : null,
+  logo = true
 } = {}) => insertTimestampedRow('public.editions', {
   name,
   year,
@@ -15,7 +16,7 @@ export const anEdition = ({
   longDescription,
   catalogLink,
   state,
-  driveLink: createEditionFolders({ year, name })
+  driveLink: createEditionFolders({ year, name, logo })
 })
 
 export const aNotAnnouncedEdition = (overrides) => anEdition({ ...overrides, state: 'PLANNED' })

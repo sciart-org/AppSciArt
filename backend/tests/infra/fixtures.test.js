@@ -7,6 +7,10 @@ import {
   enrol, aGroup, aTeam, drive
 } from '../support/index.js'
 import { isAuthorOf, isEvaluatorOf, isScientistOf, participationOf, seedIdsOf } from './database.js'
+import { childrenOf, folderIdFromLink, PNG_MIME } from '../support/fakes/driveStore.js'
+
+const logoImagesOf = (edition) =>
+  childrenOf(folderIdFromLink(edition.driveLink)).filter(file => file.mimeType === PNG_MIME)
 
 describe('edition fixtures', () => {
   it.each([
@@ -51,6 +55,18 @@ describe('edition fixtures', () => {
     const master = await drive.seedMasterTemplateOf(edition)
 
     expect(master).toMatchObject({ name: 'seedTemplate', mimeType: 'application/vnd.google-apps.document' })
+  })
+
+  it('an edition has a logo image in its Drive folder', async () => {
+    const edition = await anEdition()
+
+    expect(logoImagesOf(edition)).toEqual([expect.objectContaining({ name: 'logo.png', mimeType: 'image/png' })])
+  })
+
+  it('an edition created with logo: false has no logo image', async () => {
+    const edition = await anEdition({ logo: false })
+
+    expect(logoImagesOf(edition)).toEqual([])
   })
 })
 
