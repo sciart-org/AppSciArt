@@ -12,6 +12,13 @@ import {
   aPublishedEdition
 } from '../support/index.js'
 
+const ALLOWED_EDITION_LIST_FIELDS = ['id', 'state', 'name', 'year', 'shortDescription', 'logo', 'fruitLogo']
+
+const ALLOWED_STAFF_EDITION_LIST_FIELDS = [...ALLOWED_EDITION_LIST_FIELDS, 'driveLink']
+
+const fieldsOutsideAllowed = (item, allowed = ALLOWED_EDITION_LIST_FIELDS) =>
+  Object.keys(item).filter((key) => !allowed.includes(key))
+
 const idsOf = (editions) => editions.map((edition) => edition.id)
 
 const listedBy = async (api) => {
@@ -106,8 +113,20 @@ describe('UC-002 · when editions in every state exist', () => {
     ]))
   })
 
-  it('UC-002 · each visible edition shows its name, year, short description and logo link', async () => {
+  it('UC-002 · each visible edition shows exactly its id, state, name, year, short description and logo link', async () => {
     const editions = await listedBy(asGuest())
+
+    for (const item of editions) {
+      expect(item).toMatchObject({
+        id: expect.any(String),
+        state: expect.any(String),
+        name: expect.any(String),
+        year: expect.any(Number),
+        shortDescription: expect.any(String),
+        logo: expect.stringMatching(/^https?:\/\/\S+$/)
+      })
+      expect(fieldsOutsideAllowed(item)).toEqual([])
+    }
 
     for (const created of [announced, closed, published]) {
       const listed = editions.find((edition) => edition.id === created.id)
@@ -117,6 +136,34 @@ describe('UC-002 · when editions in every state exist', () => {
         shortDescription: created.shortDescription,
         logo: expect.stringMatching(/^https?:\/\/\S+$/)
       })
+    }
+  })
+
+  it('UC-002 · staff get the same item shape plus the Drive folder link, planned editions included', async () => {
+    const api = await as(designer(1))
+
+    const editions = await listedBy(api)
+
+    expect(idsOf(editions)).toContain(notAnnounced.id)
+    for (const item of editions) {
+      expect(item).toMatchObject({
+        id: expect.any(String),
+        state: expect.any(String),
+        name: expect.any(String),
+        year: expect.any(Number),
+        driveLink: expect.stringMatching(/^https?:\/\/\S+$/)
+      })
+      expect(fieldsOutsideAllowed(item, ALLOWED_STAFF_EDITION_LIST_FIELDS)).toEqual([])
+    }
+  })
+
+  it('UC-002 · participant list items have no field outside the public set', async () => {
+    const api = await as(participant(1))
+
+    const editions = await listedBy(api)
+
+    for (const item of editions) {
+      expect(fieldsOutsideAllowed(item)).toEqual([])
     }
   })
 })
