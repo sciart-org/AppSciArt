@@ -18,12 +18,14 @@ Tests inside one file share that state. Files run one at a time.
 
 Prerequisites: the local testing Supabase stack running (`supabase start` in `db/test/supabase`), migrated
 (`npm run db:migrate:test`) and seeded (`npm run db:seed:test`). The suite refuses to run against anything
-that isn't local.
+that isn't local. Seed only once, on an empty database: the testing seeders aren't tracked (no `SequelizeData`),
+so `db:seed:test` must not run again on a seeded database. Between files, the reset keeps the base users.
 
 ## Rules
 - **Arrange** with the fixtures below, **act** and **assert** only through the API (`as`, `asGuest`, …) and sockets.
   Use `sentEmails()` and `drive.*` only to check what went to the email and Drive services.
 - Name every test after the requirements it checks, e.g. `UC-041 · BRU-010 · announcing … is cancelled`.
+- A failing test is a finding. Never `skip` it or mark it `it.fails`.
 
 ## Actors (base users)
 Plain functions (no `await`). Each returns `{ id, authId, email, password, name, surname }` (`id` is the user
