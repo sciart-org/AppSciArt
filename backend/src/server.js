@@ -1,17 +1,8 @@
 import 'dotenv/config'
-import './models/index.js'
-import http from 'http'
-import express, { json } from 'express'
-import { corsMiddleware } from './middlewares/cors.js'
 import { sequelize } from './config/sequelize.js'
-import { initialize } from '@oas-tools/core'
-import { bearerJwt } from '@oas-tools/auth/handlers'
-import { customErrorHandler } from './middlewares/customErrorHandler.js'
-import { initializeWebSockets } from './sockets/index.js'
+import { createApp } from './app.js'
 
 const PORT = process.env.PORT || 3000
-const JWT_SECRET = process.env.JWT_SECRET
-const JWT_ISSUER = process.env.JWT_ISSUER
 
 process.on('unhandledRejection', (err) => {
   console.error('UNHANDLED REJECTION:', err)
@@ -23,31 +14,8 @@ process.on('uncaughtException', (err) => {
   process.exit(1)
 })
 
-const app = express()
-const server = http.createServer(app)
-
-app.disable('x-powered-by')
-app.use(json({ limit: '50mb' }))
-app.use(corsMiddleware())
-app.use(customErrorHandler)
-
-initializeWebSockets(server)
-
-const config = {
-  middleware: {
-    security: {
-      auth: {
-        bearerAuth: bearerJwt({
-          issuer: JWT_ISSUER,
-          secret: JWT_SECRET
-        })
-      }
-    }
-  }
-}
-
 try {
-  await initialize(app, config)
+  const { server, config } = await createApp()
   await sequelize.authenticate()
   server.listen(PORT, () => {
     console.log('\nApp running at http://localhost:' + PORT)
