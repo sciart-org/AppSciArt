@@ -20,7 +20,7 @@ Run from `backend/`:
 - `npm run db:ui` / `db:ui:test`: open Supabase Studio (54323 dev / 54333 test)
 - Local Supabase stacks live in `backend/db/dev/supabase` and `backend/db/test/supabase`. Start one with the Supabase CLI from that directory.
 - Swagger UI is at `http://localhost:3000/docs` while the server runs.
-- The backend has no unit test suite (`npm test` is a placeholder).
+- `npm test`: acceptance tests (Vitest) against the local testing Supabase stack. `npm run test:watch` runs them in watch mode. See `backend/tests/HELPERS.md`.
 
 Run from `frontend/`:
 - `npx playwright test`: e2e tests in `frontend/tests/`
@@ -39,7 +39,7 @@ Emails are sent with Resend (`src/emails/resend.js`). Outside production, set `E
 
 ## Backend architecture
 
-**The OpenAPI spec drives routing.** `server.js` initializes `@oas-tools/core` using `.oastoolsrc`, with the spec at `api/oas-file.yaml` plus `api/paths/*.yaml` and `api/components/`. Each path declares `x-router-controller: <file>` and `operationId: <exportedFn>`, which map to `src/controllers/<file>.js`. Request **and response** validation is strict. When adding or changing an endpoint:
+**The OpenAPI spec drives routing.** `src/app.js` (`createApp`) builds the app and initializes `@oas-tools/core` using `.oastoolsrc`, with the spec at `api/oas-file.yaml` plus `api/paths/*.yaml` and `api/components/`. Each path declares `x-router-controller: <file>` and `operationId: <exportedFn>`, which map to `src/controllers/<file>.js`. Request **and response** validation is strict. When adding or changing an endpoint:
 - Update the YAML.
 - Make sure the response shape matches the schema, or the request fails.
 - For public endpoints, set `security: [{}]` in the spec.
@@ -64,7 +64,7 @@ The layers are controllers → services → repositories → models:
   - Files: Google Drive (`config/drive.js`, `services/driveService.js`)
   - `scripts/keep-supabase-alive.js`: run by a scheduled GitHub workflow
 
-Style: ESLint `standard` (no semicolons, space before function parens), ES modules.
+Style: ESLint `standard` (no semicolons, space before function parens), ES modules. No comments: code explains itself through names (helper functions, named constants). Put any non-obvious "why" in docs.
 
 ## Frontend architecture
 
