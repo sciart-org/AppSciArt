@@ -4,13 +4,13 @@ import {
   anEdition, aNotAnnouncedEdition, anAnnouncedEdition, aClosedEdition, aPublishedEdition,
   aScientistOf, aSeed, aPublishedSeed,
   aHackathon, aNotAnnouncedHackathon, anAnnouncedHackathon, aClosedHackathon, anOngoingHackathonAt, anEndedHackathon,
-  enrol, aGroup, aTeam, drive
+  enrol, aGroup, aTeam, aFruit, drive
 } from '../support/index.js'
-import { isAuthorOf, isEvaluatorOf, isScientistOf, participationOf, seedIdsOf } from './database.js'
+import { fruitChainOf, isAuthorOf, isEvaluatorOf, isScientistOf, participationOf, seedIdsOf } from './database.js'
 import { childrenOf, folderIdFromLink, PNG_MIME } from '../support/fakes/driveStore.js'
 
-const logoImagesOf = (edition) =>
-  childrenOf(folderIdFromLink(edition.driveLink)).filter(file => file.mimeType === PNG_MIME)
+const imagesIn = (row) =>
+  childrenOf(folderIdFromLink(row.driveLink)).filter(file => file.mimeType === PNG_MIME)
 
 describe('edition fixtures', () => {
   it.each([
@@ -60,13 +60,13 @@ describe('edition fixtures', () => {
   it('an edition has a logo image in its Drive folder', async () => {
     const edition = await anEdition()
 
-    expect(logoImagesOf(edition)).toEqual([expect.objectContaining({ name: 'logo.png', mimeType: 'image/png' })])
+    expect(imagesIn(edition)).toEqual([expect.objectContaining({ name: 'logo.png', mimeType: 'image/png' })])
   })
 
   it('an edition created with logo: false has no logo image', async () => {
     const edition = await anEdition({ logo: false })
 
-    expect(logoImagesOf(edition)).toEqual([])
+    expect(imagesIn(edition)).toEqual([])
   })
 })
 
@@ -146,13 +146,18 @@ describe('hackathon fixtures', () => {
   })
 
   it('seeds, evaluators, participants and assisting participants are attached to the hackathon', async () => {
-    const seed = await aPublishedSeed()
+    const edition = await anAnnouncedEdition()
+    const seed = await aPublishedSeed({ edition })
     const evaluator = participant(1)
     const enrolledOnly = participant(2)
     const assisting = participant(3)
 
     const hackathon = await aHackathon({
-      seeds: [seed], evaluators: [evaluator], participants: [enrolledOnly], assisting: [assisting]
+      edition,
+      seeds: [seed],
+      evaluators: [evaluator],
+      participants: [enrolledOnly],
+      assisting: [assisting]
     })
 
     expect(await seedIdsOf(hackathon)).toEqual([seed.id])
@@ -182,9 +187,10 @@ describe('hackathon fixtures', () => {
 })
 
 describe('group and team fixtures', () => {
-  const ongoingHackathonWith = async (members) => {
-    const seed = await aPublishedSeed()
-    const hackathon = await anOngoingHackathonAt('GROUP_WORK', { seeds: [seed], assisting: members })
+  const ongoingHackathonWith = async (members, phase = 'GROUP_WORK') => {
+    const edition = await anAnnouncedEdition()
+    const seed = await aPublishedSeed({ edition })
+    const hackathon = await anOngoingHackathonAt(phase, { edition, seeds: [seed], assisting: members })
     return { hackathon, seed }
   }
 
@@ -216,7 +222,7 @@ describe('group and team fixtures', () => {
 
   it('a team puts its members in it and makes only the speaker its speaker', async () => {
     const [speaker, member] = participants(2, 9)
-    const { hackathon, seed } = await ongoingHackathonWith([speaker, member])
+    const { hackathon, seed } = await ongoingHackathonWith([speaker, member], 'TEAM_WORK')
 
     const flower = await aTeam({ hackathon, seed, members: [speaker, member], speaker })
 
@@ -226,12 +232,105 @@ describe('group and team fixtures', () => {
 
   it("a team's flower template is a copy of its hackathon's flower master template", async () => {
     const [speaker] = participants(1, 11)
-    const { hackathon, seed } = await ongoingHackathonWith([speaker])
+    const { hackathon, seed } = await ongoingHackathonWith([speaker], 'TEAM_WORK')
 
     const flower = await aTeam({ hackathon, seed, members: [speaker] })
 
     const master = await drive.flowerMasterTemplateOf(hackathon)
     const copy = await drive.flowerTemplateOf(flower)
     expect(copy.copiedFrom).toBe(master.id)
+  })
+})
+
+describe('state consistency', () => {
+  const EDITION_FIXTURES = {
+    PLANNED: aNotAnnouncedEdition,
+    ACTIVE: anAnnouncedEdition,
+    CLOSED: aClosedEdition,
+    PUBLISHED: aPublishedEdition
+  }
+
+  it.each([
+    ['PLANNED', 'PLANNED'],
+    ['ACTIVE', 'PLANNED'], ['ACTIVE', 'OPEN'], ['ACTIVE', 'CLOSED'], ['ACTIVE', 'FINISHED'],
+    ['CLOSED', 'FINISHED'],
+    ['PUBLISHED', 'FINISHED']
+  ])('a %s edition can have a %s hackathon', async (editionState, hackathonState) => {
+    const edition = await EDITION_FIXTURES[editionState]()
+
+    const hackathon = await aHackathon({ edition, state: hackathonState })
+
+    expect(hackathon.state).toBe(hackathonState)
+  })
+
+  it.each([
+    ['PLANNED', 'OPEN'], ['PLANNED', 'CLOSED'], ['PLANNED', 'FINISHED'],
+    ['CLOSED', 'PLANNED'], ['CLOSED', 'OPEN'], ['CLOSED', 'CLOSED'],
+    ['PUBLISHED', 'PLANNED'], ['PUBLISHED', 'OPEN'], ['PUBLISHED', 'CLOSED']
+  ])('a %s edition cannot have a %s hackathon', async (editionState, hackathonState) => {
+    const edition = await EDITION_FIXTURES[editionState]()
+
+    await expect(aHackathon({ edition, state: hackathonState })).rejects.toThrow('Unreachable state')
+  })
+
+  it('a hackathon cannot use an unpublished seed', async () => {
+    const edition = await anAnnouncedEdition()
+    const seed = await aSeed({ edition })
+
+    await expect(aHackathon({ edition, seeds: [seed] })).rejects.toThrow('must be published')
+  })
+
+  it('a hackathon cannot use a seed of another edition', async () => {
+    const seed = await aPublishedSeed()
+
+    await expect(aHackathon({ seeds: [seed] })).rejects.toThrow('must belong to its edition')
+  })
+
+  it.each(['GROUP_CREATION', 'GROUP_WORK', 'GROUP_PRESENTATION'])('a team cannot exist in phase %s', async (phase) => {
+    const edition = await anAnnouncedEdition()
+    const seed = await aPublishedSeed({ edition })
+    const hackathon = await anOngoingHackathonAt(phase, { edition, seeds: [seed] })
+
+    await expect(aTeam({ hackathon, seed })).rejects.toThrow('Unreachable state')
+  })
+})
+
+describe('fruit fixtures', () => {
+  it('aFruit builds its chain inside the given edition: an ended hackathon and a published flower', async () => {
+    const edition = await aPublishedEdition()
+
+    const fruit = await aFruit({ edition, state: 'IN_PROGRESS' })
+
+    expect(await fruitChainOf(fruit)).toMatchObject({
+      fruitState: 'IN_PROGRESS', flowerState: 'PUBLISHED', hackathonState: 'FINISHED', editionId: edition.id
+    })
+  })
+
+  it("the fruit's authors are linked to it in its hackathon", async () => {
+    const hackathon = await anEndedHackathon()
+    const [author, coAuthor] = participants(2, 12)
+
+    const fruit = await aFruit({ hackathon, authors: [author, coAuthor] })
+
+    expect(await participationOf(author, hackathon)).toMatchObject({ fruitId: fruit.id })
+    expect(await participationOf(coAuthor, hackathon)).toMatchObject({ fruitId: fruit.id })
+  })
+
+  it('a fruit has a main image in its Drive folder', async () => {
+    const fruit = await aFruit()
+
+    expect(imagesIn(fruit)).toEqual([expect.objectContaining({ name: 'mainImage.png' })])
+  })
+
+  it('a fruit created with mainImage: false has no main image', async () => {
+    const fruit = await aFruit({ mainImage: false })
+
+    expect(imagesIn(fruit)).toEqual([])
+  })
+
+  it('a fruit cannot exist for a hackathon that has not ended', async () => {
+    const hackathon = await anOngoingHackathonAt('TEAM_PRESENTATION')
+
+    await expect(aFruit({ hackathon })).rejects.toThrow('Unreachable state')
   })
 })

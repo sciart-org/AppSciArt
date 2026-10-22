@@ -38,3 +38,14 @@ export const removeFacilitatorRole = (user) => query(
 
 export const createUnregisteredProfile = (email) => query(
   'INSERT INTO profiles.user_profiles (id, email) VALUES (gen_random_uuid(), $1)', [email])
+
+export const fruitChainOf = (fruit) => firstRow(
+  `SELECT fr.state AS "fruitState", fl.state AS "flowerState", h.state AS "hackathonState", se."editionId"
+   FROM public.fruits fr
+   JOIN public.flowers fl ON fl.id = fr."flowerId"
+   JOIN public.seed_editions se ON se."seedId" = fl."seedId"
+   JOIN public.participations p ON p."fruitId" = fr.id
+   JOIN public.hackathons h ON h.id = p."hackathonId"
+   WHERE fr.id = $1
+   LIMIT 1`,
+  [fruit.id])

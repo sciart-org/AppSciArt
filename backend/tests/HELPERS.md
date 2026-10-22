@@ -85,6 +85,22 @@ All async. Each one creates the state the system would be in after that step, an
 its fields). Every option has a sensible default. Without options, a fixture creates an item with every required
 attribute filled in.
 
+### Consistent states
+Fixtures only build states the system can reach. An impossible combination throws `Unreachable state: …` before
+the test runs, so arrange the parents to match:
+
+| Item | Allowed |
+|---|---|
+| hackathon of a not-announced edition | only not announced |
+| hackathon of an announced edition | any state |
+| hackathon of a closed or published edition | only ended |
+| seed of a hackathon | published, and from the hackathon's edition |
+| team (flower) | only in `TEAM_CREATION`, `TEAM_WORK`, `TEAM_PRESENTATION`, or in an ended hackathon |
+| fruit | only for an ended hackathon, from a published flower; any fruit state |
+
+Seeds made without `edition` get a new edition of their own, so pass the hackathon's `edition` to `aSeed` when the
+seed goes into a hackathon.
+
 ### Editions
 `anEdition({ state, name, year, shortDescription, longDescription, catalogLink, logo })`. Shortcuts:
 
@@ -156,6 +172,17 @@ Members must already be enrolled in the hackathon.
 - `aTeam({ hackathon, seed, members, speaker = members[0], number = 1, flowerState = 'IN_BLANK', title, concept })`: a
   co-creation team for `seed`, with its flower. The flower gets its own template, copied from the hackathon's master.
   Returns the flower. `flowerState` is `IN_BLANK`, `IN_PROGRESS`, `IN_REVIEW` (delivered) or `PUBLISHED`.
+
+### Fruits
+`aFruit({ edition, hackathon, authors = [participant(15)], state = 'PUBLISHED', title, mainImage = true })`: a SciArt
+fruit and everything it comes from. Returns the fruit (`id`, `title`, `state`, …).
+
+- It builds the chain: an ended hackathon (`hackathon`, or a new one in `edition`, or in a new announced edition), a
+  published seed of that edition assigned to it, a team of `authors` with a published flower, and the fruit.
+- `authors` are enrolled if they aren't yet, and become the fruit's authors in that hackathon.
+- `state`: `IN_BLANK`, `IN_PROGRESS`, `IN_REVIEW` (delivered) or `PUBLISHED`.
+- The fruit gets a main image in its Drive folder. Pass `mainImage: false` for a fruit without one.
+- Each call makes a new seed and flower, so several fruits can share one `hackathon` or `edition`.
 
 ## Checking the email and Drive services
 - `sentEmails()` → every email sent so far in this file: `[{ to: [address], subject, html, from }]`.

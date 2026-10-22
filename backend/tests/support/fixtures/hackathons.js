@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto'
 import { daysFromNow, insertRow, insertTimestampedRow, linkRows, uniqueSuffix } from './rows.js'
 import { createHackathonFolders } from './driveTemplates.js'
 import { anAnnouncedEdition } from './editions.js'
+import { ensureHackathonFitsEdition, ensureSeedFitsHackathon } from './consistency.js'
 
 const DATES_BY_STATE = {
   PLANNED: { startDate: daysFromNow(30), endDate: daysFromNow(31) },
@@ -11,6 +12,7 @@ const DATES_BY_STATE = {
 }
 
 export const aSeedOf = async (hackathon, seed) => {
+  await ensureSeedFitsHackathon(seed, hackathon)
   await linkRows('public.hackathon_seeds', { hackathonId: hackathon.id, seedId: seed.id })
   return seed
 }
@@ -54,6 +56,7 @@ export const aHackathon = async ({
   assisting = []
 } = {}) => {
   edition ??= await anAnnouncedEdition()
+  ensureHackathonFitsEdition(state, edition)
   const hackathon = await insertTimestampedRow('public.hackathons', {
     internalName,
     isPrivate,

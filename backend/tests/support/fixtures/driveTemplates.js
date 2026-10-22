@@ -6,6 +6,7 @@ import {
 export const SEED_TEMPLATE = 'seedTemplate'
 export const FLOWER_TEMPLATE = 'flowerTemplate'
 export const LOGO_IMAGE = 'logo.png'
+export const MAIN_IMAGE = 'mainImage.png'
 
 const rootFolderId = () => process.env.DRIVE_FOLDER_ID
 
@@ -42,6 +43,13 @@ export const createHackathonFolders = ({ editionDriveLink, internalName }) => {
   createFolder('flowers', hackathonFolder.id)
   createDocument(FLOWER_TEMPLATE, hackathonFolder.id)
   return folderLink(hackathonFolder.id)
+}
+
+export const createFruitFolders = ({ editionDriveLink, title, mainImage }) => {
+  const fruitsFolder = existingOrNewFolder(folderIdFromLink(editionDriveLink), 'fruits')
+  const fruitFolder = createFolder(slug(title), fruitsFolder.id)
+  if (mainImage) createImage(MAIN_IMAGE, fruitFolder.id)
+  return folderLink(fruitFolder.id)
 }
 
 export const createFlowerFolders = async ({ hackathonDriveLink, teamNumber, seedTitle }) => {

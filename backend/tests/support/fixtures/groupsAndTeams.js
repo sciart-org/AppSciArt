@@ -1,6 +1,7 @@
 import { query } from '../db.js'
 import { insertTimestampedRow } from './rows.js'
 import { createFlowerFolders } from './driveTemplates.js'
+import { ensureHackathonHasTeams } from './consistency.js'
 
 const assignMembers = async ({ hackathon, members, unitColumn, unitId, leader, leaderColumn }) => {
   for (const member of members) {
@@ -34,6 +35,7 @@ export const aTeam = async ({
   title = null,
   concept = null
 }) => {
+  ensureHackathonHasTeams(hackathon)
   const flower = await insertTimestampedRow('public.flowers', {
     seedId: seed.id,
     state: flowerState,
