@@ -249,14 +249,14 @@
       "kind": "Test",
       "status": "Done",
       "ref": "UC-002",
-      "commits": "69ccf92, 3c96ba4, f3a9b36",
+      "commits": "69ccf92, 3c96ba4, f3a9b36, 4a9de71, 8381a1c",
       "labels": [
         "test"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 177,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCq-bk",
-      "synced": "c528fe7b048ef6aa"
+      "synced": "b69410d97449b4d0"
     },
     {
       "key": "UC-003",
@@ -268,14 +268,14 @@
       "kind": "Test",
       "status": "Done",
       "ref": "UC-003",
-      "commits": "5f35411, ddb1179",
+      "commits": "5f35411, ddb1179, 4a9de71, 8381a1c",
       "labels": [
         "test"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 178,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCq-qQ",
-      "synced": "f8af925bfe9e1392"
+      "synced": "2e85ace7940c74d9"
     },
     {
       "key": "UC-004",
@@ -1476,12 +1476,12 @@
       "kind": "Foundation",
       "status": "Done",
       "ref": "3.9",
-      "commits": "217ee88, 377f674, acad010, 2fda549, 969c9af, 8fd6d73, 4b68a76, 82f442e, b3f691a, b200ae2, 268d6e2, f4b6106, 1d0364c, 8abb6f9, 6999b8a, 579630f",
+      "commits": "217ee88, 377f674, acad010, 2fda549, 969c9af, 8fd6d73, 4b68a76, 82f442e, b3f691a, b200ae2, 268d6e2, f4b6106, 1d0364c, 8abb6f9, 6999b8a, 579630f, f34467d",
       "labels": [],
       "milestone": "v1.0.0",
       "issueNumber": 258,
       "itemId": "PVTI_lADODEgGw84BoNdFzhC-Zkw",
-      "synced": "39b43118beef812e"
+      "synced": "4ccf00c8f3aa8fd3"
     },
     {
       "key": "4.1",
