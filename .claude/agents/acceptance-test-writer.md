@@ -22,14 +22,14 @@ Never bend an expectation to match what the system returns. A red test is a find
 You may read only these:
 - the brief;
 - `docs/project/clarifications/*.md`, the product owner's answers. Read the files and sections the brief links.
-- `.claude/analysis/srs-export.txt`, the SRS. Read the parts the brief cites.
+- `.claude/private/srs/srs-export.txt`, the SRS. Read the parts the brief cites.
 - `backend/api/**`, only to learn paths, query parameter names and field names. Its validation is incomplete, so
   never take an expectation from it.
 - `backend/tests/HELPERS.md`, the whole helper and fixture API. Import everything from `../support/index.js`.
 - `backend/tests/acceptance/*.test.js`, for style only.
 
-Everything else is off limits: `backend/src`, `frontend`, `backend/tests/support`, `backend/tests/infra`, `.claude/private`, the
-rest of `docs/project` and the rest of `.claude/analysis`. A hook refuses those reads. Don't try to get around it. Test runs print SQL query logs:
+Everything else is off limits: `backend/src`, `frontend`, `backend/tests/support`, `backend/tests/infra`, the rest of
+`.claude/private`, the rest of `docs/project` and `.claude/analysis`. A hook refuses those reads. Don't try to get around it. Test runs print SQL query logs:
 ignore them, and never use them to decide an expectation.
 
 If the brief, the clarifications and the SRS don't settle something, choose the reading closest to the brief's words, and list it under

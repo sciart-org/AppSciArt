@@ -6,7 +6,7 @@ import sys
 ROOT = os.path.realpath(os.environ.get('CLAUDE_PROJECT_DIR') or os.getcwd())
 
 READABLE = [
-    '.claude/analysis/srs-export.txt',
+    '.claude/private/srs/srs-export.txt',
     'docs/project/testing/briefs/',
     'docs/project/clarifications/',
     'backend/api/',
