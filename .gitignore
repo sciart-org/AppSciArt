@@ -37,6 +37,7 @@ backend/logs
 
 docs/*
 !docs/diagrams/
+!docs/project/
 docs/memoir
 
 node_modules
@@ -52,5 +53,9 @@ node_modules
 **/supabase/.env.*.local
 
 # Claude Code personal settings and local analyses
+CLAUDE.local.md
 .claude/settings.local.json
 .claude/analysis/
+.claude/private/
+.claude/skills/
+.claude/agents/

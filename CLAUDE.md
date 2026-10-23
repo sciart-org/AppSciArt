@@ -75,4 +75,7 @@ Style: ESLint `standard` (no semicolons, space before function parens), ES modul
 
 ## Docs
 
-`docs/` holds the thesis memoir, diagrams, and `API_interactions.md`.
+- `docs/project/`: production roadmap, decisions, product owner clarifications per use case, and the acceptance
+  testing plan. Start at `docs/project/README.md`.
+- `docs/diagrams/`: conceptual and domain diagrams (PlantUML sources and PNGs).
+- The rest of `docs/` (thesis memoir sources) is local and not tracked.
