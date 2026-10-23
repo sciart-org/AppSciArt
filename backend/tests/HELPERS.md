@@ -125,12 +125,15 @@ edition without a logo.
 - `aPublishedSeed(o)`: the same, with `state: 'PUBLISHED'`.
 
 ### Hackathons
-`aHackathon({ edition, state, phase, type, internalName, description, sections, startDate, endDate, location,
-meetLink, isPrivate, seeds, evaluators, participants, assisting })`
+`aHackathon({ edition, state, phase, type, internalName, shortDescription, sections, startDate, endDate, location,
+meetLink, isPrivate, logo, seeds, evaluators, participants, assisting })`
 
 - `type`: `ON_SITE` (default), `ONLINE` or `HYBRID`.
 - `location` is set unless the hackathon is online. `meetLink` is set unless it's on-site.
-- `sections`: description sections `[{ sectionName, text }]`.
+- `shortDescription`: the preview text (IRQ-006 short description).
+- `sections`: the full description, as sections `[{ sectionName, text }]`.
+- `isPrivate`: an internal hackathon (IRQ-006 visibility). Default `false`.
+- Every hackathon gets a logo image in its Drive folder. Pass `logo: false` for a hackathon without a logo.
 - Dates follow the state:
 
   | State | Start date |

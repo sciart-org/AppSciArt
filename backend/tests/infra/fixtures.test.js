@@ -184,6 +184,18 @@ describe('hackathon fixtures', () => {
 
     expect(master).toMatchObject({ name: 'flowerTemplate', mimeType: 'application/vnd.google-apps.document' })
   })
+
+  it('a hackathon has a logo image in its Drive folder', async () => {
+    const hackathon = await aHackathon()
+
+    expect(imagesIn(hackathon)).toEqual([expect.objectContaining({ name: 'logo.png', mimeType: 'image/png' })])
+  })
+
+  it('a hackathon created with logo: false has no logo image', async () => {
+    const hackathon = await aHackathon({ logo: false })
+
+    expect(imagesIn(hackathon)).toEqual([])
+  })
 })
 
 describe('group and team fixtures', () => {

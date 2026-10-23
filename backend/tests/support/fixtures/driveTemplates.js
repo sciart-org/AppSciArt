@@ -37,11 +37,12 @@ export const createSeedFolders = async ({ editionDriveLink, title }) => {
   return folderLink(seedFolder.id)
 }
 
-export const createHackathonFolders = ({ editionDriveLink, internalName }) => {
+export const createHackathonFolders = ({ editionDriveLink, internalName, logo }) => {
   const editionFolderId = folderIdFromLink(editionDriveLink)
   const hackathonFolder = createFolder(slug(internalName), existingOrNewFolder(editionFolderId, 'hackathons').id)
   createFolder('flowers', hackathonFolder.id)
   createDocument(FLOWER_TEMPLATE, hackathonFolder.id)
+  if (logo) createImage(LOGO_IMAGE, hackathonFolder.id)
   return folderLink(hackathonFolder.id)
 }
 
