@@ -20,7 +20,5 @@ Work is tracked on two GitHub Projects boards, both private. This folder holds t
 
 It also syncs the private items when their file is present; without it, it syncs only the public board.
 
-After each step:
-1. Update the item: `status`, `commits` (short hashes).
-2. `python3 -I docs/project/tools/sync_project.py --dry-run`, check the list.
-3. `python3 -I docs/project/tools/sync_project.py`.
+After each step, run the `/log-step` skill (`.claude/skills/log-step/SKILL.md`): it updates the item and syncs
+(dry run first).

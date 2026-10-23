@@ -70,4 +70,4 @@ Tracked privately; described here only once released.
 ## Every phase
 - CI green (lint, build, `npm run test:back`, `npx playwright test --project=chromium`)
 - New tests per implemented use case; manual walkthrough with SRS use-case steps as acceptance script
-- Update the status: `README.md` "Now", then the board item
+- Record each step with the `/log-step` skill

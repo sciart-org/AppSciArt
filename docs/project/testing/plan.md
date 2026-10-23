@@ -360,15 +360,4 @@ only. The main session owns everything that needs the schema.
 | `acceptance-test-writer` agent | One test file + its coverage map, from one brief | Reads `backend/src`, `frontend/src`, test support code or private material (a hook enforces it) |
 
 ### Per-requirement workflow
-| # | Step | Details |
-|---|---|---|
-| 1 | Name the requirement | Quote its SRS text. Ask the user what the SRS doesn't settle, **including the exact allowed response fields per role** (the YAML validation is incomplete; never use it). |
-| 2 | Check for existing answers | Before asking or recording: rule at the top of `../decisions.md`. |
-| 3 | Record new answers | `../clarifications/<UC>.md` (current truth) + a row in `../decisions.md` (history). |
-| 4 | Add missing fixtures | Propose (files, why, infra tests) → go → build → document in `backend/tests/HELPERS.md` → separate commit. |
-| 5 | Write the brief | `briefs/<ID>.md` from the template in `briefs/README.md`: SRS text, link to the clarification file, vocabulary, numbered cases `**B<n>**`, fixture notes. |
-| 6 | Launch the agent | With only the brief's path. It writes the test file and `briefs/<ID>.coverage.json`, self-checks each case, runs, lints and reports. Its rules live in `.claude/agents/acceptance-test-writer.md`; the hook `.claude/agents/hooks/black-box-guard.py` blocks other reads, writes and commands. |
-| 7 | Check coverage | `python3 -I docs/project/tools/check_brief_coverage.py docs/project/testing/briefs/<ID>.md tests/acceptance/<file>.test.js`: every case has a test, no test without a case, no stale names. |
-| 8 | Review | Each case's assertions against the brief and the SRS. Run the suite; split tests so each red has one cause. |
-| 9 | Log reds | `T<n>` in the private findings register (cause checked in code); a bug issue unless security-related. |
-| 10 | Close | Show the user, commit on approval, update the status (`../README.md` "Now", then the board item). |
+Run it with the `/test-requirement` skill (`.claude/skills/test-requirement/SKILL.md`), the only copy of the steps.
