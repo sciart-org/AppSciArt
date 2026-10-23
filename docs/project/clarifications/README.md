@@ -7,6 +7,8 @@ each answer, with dates, is in `../decisions.md`; every section names the decisi
 Tests and implementation take their expectations from the SRS plus these files, never from the code. A question the
 SRS and these files don't settle goes to the product owner before any test or code relies on it.
 
+Before asking or recording an answer, check for an existing one: rule at the top of `../decisions.md`.
+
 | File | Scope |
 |---|---|
 | `general.md` | Actors and staff hierarchy, vocabulary (SRS terms → API values), HTTP meaning, announcing, state consistency |
