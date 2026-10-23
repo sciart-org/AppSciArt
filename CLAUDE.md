@@ -82,6 +82,7 @@ Style: ESLint `standard` (no semicolons, space before function parens), ES modul
 
 Writing documentation (any type: docs, briefs, decisions, issues, PR text, skills): readability comes first.
 - Prefer tables and bullets. No paragraphs with lots of text.
-- Keep a balance: Not only bullets and tables, but not only full paragraphs.
+- Keep a balance between short prose and lists. More than 8 bullets in a row is too many: group them under
+  sub-headings, turn them into a table, or say it in a short paragraph.
 - One idea per bullet; split long bullets into sub-bullets.
 - Lead with the point; put details and examples after it.
