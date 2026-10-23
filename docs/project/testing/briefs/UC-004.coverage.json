@@ -1,0 +1,59 @@
+{
+  "B1": [
+    "UC-004 · guest gets an empty list when no hackathon exists"
+  ],
+  "B2": [
+    "UC-004 · IRQ-006 · guest gets an empty list when only not-announced and private hackathons exist"
+  ],
+  "B3": [
+    "UC-004 · IRQ-006 · guest sees announced, closed, ongoing and ended hackathons"
+  ],
+  "B4": [
+    "UC-004 · IRQ-006 · guest never sees not-announced hackathons"
+  ],
+  "B5": [
+    "UC-004 · IRQ-006 · guest never sees private hackathons, whatever their state"
+  ],
+  "B6": [
+    "UC-004 · IRQ-006 · participant sees exactly the same hackathons as a guest"
+  ],
+  "B7": [
+    "UC-004 · IRQ-006 · designer sees not-announced and private hackathons too",
+    "UC-004 · IRQ-006 · facilitator sees not-announced and private hackathons too",
+    "UC-004 · IRQ-006 · administrator sees not-announced and private hackathons too"
+  ],
+  "B8": [
+    "UC-004 · IRQ-006 · guest list items have no field outside the allowed set",
+    "UC-004 · IRQ-006 · guest list items carry every required field"
+  ],
+  "B9": [
+    "UC-004 · IRQ-006 · an online hackathon has no location and an on-site one has its location"
+  ],
+  "B10": [
+    "UC-004 · IRQ-006 · editionName is the name of the hackathon's edition"
+  ],
+  "B11": [
+    "UC-004 · guest items carry no isEnrolled",
+    "UC-004 · IRQ-006 · participant items all carry a boolean isEnrolled and no staff-only field",
+    "UC-004 · IRQ-006 · participant items have no field outside the allowed set"
+  ],
+  "B12": [
+    "UC-004 · IRQ-006 · designer items have no field outside the staff set",
+    "UC-004 · IRQ-006 · facilitator items have no field outside the staff set",
+    "UC-004 · IRQ-006 · administrator items have no field outside the staff set"
+  ],
+  "B13": [
+    "UC-004 · IRQ-006 · guest never gets the meeting link in the list",
+    "UC-004 · IRQ-006 · participant never gets the meeting link in the list",
+    "UC-004 · IRQ-006 · designer never gets the meeting link in the list"
+  ],
+  "B14": [
+    "UC-004 · a participant's announced and ended hackathons they take part in are marked enrolled, others not"
+  ],
+  "B15": [
+    "UC-004 · an assisting participant's hackathon is marked enrolled"
+  ],
+  "B16": [
+    "UC-004 · being an evaluator of a hackathon does not mark it as enrolled"
+  ]
+}
