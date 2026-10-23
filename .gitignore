@@ -52,8 +52,7 @@ node_modules
 **/supabase/.env.local
 **/supabase/.env.*.local
 
-# Claude Code personal settings and local analyses
+# Claude Code personal settings and private notes
 CLAUDE.local.md
 .claude/settings.local.json
-.claude/analysis/
 .claude/private/

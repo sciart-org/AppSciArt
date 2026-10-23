@@ -13,7 +13,7 @@ Request: $ARGUMENTS
 - Never commit any of these. If something looks like one, stop and tell the user:
   - `backend/.env*` or Supabase `.env.keys` / `.env.*.local` files
   - keys or tokens: Supabase service-role, JWT, Resend, Google OAuth secrets or refresh tokens
-  - `.claude/settings.local.json`, `.claude/analysis/`, `.claude/private/` or `CLAUDE.local.md`
+  - `.claude/settings.local.json`, `.claude/private/` or `CLAUDE.local.md`
   - real personal data (names, emails of real participants) in seeders or fixtures
 - `sciart-org/AppSciArt` is a **public** repo. Commit messages must not describe vulnerabilities. Word
   security fixes generically until they are released.

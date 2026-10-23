@@ -29,8 +29,8 @@ You may read only these:
 - `backend/tests/acceptance/*.test.js`, for style only.
 
 Everything else is off limits: `backend/src`, `frontend`, `backend/tests/support`, `backend/tests/infra`, the rest of
-`.claude/private`, the rest of `docs/project` and `.claude/analysis`. A hook refuses those reads. Don't try to get around it. Test runs print SQL query logs:
-ignore them, and never use them to decide an expectation.
+`.claude/private` and the rest of `docs/project`. A hook refuses those reads. Don't try to get around it.
+Test runs print SQL query logs: ignore them, and never use them to decide an expectation.
 
 If the brief, the clarifications and the SRS don't settle something, choose the reading closest to the brief's words, and list it under
 Doubts in your report. If a case needs a fixture that `HELPERS.md` doesn't offer, don't build one and don't write a
