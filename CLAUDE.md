@@ -79,3 +79,9 @@ Style: ESLint `standard` (no semicolons, space before function parens), ES modul
   testing plan. Start at `docs/project/README.md`.
 - `docs/diagrams/`: conceptual and domain diagrams (PlantUML sources and PNGs).
 - The rest of `docs/` (thesis memoir sources) is local and not tracked.
+
+Writing documentation (any type: docs, briefs, decisions, issues, PR text, skills): readability comes first.
+- Prefer tables and bullets. No paragraphs with lots of text.
+- Keep a balance: Not only bullets and tables, but not only full paragraphs.
+- One idea per bullet; split long bullets into sub-bullets.
+- Lead with the point; put details and examples after it.
