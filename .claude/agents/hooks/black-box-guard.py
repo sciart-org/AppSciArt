@@ -27,6 +27,7 @@ ALLOWED_COMMANDS = re.compile(
     r'|npx\s+eslint(?:\s+[^;&|`$<>()]*)?)'
     r'(?:\s+2>&1)?' + OUTPUT_FILTER + r'\s*$'
 )
+REPORT_TOOLS = {'SubagentHandback'}
 HIDDEN_IN_COMMAND = re.compile(r'(?:^|[\s/=])(?:src|frontend|support|infra|analysis|private)(?:[\s/]|$)')
 
 
@@ -54,6 +55,8 @@ def glob_base(tool_input, cwd):
 
 
 def refusal(tool_name, tool_input, cwd):
+    if tool_name in REPORT_TOOLS:
+        return None
     if tool_name == 'Read':
         rel = relative(tool_input.get('file_path', ''), cwd)
         return None if is_readable(rel) else f'{rel or tool_input.get("file_path")} is outside the black-box sources'
