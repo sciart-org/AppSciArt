@@ -1474,14 +1474,14 @@
       "body": "Move the project docs to `docs/project/` (index and status, decisions, roadmap, SRS coverage, product owner clarifications, testing plan and briefs, tools) and track the Claude Code agent, skills and rules, so each fact is kept once. Security material stays private.",
       "phase": "3",
       "kind": "Foundation",
-      "status": "In progress",
+      "status": "Done",
       "ref": "3.9",
-      "commits": "217ee88, 377f674, acad010, 2fda549, 969c9af, 8fd6d73, 4b68a76, 82f442e, b3f691a, b200ae2, 268d6e2, f4b6106, 1d0364c, 8abb6f9",
+      "commits": "217ee88, 377f674, acad010, 2fda549, 969c9af, 8fd6d73, 4b68a76, 82f442e, b3f691a, b200ae2, 268d6e2, f4b6106, 1d0364c, 8abb6f9, 6999b8a, 579630f",
       "labels": [],
       "milestone": "v1.0.0",
       "issueNumber": 258,
       "itemId": "PVTI_lADODEgGw84BoNdFzhC-Zkw",
-      "synced": "4603666e141e601b"
+      "synced": "0e794d4ac04e1c0e"
     },
     {
       "key": "4.1",

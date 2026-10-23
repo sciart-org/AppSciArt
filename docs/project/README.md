@@ -45,7 +45,3 @@ Claude Code configuration that supports this work: `.claude/agents/` (acceptance
 SRS → product owner answer (entry in `decisions.md` + `clarifications/<UC>.md`) → brief → test → bug issue.
 A changed answer adds a new decision that supersedes the old one, edits the clarification in place, and updates the
 briefs and tests that depend on it.
-
-## Migration status (2026-10-23)
-These docs are being moved here from the maintainer's local notes, one step at a time. Paths in the layout table
-that don't exist yet are still pending.
