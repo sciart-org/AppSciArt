@@ -41,3 +41,4 @@ released.
 | D-033 | 2026-10-23 | Docs | The SRS text export stays private (untracked); the memoir PDF is kept only in the thesis OneDrive folder, not in the checkout. | — | in force |
 | D-034 | 2026-10-23 | Docs | Product owner answers live in `docs/project/clarifications/` (one file per use case, current truth only, edited in place; this log keeps the history). Briefs link their clarification file instead of quoting it, and the test-writing agent may read that folder. | — | in force |
 | D-035 | 2026-10-23 | Tracking | Issue #258 (board item 3.9, Phase 3) tracks the docs restructure. | — | in force |
+| D-036 | 2026-10-23 | Product owner | Participant = authenticated user without a staff role. Guests and participants see every announced edition (`ACTIVE`, `CLOSED`, `PUBLISHED`). | — | in force |
