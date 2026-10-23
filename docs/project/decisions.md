@@ -32,7 +32,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-022 | 2026-10-20 | Testing | Response shapes are tested exactly (required + allowed optional, nothing else). UC-002 item: id, state, name, year, shortDescription, logo, optional fruitLogo. | — | in force |
 | D-023 | 2026-10-20 | UC-002 | UC-002: staff list items also carry driveLink (edition Drive folder); never sent to guests or participants. | — | in force |
 | D-024 | 2026-10-20 | UC-003 | UC-003: details fields = list public set + longDescription + catalogLink (published only), staff + driveLink; finished = PUBLISHED; fruit summary moves to a separate fruits-by-edition endpoint (tested with UC-006); PLANNED by id → 404 for guest/participant, unknown → 404. | — | partly superseded by D-025 |
-| D-025 | 2026-10-20 | UC-003 | Correction to UC-003: fruits ARE in the details of a PUBLISHED edition, each {id, mainImage, title}, same for staff; guests/participants get only published fruits. | part of D-024 | in force |
+| D-025 | 2026-10-20 | UC-003 | Correction to UC-003: fruits ARE in the details of a PUBLISHED edition, each {id, mainImage, title}, same for staff; guests/participants get only published fruits. | part of D-024 | partly superseded by D-041 |
 | D-026 | 2026-10-20 | Fixtures | State consistency rules for fixtures (plan §9 Q14): closed/published editions only have finished hackathons; fruits only for finished hackathons + published flowers, any state; unpublished fruits hidden from everyone in edition details. | — | in force |
 | D-027 | 2026-10-22 | Tracking | GitHub tracking: board #4 for repo issues, private board #5 for security drafts, synced from a manifest. ([details](#d-027)) | — | in force |
 | D-028 | 2026-10-22 | UC-004 | UC-004 list: visibility, filters and exact item shape (plan §9 Q15). ([details](#d-028)) | — | partly superseded by D-029 |
@@ -43,6 +43,9 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-034 | 2026-10-23 | Docs | Product owner answers live in `docs/project/clarifications/` (one file per use case, current truth only, edited in place; this log keeps the history). Briefs link their clarification file instead of quoting it, and the test-writing agent may read that folder. | — | in force |
 | D-035 | 2026-10-23 | Tracking | Issue #258 (board item 3.9, Phase 3) tracks the docs restructure. | — | in force |
 | D-036 | 2026-10-23 | Product owner | Participant = authenticated user without a staff role. Guests and participants see every announced edition (`ACTIVE`, `CLOSED`, `PUBLISHED`). | — | in force |
+| D-039 | 2026-10-23 | UC-002/003 | Staff `?state=PLANNED` → only `PLANNED` editions. Non-published edition details: `fruits` absent or empty, either is fine. | — | partly superseded by D-041 |
+| D-040 | 2026-10-23 | UC-003 | A fruit's `mainImage` in edition details is a link, like the edition `logo`. | — | in force |
+| D-041 | 2026-10-23 | UC-003 | Every non-planned edition (`ACTIVE`, `CLOSED`, `PUBLISHED`) can have fruits; its details list only the published ones (extends the SRS, which names only finished editions). | fruits part of D-025; non-published part of D-039 | in force |
 
 ## Details
 

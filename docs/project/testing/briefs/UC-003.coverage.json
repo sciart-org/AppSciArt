@@ -1,0 +1,125 @@
+{
+  "B1": [
+    "UC-003 · guest gets the details of an announced edition"
+  ],
+  "B2": [
+    "UC-003 · guest gets the details of a closed edition",
+    "UC-003 · guest gets the details of a published edition"
+  ],
+  "B3": [
+    "UC-003 · guest asking for a not-announced edition gets 404",
+    "UC-003 · participant asking for a not-announced edition gets 404"
+  ],
+  "B4": [
+    "UC-003 · designer gets the details of a not-announced edition",
+    "UC-003 · facilitator gets the details of a not-announced edition",
+    "UC-003 · administrator gets the details of a not-announced edition",
+    "UC-003 · designer gets the details of a not-announced edition with no descriptions and no logo",
+    "UC-003 · facilitator gets the details of a not-announced edition with no descriptions and no logo",
+    "UC-003 · administrator gets the details of a not-announced edition with no descriptions and no logo"
+  ],
+  "B5": [
+    "UC-003 · guest asking for an unknown edition gets 404",
+    "UC-003 · staff asking for an unknown edition gets 404"
+  ],
+  "B6": [
+    "UC-003 · IRQ-005 · guest details of an edition that is announced have every required field",
+    "UC-003 · IRQ-005 · guest details of an edition that is closed have every required field",
+    "UC-003 · IRQ-005 · guest details of an edition that is published have every required field",
+    "UC-003 · IRQ-005 · guest details of an edition that is announced have no field outside the public set",
+    "UC-003 · IRQ-005 · guest details of an edition that is closed have no field outside the public set",
+    "UC-003 · IRQ-005 · guest details of an edition that is published have no field outside the public set",
+    "UC-003 · IRQ-005 · guest details of an edition that is announced show its full description",
+    "UC-003 · IRQ-005 · guest details of an edition that is closed show its full description",
+    "UC-003 · IRQ-005 · guest details of an edition that is published show its full description"
+  ],
+  "B7": [
+    "UC-003 · IRQ-005 · participant details have every required field",
+    "UC-003 · IRQ-005 · participant details have no field outside the public set",
+    "UC-003 · IRQ-005 · participant details have no Drive link"
+  ],
+  "B8": [
+    "UC-003 · IRQ-005 · designer details have every required field and the Drive link",
+    "UC-003 · IRQ-005 · facilitator details have every required field and the Drive link",
+    "UC-003 · IRQ-005 · administrator details have every required field and the Drive link",
+    "UC-003 · IRQ-005 · designer details have no field outside the public set plus the Drive link",
+    "UC-003 · IRQ-005 · facilitator details have no field outside the public set plus the Drive link",
+    "UC-003 · IRQ-005 · administrator details have no field outside the public set plus the Drive link"
+  ],
+  "B9": [
+    "UC-003 · IRQ-005 · published edition details include its catalogue link"
+  ],
+  "B10": [
+    "UC-003 · IRQ-005 · announced edition details have no catalogue link",
+    "UC-003 · IRQ-005 · closed edition details have no catalogue link"
+  ],
+  "B11": [
+    "UC-003 · guest sees the published fruits of an edition that is announced",
+    "UC-003 · guest sees the published fruits of an edition that is closed",
+    "UC-003 · guest sees the published fruits of an edition that is published",
+    "UC-003 · participant sees the published fruits of an edition that is announced",
+    "UC-003 · participant sees the published fruits of an edition that is closed",
+    "UC-003 · participant sees the published fruits of an edition that is published",
+    "UC-003 · designer sees the published fruits of an edition that is announced",
+    "UC-003 · designer sees the published fruits of an edition that is closed",
+    "UC-003 · designer sees the published fruits of an edition that is published",
+    "UC-003 · facilitator sees the published fruits of an edition that is announced",
+    "UC-003 · facilitator sees the published fruits of an edition that is closed",
+    "UC-003 · facilitator sees the published fruits of an edition that is published",
+    "UC-003 · administrator sees the published fruits of an edition that is announced",
+    "UC-003 · administrator sees the published fruits of an edition that is closed",
+    "UC-003 · administrator sees the published fruits of an edition that is published",
+    "UC-003 · guest sees each fruit of an edition that is announced with its id, main image link and title",
+    "UC-003 · guest sees each fruit of an edition that is closed with its id, main image link and title",
+    "UC-003 · guest sees each fruit of an edition that is published with its id, main image link and title",
+    "UC-003 · participant sees each fruit of an edition that is announced with its id, main image link and title",
+    "UC-003 · participant sees each fruit of an edition that is closed with its id, main image link and title",
+    "UC-003 · participant sees each fruit of an edition that is published with its id, main image link and title",
+    "UC-003 · designer sees each fruit of an edition that is announced with its id, main image link and title",
+    "UC-003 · designer sees each fruit of an edition that is closed with its id, main image link and title",
+    "UC-003 · designer sees each fruit of an edition that is published with its id, main image link and title",
+    "UC-003 · facilitator sees each fruit of an edition that is announced with its id, main image link and title",
+    "UC-003 · facilitator sees each fruit of an edition that is closed with its id, main image link and title",
+    "UC-003 · facilitator sees each fruit of an edition that is published with its id, main image link and title",
+    "UC-003 · administrator sees each fruit of an edition that is announced with its id, main image link and title",
+    "UC-003 · administrator sees each fruit of an edition that is closed with its id, main image link and title",
+    "UC-003 · administrator sees each fruit of an edition that is published with its id, main image link and title",
+    "UC-003 · guest sees no field outside id, main image and title in the fruits of an edition that is announced",
+    "UC-003 · guest sees no field outside id, main image and title in the fruits of an edition that is closed",
+    "UC-003 · guest sees no field outside id, main image and title in the fruits of an edition that is published",
+    "UC-003 · participant sees no field outside id, main image and title in the fruits of an edition that is announced",
+    "UC-003 · participant sees no field outside id, main image and title in the fruits of an edition that is closed",
+    "UC-003 · participant sees no field outside id, main image and title in the fruits of an edition that is published",
+    "UC-003 · designer sees no field outside id, main image and title in the fruits of an edition that is announced",
+    "UC-003 · designer sees no field outside id, main image and title in the fruits of an edition that is closed",
+    "UC-003 · designer sees no field outside id, main image and title in the fruits of an edition that is published",
+    "UC-003 · facilitator sees no field outside id, main image and title in the fruits of an edition that is announced",
+    "UC-003 · facilitator sees no field outside id, main image and title in the fruits of an edition that is closed",
+    "UC-003 · facilitator sees no field outside id, main image and title in the fruits of an edition that is published",
+    "UC-003 · administrator sees no field outside id, main image and title in the fruits of an edition that is announced",
+    "UC-003 · administrator sees no field outside id, main image and title in the fruits of an edition that is closed",
+    "UC-003 · administrator sees no field outside id, main image and title in the fruits of an edition that is published"
+  ],
+  "B12": [
+    "UC-003 · guest does not see the unpublished fruits of an edition that is announced",
+    "UC-003 · guest does not see the unpublished fruits of an edition that is closed",
+    "UC-003 · guest does not see the unpublished fruits of an edition that is published",
+    "UC-003 · participant does not see the unpublished fruits of an edition that is announced",
+    "UC-003 · participant does not see the unpublished fruits of an edition that is closed",
+    "UC-003 · participant does not see the unpublished fruits of an edition that is published",
+    "UC-003 · designer does not see the unpublished fruits of an edition that is announced",
+    "UC-003 · designer does not see the unpublished fruits of an edition that is closed",
+    "UC-003 · designer does not see the unpublished fruits of an edition that is published",
+    "UC-003 · facilitator does not see the unpublished fruits of an edition that is announced",
+    "UC-003 · facilitator does not see the unpublished fruits of an edition that is closed",
+    "UC-003 · facilitator does not see the unpublished fruits of an edition that is published",
+    "UC-003 · administrator does not see the unpublished fruits of an edition that is announced",
+    "UC-003 · administrator does not see the unpublished fruits of an edition that is closed",
+    "UC-003 · administrator does not see the unpublished fruits of an edition that is published"
+  ],
+  "B13": [
+    "UC-003 · details of an edition that is announced do not list fruits of other editions",
+    "UC-003 · details of an edition that is closed do not list fruits of other editions",
+    "UC-003 · details of an edition that is published do not list fruits of other editions"
+  ]
+}

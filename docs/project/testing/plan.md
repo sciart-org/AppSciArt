@@ -55,9 +55,10 @@ Each line is one test (or a small group). Missing parts of these use cases are l
 
 **UC-003 Edition details**
 - Guest gets the full description of an announced edition.
-- Published edition: details include its catalogue and a summary of its resulting fruits (UC-003, `general.md`).
+- Published edition: details include its catalogue (UC-003, `general.md`).
+- Every non-planned edition: details include a summary of its published fruits only (`UC-003.md`, D-041).
 - Guest cannot see the details of a not-announced edition.
-- Staff get the details of a not-announced edition (`UC-003.md`). Not tested yet.
+- Staff get the details of a not-announced edition (`UC-003.md`).
 
 **UC-004 View hackathons**
 - Guest sees announced hackathons, incoming and past.
