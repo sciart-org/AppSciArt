@@ -38,8 +38,17 @@ Per-item status and commits live on the [production roadmap board](https://githu
 | `tools/` | Scripts for briefs and board sync |
 | `tracking/` | Source of the production roadmap board |
 
-Claude Code configuration that supports this work: `.claude/agents/` (acceptance test writer), `.claude/skills/`,
-`.claude/rules/` (rules loaded only when working on matching files).
+### Where new information goes
+| New information | Goes to |
+|---|---|
+| A product owner answer | `clarifications/<UC>.md` + a row in `decisions.md` (check for an existing answer first) |
+| Any other decision | a row in `decisions.md`; supersede, never edit |
+| A finished step | `/log-step` (board item, "Now", sync) |
+| A red test | a bug issue via `/log-step`; security-related ones stay private |
+| A rule for writing tests | `.claude/rules/acceptance-tests.md` |
+| A repeatable procedure | a skill in `.claude/skills/` |
+| Architecture, commands, code style | `CLAUDE.md` |
+| Anything security-sensitive | the private folder only, until the fix is released |
 
 ## How a requirement flows
 SRS → product owner answer (entry in `decisions.md` + `clarifications/<UC>.md`) → brief → test → bug issue.
