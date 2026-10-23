@@ -16,16 +16,32 @@ const ALLOWED_EDITION_LIST_FIELDS = ['id', 'state', 'name', 'year', 'shortDescri
 
 const ALLOWED_STAFF_EDITION_LIST_FIELDS = [...ALLOWED_EDITION_LIST_FIELDS, 'driveLink']
 
+const REQUIRED_EDITION_LIST_FIELDS = ['id', 'state', 'name', 'year', 'shortDescription', 'logo']
+
+const REQUIRED_STAFF_FIELDS_OF_ANY_EDITION = ['id', 'state', 'name', 'year', 'driveLink']
+
+const REQUIRED_STAFF_FIELDS_OF_ANNOUNCED_EDITION = [...REQUIRED_STAFF_FIELDS_OF_ANY_EDITION, 'shortDescription', 'logo']
+
+const LINK = /^https?:\/\/\S+$/
+
 const fieldsOutsideAllowed = (item, allowed = ALLOWED_EDITION_LIST_FIELDS) =>
   Object.keys(item).filter((key) => !allowed.includes(key))
 
+const missingRequiredFields = (item, required) =>
+  required.filter((key) => item[key] === undefined || item[key] === null)
+
+const requiredStaffFieldsOf = (item) =>
+  item.state === 'PLANNED' ? REQUIRED_STAFF_FIELDS_OF_ANY_EDITION : REQUIRED_STAFF_FIELDS_OF_ANNOUNCED_EDITION
+
 const idsOf = (editions) => editions.map((edition) => edition.id)
 
-const listedBy = async (api) => {
-  const res = await api.get('/editions')
-  expect(res.status).toBe(200)
-  return res.body
-}
+const statesOf = (editions) => editions.map((edition) => edition.state)
+
+const STAFF_ROLES = [
+  ['designer', () => designer(1)],
+  ['facilitator', () => facilitator(1)],
+  ['administrator', () => administrator(1)]
+]
 
 describe('UC-002 · when no edition is publicly visible', () => {
   it('UC-002 · guest gets an empty list when no edition exists', async () => {
@@ -47,123 +63,210 @@ describe('UC-002 · when no edition is publicly visible', () => {
 })
 
 describe('UC-002 · when editions in every state exist', () => {
-  let notAnnounced, announced, closed, published
+  let notAnnounced, incompleteNotAnnounced, announced, closed, published
 
   beforeAll(async () => {
-    notAnnounced = await aNotAnnouncedEdition()
+    notAnnounced = await aNotAnnouncedEdition({ name: 'Not announced', year: 2027 })
+    incompleteNotAnnounced = await aNotAnnouncedEdition({
+      name: 'Incomplete not announced',
+      year: 2028,
+      shortDescription: null,
+      logo: false
+    })
     announced = await anAnnouncedEdition({ name: 'Announced', year: 2026, shortDescription: 'Announced edition' })
     closed = await aClosedEdition({ name: 'Closed', year: 2025, shortDescription: 'Closed edition' })
     published = await aPublishedEdition({ name: 'Published', year: 2024, shortDescription: 'Published edition' })
   })
 
-  it('UC-002 · guest sees announced, closed and published editions in one list, each with its state', async () => {
-    const editions = await listedBy(asGuest())
+  describe('UC-002 · visibility', () => {
+    it('UC-002 · guest sees announced, closed and published editions, each with its state', async () => {
+      const res = await asGuest().get('/editions')
 
-    expect(editions).toEqual(expect.arrayContaining([
-      expect.objectContaining({ id: announced.id, state: 'ACTIVE' }),
-      expect.objectContaining({ id: closed.id, state: 'CLOSED' }),
-      expect.objectContaining({ id: published.id, state: 'PUBLISHED' })
-    ]))
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual(expect.arrayContaining([
+        expect.objectContaining({ id: announced.id, state: 'ACTIVE' }),
+        expect.objectContaining({ id: closed.id, state: 'CLOSED' }),
+        expect.objectContaining({ id: published.id, state: 'PUBLISHED' })
+      ]))
+    })
+
+    it('UC-002 · guest never sees not-announced editions', async () => {
+      const res = await asGuest().get('/editions')
+
+      expect(res.status).toBe(200)
+      expect(idsOf(res.body)).not.toContain(notAnnounced.id)
+      expect(idsOf(res.body)).not.toContain(incompleteNotAnnounced.id)
+      expect(statesOf(res.body)).not.toContain('PLANNED')
+    })
+
+    it('UC-002 · participant sees exactly the same editions as a guest', async () => {
+      const api = await as(participant(1))
+
+      const participantRes = await api.get('/editions')
+      const guestRes = await asGuest().get('/editions')
+
+      expect(participantRes.status).toBe(200)
+      expect(guestRes.status).toBe(200)
+      expect(idsOf(participantRes.body).sort()).toEqual(idsOf(guestRes.body).sort())
+    })
+
+    it.each(STAFF_ROLES)('UC-002 · %s also sees not-announced editions without a filter', async (_role, staffMember) => {
+      const api = await as(staffMember())
+
+      const res = await api.get('/editions')
+
+      expect(res.status).toBe(200)
+      expect(res.body).toEqual(expect.arrayContaining([
+        expect.objectContaining({ id: notAnnounced.id, state: 'PLANNED' }),
+        expect.objectContaining({ id: incompleteNotAnnounced.id, state: 'PLANNED' }),
+        expect.objectContaining({ id: announced.id, state: 'ACTIVE' }),
+        expect.objectContaining({ id: closed.id, state: 'CLOSED' }),
+        expect.objectContaining({ id: published.id, state: 'PUBLISHED' })
+      ]))
+    })
   })
 
-  it('UC-002 · guest does not see not-announced editions', async () => {
-    const editions = await listedBy(asGuest())
+  describe('UC-002 · filter by state', () => {
+    it('UC-002 · guest asking for not-announced editions gets 401', async () => {
+      const res = await asGuest().get('/editions').query({ state: 'PLANNED' })
 
-    expect(idsOf(editions)).not.toContain(notAnnounced.id)
-    expect(editions.map((edition) => edition.state)).not.toContain('PLANNED')
+      expect(res.status).toBe(401)
+    })
+
+    it('UC-002 · participant asking for not-announced editions gets 403', async () => {
+      const api = await as(participant(1))
+
+      const res = await api.get('/editions').query({ state: 'PLANNED' })
+
+      expect(res.status).toBe(403)
+    })
+
+    it.each(STAFF_ROLES)('UC-002 · %s asking for not-announced editions gets only not-announced editions', async (_role, staffMember) => {
+      const api = await as(staffMember())
+
+      const res = await api.get('/editions').query({ state: 'PLANNED' })
+
+      expect(res.status).toBe(200)
+      expect(idsOf(res.body)).toEqual(expect.arrayContaining([notAnnounced.id, incompleteNotAnnounced.id]))
+      expect(idsOf(res.body)).not.toContain(announced.id)
+      expect(idsOf(res.body)).not.toContain(closed.id)
+      expect(idsOf(res.body)).not.toContain(published.id)
+      expect(statesOf(res.body).filter((state) => state !== 'PLANNED')).toEqual([])
+    })
   })
 
-  it('UC-002 · guest asking for not-announced editions is unauthorised', async () => {
-    const res = await asGuest().get('/editions').query({ state: 'PLANNED' })
+  describe('UC-002 · IRQ-005 · fields', () => {
+    it('UC-002 · IRQ-005 · guest items have no field outside the public set', async () => {
+      const res = await asGuest().get('/editions')
 
-    expect(res.status).toBe(401)
-  })
+      expect(res.status).toBe(200)
+      expect(res.body.length).toBeGreaterThan(0)
+      for (const item of res.body) {
+        expect(fieldsOutsideAllowed(item)).toEqual([])
+      }
+    })
 
-  it('UC-002 · participant asking for not-announced editions is forbidden', async () => {
-    const api = await as(participant(1))
+    it('UC-002 · IRQ-005 · guest items have every required field', async () => {
+      const res = await asGuest().get('/editions')
 
-    const res = await api.get('/editions').query({ state: 'PLANNED' })
+      expect(res.status).toBe(200)
+      expect(res.body.length).toBeGreaterThan(0)
+      for (const item of res.body) {
+        expect(missingRequiredFields(item, REQUIRED_EDITION_LIST_FIELDS)).toEqual([])
+      }
+    })
 
-    expect(res.status).toBe(403)
-  })
+    it('UC-002 · IRQ-005 · participant items have no field outside the public set, so no driveLink', async () => {
+      const api = await as(participant(1))
 
-  it('UC-002 · participant sees the same editions as a guest', async () => {
-    const api = await as(participant(1))
+      const res = await api.get('/editions')
 
-    const participantEditions = await listedBy(api)
-    const guestEditions = await listedBy(asGuest())
+      expect(res.status).toBe(200)
+      expect(res.body.length).toBeGreaterThan(0)
+      for (const item of res.body) {
+        expect(fieldsOutsideAllowed(item)).toEqual([])
+      }
+    })
 
-    expect(idsOf(participantEditions).sort()).toEqual(idsOf(guestEditions).sort())
-  })
+    it('UC-002 · IRQ-005 · participant items have every required field', async () => {
+      const api = await as(participant(1))
 
-  it.each([
-    ['designer', () => designer(1)],
-    ['facilitator', () => facilitator(1)],
-    ['administrator', () => administrator(1)]
-  ])('UC-002 · %s sees not-announced editions without a filter', async (_role, staffMember) => {
-    const api = await as(staffMember())
+      const res = await api.get('/editions')
 
-    const editions = await listedBy(api)
+      expect(res.status).toBe(200)
+      expect(res.body.length).toBeGreaterThan(0)
+      for (const item of res.body) {
+        expect(missingRequiredFields(item, REQUIRED_EDITION_LIST_FIELDS)).toEqual([])
+      }
+    })
 
-    expect(editions).toEqual(expect.arrayContaining([
-      expect.objectContaining({ id: notAnnounced.id, state: 'PLANNED' }),
-      expect.objectContaining({ id: announced.id }),
-      expect.objectContaining({ id: closed.id }),
-      expect.objectContaining({ id: published.id })
-    ]))
-  })
+    it.each(STAFF_ROLES)('UC-002 · IRQ-005 · %s items have no field outside the public set plus driveLink', async (_role, staffMember) => {
+      const api = await as(staffMember())
 
-  it('UC-002 · each visible edition shows exactly its id, state, name, year, short description and logo link', async () => {
-    const editions = await listedBy(asGuest())
+      const res = await api.get('/editions')
 
-    for (const item of editions) {
-      expect(item).toMatchObject({
-        id: expect.any(String),
-        state: expect.any(String),
-        name: expect.any(String),
-        year: expect.any(Number),
-        shortDescription: expect.any(String),
-        logo: expect.stringMatching(/^https?:\/\/\S+$/)
-      })
-      expect(fieldsOutsideAllowed(item)).toEqual([])
-    }
+      expect(res.status).toBe(200)
+      expect(res.body.length).toBeGreaterThan(0)
+      for (const item of res.body) {
+        expect(fieldsOutsideAllowed(item, ALLOWED_STAFF_EDITION_LIST_FIELDS)).toEqual([])
+      }
+    })
 
-    for (const created of [announced, closed, published]) {
-      const listed = editions.find((edition) => edition.id === created.id)
-      expect(listed).toMatchObject({
-        name: created.name,
-        year: created.year,
-        shortDescription: created.shortDescription,
-        logo: expect.stringMatching(/^https?:\/\/\S+$/)
-      })
-    }
-  })
+    it.each(STAFF_ROLES)('UC-002 · IRQ-005 · %s items have every required field and driveLink', async (_role, staffMember) => {
+      const api = await as(staffMember())
 
-  it('UC-002 · staff get the same item shape plus the Drive folder link, planned editions included', async () => {
-    const api = await as(designer(1))
+      const res = await api.get('/editions')
 
-    const editions = await listedBy(api)
+      expect(res.status).toBe(200)
+      expect(res.body.length).toBeGreaterThan(0)
+      for (const item of res.body) {
+        expect(missingRequiredFields(item, requiredStaffFieldsOf(item))).toEqual([])
+      }
+    })
 
-    expect(idsOf(editions)).toContain(notAnnounced.id)
-    for (const item of editions) {
-      expect(item).toMatchObject({
-        id: expect.any(String),
-        state: expect.any(String),
-        name: expect.any(String),
-        year: expect.any(Number),
-        driveLink: expect.stringMatching(/^https?:\/\/\S+$/)
-      })
-      expect(fieldsOutsideAllowed(item, ALLOWED_STAFF_EDITION_LIST_FIELDS)).toEqual([])
-    }
-  })
+    it('UC-002 · IRQ-005 · name, year and short description are the edition\'s own', async () => {
+      const res = await asGuest().get('/editions')
 
-  it('UC-002 · participant list items have no field outside the public set', async () => {
-    const api = await as(participant(1))
+      expect(res.status).toBe(200)
+      for (const created of [announced, closed, published]) {
+        const listed = res.body.find((edition) => edition.id === created.id)
+        expect(listed).toMatchObject({
+          name: created.name,
+          year: created.year,
+          shortDescription: created.shortDescription
+        })
+      }
+    })
 
-    const editions = await listedBy(api)
+    it('UC-002 · IRQ-005 · logo is a link', async () => {
+      const res = await asGuest().get('/editions')
 
-    for (const item of editions) {
-      expect(fieldsOutsideAllowed(item)).toEqual([])
-    }
+      expect(res.status).toBe(200)
+      for (const created of [announced, closed, published]) {
+        const listed = res.body.find((edition) => edition.id === created.id)
+        expect(listed.logo).toMatch(LINK)
+      }
+    })
+
+    it.each(STAFF_ROLES)('UC-002 · BRU-004 · %s sees a not-announced edition without short description or logo listed', async (_role, staffMember) => {
+      const api = await as(staffMember())
+
+      const res = await api.get('/editions')
+
+      expect(res.status).toBe(200)
+      expect(idsOf(res.body)).toContain(incompleteNotAnnounced.id)
+    })
+
+    it.each(STAFF_ROLES)('UC-002 · BRU-004 · %s sees the missing short description and logo absent or null', async (_role, staffMember) => {
+      const api = await as(staffMember())
+
+      const res = await api.get('/editions')
+
+      expect(res.status).toBe(200)
+      const listed = res.body.find((edition) => edition.id === incompleteNotAnnounced.id)
+      expect(listed).toBeDefined()
+      expect(listed.shortDescription ?? null).toBeNull()
+      expect(listed.logo ?? null).toBeNull()
+    })
   })
 })

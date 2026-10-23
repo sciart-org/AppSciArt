@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import { describe, it, expect, beforeAll } from 'vitest'
 import {
   asGuest,
@@ -13,210 +14,301 @@ import {
   aFruit
 } from '../support/index.js'
 
-const ALLOWED_EDITION_DETAILS_FIELDS = ['id', 'state', 'name', 'year', 'logo', 'shortDescription', 'longDescription', 'catalogLink', 'fruits']
+const LINK = /^https?:\/\/\S+$/
+
+const ALLOWED_EDITION_DETAILS_FIELDS = [
+  'id', 'state', 'name', 'year', 'logo', 'shortDescription', 'longDescription', 'fruits', 'catalogLink'
+]
 
 const ALLOWED_STAFF_EDITION_DETAILS_FIELDS = [...ALLOWED_EDITION_DETAILS_FIELDS, 'driveLink']
 
-const ALLOWED_FRUIT_SUMMARY_FIELDS = ['id', 'mainImage', 'title']
+const ALLOWED_FRUIT_FIELDS = ['id', 'mainImage', 'title']
 
-const UNKNOWN_EDITION_ID = '00000000-0000-4000-8000-000000000000'
+const REQUIRED_EDITION_DETAILS = {
+  id: expect.any(String),
+  state: expect.any(String),
+  name: expect.any(String),
+  year: expect.any(Number),
+  logo: expect.stringMatching(LINK),
+  shortDescription: expect.any(String),
+  longDescription: expect.any(String),
+  fruits: expect.any(Array)
+}
 
-const A_LINK = /^https?:\/\/\S+$/
+const UNPUBLISHED_FRUIT_STATES = ['IN_BLANK', 'IN_PROGRESS', 'IN_REVIEW']
 
 const fieldsOutsideAllowed = (item, allowed = ALLOWED_EDITION_DETAILS_FIELDS) =>
   Object.keys(item).filter((key) => !allowed.includes(key))
 
-const publicValuesOf = (edition) => ({
-  id: edition.id,
-  state: edition.state,
-  name: edition.name,
-  year: edition.year,
-  shortDescription: edition.shortDescription,
-  longDescription: edition.longDescription
-})
+const fruitIdsOf = (details) => (details.fruits ?? []).map((fruit) => fruit.id)
 
-const detailsOf = (api, edition) => api.get(`/editions/${edition.id}`)
+const idsOf = (items) => items.map((item) => item.id)
 
-const fruitsIn = (details) => details.fruits ?? []
+const guestClient = async () => asGuest()
 
-const fruitIdsIn = (details) => fruitsIn(details).map((fruit) => fruit.id).sort()
+const ACTORS = [
+  ['guest', guestClient],
+  ['participant', () => as(participant(1))],
+  ['designer', () => as(designer(1))],
+  ['facilitator', () => as(facilitator(1))],
+  ['administrator', () => as(administrator(1))]
+]
 
-describe('UC-003 · view the details of an edition', () => {
-  let notAnnounced, announced, closed, published, otherPublished
-  let publishedFruits, unpublishedFruit, fruitOfOtherEdition
+const STAFF = [
+  ['designer', () => designer(1)],
+  ['facilitator', () => facilitator(1)],
+  ['administrator', () => administrator(1)]
+]
+
+const EDITION_STATES = ['announced', 'closed', 'published']
+
+const ACTORS_BY_EDITION_STATE = ACTORS.flatMap(([actor, client]) =>
+  EDITION_STATES.map((editionState) => [actor, editionState, client])
+)
+
+const detailsOf = async (api, edition) => {
+  const res = await api.get(`/editions/${edition.id}`)
+  expect(res.status).toBe(200)
+  return res.body
+}
+
+describe('UC-003 · edition details', () => {
+  let notAnnounced, incomplete, otherPublished, otherEditionFruit
+  const editions = {}
+  const publishedFruits = {}
+  const unpublishedFruits = {}
+
+  const fruitsFor = async (label, edition) => {
+    publishedFruits[label] = [
+      await aFruit({ edition, state: 'PUBLISHED', title: `First published fruit of the ${label} edition` }),
+      await aFruit({ edition, state: 'PUBLISHED', title: `Second published fruit of the ${label} edition` })
+    ]
+    unpublishedFruits[label] = []
+    for (const state of UNPUBLISHED_FRUIT_STATES) {
+      unpublishedFruits[label].push(await aFruit({ edition, state, title: `${state} fruit of the ${label} edition` }))
+    }
+  }
 
   beforeAll(async () => {
-    notAnnounced = await aNotAnnouncedEdition()
-    announced = await anAnnouncedEdition()
-    closed = await aClosedEdition()
-    published = await aPublishedEdition()
-    otherPublished = await aPublishedEdition()
-    publishedFruits = [
-      await aFruit({ edition: published, title: 'First fruit' }),
-      await aFruit({ edition: published, title: 'Second fruit' })
-    ]
-    unpublishedFruit = await aFruit({ edition: published, state: 'IN_PROGRESS', title: 'Unfinished fruit' })
-    fruitOfOtherEdition = await aFruit({ edition: otherPublished, title: 'Fruit of another edition' })
-  })
-
-  it.each([
-    ['an announced', () => announced],
-    ['a closed', () => closed]
-  ])('UC-003 · guest gets the full description of %s edition', async (_state, editionOf) => {
-    const edition = editionOf()
-
-    const res = await detailsOf(asGuest(), edition)
-
-    expect(res.status).toBe(200)
-    expect(res.body).toMatchObject({ ...publicValuesOf(edition), logo: expect.stringMatching(A_LINK) })
-    expect(fieldsOutsideAllowed(res.body)).toEqual([])
-  })
-
-  it('UC-003 · guest gets the full description and the catalogue of a published edition', async () => {
-    const res = await detailsOf(asGuest(), published)
-
-    expect(res.status).toBe(200)
-    expect(res.body).toMatchObject({
-      ...publicValuesOf(published),
-      logo: expect.stringMatching(A_LINK),
-      catalogLink: published.catalogLink
+    notAnnounced = await aNotAnnouncedEdition({ name: 'Planned', year: 2027 })
+    incomplete = await aNotAnnouncedEdition({ shortDescription: null, longDescription: null, logo: false })
+    editions.announced = await anAnnouncedEdition({
+      name: 'Announced',
+      year: 2026,
+      shortDescription: 'Announced edition',
+      longDescription: 'The full description of the announced edition topic'
     })
-    expect(fieldsOutsideAllowed(res.body)).toEqual([])
-  })
-
-  it('UC-003 · participant gets the same details as a guest', async () => {
-    const api = await as(participant(1))
-
-    const participantRes = await detailsOf(api, announced)
-    const guestRes = await detailsOf(asGuest(), announced)
-
-    expect(participantRes.status).toBe(200)
-    expect(participantRes.body).toEqual(guestRes.body)
-    expect(fieldsOutsideAllowed(participantRes.body)).toEqual([])
-  })
-
-  it('UC-003 · guest asking for a not-announced edition gets not found', async () => {
-    const res = await detailsOf(asGuest(), notAnnounced)
-
-    expect(res.status).toBe(404)
-  })
-
-  it('UC-003 · participant asking for a not-announced edition gets not found', async () => {
-    const api = await as(participant(1))
-
-    const res = await detailsOf(api, notAnnounced)
-
-    expect(res.status).toBe(404)
-  })
-
-  it.each([
-    ['designer', () => designer(1)],
-    ['facilitator', () => facilitator(1)],
-    ['administrator', () => administrator(1)]
-  ])('UC-003 · %s gets a not-announced edition with its Drive folder link', async (_role, staffMember) => {
-    const api = await as(staffMember())
-
-    const res = await detailsOf(api, notAnnounced)
-
-    expect(res.status).toBe(200)
-    expect(res.body).toMatchObject({
-      id: notAnnounced.id,
-      state: 'PLANNED',
-      name: notAnnounced.name,
-      year: notAnnounced.year,
-      driveLink: expect.stringMatching(A_LINK)
+    editions.closed = await aClosedEdition({
+      name: 'Closed',
+      year: 2025,
+      shortDescription: 'Closed edition',
+      longDescription: 'The full description of the closed edition topic'
     })
-    expect(fieldsOutsideAllowed(res.body, ALLOWED_STAFF_EDITION_DETAILS_FIELDS)).toEqual([])
-  })
-
-  it('UC-003 · staff get every public field of a visible edition plus its Drive folder link', async () => {
-    const api = await as(designer(1))
-
-    const res = await detailsOf(api, published)
-
-    expect(res.status).toBe(200)
-    expect(res.body).toMatchObject({
-      ...publicValuesOf(published),
-      logo: expect.stringMatching(A_LINK),
-      catalogLink: published.catalogLink,
-      driveLink: expect.stringMatching(A_LINK)
+    editions.published = await aPublishedEdition({
+      name: 'Published',
+      year: 2024,
+      shortDescription: 'Published edition',
+      longDescription: 'The full description of the published edition topic'
     })
-    expect(fieldsOutsideAllowed(res.body, ALLOWED_STAFF_EDITION_DETAILS_FIELDS)).toEqual([])
-  })
+    otherPublished = await aPublishedEdition({ name: 'Other published', year: 2023 })
 
-  it.each([
-    ['guest', async () => asGuest()],
-    ['participant', () => as(participant(1))],
-    ['designer', () => as(designer(1))]
-  ])('UC-003 · %s asking for an unknown edition gets not found', async (_actor, clientOf) => {
-    const api = await clientOf()
-
-    const res = await api.get(`/editions/${UNKNOWN_EDITION_ID}`)
-
-    expect(res.status).toBe(404)
-  })
-
-  it('UC-003 · a published edition lists exactly its published fruits', async () => {
-    const res = await detailsOf(asGuest(), published)
-
-    expect(res.status).toBe(200)
-    expect(fruitIdsIn(res.body)).toEqual(publishedFruits.map((fruit) => fruit.id).sort())
-  })
-
-  it('UC-003 · each fruit in the summary shows its id, title and main image link', async () => {
-    const res = await detailsOf(asGuest(), published)
-
-    for (const created of publishedFruits) {
-      const listed = fruitsIn(res.body).find((fruit) => fruit.id === created.id)
-      expect(listed).toMatchObject({ id: created.id, title: created.title, mainImage: expect.stringMatching(A_LINK) })
+    for (const label of EDITION_STATES) {
+      await fruitsFor(label, editions[label])
     }
+    otherEditionFruit = await aFruit({ edition: otherPublished, state: 'PUBLISHED', title: 'Fruit of another edition' })
   })
 
-  it('UC-003 · fruits in the summary have no field outside id, main image and title', async () => {
-    const res = await detailsOf(asGuest(), published)
+  describe('UC-003 · access', () => {
+    it('UC-003 · guest gets the details of an announced edition', async () => {
+      const res = await asGuest().get(`/editions/${editions.announced.id}`)
 
-    for (const fruit of fruitsIn(res.body)) {
-      expect(fieldsOutsideAllowed(fruit, ALLOWED_FRUIT_SUMMARY_FIELDS)).toEqual([])
-    }
+      expect(res.status).toBe(200)
+      expect(res.body).toMatchObject({ id: editions.announced.id, state: 'ACTIVE' })
+    })
+
+    it.each([
+      ['closed', 'CLOSED'],
+      ['published', 'PUBLISHED']
+    ])('UC-003 · guest gets the details of a %s edition', async (label, state) => {
+      const res = await asGuest().get(`/editions/${editions[label].id}`)
+
+      expect(res.status).toBe(200)
+      expect(res.body).toMatchObject({ id: editions[label].id, state })
+    })
+
+    it('UC-003 · guest asking for a not-announced edition gets 404', async () => {
+      const res = await asGuest().get(`/editions/${notAnnounced.id}`)
+
+      expect(res.status).toBe(404)
+    })
+
+    it('UC-003 · participant asking for a not-announced edition gets 404', async () => {
+      const api = await as(participant(1))
+
+      const res = await api.get(`/editions/${notAnnounced.id}`)
+
+      expect(res.status).toBe(404)
+    })
+
+    it.each(STAFF)('UC-003 · %s gets the details of a not-announced edition', async (_role, staffMember) => {
+      const api = await as(staffMember())
+
+      const res = await api.get(`/editions/${notAnnounced.id}`)
+
+      expect(res.status).toBe(200)
+      expect(res.body).toMatchObject({ id: notAnnounced.id, state: 'PLANNED' })
+    })
+
+    it.each(STAFF)('UC-003 · %s gets the details of a not-announced edition with no descriptions and no logo', async (_role, staffMember) => {
+      const api = await as(staffMember())
+
+      const res = await api.get(`/editions/${incomplete.id}`)
+
+      expect(res.status).toBe(200)
+      expect(res.body).toMatchObject({ id: incomplete.id, state: 'PLANNED' })
+    })
+
+    it('UC-003 · guest asking for an unknown edition gets 404', async () => {
+      const res = await asGuest().get(`/editions/${randomUUID()}`)
+
+      expect(res.status).toBe(404)
+    })
+
+    it('UC-003 · staff asking for an unknown edition gets 404', async () => {
+      const api = await as(designer(1))
+
+      const res = await api.get(`/editions/${randomUUID()}`)
+
+      expect(res.status).toBe(404)
+    })
   })
 
-  it.each([
-    ['participant', () => participant(1)],
-    ['designer', () => designer(1)]
-  ])('UC-003 · %s never sees unpublished fruits', async (_actor, user) => {
-    const api = await as(user())
+  describe('UC-003 · IRQ-005 · fields', () => {
+    it.each(EDITION_STATES)('UC-003 · IRQ-005 · guest details of an edition that is %s have every required field', async (label) => {
+      const details = await detailsOf(asGuest(), editions[label])
 
-    const res = await detailsOf(api, published)
-    const guestRes = await detailsOf(asGuest(), published)
+      expect(details).toMatchObject(REQUIRED_EDITION_DETAILS)
+    })
 
-    expect(res.status).toBe(200)
-    expect(fruitIdsIn(res.body)).not.toContain(unpublishedFruit.id)
-    expect(fruitIdsIn(res.body)).toEqual(fruitIdsIn(guestRes.body))
+    it.each(EDITION_STATES)('UC-003 · IRQ-005 · guest details of an edition that is %s have no field outside the public set', async (label) => {
+      const details = await detailsOf(asGuest(), editions[label])
+
+      expect(fieldsOutsideAllowed(details)).toEqual([])
+    })
+
+    it.each(EDITION_STATES)('UC-003 · IRQ-005 · guest details of an edition that is %s show its full description', async (label) => {
+      const details = await detailsOf(asGuest(), editions[label])
+
+      expect(details.longDescription).toBe(editions[label].longDescription)
+    })
+
+    it('UC-003 · IRQ-005 · participant details have every required field', async () => {
+      const api = await as(participant(1))
+
+      const details = await detailsOf(api, editions.announced)
+
+      expect(details).toMatchObject(REQUIRED_EDITION_DETAILS)
+    })
+
+    it('UC-003 · IRQ-005 · participant details have no field outside the public set', async () => {
+      const api = await as(participant(1))
+
+      const details = await detailsOf(api, editions.announced)
+
+      expect(fieldsOutsideAllowed(details)).toEqual([])
+    })
+
+    it('UC-003 · IRQ-005 · participant details have no Drive link', async () => {
+      const api = await as(participant(1))
+
+      const details = await detailsOf(api, editions.announced)
+
+      expect(details).not.toHaveProperty('driveLink')
+    })
+
+    it.each(STAFF)('UC-003 · IRQ-005 · %s details have every required field and the Drive link', async (_role, staffMember) => {
+      const api = await as(staffMember())
+
+      const details = await detailsOf(api, editions.announced)
+
+      expect(details).toMatchObject({ ...REQUIRED_EDITION_DETAILS, driveLink: expect.stringMatching(LINK) })
+    })
+
+    it.each(STAFF)('UC-003 · IRQ-005 · %s details have no field outside the public set plus the Drive link', async (_role, staffMember) => {
+      const api = await as(staffMember())
+
+      const details = await detailsOf(api, editions.announced)
+
+      expect(fieldsOutsideAllowed(details, ALLOWED_STAFF_EDITION_DETAILS_FIELDS)).toEqual([])
+    })
+
+    it('UC-003 · IRQ-005 · published edition details include its catalogue link', async () => {
+      const details = await detailsOf(asGuest(), editions.published)
+
+      expect(details.catalogLink).toEqual(expect.stringMatching(LINK))
+      expect(details.catalogLink).toBe(editions.published.catalogLink)
+    })
+
+    it.each(['announced', 'closed'])('UC-003 · IRQ-005 · %s edition details have no catalogue link', async (label) => {
+      const details = await detailsOf(asGuest(), editions[label])
+
+      expect(details.catalogLink ?? null).toBeNull()
+    })
   })
 
-  it.each([
-    ['an announced', () => announced],
-    ['a closed', () => closed]
-  ])('UC-003 · %s edition shows no fruits', async (_state, editionOf) => {
-    const res = await detailsOf(asGuest(), editionOf())
+  describe('UC-003 · fruits', () => {
+    it.each(ACTORS_BY_EDITION_STATE)('UC-003 · %s sees the published fruits of an edition that is %s', async (_actor, label, client) => {
+      const api = await client()
 
-    expect(res.status).toBe(200)
-    expect(fruitsIn(res.body)).toEqual([])
-  })
+      const details = await detailsOf(api, editions[label])
 
-  it('UC-003 · a not-announced edition seen by a designer shows no fruits', async () => {
-    const api = await as(designer(1))
+      expect(fruitIdsOf(details)).toEqual(expect.arrayContaining(idsOf(publishedFruits[label])))
+    })
 
-    const res = await detailsOf(api, notAnnounced)
+    it.each(ACTORS_BY_EDITION_STATE)('UC-003 · %s sees each fruit of an edition that is %s with its id, main image link and title', async (_actor, label, client) => {
+      const api = await client()
 
-    expect(res.status).toBe(200)
-    expect(fruitsIn(res.body)).toEqual([])
-  })
+      const details = await detailsOf(api, editions[label])
 
-  it('UC-003 · fruits of another edition never appear in an edition\'s details', async () => {
-    const res = await detailsOf(asGuest(), published)
+      expect(details.fruits).toEqual(expect.any(Array))
+      for (const fruit of details.fruits) {
+        expect(fruit).toMatchObject({
+          id: expect.any(String),
+          mainImage: expect.stringMatching(LINK),
+          title: expect.any(String)
+        })
+      }
+      for (const created of publishedFruits[label]) {
+        const listed = details.fruits.find((fruit) => fruit.id === created.id)
+        expect(listed).toMatchObject({ title: created.title })
+      }
+    })
 
-    expect(res.status).toBe(200)
-    expect(fruitIdsIn(res.body)).not.toContain(fruitOfOtherEdition.id)
+    it.each(ACTORS_BY_EDITION_STATE)('UC-003 · %s sees no field outside id, main image and title in the fruits of an edition that is %s', async (_actor, label, client) => {
+      const api = await client()
+
+      const details = await detailsOf(api, editions[label])
+
+      expect(details.fruits).toEqual(expect.any(Array))
+      for (const fruit of details.fruits) {
+        expect(fieldsOutsideAllowed(fruit, ALLOWED_FRUIT_FIELDS)).toEqual([])
+      }
+    })
+
+    it.each(ACTORS_BY_EDITION_STATE)('UC-003 · %s does not see the unpublished fruits of an edition that is %s', async (_actor, label, client) => {
+      const api = await client()
+
+      const details = await detailsOf(api, editions[label])
+
+      for (const fruit of unpublishedFruits[label]) {
+        expect(fruitIdsOf(details)).not.toContain(fruit.id)
+      }
+    })
+
+    it.each(EDITION_STATES)('UC-003 · details of an edition that is %s do not list fruits of other editions', async (label) => {
+      const details = await detailsOf(asGuest(), editions[label])
+
+      expect(fruitIdsOf(details)).not.toContain(otherEditionFruit.id)
+    })
   })
 })
