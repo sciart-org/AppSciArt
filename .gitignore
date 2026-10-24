@@ -34,6 +34,7 @@ frontend/playwright/.auth/
 backend/node_modules
 backend/.env**
 backend/logs
+backend/coverage
 
 docs/*
 !docs/diagrams/

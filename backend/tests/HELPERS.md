@@ -227,3 +227,18 @@ curatorVision, seedDescription })`: a SciArt fruit and everything it comes from.
   state through `globalThis`. If the app didn't load both fakes, setup stops before any test runs.
 - `tests/infra/` checks this tooling itself (users, tokens, fixtures, fakes, sockets, clean state). It tests no
   requirement.
+
+## Coverage
+Run `npm run test:coverage`. It prints a table and writes an HTML report to `coverage/index.html` (gitignored);
+`npm run coverage:open` opens it.
+
+| Choice | Why |
+|---|---|
+| c8, not Vitest's coverage | Node loads `src/` (see above), so Vitest's coverage maps it wrongly (`app.js` at 0%). c8 reads Node's own V8 coverage. |
+| `--pool=threads` | With forked workers, Vitest ends them before V8 writes its coverage, so c8 gets nothing. Threads only apply to this script. |
+| `all: true` (`.c8rc.json`) | Files no test loads show at 0% instead of being left out. |
+
+Reading the numbers:
+- `% Lines` counts imports and definitions as covered as soon as a file loads. `% Funcs` and the report's red lines
+  show better what the tests exercise.
+- The script exits with an error when tests fail; the report is still written.

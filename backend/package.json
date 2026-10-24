@@ -21,7 +21,9 @@
     "db:seed:create": "npx sequelize-cli seed:generate --name",
     "db:ui": "open-cli http://localhost:54323",
     "db:ui:test": "open-cli http://localhost:54333",
-    "test:watch": "cross-env NODE_ENV=testing vitest"
+    "test:watch": "cross-env NODE_ENV=testing vitest",
+    "test:coverage": "cross-env NODE_ENV=testing c8 vitest run --pool=threads",
+    "coverage:open": "open-cli coverage/index.html"
   },
   "repository": {
     "type": "git",
@@ -42,6 +44,7 @@
   },
   "homepage": "https://github.com/sciart-org/AppSciArt#readme",
   "devDependencies": {
+    "c8": "^12.0.0",
     "cross-env": "^10.1.0",
     "open-cli": "^9.0.0",
     "sequelize-cli": "^6.6.3",
