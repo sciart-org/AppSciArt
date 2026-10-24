@@ -1,7 +1,9 @@
 import { query } from '../db.js'
-import { insertTimestampedRow } from './rows.js'
+import { insertTimestampedRow, uniqueSuffix } from './rows.js'
 import { createFlowerFolders } from './driveTemplates.js'
-import { ensureHackathonHasTeams } from './consistency.js'
+import { ensureHackathonHasTeams, ensureSeedOfHackathon } from './consistency.js'
+
+const DELIVERED_FLOWER_STATES = ['IN_REVIEW', 'PUBLISHED']
 
 const assignMembers = async ({ hackathon, members, unitColumn, unitId, leader, leaderColumn }) => {
   for (const member of members) {
@@ -14,6 +16,7 @@ const assignMembers = async ({ hackathon, members, unitColumn, unitId, leader, l
 }
 
 export const aGroup = async ({ hackathon, seed, members = [], voice = members[0], map = null, delivered = false }) => {
+  await ensureSeedOfHackathon(seed, hackathon)
   const group = await insertTimestampedRow('public.conceptual_maps', {
     seedId: seed.id,
     map: map === null ? null : JSON.stringify(map),
@@ -32,16 +35,18 @@ export const aTeam = async ({
   speaker = members[0],
   number = 1,
   flowerState = 'IN_BLANK',
-  title = null,
-  concept = null
+  title = DELIVERED_FLOWER_STATES.includes(flowerState) ? `Flower ${uniqueSuffix()}` : null,
+  concept = DELIVERED_FLOWER_STATES.includes(flowerState) ? 'A flower concept inspired by its seed' : null,
+  mainImage = true
 }) => {
   ensureHackathonHasTeams(hackathon)
+  await ensureSeedOfHackathon(seed, hackathon)
   const flower = await insertTimestampedRow('public.flowers', {
     seedId: seed.id,
     state: flowerState,
     title,
     concept,
-    driveLink: await createFlowerFolders({ hackathonDriveLink: hackathon.driveLink, teamNumber: number, seedTitle: seed.title })
+    driveLink: await createFlowerFolders({ hackathonDriveLink: hackathon.driveLink, teamNumber: number, seedTitle: seed.title, mainImage })
   })
   await assignMembers({
     hackathon, members, unitColumn: 'teamId', unitId: flower.id, leader: speaker, leaderColumn: 'isTeamSpeaker'

@@ -35,6 +35,7 @@ Per-item status and commits live on the [production roadmap board](https://githu
 | `clarifications/` | Product owner answers per use case where the SRS is silent; current truth only |
 | `testing/plan.md` | Acceptance test scope, plan per use case, execution steps |
 | `testing/briefs/` | One brief per acceptance test file, for the test-writing agent |
+| `testing/consistency.md` | Fixture consistency rules: source, check, infra test |
 | `tools/` | Scripts for briefs and board sync |
 | `tracking/` | Source of the production roadmap board |
 

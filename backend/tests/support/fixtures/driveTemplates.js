@@ -29,10 +29,11 @@ export const createEditionFolders = ({ year, name, logo }) => {
   return folderLink(editionFolder.id)
 }
 
-export const createSeedFolders = async ({ editionDriveLink, title }) => {
+export const createSeedFolders = async ({ editionDriveLink, title, mainImage }) => {
   const editionFolderId = folderIdFromLink(editionDriveLink)
   const seedFolder = createFolder(slug(title), existingOrNewFolder(editionFolderId, 'seeds').id)
   createFolder('images', seedFolder.id)
+  if (mainImage) createImage(MAIN_IMAGE, seedFolder.id)
   await copyTemplateInto(editionFolderId, SEED_TEMPLATE, seedFolder.id)
   return folderLink(seedFolder.id)
 }
@@ -53,10 +54,11 @@ export const createFruitFolders = ({ editionDriveLink, title, mainImage }) => {
   return folderLink(fruitFolder.id)
 }
 
-export const createFlowerFolders = async ({ hackathonDriveLink, teamNumber, seedTitle }) => {
+export const createFlowerFolders = async ({ hackathonDriveLink, teamNumber, seedTitle, mainImage }) => {
   const hackathonFolderId = folderIdFromLink(hackathonDriveLink)
   const flowersFolder = existingOrNewFolder(hackathonFolderId, 'flowers')
   const flowerFolder = createFolder(slug(`Team ${teamNumber} - ${seedTitle}`), flowersFolder.id)
+  if (mainImage) createImage(MAIN_IMAGE, flowerFolder.id)
   await copyTemplateInto(hackathonFolderId, FLOWER_TEMPLATE, flowerFolder.id)
   return folderLink(flowerFolder.id)
 }

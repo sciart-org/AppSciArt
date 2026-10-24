@@ -87,7 +87,7 @@ attribute filled in.
 
 ### Consistent states
 Fixtures only build states the system can reach. An impossible combination throws `Unreachable state: …` before
-the test runs, so arrange the parents to match:
+the test runs, so arrange the parents to match. Each rule's source and check: `docs/project/testing/consistency.md`.
 
 | Item | Allowed |
 |---|---|
@@ -95,6 +95,7 @@ the test runs, so arrange the parents to match:
 | hackathon of an announced edition | any state |
 | hackathon of a closed or published edition | only ended |
 | seed of a hackathon | published, and from the hackathon's edition |
+| seed of a group or team | assigned to that hackathon |
 | team (flower) | only in `TEAM_CREATION`, `TEAM_WORK`, `TEAM_PRESENTATION`, or in an ended hackathon |
 | fruit | only for an ended hackathon, from a published flower; any fruit state |
 
@@ -117,12 +118,16 @@ edition without a logo.
 
 ### Inspiring scientists and seeds
 - `aScientistOf(edition, user)`: `user` is invited to `edition` as inspiring scientist. Returns `user`.
-- `aSeed({ edition, authors, state, title, branchesOfKnowledge, videoLink, presentationLink, podcastLink })`
+- `aSeed({ edition, authors, state, title, branchesOfKnowledge, videoLink, presentationLink, podcastLink, seedPDF,
+  mainImage = true })`
   - `authors`: users, each made a scientist of the edition too.
   - `state`: `IN_PROGRESS` (default, editable), `IN_REVIEW` (delivered) or `PUBLISHED`.
   - The seed gets its own template, copied from the edition's master.
+  - `seedPDF`: a link by default; `null` for none.
+  - `mainImage`: a main image in the seed's Drive folder; `false` for none.
   - If `edition` is omitted, a new announced edition is created.
 - `aPublishedSeed(o)`: the same, with `state: 'PUBLISHED'`.
+- `aSeedOfEdition(edition, seed)`: `seed` also belongs to `edition`. Returns `seed`.
 
 ### Hackathons
 `aHackathon({ edition, state, phase, type, internalName, shortDescription, sections, startDate, endDate, location,
@@ -172,13 +177,19 @@ Members must already be enrolled in the hackathon.
 
 - `aGroup({ hackathon, seed, members, voice = members[0], map = null, delivered = false })`: an exploring group for
   `seed`, with its conceptual map. `map` is the map content (JSON). Returns the group.
-- `aTeam({ hackathon, seed, members, speaker = members[0], number = 1, flowerState = 'IN_BLANK', title, concept })`: a
-  co-creation team for `seed`, with its flower. The flower gets its own template, copied from the hackathon's master.
-  Returns the flower. `flowerState` is `IN_BLANK`, `IN_PROGRESS`, `IN_REVIEW` (delivered) or `PUBLISHED`.
+- `aTeam({ hackathon, seed, members, speaker = members[0], number = 1, flowerState = 'IN_BLANK', title, concept,
+  mainImage = true })`: a co-creation team for `seed`, with its flower. Returns the flower.
+  - `flowerState` is `IN_BLANK`, `IN_PROGRESS`, `IN_REVIEW` (delivered) or `PUBLISHED`.
+  - `title` and `concept`: filled in for `IN_REVIEW` and `PUBLISHED` flowers, `null` before.
+  - The flower gets its own template, copied from the hackathon's master, and a main image in its Drive folder
+    (`mainImage: false` for none).
+- Groups and teams only use seeds assigned to their hackathon.
 
 ### Fruits
-`aFruit({ edition, hackathon, authors = [participant(15)], state = 'PUBLISHED', title, mainImage = true })`: a SciArt
-fruit and everything it comes from. Returns the fruit (`id`, `title`, `state`, …).
+`aFruit({ edition, hackathon, authors = [participant(15)], state = 'PUBLISHED', title, mainImage = true, authorVision,
+curatorVision, seedDescription })`: a SciArt fruit and everything it comes from. Returns the fruit (`id`, `title`,
+`state`, …) plus the `flower`, `seed` and `hackathon` it was built from. The three texts are filled in by default;
+`seedDescription` is the fruit's own description of its seed.
 
 - It builds the chain: an ended hackathon (`hackathon`, or a new one in `edition`, or in a new announced edition), a
   published seed of that edition assigned to it, a team of `authors` with a published flower, and the fruit.

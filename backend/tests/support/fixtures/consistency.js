@@ -23,6 +23,12 @@ const isSeedOfEdition = async (seed, editionId) => {
   return rowCount > 0
 }
 
+const isSeedOfHackathon = async (seed, hackathon) => {
+  const { rowCount } = await query(
+    'SELECT 1 FROM public.hackathon_seeds WHERE "seedId" = $1 AND "hackathonId" = $2', [seed.id, hackathon.id])
+  return rowCount > 0
+}
+
 export const ensureHackathonFitsEdition = (hackathonState, edition) => ensure(
   HACKATHON_STATES_BY_EDITION_STATE[edition.state].includes(hackathonState),
   `a ${edition.state} edition can't have a ${hackathonState} hackathon`)
@@ -41,3 +47,6 @@ export const ensureHackathonHasFruits = (hackathon) => ensure(
 
 export const ensureSameEdition = (hackathon, edition) => ensure(
   hackathon.editionId === edition.id, 'the hackathon belongs to another edition')
+
+export const ensureSeedOfHackathon = async (seed, hackathon) => ensure(
+  await isSeedOfHackathon(seed, hackathon), "groups and teams only use their hackathon's seeds")

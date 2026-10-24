@@ -20,7 +20,9 @@ export const aSeed = async ({
   branchesOfKnowledge = ['Biology'],
   videoLink = null,
   presentationLink = null,
-  podcastLink = null
+  podcastLink = null,
+  seedPDF = `https://example.org/seeds/${uniqueSuffix()}.pdf`,
+  mainImage = true
 } = {}) => {
   edition ??= await anAnnouncedEdition()
   const seed = await insertTimestampedRow('public.seeds', {
@@ -30,7 +32,8 @@ export const aSeed = async ({
     videoLink,
     presentationLink,
     podcastLink,
-    driveLink: await createSeedFolders({ editionDriveLink: edition.driveLink, title })
+    seedPDF,
+    driveLink: await createSeedFolders({ editionDriveLink: edition.driveLink, title, mainImage })
   })
   await linkRows('public.seed_editions', { seedId: seed.id, editionId: edition.id })
   for (const author of authors) await addAuthor(seed, edition, author)
@@ -38,3 +41,8 @@ export const aSeed = async ({
 }
 
 export const aPublishedSeed = (overrides) => aSeed({ ...overrides, state: 'PUBLISHED' })
+
+export const aSeedOfEdition = async (edition, seed) => {
+  await linkRows('public.seed_editions', { seedId: seed.id, editionId: edition.id })
+  return seed
+}

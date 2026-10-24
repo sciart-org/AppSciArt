@@ -47,7 +47,10 @@ export const aFruit = async ({
   authors = [participant(DEFAULT_AUTHOR_NUMBER)],
   state = 'PUBLISHED',
   title = `Fruit ${uniqueSuffix()}`,
-  mainImage = true
+  mainImage = true,
+  authorVision = "The authors' vision of the fruit",
+  curatorVision = "The curator's vision of the fruit",
+  seedDescription = 'The seed and how the fruit relates to it'
 } = {}) => {
   ({ hackathon, edition } = await endedHackathonAndEdition({ edition, hackathon }))
   ensureHackathonHasFruits(hackathon)
@@ -57,9 +60,12 @@ export const aFruit = async ({
   const fruit = await insertTimestampedRow('public.fruits', {
     title,
     state,
+    authorVision,
+    curatorVision,
+    seedDescription,
     flowerId: flower.id,
     driveLink: createFruitFolders({ editionDriveLink: edition.driveLink, title, mainImage })
   })
   await linkAuthorsToFruit(authors, hackathon, fruit)
-  return fruit
+  return { ...fruit, flower, seed, hackathon }
 }

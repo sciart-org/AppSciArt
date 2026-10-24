@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest'
 import {
   participant, participants,
   anEdition, aNotAnnouncedEdition, anAnnouncedEdition, aClosedEdition, aPublishedEdition,
-  aScientistOf, aSeed, aPublishedSeed,
+  aScientistOf, aSeed, aPublishedSeed, aSeedOfEdition,
   aHackathon, aNotAnnouncedHackathon, anAnnouncedHackathon, aClosedHackathon, anOngoingHackathonAt, anEndedHackathon,
   enrol, aGroup, aTeam, aFruit, drive
 } from '../support/index.js'
-import { fruitChainOf, isAuthorOf, isEvaluatorOf, isScientistOf, participationOf, seedIdsOf } from './database.js'
+import { editionIdsOf, fruitChainOf, isAuthorOf, isEvaluatorOf, isScientistOf, participationOf, seedIdsOf } from './database.js'
 import { childrenOf, folderIdFromLink, PNG_MIME } from '../support/fakes/driveStore.js'
 
 const imagesIn = (row) =>
@@ -106,6 +106,29 @@ describe('seed fixtures', () => {
     const master = await drive.seedMasterTemplateOf(edition)
     const copy = await drive.seedTemplateOf(seed)
     expect(copy.copiedFrom).toBe(master.id)
+  })
+
+  it('a seed has a main image in its Drive folder and a PDF link by default', async () => {
+    const seed = await aSeed()
+
+    expect(imagesIn(seed)).toEqual([expect.objectContaining({ name: 'mainImage.png' })])
+    expect(seed.seedPDF).toBeTruthy()
+  })
+
+  it('a seed created with mainImage: false and seedPDF: null has neither', async () => {
+    const seed = await aSeed({ mainImage: false, seedPDF: null })
+
+    expect(imagesIn(seed)).toEqual([])
+    expect(seed.seedPDF).toBeNull()
+  })
+
+  it('aSeedOfEdition adds the seed to another edition', async () => {
+    const [first, second] = [await anAnnouncedEdition(), await anAnnouncedEdition()]
+    const seed = await aSeed({ edition: first })
+
+    await aSeedOfEdition(second, seed)
+
+    expect(await editionIdsOf(seed)).toEqual(expect.arrayContaining([first.id, second.id]))
   })
 })
 
@@ -252,6 +275,34 @@ describe('group and team fixtures', () => {
     const copy = await drive.flowerTemplateOf(flower)
     expect(copy.copiedFrom).toBe(master.id)
   })
+
+  it.each(['IN_REVIEW', 'PUBLISHED'])('a %s flower has a title, a concept and a main image', async (flowerState) => {
+    const [speaker] = participants(1, 13)
+    const { hackathon, seed } = await ongoingHackathonWith([speaker], 'TEAM_WORK')
+
+    const flower = await aTeam({ hackathon, seed, members: [speaker], flowerState })
+
+    expect(flower).toMatchObject({ title: expect.any(String), concept: expect.any(String) })
+    expect(imagesIn(flower)).toEqual([expect.objectContaining({ name: 'mainImage.png' })])
+  })
+
+  it('a blank flower has no title or concept', async () => {
+    const [speaker] = participants(1, 13)
+    const { hackathon, seed } = await ongoingHackathonWith([speaker], 'TEAM_WORK')
+
+    const flower = await aTeam({ hackathon, seed, members: [speaker] })
+
+    expect(flower).toMatchObject({ title: null, concept: null })
+  })
+
+  it('a team created with mainImage: false has a flower without a main image', async () => {
+    const [speaker] = participants(1, 13)
+    const { hackathon, seed } = await ongoingHackathonWith([speaker], 'TEAM_WORK')
+
+    const flower = await aTeam({ hackathon, seed, members: [speaker], mainImage: false })
+
+    expect(imagesIn(flower)).toEqual([])
+  })
 })
 
 describe('state consistency', () => {
@@ -305,6 +356,24 @@ describe('state consistency', () => {
 
     await expect(aTeam({ hackathon, seed })).rejects.toThrow('Unreachable state')
   })
+
+  const hackathonAndUnassignedSeed = async (phase) => {
+    const edition = await anAnnouncedEdition()
+    const hackathon = await anOngoingHackathonAt(phase, { edition })
+    return { hackathon, seed: await aPublishedSeed({ edition }) }
+  }
+
+  it('a group cannot use a seed that is not assigned to its hackathon', async () => {
+    const { hackathon, seed } = await hackathonAndUnassignedSeed('GROUP_WORK')
+
+    await expect(aGroup({ hackathon, seed })).rejects.toThrow("only use their hackathon's seeds")
+  })
+
+  it('a team cannot use a seed that is not assigned to its hackathon', async () => {
+    const { hackathon, seed } = await hackathonAndUnassignedSeed('TEAM_WORK')
+
+    await expect(aTeam({ hackathon, seed })).rejects.toThrow("only use their hackathon's seeds")
+  })
 })
 
 describe('fruit fixtures', () => {
@@ -316,6 +385,15 @@ describe('fruit fixtures', () => {
     expect(await fruitChainOf(fruit)).toMatchObject({
       fruitState: 'IN_PROGRESS', flowerState: 'PUBLISHED', hackathonState: 'FINISHED', editionId: edition.id
     })
+  })
+
+  it('aFruit returns the flower, seed and hackathon it was built from', async () => {
+    const hackathon = await anEndedHackathon()
+
+    const fruit = await aFruit({ hackathon })
+
+    expect(await fruitChainOf(fruit)).toMatchObject({ flowerId: fruit.flower.id, seedId: fruit.seed.id })
+    expect(fruit.hackathon.id).toBe(hackathon.id)
   })
 
   it("the fruit's authors are linked to it in its hackathon", async () => {
@@ -332,6 +410,14 @@ describe('fruit fixtures', () => {
     const fruit = await aFruit()
 
     expect(imagesIn(fruit)).toEqual([expect.objectContaining({ name: 'mainImage.png' })])
+  })
+
+  it("a fruit has its authors' vision, curator's vision and seed description by default", async () => {
+    const fruit = await aFruit()
+
+    expect(fruit).toMatchObject({
+      authorVision: expect.any(String), curatorVision: expect.any(String), seedDescription: expect.any(String)
+    })
   })
 
   it('a fruit created with mainImage: false has no main image', async () => {

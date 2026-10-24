@@ -70,6 +70,7 @@ Only states the system can reach exist (fixtures build nothing else):
 - Fruits only for `FINISHED` hackathons and `PUBLISHED` flowers, in any fruit state. A fruit can be published in
   any non-planned edition; publishing an edition doesn't require all its fruits published.
 - Hackathon seeds are `PUBLISHED` and belong to the hackathon's edition (BRU-039).
+- Groups and teams only work on seeds assigned to their hackathon, so a flower's seed is always published.
 - In edition details, unpublished fruits are shown to nobody (staff included).
 
 Decisions: D-026.

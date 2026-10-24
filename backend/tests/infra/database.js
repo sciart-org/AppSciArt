@@ -23,6 +23,9 @@ export const isEvaluatorOf = async (user, hackathon) => await countOf(
 export const seedIdsOf = async (hackathon) => (await query(
   'SELECT "seedId" FROM public.hackathon_seeds WHERE "hackathonId" = $1', [hackathon.id])).rows.map(row => row.seedId)
 
+export const editionIdsOf = async (seed) => (await query(
+  'SELECT "editionId" FROM public.seed_editions WHERE "seedId" = $1', [seed.id])).rows.map(row => row.editionId)
+
 export const editionCount = () => countOf('SELECT count(*)::int AS count FROM public.editions')
 
 export const userProfileCount = () => countOf('SELECT count(*)::int AS count FROM profiles.user_profiles')
@@ -40,7 +43,8 @@ export const createUnregisteredProfile = (email) => query(
   'INSERT INTO profiles.user_profiles (id, email) VALUES (gen_random_uuid(), $1)', [email])
 
 export const fruitChainOf = (fruit) => firstRow(
-  `SELECT fr.state AS "fruitState", fl.state AS "flowerState", h.state AS "hackathonState", se."editionId"
+  `SELECT fr.state AS "fruitState", fl.state AS "flowerState", h.state AS "hackathonState", se."editionId",
+     fl.id AS "flowerId", fl."seedId"
    FROM public.fruits fr
    JOIN public.flowers fl ON fl.id = fr."flowerId"
    JOIN public.seed_editions se ON se."seedId" = fl."seedId"
