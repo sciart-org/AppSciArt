@@ -15,3 +15,5 @@ Before asking or recording an answer, check for an existing one: rule at the top
 | `UC-002.md` | View editions |
 | `UC-003.md` | Edition details |
 | `UC-004.md` | View hackathons |
+| `UC-006.md` | Explore products of an edition (+ BRU-018) |
+| `UC-007.md` | Product details (+ BRU-018) |

@@ -46,6 +46,8 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-039 | 2026-10-23 | UC-002/003 | Staff `?state=PLANNED` → only `PLANNED` editions. Non-published edition details: `fruits` absent or empty, either is fine. | — | partly superseded by D-041 |
 | D-040 | 2026-10-23 | UC-003 | A fruit's `mainImage` in edition details is a link, like the edition `logo`. | — | in force |
 | D-041 | 2026-10-23 | UC-003 | Every non-planned edition (`ACTIVE`, `CLOSED`, `PUBLISHED`) can have fruits; its details list only the published ones (extends the SRS, which names only finished editions). | fruits part of D-025; non-published part of D-039 | in force |
+| D-042 | 2026-10-23 | UC-006 | UC-006: list per type by `editionId`; guests and participants see published products only, staff every state; private hackathon doesn't hide published products; exact item fields. ([details](#d-042)) | — | in force |
+| D-043 | 2026-10-23 | UC-007 | UC-007: published details for everyone; unpublished → staff and its authors, others `404`; exact fields per type, `driveLink` and `template` for staff and authors only. ([details](#d-043)) | — | in force |
 
 ## Details
 
@@ -89,3 +91,15 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 - Private, untracked: security-sensitive material in a private folder; private working instructions in `CLAUDE.local.md`.
 - Tracked in `.claude/`: the test-writing agent, its hook, the skills and the path-scoped rules.
 - Migrated in steps, each approved.
+
+### D-042
+- `GET /seeds|flowers|fruits?editionId=`: missing → `400`, unknown → `404`, `PLANNED` edition → `404` for guests and participants.
+- Published only for guests and participants (authors included); staff see every state, unlike edition details (D-041).
+- Item: seed `id, state, title, mainImage, branchesOfKnowledge, authors`; flower and fruit `id, state, title, mainImage, authors`. Author `{id, name, surname}`.
+
+### D-043
+- Unpublished details: staff and the product's authors `200`, others `404`.
+- Seed: `id, title, state, branchesOfKnowledge, seedPDF, mainImage, authors` + optional `videoLink, presentationLink, podcastLink, otherImages`.
+- Flower: `id, title, concept, state, seed {id}, mainImage, authors` + optional `prototypeImages, inspirationImages, presentation, video`.
+- Fruit: `id, title, state, authorVision, curatorVision, flower {id}, seed {id, description}, mainImage, authors` + optional `otherImages`.
+- `driveLink` and `template`: staff and authors only.
