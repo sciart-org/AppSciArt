@@ -1036,7 +1036,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 218,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrHds",
-      "synced": "3c586d95a3b0ffe2"
+      "synced": "fd1265e3711b600f"
     },
     {
       "key": "A6-rbac",
@@ -1531,7 +1531,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 227,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrJsQ",
-      "synced": "84c9a7ed80458a7e"
+      "synced": "6e1da2ac5ce857bf"
     },
     {
       "key": "H4",
@@ -1570,7 +1570,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 229,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrKGA",
-      "synced": "001f946f36adde28"
+      "synced": "6ab2bb7ef56887f4"
     },
     {
       "key": "H6",
@@ -1609,7 +1609,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 231,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrKfk",
-      "synced": "8c15a1359913d406"
+      "synced": "beeebcc2bfe54e78"
     },
     {
       "key": "H8",
@@ -1629,7 +1629,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 232,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrKsw",
-      "synced": "7a92c60b8f5e5e73"
+      "synced": "31a358dd2573bf8c"
     },
     {
       "key": "3.1",
@@ -1703,7 +1703,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 236,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrLfc",
-      "synced": "fa14a6c419299526"
+      "synced": "dbd5a8f12bb4277c"
     },
     {
       "key": "3.5",
@@ -1790,9 +1790,9 @@
         "hackathon-mvp"
       ],
       "milestone": "v1.0.0",
-      "issueNumber": null,
-      "itemId": null,
-      "synced": ""
+      "issueNumber": 274,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOy0g",
+      "synced": "4d9712fa6d055d30"
     },
     {
       "key": "3.11",
@@ -1809,9 +1809,9 @@
         "hackathon-mvp"
       ],
       "milestone": "v1.0.0",
-      "issueNumber": null,
-      "itemId": null,
-      "synced": ""
+      "issueNumber": 275,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOy9c",
+      "synced": "153b559b237447cc"
     },
     {
       "key": "4.1",
