@@ -51,6 +51,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-044 | 2026-10-30 | UC-007 | UC-007: related products in details are the related product's own details for the same viewer (flower `seed`; fruit `flower` without its `seed`, fruit `seed` plus the fruit's `description`). ([details](#d-044)) | related items of D-043 | in force |
 | D-045 | 2026-10-30 | UC-006/007 | Evaluators see products of every state in lists and details, like staff. `driveLink` and `template` stay for staff and the product's authors only, on every product and related item. | — | partly superseded by D-046 |
 | D-046 | 2026-10-30 | UC-006/007 | Evaluators see unpublished flowers and fruits only of the hackathons they evaluate, and get their `driveLink` and `template`. Seeds: like participants. Inspiring scientists get `driveLink` and `template` only of their own seeds. | evaluator part of D-045 | in force |
+| D-048 | 2026-11-01 | Priority | Hackathon MVP before the 2026-11-03 product owner meeting: an ongoing hackathon runs from CLOSED / PREPARING to FINISHED on pre-production, tested internally by the team. Phase 1a pauses after UC-006/007 and resumes after the meeting. ([details](#d-048)) | — | in force |
 
 ## Details
 
@@ -111,3 +112,12 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 - Flower `seed`: the body `GET /seeds/{id}` returns to the same viewer, so `driveLink` and `template` only for staff and the seed's authors.
 - Fruit `flower`: the body `GET /flowers/{id}` returns to the same viewer, without its `seed` (the fruit has its own `seed`).
 - Fruit `seed`: the body `GET /seeds/{id}` returns to the same viewer, plus `description`, the seed description stored for that fruit.
+
+### D-048
+- Scope: UC-044 start and UC-047–067 except UC-065. Creating, announcing, closing and joining are out of scope;
+  the demo hackathon is prepared by seeders.
+- Tests: one journey test (plan §4.9) from PREPARING to FINISHED, checking postconditions only. Per-UC tests for
+  these use cases follow after the meeting.
+- Only bugs the journey test or the walkthrough show are fixed now.
+- Priority over D-012 (tests before any fix) for this milestone only.
+- Board: the milestone's items carry the label `hackathon-mvp`.

@@ -7,9 +7,9 @@ root `CLAUDE.md`.
 Security work is tracked privately and only described here in generic terms until the fixes are released.
 
 ## Now
-- **Phase:** 1a, acceptance tests from the SRS (branch `tests/acceptance`)
-- **Done:** UC-002 view editions, UC-003 edition details, UC-004 view hackathons
-- **Next:** UC-006 / UC-007
+- **Milestone:** Hackathon MVP for 2026-11-03 (D-048, `roadmap.md`)
+- **Paused:** Phase 1a after UC-006 / UC-007; next there: FRQ-001 authentication
+- **Next:** clarifications for the ongoing-hackathon use cases, then the journey test
 
 ## Phases
 | Phase | Scope | Issue | Status |

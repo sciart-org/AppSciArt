@@ -1030,7 +1030,8 @@
       "ref": "A6",
       "commits": "",
       "labels": [
-        "test"
+        "test",
+        "hackathon-mvp"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 218,
@@ -1524,7 +1525,8 @@
       "ref": "H3",
       "commits": "",
       "labels": [
-        "bug"
+        "bug",
+        "hackathon-mvp"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 227,
@@ -1562,7 +1564,8 @@
       "ref": "H5",
       "commits": "",
       "labels": [
-        "bug"
+        "bug",
+        "hackathon-mvp"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 229,
@@ -1600,7 +1603,8 @@
       "ref": "H7",
       "commits": "",
       "labels": [
-        "bug"
+        "bug",
+        "hackathon-mvp"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 231,
@@ -1619,7 +1623,8 @@
       "ref": "H8",
       "commits": "",
       "labels": [
-        "bug"
+        "bug",
+        "hackathon-mvp"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 232,
@@ -1692,7 +1697,9 @@
       "status": "Todo",
       "ref": "3.4",
       "commits": "",
-      "labels": [],
+      "labels": [
+        "hackathon-mvp"
+      ],
       "milestone": "v1.0.0",
       "issueNumber": 236,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrLfc",
@@ -1767,6 +1774,44 @@
       "issueNumber": 258,
       "itemId": "PVTI_lADODEgGw84BoNdFzhC-Zkw",
       "synced": "4ccf00c8f3aa8fd3"
+    },
+    {
+      "key": "3.10",
+      "project": "public",
+      "parent": "P3",
+      "title": "Demo seeders for an ongoing hackathon",
+      "body": "Sequelize seeders that prepare a demo hackathon in CLOSED / PREPARING: published seeds of its edition linked to it, evaluators assigned, test participants enrolled. Local (`development`) and pre-production, without running on production (D-048).",
+      "phase": "3",
+      "kind": "Foundation",
+      "status": "Todo",
+      "ref": "3.10",
+      "commits": "",
+      "labels": [
+        "hackathon-mvp"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": null,
+      "itemId": null,
+      "synced": ""
+    },
+    {
+      "key": "3.11",
+      "project": "public",
+      "parent": "P3",
+      "title": "Hackathon walkthrough checklist",
+      "body": "`docs/project/testing/walkthrough-hackathon.md`: the ongoing hackathon from PREPARING to FINISHED as SRS steps per actor (facilitator, evaluator, participants), run by hand locally and on pre-production. Doubles as the meeting script (D-048).",
+      "phase": "3",
+      "kind": "Foundation",
+      "status": "Todo",
+      "ref": "3.11",
+      "commits": "",
+      "labels": [
+        "hackathon-mvp"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": null,
+      "itemId": null,
+      "synced": ""
     },
     {
       "key": "4.1",
