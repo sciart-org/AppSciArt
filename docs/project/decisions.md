@@ -47,7 +47,10 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-040 | 2026-10-23 | UC-003 | A fruit's `mainImage` in edition details is a link, like the edition `logo`. | — | in force |
 | D-041 | 2026-10-23 | UC-003 | Every non-planned edition (`ACTIVE`, `CLOSED`, `PUBLISHED`) can have fruits; its details list only the published ones (extends the SRS, which names only finished editions). | fruits part of D-025; non-published part of D-039 | in force |
 | D-042 | 2026-10-23 | UC-006 | UC-006: list per type by `editionId`; guests and participants see published products only, staff every state; private hackathon doesn't hide published products; exact item fields. ([details](#d-042)) | — | in force |
-| D-043 | 2026-10-23 | UC-007 | UC-007: published details for everyone; unpublished → staff and its authors, others `404`; exact fields per type, `driveLink` and `template` for staff and authors only. ([details](#d-043)) | — | in force |
+| D-043 | 2026-10-23 | UC-007 | UC-007: published details for everyone; unpublished → staff and its authors, others `404`; exact fields per type, `driveLink` and `template` for staff and authors only. ([details](#d-043)) | — | partly superseded by D-044 |
+| D-044 | 2026-10-30 | UC-007 | UC-007: related products in details are the related product's own details for the same viewer (flower `seed`; fruit `flower` without its `seed`, fruit `seed` plus the fruit's `description`). ([details](#d-044)) | related items of D-043 | in force |
+| D-045 | 2026-10-30 | UC-006/007 | Evaluators see products of every state in lists and details, like staff. `driveLink` and `template` stay for staff and the product's authors only, on every product and related item. | — | partly superseded by D-046 |
+| D-046 | 2026-10-30 | UC-006/007 | Evaluators see unpublished flowers and fruits only of the hackathons they evaluate, and get their `driveLink` and `template`. Seeds: like participants. Inspiring scientists get `driveLink` and `template` only of their own seeds. | evaluator part of D-045 | in force |
 
 ## Details
 
@@ -103,3 +106,8 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 - Flower: `id, title, concept, state, seed {id}, mainImage, authors` + optional `prototypeImages, inspirationImages, presentation, video`.
 - Fruit: `id, title, state, authorVision, curatorVision, flower {id}, seed {id, description}, mainImage, authors` + optional `otherImages`.
 - `driveLink` and `template`: staff and authors only.
+
+### D-044
+- Flower `seed`: the body `GET /seeds/{id}` returns to the same viewer, so `driveLink` and `template` only for staff and the seed's authors.
+- Fruit `flower`: the body `GET /flowers/{id}` returns to the same viewer, without its `seed` (the fruit has its own `seed`).
+- Fruit `seed`: the body `GET /seeds/{id}` returns to the same viewer, plus `description`, the seed description stored for that fruit.
