@@ -39,6 +39,9 @@ Rules for writing, briefing and reviewing the black-box acceptance tests. Plan a
 7. **Readable tests.** No comments (`CLAUDE.md` style): name each test after its expected outcome, check one
    behaviour, use named actors instead of magic numbers, and assert what the name claims. The "why" of the tooling
    goes in `HELPERS.md` "How it works".
+   - **Failures show the difference.** A red test's message names what is wrong and shows expected vs received,
+     e.g. a list of missing or extra fields compared with `[]`, or `{ state: body.state }` compared with the
+     expected object. Never a bare `expected null not to be null` or `expected false to be true`.
 8. **Writer independence.** The test files are written by the `acceptance-test-writer` agent from a brief, not by
    the main session, which has read the code (plan §8).
 

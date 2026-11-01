@@ -46,6 +46,9 @@ workaround. Leave that case out and report what fixture it needs.
   arrange / act / assert with blank lines.
 - Response shapes are checked exactly. Use allowed-field constants and a `fieldsOutsideAllowed` helper, like
   `editionsList.test.js`, plus separate checks that the required fields are present.
+- Failures show the difference: a red test's message names what is wrong and shows expected vs received. Compare a
+  list of missing or extra fields with `[]`, or `{ [field]: body[field] }` with the expected object. Never assert in
+  a way that fails with a bare `expected null not to be null` or `expected false to be true`.
 - Never rely on order unless the brief requires one. Compare ids with containment, exclusion, or sorted lists.
 - Database state is reset per file, not per test. Assert on the rows you created. Empty-list cases go first, in
   their own `describe`, before anything is created.
