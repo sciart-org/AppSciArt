@@ -1,0 +1,188 @@
+{
+  "B1": [
+    "UC-006 · guest lists the published seeds of an announced edition",
+    "UC-006 · guest lists the published flowers of an announced edition",
+    "UC-006 · guest lists the published fruits of an announced edition"
+  ],
+  "B2": [
+    "UC-006 · guest lists the published seeds of a closed edition",
+    "UC-006 · guest lists the published flowers of a closed edition",
+    "UC-006 · guest lists the published fruits of a closed edition",
+    "UC-006 · guest lists the published seeds of a published edition",
+    "UC-006 · guest lists the published flowers of a published edition",
+    "UC-006 · guest lists the published fruits of a published edition"
+  ],
+  "B3": [
+    "UC-006 · guest listing the seeds of a not-announced edition gets 404",
+    "UC-006 · participant listing the seeds of a not-announced edition gets 404",
+    "UC-006 · guest listing the flowers of a not-announced edition gets 404",
+    "UC-006 · participant listing the flowers of a not-announced edition gets 404",
+    "UC-006 · guest listing the fruits of a not-announced edition gets 404",
+    "UC-006 · participant listing the fruits of a not-announced edition gets 404"
+  ],
+  "B4": [
+    "UC-006 · listing seeds without editionId gets 400",
+    "UC-006 · listing flowers without editionId gets 400",
+    "UC-006 · listing fruits without editionId gets 400"
+  ],
+  "B5": [
+    "UC-006 · listing seeds of an unknown edition gets 404",
+    "UC-006 · listing flowers of an unknown edition gets 404",
+    "UC-006 · listing fruits of an unknown edition gets 404"
+  ],
+  "B6": [
+    "UC-006 · seeds of other editions are not listed",
+    "UC-006 · flowers of other editions are not listed",
+    "UC-006 · fruits of other editions are not listed"
+  ],
+  "B7": [
+    "UC-006 · IRQ-002 · a seed that belongs to two editions is listed in the first one",
+    "UC-006 · IRQ-002 · a seed that belongs to two editions is listed in the second one"
+  ],
+  "B8": [
+    "UC-006 · BRU-018 · guest does not get unpublished seeds",
+    "UC-006 · BRU-018 · participant does not get unpublished seeds"
+  ],
+  "B9": [
+    "UC-006 · IRQ-003 · guest does not get unpublished flowers",
+    "UC-006 · IRQ-003 · participant does not get unpublished flowers",
+    "UC-006 · IRQ-004 · guest does not get unpublished fruits",
+    "UC-006 · IRQ-004 · participant does not get unpublished fruits"
+  ],
+  "B10": [
+    "UC-006 · BRU-018 · a seed author does not get their own unpublished seeds in the list"
+  ],
+  "B11": [
+    "UC-006 · IRQ-002 · designer gets the seeds of every state",
+    "UC-006 · IRQ-002 · facilitator gets the seeds of every state",
+    "UC-006 · IRQ-002 · administrator gets the seeds of every state",
+    "UC-006 · IRQ-003 · designer gets the flowers of every state",
+    "UC-006 · IRQ-003 · facilitator gets the flowers of every state",
+    "UC-006 · IRQ-003 · administrator gets the flowers of every state",
+    "UC-006 · IRQ-004 · designer gets the fruits of every state",
+    "UC-006 · IRQ-004 · facilitator gets the fruits of every state",
+    "UC-006 · IRQ-004 · administrator gets the fruits of every state"
+  ],
+  "B12": [
+    "UC-006 · IRQ-003 · published flowers of a private hackathon are listed for a guest",
+    "UC-006 · IRQ-004 · published fruits of a private hackathon are listed for a guest"
+  ],
+  "B13": [
+    "UC-006 · IRQ-002 · guest gets seeds items with no field outside the allowed set",
+    "UC-006 · IRQ-002 · participant gets seeds items with no field outside the allowed set",
+    "UC-006 · IRQ-002 · designer gets seeds items with no field outside the allowed set",
+    "UC-006 · IRQ-002 · facilitator gets seeds items with no field outside the allowed set",
+    "UC-006 · IRQ-002 · administrator gets seeds items with no field outside the allowed set",
+    "UC-006 · IRQ-002 · guest gets seeds items with every required field",
+    "UC-006 · IRQ-002 · participant gets seeds items with every required field",
+    "UC-006 · IRQ-002 · designer gets seeds items with every required field",
+    "UC-006 · IRQ-002 · facilitator gets seeds items with every required field",
+    "UC-006 · IRQ-002 · administrator gets seeds items with every required field",
+    "UC-006 · IRQ-002 · guest gets seeds items whose mainImage is a link",
+    "UC-006 · IRQ-002 · participant gets seeds items whose mainImage is a link",
+    "UC-006 · IRQ-002 · designer gets seeds items whose mainImage is a link",
+    "UC-006 · IRQ-002 · facilitator gets seeds items whose mainImage is a link",
+    "UC-006 · IRQ-002 · administrator gets seeds items whose mainImage is a link"
+  ],
+  "B14": [
+    "UC-006 · IRQ-003 · guest gets flowers items with no field outside the allowed set",
+    "UC-006 · IRQ-003 · participant gets flowers items with no field outside the allowed set",
+    "UC-006 · IRQ-003 · designer gets flowers items with no field outside the allowed set",
+    "UC-006 · IRQ-003 · facilitator gets flowers items with no field outside the allowed set",
+    "UC-006 · IRQ-003 · administrator gets flowers items with no field outside the allowed set",
+    "UC-006 · IRQ-003 · guest gets flowers items with every required field",
+    "UC-006 · IRQ-003 · participant gets flowers items with every required field",
+    "UC-006 · IRQ-003 · designer gets flowers items with every required field",
+    "UC-006 · IRQ-003 · facilitator gets flowers items with every required field",
+    "UC-006 · IRQ-003 · administrator gets flowers items with every required field",
+    "UC-006 · IRQ-003 · guest gets flowers items whose mainImage is a link",
+    "UC-006 · IRQ-003 · participant gets flowers items whose mainImage is a link",
+    "UC-006 · IRQ-003 · designer gets flowers items whose mainImage is a link",
+    "UC-006 · IRQ-003 · facilitator gets flowers items whose mainImage is a link",
+    "UC-006 · IRQ-003 · administrator gets flowers items whose mainImage is a link"
+  ],
+  "B15": [
+    "UC-006 · IRQ-004 · guest gets fruits items with no field outside the allowed set",
+    "UC-006 · IRQ-004 · participant gets fruits items with no field outside the allowed set",
+    "UC-006 · IRQ-004 · designer gets fruits items with no field outside the allowed set",
+    "UC-006 · IRQ-004 · facilitator gets fruits items with no field outside the allowed set",
+    "UC-006 · IRQ-004 · administrator gets fruits items with no field outside the allowed set",
+    "UC-006 · IRQ-004 · guest gets fruits items with every required field",
+    "UC-006 · IRQ-004 · participant gets fruits items with every required field",
+    "UC-006 · IRQ-004 · designer gets fruits items with every required field",
+    "UC-006 · IRQ-004 · facilitator gets fruits items with every required field",
+    "UC-006 · IRQ-004 · administrator gets fruits items with every required field",
+    "UC-006 · IRQ-004 · guest gets fruits items whose mainImage is a link",
+    "UC-006 · IRQ-004 · participant gets fruits items whose mainImage is a link",
+    "UC-006 · IRQ-004 · designer gets fruits items whose mainImage is a link",
+    "UC-006 · IRQ-004 · facilitator gets fruits items whose mainImage is a link",
+    "UC-006 · IRQ-004 · administrator gets fruits items whose mainImage is a link"
+  ],
+  "B16": [
+    "UC-006 · IRQ-002 · guest gets seeds items whose authors are a list",
+    "UC-006 · IRQ-002 · participant gets seeds items whose authors are a list",
+    "UC-006 · IRQ-002 · designer gets seeds items whose authors are a list",
+    "UC-006 · IRQ-002 · facilitator gets seeds items whose authors are a list",
+    "UC-006 · IRQ-002 · administrator gets seeds items whose authors are a list",
+    "UC-006 · IRQ-003 · guest gets flowers items whose authors are a list",
+    "UC-006 · IRQ-003 · participant gets flowers items whose authors are a list",
+    "UC-006 · IRQ-003 · designer gets flowers items whose authors are a list",
+    "UC-006 · IRQ-003 · facilitator gets flowers items whose authors are a list",
+    "UC-006 · IRQ-003 · administrator gets flowers items whose authors are a list",
+    "UC-006 · IRQ-004 · guest gets fruits items whose authors are a list",
+    "UC-006 · IRQ-004 · participant gets fruits items whose authors are a list",
+    "UC-006 · IRQ-004 · designer gets fruits items whose authors are a list",
+    "UC-006 · IRQ-004 · facilitator gets fruits items whose authors are a list",
+    "UC-006 · IRQ-004 · administrator gets fruits items whose authors are a list",
+    "UC-006 · IRQ-002 · guest gets seeds authors with no field outside id, name and surname",
+    "UC-006 · IRQ-002 · participant gets seeds authors with no field outside id, name and surname",
+    "UC-006 · IRQ-002 · designer gets seeds authors with no field outside id, name and surname",
+    "UC-006 · IRQ-002 · facilitator gets seeds authors with no field outside id, name and surname",
+    "UC-006 · IRQ-002 · administrator gets seeds authors with no field outside id, name and surname",
+    "UC-006 · IRQ-003 · guest gets flowers authors with no field outside id, name and surname",
+    "UC-006 · IRQ-003 · participant gets flowers authors with no field outside id, name and surname",
+    "UC-006 · IRQ-003 · designer gets flowers authors with no field outside id, name and surname",
+    "UC-006 · IRQ-003 · facilitator gets flowers authors with no field outside id, name and surname",
+    "UC-006 · IRQ-003 · administrator gets flowers authors with no field outside id, name and surname",
+    "UC-006 · IRQ-004 · guest gets fruits authors with no field outside id, name and surname",
+    "UC-006 · IRQ-004 · participant gets fruits authors with no field outside id, name and surname",
+    "UC-006 · IRQ-004 · designer gets fruits authors with no field outside id, name and surname",
+    "UC-006 · IRQ-004 · facilitator gets fruits authors with no field outside id, name and surname",
+    "UC-006 · IRQ-004 · administrator gets fruits authors with no field outside id, name and surname",
+    "UC-006 · IRQ-002 · guest gets seeds authors with id, name and surname",
+    "UC-006 · IRQ-002 · participant gets seeds authors with id, name and surname",
+    "UC-006 · IRQ-002 · designer gets seeds authors with id, name and surname",
+    "UC-006 · IRQ-002 · facilitator gets seeds authors with id, name and surname",
+    "UC-006 · IRQ-002 · administrator gets seeds authors with id, name and surname",
+    "UC-006 · IRQ-003 · guest gets flowers authors with id, name and surname",
+    "UC-006 · IRQ-003 · participant gets flowers authors with id, name and surname",
+    "UC-006 · IRQ-003 · designer gets flowers authors with id, name and surname",
+    "UC-006 · IRQ-003 · facilitator gets flowers authors with id, name and surname",
+    "UC-006 · IRQ-003 · administrator gets flowers authors with id, name and surname",
+    "UC-006 · IRQ-004 · guest gets fruits authors with id, name and surname",
+    "UC-006 · IRQ-004 · participant gets fruits authors with id, name and surname",
+    "UC-006 · IRQ-004 · designer gets fruits authors with id, name and surname",
+    "UC-006 · IRQ-004 · facilitator gets fruits authors with id, name and surname",
+    "UC-006 · IRQ-004 · administrator gets fruits authors with id, name and surname",
+    "UC-006 · IRQ-002 · seed authors are its inspiring scientists",
+    "UC-006 · IRQ-003 · flower authors are its co-creation team members",
+    "UC-006 · IRQ-004 · fruit authors are its own authors"
+  ],
+  "B17": [
+    "UC-006 · IRQ-002 · a published item in the seeds list has the same fields for guest, participant and staff",
+    "UC-006 · IRQ-003 · a published item in the flowers list has the same fields for guest, participant and staff",
+    "UC-006 · IRQ-004 · a published item in the fruits list has the same fields for guest, participant and staff"
+  ],
+  "B18": [
+    "UC-006 · IRQ-003 · the evaluator of a hackathon gets its flowers of every state",
+    "UC-006 · IRQ-004 · the evaluator of a hackathon gets its fruits of every state",
+    "UC-006 · IRQ-003 · the evaluator of a hackathon gets flowers items with no field outside the allowed set",
+    "UC-006 · IRQ-004 · the evaluator of a hackathon gets fruits items with no field outside the allowed set",
+    "UC-006 · IRQ-003 · the evaluator of a hackathon gets flowers items with every required field",
+    "UC-006 · IRQ-004 · the evaluator of a hackathon gets fruits items with every required field",
+    "UC-006 · IRQ-003 · an evaluator does not get the unpublished flowers of a hackathon they do not evaluate",
+    "UC-006 · IRQ-004 · an evaluator does not get the unpublished fruits of a hackathon they do not evaluate",
+    "UC-006 · BRU-018 · the evaluator of the flowers hackathon does not get unpublished seeds",
+    "UC-006 · BRU-018 · the evaluator of the fruits hackathon does not get unpublished seeds"
+  ]
+}
