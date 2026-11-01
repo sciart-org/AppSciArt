@@ -304,16 +304,16 @@
       "body": "Black-box acceptance tests written from the SRS (step A2, testing plan §4.1).\n\nExpected behaviour:\n- Guest lists the seeds, flowers and fruits of an edition; only published products appear.\n- An unpublished seed never appears to a guest or a plain participant (BRU-018).\n- Guest gets the details of a published seed, flower and fruit.\n- Guest cannot get the details of an unpublished product.",
       "phase": "1a",
       "kind": "Test",
-      "status": "Todo",
+      "status": "Done",
       "ref": "UC-006/007",
-      "commits": "",
+      "commits": "91dcddb, fc89c41, 1c3ae1e, 32d68f4",
       "labels": [
         "test"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 180,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCq_Fs",
-      "synced": "5f11682a80f1fc25"
+      "synced": "4c909e32f0c7816c"
     },
     {
       "key": "FRQ-001",
@@ -1137,7 +1137,7 @@
       "project": "public",
       "parent": "P2",
       "title": "Edition details: fruit summary fields don't match the contract",
-      "body": "Fruit summary items in a published edition's details should be exactly `id`, `mainImage`, `title`. `mainImage` is missing and `seed`/`flower` are extra.\n\nRed tests: `editionDetails.test.js` fruit main image / fruit fields.",
+      "body": "Fruit summary items in a published edition's details should be exactly `id`, `mainImage`, `title`. `mainImage` is missing and `seed`/`flower` are extra.\n\nRed tests: `editionDetails.test.js` fruit main image / fruit fields.\n\nSame fields in the products list and details (UC-006/007): fruit items and fruit details have no `mainImage`, and list items also carry `flower`/`seed`.\n\nRed tests: `productsList.test.js` fruits item shape and main image; `productDetails.test.js` published fruit main image.",
       "phase": "2",
       "kind": "Bug",
       "status": "Todo",
@@ -1149,7 +1149,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 224,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrI_k",
-      "synced": "3778acb414480743"
+      "synced": "12ac7587479f7b1a"
     },
     {
       "key": "T8",
@@ -1188,6 +1188,291 @@
       "issueNumber": 257,
       "itemId": "PVTI_lADODEgGw84BoNdFzhC95eU",
       "synced": "656b87bfb72ad932"
+    },
+    {
+      "key": "T13",
+      "project": "public",
+      "parent": "P2",
+      "title": "Products list: listing without an edition returns 500",
+      "body": "Listing seeds or flowers without `editionId` returned `500`; it should be `400`.\n\nRed tests: `productsList.test.js` \"listing %s without editionId gets 400\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Done",
+      "ref": "T13",
+      "commits": "91dcddb",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 259,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOpr4",
+      "synced": "fb397f1676cc9952"
+    },
+    {
+      "key": "T14",
+      "project": "public",
+      "parent": "P2",
+      "title": "Products list: seed authors see their own unpublished seeds",
+      "body": "A seed's author gets their own `IN_PROGRESS`/`IN_REVIEW` seeds in the edition's list. Guests and participants, authors included, should get published products only (BRU-018, D-042).\n\nRed tests: `productsList.test.js` \"a seed author does not get their own unpublished seeds in the list\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T14",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 260,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOp5I",
+      "synced": "227778acebaef6a1"
+    },
+    {
+      "key": "T15",
+      "project": "public",
+      "parent": "P2",
+      "title": "Products list: seed items have no `state`",
+      "body": "Seed list items lack `state`, a required item field (D-042).\n\nRed tests: `productsList.test.js` \"%s gets seeds items with every required field\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T15",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 261,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOqCo",
+      "synced": "43f50e098fbc72aa"
+    },
+    {
+      "key": "T16",
+      "project": "public",
+      "parent": "P2",
+      "title": "Seed details: no `state` for guests and participants",
+      "body": "Published seed details sent to guests and participants lack `state` (D-043).\n\nRed tests: `productDetails.test.js` \"… published seed … with the required field state\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T16",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 262,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOqKw",
+      "synced": "a8b4ca641aacabd7"
+    },
+    {
+      "key": "T17",
+      "project": "public",
+      "parent": "P2",
+      "title": "Seeds: a `template` field is sent to everyone",
+      "body": "Seed list items and seed details always carry `template` (as `null` for guests and participants). Only staff and the seed's authors should get it, and nobody else should get the key at all (D-042, D-043).\n\nRed tests: `productsList.test.js` seeds \"no field outside the allowed set\"; `productDetails.test.js` seed \"no field outside the public set\" and the B19 seed tests.",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T17",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 263,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOqUo",
+      "synced": "5a73f6ce224e29ae"
+    },
+    {
+      "key": "T18",
+      "project": "public",
+      "parent": "P2",
+      "title": "Flowers: list items and details carry extra fields",
+      "body": "Flower list items carry `seed` and `isDelivered`; flower details carry `seedId` and `isDelivered`. None is in the allowed set (D-042, D-043).\n\nRed tests: `productsList.test.js` flowers \"no field outside the allowed set\"; `productDetails.test.js` flower \"no field outside …\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T18",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 264,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOqbs",
+      "synced": "9b7c9020f0624484"
+    },
+    {
+      "key": "T19",
+      "project": "public",
+      "parent": "P2",
+      "title": "Flowers: no `mainImage`",
+      "body": "Flower list items and details have no `mainImage` link (D-042, D-043).\n\nRed tests: `productsList.test.js` flowers \"every required field\" / \"mainImage is a link\"; `productDetails.test.js` flower \"required field mainImage\" / \"mainImage is a link\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T19",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 265,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOqi4",
+      "synced": "a39aaec1f4961977"
+    },
+    {
+      "key": "T20",
+      "project": "public",
+      "parent": "P2",
+      "title": "Flower details: no `state` for guests and participants",
+      "body": "Published flower details sent to guests and participants lack `state` (D-043).\n\nRed tests: `productDetails.test.js` \"… published flower with the required field state\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T20",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 266,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOqp0",
+      "synced": "f236235da8bc7325"
+    },
+    {
+      "key": "T21",
+      "project": "public",
+      "parent": "P2",
+      "title": "Fruits: authors have no `id`",
+      "body": "Fruit authors are `{name, surname}`; they should be exactly `{id, name, surname}` (D-042, D-043).\n\nRed tests: `productsList.test.js` fruits authors; `productDetails.test.js` fruit author tests.",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T21",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 267,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOqyo",
+      "synced": "efaa2c81ffde3768"
+    },
+    {
+      "key": "T23",
+      "project": "public",
+      "parent": "P2",
+      "title": "Fruit details: authors and evaluators can't open an unpublished fruit",
+      "body": "A fruit's authors, and the evaluators of its hackathon, get `403` for an unpublished fruit; they should get its details (D-043, D-046).\n\nRed tests: `productDetails.test.js` B5 and B20 fruit author tests, B21 fruit tests.",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T23",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 268,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOq80",
+      "synced": "5e1bc8480df6e844"
+    },
+    {
+      "key": "T24",
+      "project": "public",
+      "parent": "P2",
+      "title": "Fruit details: no `driveLink` or `template` for staff, authors and evaluators",
+      "body": "Fruit details never include `driveLink` and `template`, also for staff, the fruit's authors and the evaluators of its hackathon (D-043, D-046).\n\nRed tests: `productDetails.test.js` B17 \"required field driveLink / template\", B23 fruit tests.",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T24",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 269,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOrFg",
+      "synced": "d1e8a8fac66ad3c1"
+    },
+    {
+      "key": "T25",
+      "project": "public",
+      "parent": "P2",
+      "title": "Flower details: the flower's seed isn't the seed's own details",
+      "body": "The flower's `seed` should be what `GET /seeds/{id}` returns to the same viewer (D-044). It lacks `state` and `mainImage`, and `driveLink`/`template` for staff and the seed's authors.\n\nRed tests: `productDetails.test.js` B12.",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T25",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 270,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOrPQ",
+      "synced": "a0cbf23271d150db"
+    },
+    {
+      "key": "T26",
+      "project": "public",
+      "parent": "P2",
+      "title": "Fruit details: the fruit's flower and seed aren't their own details",
+      "body": "The fruit's `flower` (without its `seed`) and `seed` (plus `description`) should be their own details for the same viewer (D-044). The flower lacks `concept`, `state`, `mainImage`, `authors` and carries `isDelivered`; the seed has only `id`, `title`, `authors`.\n\nRed tests: `productDetails.test.js` B15, B16.",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T26",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 271,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOrYM",
+      "synced": "c6101a28b5fda2c3"
+    },
+    {
+      "key": "T28",
+      "project": "public",
+      "parent": "P2",
+      "title": "Products list: evaluators don't get their hackathon's unpublished flowers",
+      "body": "The evaluator of a hackathon should get its flowers in every state (D-046); they get only the published ones.\n\nRed tests: `productsList.test.js` \"the evaluator of a hackathon gets its flowers of every state\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T28",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 272,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOrjk",
+      "synced": "37645d5259e9d5bd"
+    },
+    {
+      "key": "T30",
+      "project": "public",
+      "parent": "P2",
+      "title": "Products list: evaluators don't get their hackathon's unpublished fruits",
+      "body": "The evaluator of a hackathon should get its fruits in every state (D-046); they get only the published ones.\n\nRed tests: `productsList.test.js` \"the evaluator of a hackathon gets its fruits of every state\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "T30",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 273,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFOru4",
+      "synced": "83a33f5b2f36016a"
     },
     {
       "key": "H1",
