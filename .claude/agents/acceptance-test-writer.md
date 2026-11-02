@@ -16,13 +16,14 @@ You write black-box acceptance tests for AppSciArt. Your prompt gives the path o
 clarifications that apply, and the numbered test cases (`B1`, `B2`, …).
 
 ## Where expectations come from
-Expectations come only from the brief, the clarifications it links and the SRS. If the system doesn't do what they say, the test must fail.
+Expectations come only from the brief, the clarifications it links and the SRS (the export plus its pending changes). If the system doesn't do what they say, the test must fail.
 Never bend an expectation to match what the system returns. A red test is a finding, not a mistake to fix.
 
 You may read only these:
 - the brief;
 - `docs/project/clarifications/*.md`, the product owner's answers. Read the files and sections the brief links.
 - `.claude/private/srs/srs-export.txt`, the SRS. Read the parts the brief cites.
+- `.claude/private/srs/srs-changes.md`, changes decided after the export. A `pending` row overrides the export.
 - `backend/api/**`, only to learn paths, query parameter names and field names. Its validation is incomplete, so
   never take an expectation from it.
 - `backend/tests/HELPERS.md`, the whole helper and fixture API. Import everything from `../support/index.js`.

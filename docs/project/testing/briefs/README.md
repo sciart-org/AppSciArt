@@ -15,7 +15,8 @@ The agent's fixed rules (allowed sources, style, run and report) live in the age
 # <ID> <use case name> → `backend/tests/acceptance/<file>.test.js`
 
 ## Requirement
-SRS IDs and where to find them in `srs-export.txt` (line numbers), plus the SRS text quoted.
+SRS IDs and where to find them in `srs-export.txt` (line numbers), plus the SRS text quoted. Note any pending
+change to it (`srs-changes.md`), with its source decision.
 
 ## Clarifications
 Links to the product owner's answers that apply (`docs/project/clarifications/<UC>.md`, sections), plus any
