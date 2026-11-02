@@ -13,16 +13,17 @@ Drafted 2026-10-17. Per-item status and commits live on the [production roadmap 
 - Not in Phase 0: push (ask first), release merge to `main` (after Phases 1–2), deleting local files (`.env.old_development`, `.Rhistory`, `fake.png`)
 
 ## Hackathon MVP (2026-11-03)
-Ongoing hackathon from CLOSED / PREPARING to FINISHED on pre-production (D-048).
-- [ ] Clarifications for UC-044, UC-047–064, UC-066, UC-067
+Ongoing hackathon from CLOSED / PREPARING to FINISHED on pre-production (D-048, D-049). Listed in work order.
+- [x] Product owner answers for the flow (D-049); per-UC clarification files after the meeting
+- [ ] Demo seeders: hackathon in CLOSED / PREPARING with seeds, evaluators and participants (3.10)
 - [ ] Journey fixture, brief and test (A6-journey)
 - [ ] Fixes for what the journey test shows red
 - [ ] Crash guards in the ongoing-hackathon socket handlers
-- [ ] Demo seeders: hackathon in CLOSED / PREPARING with seeds, evaluators and participants (3.10)
-- [ ] Walkthrough checklist (`testing/walkthrough-hackathon.md`), run locally; frontend fixes in the ongoing-hackathon screens (3.11)
+- [ ] Pre-production redeploy, demo seeders there, `.env.example` per package (3.4)
+- [ ] Walkthrough checklist (`testing/walkthrough-hackathon.md`), run on pre-production; frontend fixes in the ongoing-hackathon screens (3.11)
 - [ ] Security fixes for this flow (tracked privately)
-- [ ] Pre-production deploy and `.env.example` per package (3.4)
-- Verify: journey test green up to FINISHED; walkthrough passes locally and on pre-production
+- [ ] UC-065 submit rubric (cut first if time runs short)
+- Verify: journey test green up to FINISHED; walkthrough passes on pre-production
 
 ## Phase 1a — Acceptance tests from the SRS
 Black-box test safety net before any fix (D-012). Plan and steps: `testing/plan.md`.

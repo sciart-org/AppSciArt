@@ -51,7 +51,8 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-044 | 2026-10-30 | UC-007 | UC-007: related products in details are the related product's own details for the same viewer (flower `seed`; fruit `flower` without its `seed`, fruit `seed` plus the fruit's `description`). ([details](#d-044)) | related items of D-043 | in force |
 | D-045 | 2026-10-30 | UC-006/007 | Evaluators see products of every state in lists and details, like staff. `driveLink` and `template` stay for staff and the product's authors only, on every product and related item. | — | partly superseded by D-046 |
 | D-046 | 2026-10-30 | UC-006/007 | Evaluators see unpublished flowers and fruits only of the hackathons they evaluate, and get their `driveLink` and `template`. Seeds: like participants. Inspiring scientists get `driveLink` and `template` only of their own seeds. | evaluator part of D-045 | in force |
-| D-048 | 2026-11-01 | Priority | Hackathon MVP before the 2026-11-03 product owner meeting: an ongoing hackathon runs from CLOSED / PREPARING to FINISHED on pre-production, tested internally by the team. Phase 1a pauses after UC-006/007 and resumes after the meeting. ([details](#d-048)) | — | in force |
+| D-048 | 2026-11-01 | Priority | Hackathon MVP before the 2026-11-03 product owner meeting: an ongoing hackathon runs from CLOSED / PREPARING to FINISHED on pre-production, tested internally by the team. Phase 1a pauses after UC-006/007 and resumes after the meeting. ([details](#d-048)) | — | partly superseded by D-049 |
+| D-049 | 2026-11-02 | Product owner | Hackathon MVP flow answered (PREPARING → FINISHED): staff drive phases and can force them, only staff mark assistance, any enrolled participant can enter, groups and teams each take a different seed, UC-065 in scope but not needed to end. Milestone plan compressed. ([details](#d-049)) | D-048 (scope: UC-065 added) | in force |
 
 ## Details
 
@@ -121,3 +122,55 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 - Only bugs the journey test or the walkthrough show are fixed now.
 - Priority over D-012 (tests before any fix) for this milestone only.
 - Board: the milestone's items carry the label `hackathon-mvp`.
+
+### D-049
+Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications/` after the meeting (D-034).
+
+**General**
+- The journey test checks postconditions only; exact shapes stay for the per-UC tests (exception to D-022).
+- Facilitators, designers and admins advance phases, one at a time, never backwards.
+- Staff control the phases, not participants. Where a phase change only warns, the warning is in the UI; the API
+  allows it.
+
+**PREPARING (UC-044, UC-047, UC-057)**
+- Entering doesn't mark assistance; only staff set it, in any phase while the hackathon is ongoing. May change after
+  staff feedback.
+- Any enrolled participant can enter, assisting or not (BRU-048); assistance is only an indicator for staff.
+- Starting needs ≥1 enrolled participant (BRU-037).
+
+**Groups (UC-058, UC-048, UC-049, UC-059)**
+- ≥1 group. Each group has a different seed; seeds without a group are allowed but not preferred.
+- GROUP_WORK can't start with an assisting participant without a group (new rule) or a group without a voice
+  (BRU-032). A second voice replaces the first.
+- A map is readable by its members, staff and evaluators; other participants read only delivered maps of the
+  hackathons they're enrolled in.
+- GROUP_PRESENTATION can start with undelivered maps (UI warning only).
+
+**Ratings (UC-050, UC-052, UC-060)**
+- Only presented seeds are rated; ratings can change until submission.
+- A participant submits after all groups have presented, with every presented seed rated. Not every participant
+  must submit before TEAM_CREATION.
+- Ratings are seen by staff (facilitators, designers, admins) and evaluators; each participant sees their own.
+
+**Teams and flowers (UC-061, UC-053, UC-054, UC-062)**
+- One seed per team; teams in the same hackathon can't share a seed; not every seed needs a team. May change later.
+- Same membership and speaker rules as groups.
+- A member sees the seed, its conceptual map(s) and the team's flower document, where the flower is filled in.
+- TEAM_PRESENTATION can start with undelivered flowers (UI warning only).
+
+**Rubrics and end (UC-063–067)**
+- One rubric per evaluator × delivered flower from the start of TEAM_PRESENTATION; each evaluator sees only theirs.
+- UC-065 (submit rubric) is in scope. Ending doesn't need submitted rubrics.
+- After FINISHED, evaluators can still open, edit and submit unsubmitted rubrics; a submitted one is read-only.
+- The management view shows evaluators the same as facilitators, read-only (BRU-025).
+- The hackathon ends only from TEAM_PRESENTATION, after at least one team has presented.
+
+**SRS changes:** Q2, Q4, Q5, Q12, Q19, Q21 and Q23 change SRS items; recorded with the SRS export.
+
+**Milestone plan (time is short)**
+- Order: demo seeder first (local, then pre-prod), journey test and fix loop, redeploy, walkthrough on pre-prod as
+  the rehearsal. The local walkthrough is dropped.
+- Cut first to last: UC-065, #229, frontend cleanups not seen in the walkthrough, security fixes for this flow
+  (tracked privately; if cut, the pre-prod URL stays within the team). Never cut: demo seeder, deploy, flow reaching
+  FINISHED.
+- Fallback: if pre-prod fails on 2026-11-03, the seeded flow is demoed locally.
