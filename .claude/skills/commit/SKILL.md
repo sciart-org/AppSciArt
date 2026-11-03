@@ -55,3 +55,9 @@ Closes #179
   the output and stop. If the hook reformats files that stay modified afterwards, point them out.
 - Afterwards, show `git log --oneline -<n>` and `git status --short`.
 - Never push, amend, rebase, or force anything unless the user asks.
+
+## 5. Log the step
+- Right after the batch, run `/log-step` for the board item in the trailer, without asking first. The approved commit
+  plan already covers it.
+- Skip it only when the batch was log-step's own `chore: update board status` commit.
+- A PostToolUse hook (`.claude/hooks/log-step-after-commit.sh`) reminds Claude of this after every `git commit`.
