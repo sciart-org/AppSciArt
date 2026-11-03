@@ -88,7 +88,16 @@ export default function CreateTeams() {
     const teamId = seedId === null ? null : team?.id;
     const currentTeamId = participant?.teamFlower?.id ?? null;
     if (currentTeamId === teamId) return;
-    updateParticipant(participant.userProfile.id, { teamId });
+    updateParticipant(
+      participant.userProfile.id,
+      { teamId },
+      {
+        optimisticChanges: {
+          teamFlower: teamId ? { id: teamId, seed: { id: seedId } } : null,
+          isTeamSpeaker: false,
+        },
+      },
+    );
   };
 
   const handleFlowerChange = (participant, seedId) => {

@@ -126,7 +126,11 @@ export default function HackathonRouter() {
   const updateParticipant = async (
     participantId,
     newParticipant,
-    { broadcast = "ALL", optimistic = true } = {},
+    {
+      broadcast = "ALL",
+      optimistic = true,
+      optimisticChanges = newParticipant,
+    } = {},
   ) => {
     let previousHackathon;
     if (optimistic) {
@@ -134,7 +138,7 @@ export default function HackathonRouter() {
       const existing = hackathon.participations.find(
         (p) => p.userProfile.id === participantId,
       );
-      const merged = { ...existing, ...newParticipant };
+      const merged = { ...existing, ...optimisticChanges };
       updateParticipationState(merged);
     }
     await fetcher({

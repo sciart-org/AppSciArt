@@ -53,7 +53,17 @@ export default function CreateGroups() {
   const changeSeed = (participant, seedId, group) => {
     const groupId = seedId === null ? null : group?.id;
     if (participant?.groupSeed?.id === groupId) return;
-    updateParticipant(participant.userProfile.id, { groupId });
+    updateParticipant(
+      participant.userProfile.id,
+      { groupId },
+      {
+        optimisticChanges: {
+          groupSeed: groupId ? { id: seedId } : null,
+          conceptualMap: groupId ? { id: groupId } : {},
+          isGroupVoice: false,
+        },
+      },
+    );
   };
 
   const handleSeedChange = (participant, seedId) => {
