@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import useWebSockets from "../../utils/useWebSockets";
 import { HackathonContext } from "./components/HackathonContext";
 import PrepareHackathon from "./adminPhases/PrepareHackathon";
@@ -53,6 +53,16 @@ export default function HackathonManagement({
     hackathonPhases.indexOf(hackathon.phase),
   );
 
+  const exploringGroupsRef = useRef(exploringGroups);
+  useEffect(() => {
+    exploringGroupsRef.current = exploringGroups;
+  }, [exploringGroups]);
+
+  const coCreationTeamsRef = useRef(coCreationTeams);
+  useEffect(() => {
+    coCreationTeamsRef.current = coCreationTeams;
+  }, [coCreationTeams]);
+
   const fetchExploringGroups = async () => {
     await fetcher({
       url: `hackathons/${hackathon.id}/clusters/${0}/exploring-groups`,
@@ -104,7 +114,10 @@ export default function HackathonManagement({
     });
 
     socket.on("group:updated", (groupChanges) => {
-      if (!exploringGroups.map((g) => g.id).includes(groupChanges.id)) {
+      const isKnownGroup = exploringGroupsRef.current.some(
+        (g) => g.id === groupChanges.id,
+      );
+      if (!isKnownGroup) {
         fetchExploringGroups();
         return;
       }
@@ -116,7 +129,10 @@ export default function HackathonManagement({
     });
 
     socket.on("team:updated", (teamChanges) => {
-      if (!coCreationTeams.map((f) => f.id).includes(teamChanges.id)) {
+      const isKnownTeam = coCreationTeamsRef.current.some(
+        (t) => t.id === teamChanges.id,
+      );
+      if (!isKnownTeam) {
         fetchCoCreationTeams();
         return;
       }
