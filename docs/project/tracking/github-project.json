@@ -1028,7 +1028,7 @@
       "kind": "Test",
       "status": "Todo",
       "ref": "A6",
-      "commits": "",
+      "commits": "5aa7e6d",
       "labels": [
         "test",
         "hackathon-mvp"
@@ -1036,7 +1036,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 218,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrHds",
-      "synced": "fd1265e3711b600f"
+      "synced": "15ee1f00c491c998"
     },
     {
       "key": "A6-rbac",
@@ -1521,9 +1521,9 @@
       "body": "The internal staff role object isn't the same as `ROLES.STAFF`, so role-keyed scope maps fall back to the default scope. Effects: next-phase lookup fails on planned hackathons, edition-name uniqueness ignores unpublished editions. Key the maps by role name.",
       "phase": "2",
       "kind": "Bug",
-      "status": "Todo",
+      "status": "In progress",
       "ref": "H3",
-      "commits": "",
+      "commits": "54052ba",
       "labels": [
         "bug",
         "hackathon-mvp"
@@ -1531,7 +1531,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 227,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrJsQ",
-      "synced": "6e1da2ac5ce857bf"
+      "synced": "d5f225a1758bbf8d"
     },
     {
       "key": "H4",
@@ -1630,6 +1630,26 @@
       "issueNumber": 232,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrKsw",
       "synced": "31a358dd2573bf8c"
+    },
+    {
+      "key": "W4",
+      "project": "public",
+      "parent": "P2",
+      "title": "Rating submission can be lost without notice",
+      "body": "The participant screen shows the ratings as submitted as soon as it sends them. If the server rejects them, nothing is stored and the participant isn't told. Mark them as submitted only when the server confirms. Found in the hackathon walkthrough (D-051).",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "W4",
+      "commits": "",
+      "labels": [
+        "bug",
+        "hackathon-mvp"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 276,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhFqPPM",
+      "synced": "09cba583d824203e"
     },
     {
       "key": "3.1",
@@ -1783,16 +1803,16 @@
       "body": "Sequelize seeders that prepare a demo hackathon in CLOSED / PREPARING: published seeds of its edition linked to it, evaluators assigned, test participants enrolled. Local (`development`) and pre-production, without running on production (D-048).",
       "phase": "3",
       "kind": "Foundation",
-      "status": "Todo",
+      "status": "In progress",
       "ref": "3.10",
-      "commits": "",
+      "commits": "888ea91",
       "labels": [
         "hackathon-mvp"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 274,
       "itemId": "PVTI_lADODEgGw84BoNdFzhFOy0g",
-      "synced": "4d9712fa6d055d30"
+      "synced": "5b4f65ced0741f10"
     },
     {
       "key": "3.11",
@@ -1802,16 +1822,16 @@
       "body": "`docs/project/testing/walkthrough-hackathon.md`: the ongoing hackathon from PREPARING to FINISHED as SRS steps per actor (facilitator, evaluator, participants), run by hand locally and on pre-production. Doubles as the meeting script (D-048).",
       "phase": "3",
       "kind": "Foundation",
-      "status": "Todo",
+      "status": "In progress",
       "ref": "3.11",
-      "commits": "",
+      "commits": "e2f32d1, 68e4fef, 05f7c5e",
       "labels": [
         "hackathon-mvp"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 275,
       "itemId": "PVTI_lADODEgGw84BoNdFzhFOy9c",
-      "synced": "153b559b237447cc"
+      "synced": "ac3fc4c478424a4f"
     },
     {
       "key": "4.1",

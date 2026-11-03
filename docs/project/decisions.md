@@ -52,7 +52,9 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-045 | 2026-10-30 | UC-006/007 | Evaluators see products of every state in lists and details, like staff. `driveLink` and `template` stay for staff and the product's authors only, on every product and related item. | — | partly superseded by D-046 |
 | D-046 | 2026-10-30 | UC-006/007 | Evaluators see unpublished flowers and fruits only of the hackathons they evaluate, and get their `driveLink` and `template`. Seeds: like participants. Inspiring scientists get `driveLink` and `template` only of their own seeds. | evaluator part of D-045 | in force |
 | D-048 | 2026-11-01 | Priority | Hackathon MVP before the 2026-11-03 product owner meeting: an ongoing hackathon runs from CLOSED / PREPARING to FINISHED on pre-production, tested internally by the team. Phase 1a pauses after UC-006/007 and resumes after the meeting. ([details](#d-048)) | — | partly superseded by D-049 |
-| D-049 | 2026-11-02 | Product owner | Hackathon MVP flow answered (PREPARING → FINISHED): staff drive phases and can force them, only staff mark assistance, any enrolled participant can enter, groups and teams each take a different seed, UC-065 in scope but not needed to end. Milestone plan compressed. ([details](#d-049)) | D-048 (scope: UC-065 added) | in force |
+| D-049 | 2026-11-02 | Product owner | Hackathon MVP flow answered (PREPARING → FINISHED): staff drive phases and can force them, only staff mark assistance, any enrolled participant can enter, groups and teams each take a different seed, UC-065 in scope but not needed to end. Milestone plan compressed. ([details](#d-049)) | D-048 (scope: UC-065 added) | partly superseded by D-051 |
+| D-050 | 2026-11-03 | Tooling | Seed data is organised by purpose, not by environment: one sample dataset (`seeders/sample/`, built from shared factories, real Drive folders) for development and pre-production, rebuilt with `db:reset`; production gets no sample data. ([details](#d-050)) | — | in force |
+| D-051 | 2026-11-03 | Priority | Hackathon MVP order changed on meeting day: a local walkthrough found and fixed the flow bugs, and the journey test moves to after the meeting. ([details](#d-051)) | D-049 (milestone order) | in force |
 
 ## Details
 
@@ -174,3 +176,22 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
   (tracked privately; if cut, the pre-prod URL stays within the team). Never cut: demo seeder, deploy, flow reaching
   FINISHED.
 - Fallback: if pre-prod fails on 2026-11-03, the seeded flow is demoed locally.
+
+### D-050
+- Why: the old seeders were split by environment, mixed real catalog data with fake states, depended on each other
+  through hard-coded IDs, and pre-production (`NODE_ENV=production` on the server) had no safe folder.
+- `NODE_ENV` → seeders folder (`.sequelizerc`): `development` and `pre-production` → `sample/`, `testing` →
+  `testing/`, `production` → `production/` (empty). `sampleData.js` refuses to load in any other environment.
+- Seeder runs are recorded (`seederStorage: 'sequelize'`), so `db:reset` (undo all, seed all) and
+  `db:reset:preprod` rebuild the dataset, Drive folders included.
+- Pre-production is seeded from a local `.env.pre-production` (`NODE_ENV=pre-production`); `.env.production` is
+  the real production.
+- The previous seeders stay in `seeders/old/` as reference; later steps fold them into the sample dataset and share
+  the factories with the test fixtures.
+
+### D-051
+- The journey test, brief and fix loop of D-049 didn't fit before the meeting. Instead, the team walked the seeded
+  hackathon locally from PREPARING to FINISHED and fixed what blocked it (#227, #275).
+- The pre-production walkthrough stays the rehearsal. The journey test (#218) comes after the meeting.
+- Routine for every run: `db:reset`, restart the backend (presentation and rating state is in memory, #229), reload
+  every tab and sign in again.

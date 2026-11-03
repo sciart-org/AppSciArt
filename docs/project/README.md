@@ -9,7 +9,9 @@ Security work is tracked privately and only described here in generic terms unti
 ## Now
 - **Milestone:** Hackathon MVP for 2026-11-03 (D-048, `roadmap.md`)
 - **Paused:** Phase 1a after UC-006 / UC-007; next there: FRQ-001 authentication
-- **Next:** clarifications for the ongoing-hackathon use cases, then the journey test
+- **Done:** demo sample data (`db:reset`); local walkthrough reaches FINISHED after four flow fixes
+- **Next:** deploy and seed pre-production, walkthrough there; then socket session handling; the journey test
+  after the meeting (D-051)
 
 ## Phases
 | Phase | Scope | Issue | Status |
