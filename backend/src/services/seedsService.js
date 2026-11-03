@@ -21,9 +21,12 @@ const getSeedsWithImage = async (seeds) => {
 }
 
 export const getFullSeedsDetails = async (seeds) => {
-  const seedsWithTemplate = await getSeedsWithTemplate(seeds)
-  const seedsWithTemplateAndImage = await getSeedsWithImage(seedsWithTemplate)
-  return seedsWithTemplateAndImage
+  const [seedsWithTemplate, seedsWithImage] = await Promise.all([
+    getSeedsWithTemplate(seeds),
+    getSeedsWithImage(seeds)
+  ])
+  const imageBySeedId = new Map(seedsWithImage.map(seed => [seed.id, seed.mainImage]))
+  return seedsWithTemplate.map(seed => ({ ...seed, mainImage: imageBySeedId.get(seed.id) ?? null }))
 }
 
 export async function getSeedsByEdition (userId, editionId) {
