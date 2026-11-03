@@ -1,13 +1,30 @@
 .team-presentation-container {
   width: 80vw;
-  height: 35rem;
+  max-width: 100%;
+  min-height: 35rem;
   border: solid 1px var(--aster-dark-gray);
   border-radius: 1rem;
   margin-inline: auto;
-  padding-inline: 2rem;
+  padding: 2rem;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
   box-sizing: border-box;
   align-items: center;
+}
+
+.team-presentation-flower {
+  height: min(50vh, 30rem);
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.team-presentation-details {
+  flex: 1 1 20rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .member-name {

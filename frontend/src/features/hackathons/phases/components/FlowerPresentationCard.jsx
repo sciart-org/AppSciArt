@@ -1,5 +1,6 @@
 import Flower from "../../../../components/sciartProducts/Flower";
 import { getFullUserName } from "../../../../utils/commonUtils";
+import "../TeamPresentation.css";
 
 const SeedFlowerTitles = ({ flowerTitle, seedTitle }) => {
   return (
@@ -53,8 +54,8 @@ export default function FlowerPresentationCard({
 }) {
   return (
     <div className="team-presentation-container">
-      <Flower style={{ height: "50vh", marginRight: "2rem" }} />
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <Flower className="team-presentation-flower" />
+      <div className="team-presentation-details">
         <SeedFlowerTitles flowerTitle={flowerTitle} seedTitle={seedTitle} />
         <SeedFlowerAuthors
           flowerAuthors={flowerAuthors}
