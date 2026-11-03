@@ -2,7 +2,7 @@ import * as service from '../services/userHackathonsService.js'
 import { withController } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import { validateHackathonIsOpen } from '../validators/hackathonValidators.js'
-import { broadcastParticipationUpdate } from '../sockets/hackathonPhases.js'
+import { broadcastParticipationUpdate, emitGroupsChangedToStaff, emitTeamsChangedToStaff } from '../sockets/hackathonPhases.js'
 import { validateAuthenticated, validateStaff } from '../middlewares/authMiddleware.js'
 
 export function getUserEnrolledHackathons (req, res) {
@@ -71,6 +71,8 @@ export const updateParticipation = withController(async (req, res, addAfterCommi
   const updatedParticipation = await service.updateParticipationByUserAndHackathon(currentUser.id, userId, hackathonId, participation)
 
   addAfterCommit(() => broadcastParticipationUpdate(broadcast, hackathonId, updatedParticipation.id, updatedParticipation))
+  if (participation.groupId !== undefined) addAfterCommit(() => emitGroupsChangedToStaff(hackathonId))
+  if (participation.teamId !== undefined) addAfterCommit(() => emitTeamsChangedToStaff(hackathonId))
 
   return res.status(200).send(updatedParticipation)
 })

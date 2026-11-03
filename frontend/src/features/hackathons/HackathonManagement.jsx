@@ -127,10 +127,6 @@ export default function HackathonManagement({
       );
     });
 
-    socket.on("group:removed", (groupId) => {
-      setExploringGroups((prev) => prev.filter((g) => g.id !== groupId));
-    });
-
     socket.on("error_message", (error) => {
       showErrorMessage(error);
     });

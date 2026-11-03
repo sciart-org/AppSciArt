@@ -8,7 +8,6 @@ import * as ParticipationsRepository from '../repositories/participationsReposit
 import * as UsersRepository from '../repositories/usersRepository.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 import * as HackathonsRepository from '../repositories/hackathonsRepository.js'
-import { emitGroupRemovedToStaff, emitGroupUpdateToStaff, emitTeamUpdateToStaff } from '../sockets/hackathonPhases.js'
 import * as FlowersRepository from '../repositories/flowersRepository.js'
 import { getFlowerRubrics } from './driveService.js'
 import { toPlainObject } from './mappers/utils.js'
@@ -168,7 +167,6 @@ const validateGroupIsValid = async (hackathonState, participation, body) => {
 
   if (body.groupId) {
     await validateConceptualMapIsFromHackathon(body.groupId, hackathonId)
-    emitGroupUpdateToStaff(hackathonId, null, {})
   }
 
   if (body.isGroupVoice) {
@@ -191,7 +189,6 @@ const validateTeamIsValid = async (hackathonState, participation, body) => {
 
   if (body.teamId) {
     await validateFlowerIsFromHackathon(body.teamId, hackathonId)
-    emitTeamUpdateToStaff(hackathonId, null, {})
   }
 
   if (body.isTeamSpeaker) {
@@ -219,9 +216,7 @@ const removeGroupIfEmpty = async (groupId) => {
 
   if (group?.participations.length === 1) {
     await GroupsAndTeamsRepository.deleteConceptualMap(groupId)
-    return true
   }
-  return false
 }
 
 async function updateParticipation (currentUserId, participation, body) {
@@ -236,10 +231,7 @@ async function updateParticipation (currentUserId, participation, body) {
   const participationBody = { clusterNumber, roles, interests, isGroupVoice, isTeamSpeaker, hasConfirmedAssistance, groupId, teamId, fruitId }
 
   if (groupId === null && hackathonPhase !== 'GROUP_CREATION') {
-    const removed = await removeGroupIfEmpty(previousGroupId)
-    if (removed) {
-      emitGroupRemovedToStaff(hackathonId, previousGroupId)
-    }
+    await removeGroupIfEmpty(previousGroupId)
   }
 
   if (Object.values(participationBody).some(v => v !== undefined)) {
