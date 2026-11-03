@@ -47,12 +47,11 @@ export default function ActiveHackathon() {
   useEffect(() => {
     const shouldNotConnect =
       !socket || !participation || !participation?.hackathonId;
-    const shouldNotJoinCluster = participation?.clusterNumber == null;
 
-    if (shouldNotConnect || shouldNotJoinCluster) return;
+    if (shouldNotConnect) return;
 
-    const clusterRoom = `${participation?.hackathonId}/cluster/${participation?.clusterNumber}`;
-    socket.emit("join_room", clusterRoom);
+    const presentationsRoom = `${participation.hackathonId}/cluster/0`;
+    socket.emit("join_room", presentationsRoom);
   }, [participation, socket]);
 
   useEffect(() => {
