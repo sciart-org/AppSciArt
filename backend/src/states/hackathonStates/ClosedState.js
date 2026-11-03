@@ -76,12 +76,25 @@ export class ClosedState extends HackathonState {
   }
 
   async advance () {
+    const currentPhase = this.hackathon.phase
     const nextPhase = this.getNextPhase()
     const nextState = this.getNextState()
 
     this.hackathon.phase = nextPhase
     this.hackathon.state = nextState
 
+    if (nextPhase !== currentPhase) {
+      await this.setUpPhase(nextPhase)
+    }
+
+    if (nextState === 'FINISHED') {
+      return new FinishedState(this.hackathon)
+    }
+
+    return this
+  }
+
+  async setUpPhase (nextPhase) {
     if (nextPhase === 'GROUP_CREATION') {
       await GroupsAndTeamsService.createConceptualMapsOfHackathon(this.hackathon.id)
     } else if (nextPhase === 'GROUP_WORK') {
@@ -99,12 +112,6 @@ export class ClosedState extends HackathonState {
       await FlowersService.createHackathonFlowerRubrics(this.hackathon.id)
       await FlowersService.setHackathonFlowersToInReview(this.hackathon.id)
     }
-
-    if (nextState === 'FINISHED') {
-      return new FinishedState(this.hackathon)
-    }
-
-    return this
   }
 
   getNextState () {
