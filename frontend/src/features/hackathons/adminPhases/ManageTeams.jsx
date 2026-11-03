@@ -191,7 +191,7 @@ export default function ManageTeams() {
           Team {selectedTeam.number} have submitted their flower!
         </h3>
         <TeamFlowerDoc />
-        {isCurrentPhase && (
+        {isCurrentPhase && !isEvaluatorOfHackathon && (
           <>
             <p>Do they need to modify it?</p>
             <AsterButton onClick={undeliverFlower}>
