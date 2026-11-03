@@ -52,7 +52,7 @@ export const UserProfile = sequelize.define(
     about: {
       type: DataTypes.STRING
     },
-    tags: {
+    tags: { // TODO: DELETE?
       type: DataTypes.ARRAY(DataTypes.STRING)
     },
     socialNetworks: {

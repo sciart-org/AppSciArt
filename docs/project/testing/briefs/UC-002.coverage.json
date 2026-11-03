@@ -1,0 +1,61 @@
+{
+  "B1": [
+    "UC-002 · guest gets an empty list when no edition exists"
+  ],
+  "B2": [
+    "UC-002 · guest gets an empty list when only not-announced editions exist"
+  ],
+  "B3": [
+    "UC-002 · guest sees announced, closed and published editions, each with its state"
+  ],
+  "B4": [
+    "UC-002 · guest never sees not-announced editions"
+  ],
+  "B5": [
+    "UC-002 · participant sees exactly the same editions as a guest"
+  ],
+  "B6": [
+    "UC-002 · designer also sees not-announced editions without a filter",
+    "UC-002 · facilitator also sees not-announced editions without a filter",
+    "UC-002 · administrator also sees not-announced editions without a filter"
+  ],
+  "B7": [
+    "UC-002 · guest asking for not-announced editions gets 401"
+  ],
+  "B8": [
+    "UC-002 · participant asking for not-announced editions gets 403"
+  ],
+  "B9": [
+    "UC-002 · designer asking for not-announced editions gets only not-announced editions",
+    "UC-002 · facilitator asking for not-announced editions gets only not-announced editions",
+    "UC-002 · administrator asking for not-announced editions gets only not-announced editions"
+  ],
+  "B10": [
+    "UC-002 · IRQ-005 · guest items have no field outside the public set",
+    "UC-002 · IRQ-005 · guest items have every required field"
+  ],
+  "B11": [
+    "UC-002 · IRQ-005 · participant items have no field outside the public set, so no driveLink",
+    "UC-002 · IRQ-005 · participant items have every required field"
+  ],
+  "B12": [
+    "UC-002 · IRQ-005 · designer items have no field outside the public set plus driveLink",
+    "UC-002 · IRQ-005 · facilitator items have no field outside the public set plus driveLink",
+    "UC-002 · IRQ-005 · administrator items have no field outside the public set plus driveLink",
+    "UC-002 · IRQ-005 · designer items have every required field and driveLink",
+    "UC-002 · IRQ-005 · facilitator items have every required field and driveLink",
+    "UC-002 · IRQ-005 · administrator items have every required field and driveLink"
+  ],
+  "B13": [
+    "UC-002 · IRQ-005 · name, year and short description are the edition's own",
+    "UC-002 · IRQ-005 · logo is a link"
+  ],
+  "B14": [
+    "UC-002 · BRU-004 · designer sees a not-announced edition without short description or logo listed",
+    "UC-002 · BRU-004 · facilitator sees a not-announced edition without short description or logo listed",
+    "UC-002 · BRU-004 · administrator sees a not-announced edition without short description or logo listed",
+    "UC-002 · BRU-004 · designer sees the missing short description and logo absent or null",
+    "UC-002 · BRU-004 · facilitator sees the missing short description and logo absent or null",
+    "UC-002 · BRU-004 · administrator sees the missing short description and logo absent or null"
+  ]
+}

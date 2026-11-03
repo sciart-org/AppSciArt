@@ -1,0 +1,7 @@
+{
+  "all": true,
+  "include": ["src/**"],
+  "exclude": ["src/migrations/**", "src/seeders/**"],
+  "reporter": ["text", "html"],
+  "reports-dir": "coverage"
+}

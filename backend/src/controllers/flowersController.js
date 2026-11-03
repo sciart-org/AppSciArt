@@ -9,7 +9,7 @@ export const getFlowers = withController(async (req, res) => {
   const hackathonId = req.query.hackathonId
   const currentUser = await UsersService.getCurrentUserProfile(req)
 
-  errorThrower(!checkExists(editionId) && !checkExists(hackathonId), 'Either an edition or hackathon must be provided')
+  errorThrower(!checkExists(editionId) && !checkExists(hackathonId), 'Either an edition or hackathon must be provided', 400)
   let flowers = []
 
   if (checkExists(editionId)) {

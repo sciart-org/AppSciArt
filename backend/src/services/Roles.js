@@ -19,9 +19,7 @@ export const ROLES = {
   PARTICIPANT: { name: ROLE_SCOPE_NAMES.PARTICIPANT, models: [] }
 }
 
-export const INTERNAL_BACKEND_ROLE = {
-  name: 'staff'
-}
+export const INTERNAL_BACKEND_ROLE = ROLES.STAFF
 
 export const getUserRole = async (userId, { hackathonId, editionId } = {}) => {
   if (!userId) return ROLES.PUBLIC

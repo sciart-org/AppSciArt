@@ -34,10 +34,26 @@ frontend/playwright/.auth/
 backend/node_modules
 backend/.env**
 backend/logs
+backend/coverage
+
+docs/*
+!docs/diagrams/
+!docs/project/
+docs/memoir
 
 node_modules
+
+**/tmp
+
+.vscode/
+
 **/supabase/.branches
 **/supabase/.temp
 **/supabase/.env.keys
 **/supabase/.env.local
 **/supabase/.env.*.local
+
+# Claude Code personal settings and private notes
+CLAUDE.local.md
+.claude/settings.local.json
+.claude/private/

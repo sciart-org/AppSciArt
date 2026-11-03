@@ -21,9 +21,9 @@ export const Seed = sequelize.define(
       type: DataTypes.STRING
     },
     state: {
-      type: DataTypes.ENUM('IN_BLANK', 'IN_PROGRESS', 'IN_REVIEW', 'PUBLISHED'),
+      type: DataTypes.ENUM('IN_PROGRESS', 'IN_REVIEW', 'PUBLISHED'),
       allowNull: false,
-      defaultValue: 'IN_BLANK'
+      defaultValue: 'IN_PROGRESS'
     },
     branchesOfKnowledge: {
       type: DataTypes.ARRAY(DataTypes.STRING)
@@ -94,7 +94,7 @@ Seed.associate = (db) => {
   Seed.addScope('withEdition', (editionId) => ({
     include: [
       {
-        model: Edition.unscoped(),
+        model: Edition.unscoped(), // TODO
         where: editionId ? { id: editionId } : null,
         attributes: [],
         through: { attributes: [] }

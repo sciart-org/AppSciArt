@@ -14,14 +14,14 @@ export const Participation = sequelize.define(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
-    clusterNumber: {
+    clusterNumber: { // TODO: DELETE
       type: DataTypes.INTEGER
     },
     roles: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false
     },
-    interests: {
+    interests: { // TODO: DELETE
       type: DataTypes.TEXT
     },
     isGroupVoice: {
@@ -173,6 +173,7 @@ Participation.associate = (db) => {
         },
         include: {
           model: Seed.scope([isAdmin ? 'staff' : 'public', 'withAuthors']),
+          // TODO
           attributes: {
             exclude: ['state', 'branchesOfKnowledge']
           },
@@ -190,6 +191,7 @@ Participation.associate = (db) => {
         },
         include: {
           model: Seed.scope([isAdmin ? 'staff' : 'public', 'withAuthors']),
+          // TODO
           attributes: {
             exclude: ['state', 'branchesOfKnowledge']
           }

@@ -3,11 +3,10 @@
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface, Sequelize) {
   const userProfileIds = [
-    'e4a07965-e4eb-4674-bbd4-4b81df4f9b2c',
-    '9d84a3ac-46a1-4760-98c4-bf49d7638f68',
-    'da12b6f6-abf6-4d69-9881-36c06c9c0d24',
-    '1cdafd67-6cfc-4f00-942b-b22e4e01fddf',
-    'b50658b8-5cab-4a1a-bd00-17f937376207'
+    '16df78a0-c87a-4dde-a87b-d14ec76041a1',
+    '871418dd-0afb-4d27-adb0-e5ad6fda3d8c',
+    'b31b8167-ed71-4d3f-912a-e6b513a58c90',
+    'e2fbf798-5235-4796-9622-8e92ca020e97'
   ]
 
   /*

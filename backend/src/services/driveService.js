@@ -355,7 +355,8 @@ export const createDriveHackathon = async (editionDriveLink, internalName, logo)
   await Promise.all([
     createFolderGeneric('flowers', hackathonFolder.id),
     uploadImg(logo, driveLink),
-    createEmptyDoc(hackathonFolder.id, 'flowerTemplate')
+    createEmptyDoc(hackathonFolder.id, 'flowerTemplate'),
+    createEmptyDoc(hackathonFolder.id, 'rubricTemplate')
   ])
   return driveLink
 }
