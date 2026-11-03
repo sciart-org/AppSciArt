@@ -99,9 +99,9 @@ export async function getParticipation (userId, hackathonId) {
   return await getParticipationById(userId, participation.id)
 }
 
-export async function getEvaluatorDetails (user, hackathonId) {
+export async function getEvaluatorDetails (user, hackathonId, { withRubrics = false } = {}) {
   const isEvaluator = await checkHasRole(user.id, ROLES.EVALUATOR, { hackathonId })
-  if (!isEvaluator) return { isEvaluator }
+  if (!isEvaluator || !withRubrics) return { isEvaluator }
 
   const hackathonFlowers = await FlowersRepository.getFlowersOfHackathon(hackathonId, { role: ROLES.EVALUATOR })
   const flowers = hackathonFlowers

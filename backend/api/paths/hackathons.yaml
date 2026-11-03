@@ -223,6 +223,12 @@ evaluatorsMe:
         schema:
           type: string
           format: uuid
+      - name: withRubrics
+        in: query
+        required: false
+        description: Also return the evaluator's rubric link for each flower (looked up in Google Drive)
+        schema:
+          type: boolean
     responses:
       "200":
         description: Evaluator details

@@ -52,7 +52,7 @@ export default function ManageTeamPresentations() {
 
   useEffect(() => {
     fetcher({
-      url: `hackathons/${hackathon?.id}/evaluators/me`,
+      url: `hackathons/${hackathon?.id}/evaluators/me?withRubrics=true`,
       onSuccess: (data) => setFlowerRubrics(data.flowers),
     });
   }, []);

@@ -46,7 +46,8 @@ export const getMyEvaluatorRole = withController(async (req, res) => {
   const currentUser = await validateAuthenticated(req)
 
   const { hackathonId } = req.params
-  const evaluator = await service.getEvaluatorDetails(currentUser, hackathonId)
+  const withRubrics = req.query.withRubrics === 'true'
+  const evaluator = await service.getEvaluatorDetails(currentUser, hackathonId, { withRubrics })
 
   return res.status(200).send(evaluator)
 })
