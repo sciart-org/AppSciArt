@@ -1023,7 +1023,7 @@
       "project": "public",
       "parent": "P1a",
       "title": "Acceptance tests: full hackathon journey",
-      "body": "One test through the API and sockets only: edition created → announced → scientist invited → seed → hackathon → announced → participants join → closed → started → groups → maps → presentations + ratings → teams → flowers → presentations → rubrics → ended. Shows the first broken step. Step A6, testing plan §4.9.",
+      "body": "One test through the API and sockets only, from a hackathon in CLOSED / PREPARING to FINISHED: started → groups → maps → presentations + ratings → teams → flowers → presentations → rubrics → ended. Shows the first broken step. Gate for the production deploy (D-052). Step A6, testing plan §4.9.",
       "phase": "1a",
       "kind": "Test",
       "status": "Todo",
@@ -1031,12 +1031,13 @@
       "commits": "5aa7e6d",
       "labels": [
         "test",
-        "hackathon-mvp"
+        "hackathon-mvp",
+        "hackathon-prod"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 218,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrHds",
-      "synced": "15ee1f00c491c998"
+      "synced": "280cffb23f6f6c9c"
     },
     {
       "key": "A6-rbac",
@@ -1545,12 +1546,13 @@
       "ref": "H4",
       "commits": "",
       "labels": [
-        "bug"
+        "bug",
+        "hackathon-prod"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 228,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrJ5I",
-      "synced": "a5fef57700a1578d"
+      "synced": "454f5de5f6ab0cca"
     },
     {
       "key": "H5",
@@ -1718,12 +1720,13 @@
       "ref": "3.4",
       "commits": "",
       "labels": [
-        "hackathon-mvp"
+        "hackathon-mvp",
+        "hackathon-prod"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 236,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrLfc",
-      "synced": "dbd5a8f12bb4277c"
+      "synced": "06df805e1dd5213d"
     },
     {
       "key": "3.5",
@@ -1803,7 +1806,7 @@
       "body": "Sequelize seeders that prepare a demo hackathon in CLOSED / PREPARING: published seeds of its edition linked to it, evaluators assigned, test participants enrolled. Local (`development`) and pre-production, without running on production (D-048).",
       "phase": "3",
       "kind": "Foundation",
-      "status": "In progress",
+      "status": "Done",
       "ref": "3.10",
       "commits": "888ea91",
       "labels": [
@@ -1812,26 +1815,27 @@
       "milestone": "v1.0.0",
       "issueNumber": 274,
       "itemId": "PVTI_lADODEgGw84BoNdFzhFOy0g",
-      "synced": "5b4f65ced0741f10"
+      "synced": "4e6735636f9ea11b"
     },
     {
       "key": "3.11",
       "project": "public",
       "parent": "P3",
       "title": "Hackathon walkthrough checklist",
-      "body": "`docs/project/testing/walkthrough-hackathon.md`: the ongoing hackathon from PREPARING to FINISHED as SRS steps per actor (facilitator, evaluator, participants), run by hand locally and on pre-production. Doubles as the meeting script (D-048).",
+      "body": "`docs/project/testing/walkthrough-hackathon.md`: the ongoing hackathon from PREPARING to FINISHED as SRS steps per actor (facilitator, evaluator, participants). Run by hand on pre-production before each production deploy (D-052).",
       "phase": "3",
       "kind": "Foundation",
       "status": "In progress",
       "ref": "3.11",
       "commits": "e2f32d1, 68e4fef, 05f7c5e, d2a1324..0b38e99",
       "labels": [
-        "hackathon-mvp"
+        "hackathon-mvp",
+        "hackathon-prod"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 275,
       "itemId": "PVTI_lADODEgGw84BoNdFzhFOy9c",
-      "synced": "1c742aaf642a223c"
+      "synced": "f4c4d44e2f355621"
     },
     {
       "key": "4.1",
@@ -2166,6 +2170,44 @@
       "issueNumber": 278,
       "itemId": "PVTI_lADODEgGw84BoNdFzhGi9mU",
       "synced": "0318f527bc95d51a"
+    },
+    {
+      "key": "3.12",
+      "project": "public",
+      "parent": "P3",
+      "title": "Real-data seeder for production",
+      "body": "Seeder in `seeders/production/` that loads a real hackathon in CLOSED / PREPARING: the project's real editions, seeds, evaluators and participants. Data is read from a gitignored file (a tracked example documents the shape). Idempotent: a re-run never duplicates or deletes. Participants get user profiles without accounts (D-052, D-053).",
+      "phase": "3",
+      "kind": "Foundation",
+      "status": "Todo",
+      "ref": "3.12",
+      "commits": "",
+      "labels": [
+        "hackathon-prod"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 279,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhGj3vw",
+      "synced": "a4b9e71d47515571"
+    },
+    {
+      "key": "4.7",
+      "project": "public",
+      "parent": "P4",
+      "title": "Link and unlink accounts with user profiles",
+      "body": "Staff link an auth account with a user profile, or unlink it, matched by email. A profile created before its owner signs up (e.g. past participants loaded by the production seeder) is claimed when they sign up. New requirement, pending in the SRS (D-053).",
+      "phase": "4",
+      "kind": "Feature",
+      "status": "Todo",
+      "ref": "4.7",
+      "commits": "",
+      "labels": [
+        "enhancement"
+      ],
+      "milestone": null,
+      "issueNumber": 280,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhGj37c",
+      "synced": "95a8e8c519e9f5d2"
     }
   ]
 }

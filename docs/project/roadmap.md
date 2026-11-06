@@ -12,18 +12,26 @@ Drafted 2026-10-17. Per-item status and commits live on the [production roadmap 
 - ~~0.4 Fast-forward `develop` to `bachelor_thesis_submision`~~ replaced: work accumulates on `release/v1.0.0` (D-007)
 - Not in Phase 0: push (ask first), release merge to `main` (after Phases 1–2), deleting local files (`.env.old_development`, `.Rhistory`, `fake.png`)
 
-## Hackathon MVP (2026-11-03)
-Ongoing hackathon from CLOSED / PREPARING to FINISHED on pre-production (D-048, D-049). Listed in work order.
-- [x] Product owner answers for the flow (D-049); per-UC clarification files after the meeting
-- [ ] Demo seeders: hackathon in CLOSED / PREPARING with seeds, evaluators and participants (3.10)
-- [ ] Journey fixture, brief and test (A6-journey)
-- [ ] Fixes for what the journey test shows red
-- [ ] Crash guards in the ongoing-hackathon socket handlers
-- [ ] Pre-production redeploy, demo seeders there, `.env.example` per package (3.4)
-- [ ] Walkthrough checklist (`testing/walkthrough-hackathon.md`), run on pre-production; frontend fixes in the ongoing-hackathon screens (3.11)
+## Hackathon in production (D-052)
+A real hackathon runs from CLOSED / PREPARING to FINISHED in production. Listed in work order; every fix ships with
+a test that reproduces it.
+- [ ] Real-data seeder in `seeders/production/`, data in a gitignored file; idempotent
+- [ ] #228 an evaluator in two hackathons
 - [ ] Security fixes for this flow (tracked privately)
-- [ ] UC-065 submit rubric (cut first if time runs short)
-- Verify: journey test green up to FINISHED; walkthrough passes on pre-production
+- [ ] Journey test #218, CLOSED / PREPARING → FINISHED
+- [ ] Production env, `.env.example` per package (#236), DB backup
+- [ ] Walkthrough checklist #275 on pre-production, then production deploy
+- Out of scope: PLANNED → CLOSED (#225), ratings persistence (#229), minor bugs
+- Verify: journey test green; checklist passes on pre-production; seeder re-run changes nothing
+
+## Hackathon MVP (2026-11-03) — done
+Ongoing hackathon from CLOSED / PREPARING to FINISHED on pre-production (D-048, D-049, D-051).
+- [x] Product owner answers for the flow (D-049)
+- [x] Demo seeders (#274, D-050)
+- [x] Pre-production deploy and seeding
+- [x] Walkthrough on local and pre-production, flow fixes (#227, #275)
+- Moved to the production milestone: journey test, security fixes for this flow, `.env.example`, checklist
+- Cut (for now): UC-065 submit rubric
 
 ## Phase 1a — Acceptance tests from the SRS
 Black-box test safety net before any fix (D-012). Plan and steps: `testing/plan.md`.
@@ -58,6 +66,7 @@ Tracked privately; described here only once released.
 - [ ] UC-011 withdraw (BRU-020, FRQ-006)
 - [ ] UC-030/045 delete edition/hackathon (BRU-003/013, FRQ-012)
 - [ ] UC-027 role management (FRQ-002); UC-028 delete user + data export (NFRQ-009)
+- [ ] Staff link and unlink accounts with user profiles by email (D-053)
 - [ ] Frontend: `AuthContext`, `<ProtectedRoute role>`, `useFetcher` (loading, `response.ok`, AbortController)
 
 ## Phase 5 — Complete SRS workflows (sub-plan each)

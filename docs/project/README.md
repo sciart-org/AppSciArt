@@ -7,11 +7,10 @@ root `CLAUDE.md`.
 Security work is tracked privately and only described here in generic terms until the fixes are released.
 
 ## Now
-- **Milestone:** Hackathon MVP for 2026-11-03 (D-048, `roadmap.md`)
+- **Milestone:** Hackathon in production (D-052, `roadmap.md`): a real hackathon from CLOSED / PREPARING to FINISHED
+- **Done:** Hackathon MVP on pre-production (D-048–D-051)
+- **Next:** real-data seeder for production (3.12), then #228
 - **Paused:** Phase 1a after UC-006 / UC-007; next there: FRQ-001 authentication
-- **Done:** demo sample data (`db:reset`); pre-production deployed and seeded; walkthrough reaches FINISHED there
-  after the flow and smoke-run fixes
-- **Next:** socket session handling; the journey test after the meeting (D-051)
 
 ## Phases
 | Phase | Scope | Issue | Status |

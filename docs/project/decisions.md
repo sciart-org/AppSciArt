@@ -52,9 +52,11 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-045 | 2026-10-30 | UC-006/007 | Evaluators see products of every state in lists and details, like staff. `driveLink` and `template` stay for staff and the product's authors only, on every product and related item. | — | partly superseded by D-046 |
 | D-046 | 2026-10-30 | UC-006/007 | Evaluators see unpublished flowers and fruits only of the hackathons they evaluate, and get their `driveLink` and `template`. Seeds: like participants. Inspiring scientists get `driveLink` and `template` only of their own seeds. | evaluator part of D-045 | in force |
 | D-048 | 2026-11-01 | Priority | Hackathon MVP before the 2026-11-03 product owner meeting: an ongoing hackathon runs from CLOSED / PREPARING to FINISHED on pre-production, tested internally by the team. Phase 1a pauses after UC-006/007 and resumes after the meeting. ([details](#d-048)) | — | partly superseded by D-049 |
-| D-049 | 2026-11-02 | Product owner | Hackathon MVP flow answered (PREPARING → FINISHED): staff drive phases and can force them, only staff mark assistance, any enrolled participant can enter, groups and teams each take a different seed, UC-065 in scope but not needed to end. Milestone plan compressed. ([details](#d-049)) | D-048 (scope: UC-065 added) | partly superseded by D-051 |
-| D-050 | 2026-11-03 | Tooling | Seed data is organised by purpose, not by environment: one sample dataset (`seeders/sample/`, built from shared factories, real Drive folders) for development and pre-production, rebuilt with `db:reset`; production gets no sample data. ([details](#d-050)) | — | in force |
+| D-049 | 2026-11-02 | Product owner | Hackathon MVP flow answered (PREPARING → FINISHED): staff drive phases and can force them, only staff mark assistance, any enrolled participant can enter, groups and teams each take a different seed, UC-065 in scope but not needed to end. Milestone plan compressed. ([details](#d-049)) | D-048 (scope: UC-065 added) | partly superseded by D-051, D-052 |
+| D-050 | 2026-11-03 | Tooling | Seed data is organised by purpose, not by environment: one sample dataset (`seeders/sample/`, built from shared factories, real Drive folders) for development and pre-production, rebuilt with `db:reset`; production gets no sample data. ([details](#d-050)) | — | partly superseded by D-052 |
 | D-051 | 2026-11-03 | Priority | Hackathon MVP order changed on meeting day: a local walkthrough found and fixed the flow bugs, and the journey test moves to after the meeting. ([details](#d-051)) | D-049 (milestone order) | in force |
+| D-052 | 2026-11-06 | Priority | Hackathon in production: a real hackathon runs from CLOSED / PREPARING to FINISHED in production, loaded by a real-data seeder whose data stays out of the repo. Every fix ships with a test that reproduces it. ([details](#d-052)) | D-049 (cut order), D-050 (no data in production) | in force |
+| D-053 | 2026-11-06 | Requirement | Future requirement, not scheduled now: staff link and unlink an auth account with a user profile (matched by email), so profiles created before their owners sign up get claimed by them. ([details](#d-053)) | — | in force |
 
 ## Details
 
@@ -195,3 +197,51 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
 - The pre-production walkthrough stays the rehearsal. The journey test (#218) comes after the meeting.
 - Routine for every run: `db:reset`, restart the backend (presentation and rating state is in memory, #229), reload
   every tab and sign in again.
+
+### D-052
+- Why: the product owner wants the first real hackathons in production. They start already closed, so PLANNED →
+  CLOSED (#225) isn't needed yet.
+- Out of scope:
+  - PLANNED → CLOSED: the hackathon is loaded at CLOSED / PREPARING
+  - Ratings persistence (#229): ratings are only used until team creation
+  - Minor bugs (#276–#278, #231, #232) and response-shape findings
+- In scope, in order:
+
+| # | Step | Test |
+|---|---|---|
+| 1 | Real-data seeder in `seeders/production/` | Two runs on the test DB give the same data |
+| 2 | #228: an evaluator in two hackathons | Acceptance test, red before the fix |
+| 3 | Security fixes for this flow (tracked privately) | One regression test per fix |
+| 4 | Journey test (#218), CLOSED / PREPARING → FINISHED | The production gate |
+| 5 | Ops: production env, `.env.example` (#236), DB backup | Smoke on pre-production |
+| 6 | Walkthrough checklist (#275) on pre-production, then production deploy | Manual run |
+
+**Real-data seeder**
+- The code is tracked; the data (people, seeds, hackathon) is read from a gitignored file. A tracked example file
+  with fake values documents the shape.
+- Idempotent: find-or-create by natural keys (email, titles), so a re-run never duplicates or deletes. No `down()`
+  that wipes real data.
+- Participants get user profiles without auth accounts; they claim them by signing up with the same email (D-053).
+
+**Tests for every fix**
+- A fix starts with a test that fails for the reason of the bug, then passes. No fix is published without one.
+- Security tests are pushed together with their fix, never before it (as in D-038 and D-047).
+
+**Sources**
+- Twelve-Factor App, "XII. Admin processes": one-off admin tasks are code shipped with the app and run in the same
+  environment.
+- Rails Guides, "Active Record Migrations" § "Migrations and Seed Data": seeds should be idempotent.
+- *Software Engineering at Google* (Winters, Manshreck, Wright), ch. 11–12: a bug fix comes with a test that
+  reproduces it. Feathers, *Working Effectively with Legacy Code*: pin behaviour with tests before changing it.
+- GDPR art. 5(1)(f): personal data needs appropriate security, so real names and emails stay out of a public repo.
+
+### D-053
+- Terms:
+  - **Account:** the real auth data (Supabase `auth.users`)
+  - **User profile:** the user's relations with products (authorships, participations, roles)
+- Need: past participants are loaded as user profiles before they have an account (D-052). Staff must be able to
+  link a profile with an account, or unlink it, by email.
+- Today: signing up with direct registration reuses a profile with the same email. Quick registration refuses an
+  email that already has a profile.
+- Recorded as a new SRS requirement (pending in the SRS changes); planned with role and user management (Phase 4).
+
