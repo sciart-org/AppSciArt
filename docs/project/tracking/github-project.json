@@ -2126,6 +2126,46 @@
       "issueNumber": 255,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrPSM",
       "synced": "da7976ff9a652106"
+    },
+    {
+      "key": "W13",
+      "title": "Group and team creation: a failed move undoes earlier moves on screen",
+      "project": "public",
+      "parent": "P2",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "commits": "",
+      "labels": [
+        "bug",
+        "hackathon-mvp"
+      ],
+      "milestone": "v1.0.0",
+      "ref": "W13",
+      "body": "The drag-and-drop handler in group and team creation keeps the state from when the screen opened. If a move fails, the screen goes back to that state, so moves the server already saved disappear until a reload. Make the drop use the current state. Keep the move warning in past phases on every move (product owner preference); drop the \"already confirmed\" flag. Found in the hackathon walkthrough (D-051).",
+      "issueNumber": 277,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhGi9cI",
+      "synced": "1bccd199eb9feb7b"
+    },
+    {
+      "key": "W16",
+      "title": "Participant updates roll back the whole hackathon on error",
+      "project": "public",
+      "parent": "P2",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "commits": "",
+      "labels": [
+        "bug",
+        "hackathon-mvp"
+      ],
+      "milestone": "v1.0.0",
+      "ref": "W16",
+      "body": "When a participant update fails, the screen restores a copy of the whole hackathon taken before the request. A move made meanwhile is also undone on screen, though the server saved it. Restore only the participant whose update failed. Found in the hackathon walkthrough (D-051).",
+      "issueNumber": 278,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhGi9mU",
+      "synced": "0318f527bc95d51a"
     }
   ]
 }
