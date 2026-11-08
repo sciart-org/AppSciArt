@@ -1,0 +1,42 @@
+name: Docs build
+
+on:
+  pull_request:
+    branches: [develop, main]
+    paths:
+      - 'docs/project/**'
+      - 'docs/diagrams/**'
+      - 'website/**'
+      - '.github/workflows/docs-test.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./website
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build

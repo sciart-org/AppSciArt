@@ -59,6 +59,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-051 | 2026-11-03 | Priority | Hackathon MVP order changed on meeting day: a local walkthrough found and fixed the flow bugs, and the journey test moves to after the meeting. ([details](#d-051)) | D-049 (milestone order) | in force |
 | D-052 | 2026-11-06 | Priority | Hackathon in production: a real hackathon runs from CLOSED / PREPARING to FINISHED in production, loaded by a real-data seeder whose data stays out of the repo. Every fix ships with a test that reproduces it. ([details](#d-052)) | D-049 (cut order), D-050 (no data in production) | in force |
 | D-053 | 2026-11-06 | Requirement | Future requirement, not scheduled now: staff link and unlink an auth account with a user profile (matched by email), so profiles created before their owners sign up get claimed by them. ([details](#d-053)) | — | in force |
+| D-054 | 2026-11-08 | Docs | The project docs get a Docusaurus site in `website/` that reads `docs/project/` and `docs/diagrams/` in place (allowlist, plain Markdown), is built on every pull request that touches them, and is deployed to GitHub Pages from `develop`. ([details](#d-054)) | — | in force |
 
 ## Details
 
@@ -247,3 +248,18 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
   email that already has a profile.
 - Recorded as a new SRS requirement (pending in the SRS changes); planned with role and user management (Phase 4).
 
+### D-054
+- Why: the docs were only readable as Markdown on GitHub; a site gives navigation, search-friendly pages and the
+  diagrams in one place, with no second copy to keep in sync.
+- Layout follows the Docusaurus monorepo convention (a `website/` package next to the apps, as in Jest).
+- The docs plugin reads `../docs` with an `include` allowlist (`project/**/*.md`, `diagrams/**/*.md`), so local or
+  private material in `docs/` can never be published by accident.
+- `markdown.format: 'detect'` parses `.md` as CommonMark, so the existing docs build unchanged.
+- CI and deploy follow the Docusaurus guide: one workflow builds on pull requests, another builds and deploys with
+  GitHub's official Pages actions (`upload-pages-artifact`, `deploy-pages`), not a `gh-pages` branch.
+- Deployed from `develop`, where the docs change day to day; `main` only moves on releases.
+- Sources: [Docusaurus deployment, GitHub Actions](https://docusaurus.io/docs/deployment#triggering-deployment-with-github-actions),
+  [docs plugin options](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-docs),
+  [Markdown format](https://docusaurus.io/docs/api/docusaurus-config#markdown),
+  [GitHub Pages custom workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages),
+  [Jest `website/`](https://github.com/jestjs/jest/tree/main/website).

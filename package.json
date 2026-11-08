@@ -2,7 +2,7 @@
   "scripts": {
     "dev:back": "npm run dev --prefix backend",
     "dev:front": "npm run dev --prefix frontend",
-    "dev": "npm run dev:back & npm run dev:front", 
+    "dev": "npm run dev:back & npm run dev:front",
     "test:dev": "npm run test:dev --prefix backend & npm run dev:front",
     "test:back": "npm run test --prefix backend",
     "test:front": "npm run test --prefix frontend",
@@ -10,7 +10,9 @@
     "lint:fix": "npm run lint:fix --prefix backend && npm run lint:fix --prefix frontend",
     "prepare": "husky",
     "db:ui": "npm run db:ui --prefix backend",
-    "db:ui:test": "npm run db:ui:test --prefix backend"
+    "db:ui:test": "npm run db:ui:test --prefix backend",
+    "docs": "npm start --prefix website",
+    "docs:build": "npm run build --prefix website"
   },
   "devDependencies": {
     "husky": "^9.1.7",
