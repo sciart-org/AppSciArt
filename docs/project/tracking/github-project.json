@@ -2198,7 +2198,7 @@
       "body": "Docusaurus site in `website/` that publishes `docs/project/` and `docs/diagrams/`; a CI build on pull requests and a GitHub Pages deploy. Step 3.13.",
       "phase": "3",
       "kind": "Foundation",
-      "status": "In progress",
+      "status": "Done",
       "ref": "3.13",
       "commits": "3b2c273, 912363e, 1e24e42",
       "labels": [
@@ -2207,7 +2207,26 @@
       "milestone": "v1.0.0",
       "issueNumber": 281,
       "itemId": "PVTI_lADODEgGw84BoNdFzhG_n_I",
-      "synced": "8480ef74e07e5536"
+      "synced": "d8980e76c6745ba5"
+    },
+    {
+      "key": "3.14",
+      "project": "public",
+      "parent": "P3",
+      "title": "Docs site on docs.appsciart.ovh",
+      "body": "Move the docs site from `sciart-org.github.io/AppSciArt/` to `docs.appsciart.ovh`: org domain verification, Pages custom domain, site `url`/`baseUrl`, enforced HTTPS. Waits on the DNS records at the domain's registrar. Step 3.14.",
+      "phase": "3",
+      "kind": "Foundation",
+      "status": "Todo",
+      "ref": "3.14",
+      "commits": "",
+      "labels": [
+        "documentation"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 283,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhHAubI",
+      "synced": "444264de9bdba16c"
     },
     {
       "key": "4.7",
