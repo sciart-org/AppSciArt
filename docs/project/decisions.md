@@ -16,11 +16,11 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-001 | 2026-10-17 | Repository | Security-sensitive analysis (review findings and their locations) is kept out of the repo, because the repo is public. | — | superseded by D-032 |
 | D-002 | 2026-10-17 | Repository | `docs/diagrams` stays tracked; rest of `docs/` (memoir, `API_interactions.md`) local. | — | partly superseded by D-032 (`docs/project/` is tracked) |
 | D-003 | 2026-10-17 | Repository | `.vscode/` stays local. | — | in force |
-| D-004 | 2026-10-17 | Branching | Branching: git-flow, `develop → main`; release merge only after Phases 1–2. | — | in force |
+| D-004 | 2026-10-17 | Branching | Branching: git-flow, `develop → main`; release merge only after Phases 1–2. | — | partly superseded by D-055 (git-flow; `develop → main` stays) |
 | D-006 | 2026-10-19 | Priority | Priority: ship what is already implemented (Phases 0–3), new SRS features after the first release. | — | in force |
-| D-007 | 2026-10-19 | Branching | Branch `release/v1.0.0` (from `bachelor_thesis_submision`) holds all production prep until the merge to `main`. | — | in force |
+| D-007 | 2026-10-19 | Branching | Branch `release/v1.0.0` (from `bachelor_thesis_submision`) holds all production prep until the merge to `main`. | — | superseded by D-055 |
 | D-008 | 2026-10-19 | Hosting | Hosting as defined in the memoir (§4.6): Netlify, Render, Supabase Cloud, Google Drive, Resend; pre-production auto-deploys. ([details](#d-008)) | — | in force |
-| D-009 | 2026-10-19 | Environments | Environments: **pre-production = `develop`**, **production = `main`**. Flow: `release/v1.0.0` → `develop` (verify on pre-prod) → `main`. | — | in force |
+| D-009 | 2026-10-19 | Environments | Environments: **pre-production = `develop`**, **production = `main`**. Flow: `release/v1.0.0` → `develop` (verify on pre-prod) → `main`. | — | partly superseded by D-055 (flow) |
 | D-010 | 2026-10-19 | Hosting | **Free plans only** on every service for now; their limits shape Phases 2–3. ([details](#d-010)) | — | in force |
 | D-012 | 2026-10-19 | Priority | Tests come first: Phase 1a (testing foundation) before any fix, focused on what already works. | — | in force |
 | D-013 | 2026-10-19 | Testing | Testing plan v2: black-box from the SRS, bugs show red, silent cases asked to the user first (v1 from code rejected). | — | in force |
@@ -57,9 +57,11 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-049 | 2026-11-02 | Product owner | Hackathon MVP flow answered (PREPARING → FINISHED): staff drive phases and can force them, only staff mark assistance, any enrolled participant can enter, groups and teams each take a different seed, UC-065 in scope but not needed to end. Milestone plan compressed. ([details](#d-049)) | D-048 (scope: UC-065 added) | partly superseded by D-051, D-052 |
 | D-050 | 2026-11-03 | Tooling | Seed data is organised by purpose, not by environment: one sample dataset (`seeders/sample/`, built from shared factories, real Drive folders) for development and pre-production, rebuilt with `db:reset`; production gets no sample data. ([details](#d-050)) | — | partly superseded by D-052 |
 | D-051 | 2026-11-03 | Priority | Hackathon MVP order changed on meeting day: a local walkthrough found and fixed the flow bugs, and the journey test moves to after the meeting. ([details](#d-051)) | D-049 (milestone order) | in force |
-| D-052 | 2026-11-06 | Priority | Hackathon in production: a real hackathon runs from CLOSED / PREPARING to FINISHED in production, loaded by a real-data seeder whose data stays out of the repo. Every fix ships with a test that reproduces it. ([details](#d-052)) | D-049 (cut order), D-050 (no data in production) | in force |
+| D-052 | 2026-11-06 | Priority | Hackathon in production: a real hackathon runs from CLOSED / PREPARING to FINISHED in production, loaded by a real-data seeder whose data stays out of the repo. Every fix ships with a test that reproduces it. ([details](#d-052)) | D-049 (cut order), D-050 (no data in production) | partly superseded by D-056 |
 | D-053 | 2026-11-06 | Requirement | Future requirement, not scheduled now: staff link and unlink an auth account with a user profile (matched by email), so profiles created before their owners sign up get claimed by them. ([details](#d-053)) | — | in force |
 | D-054 | 2026-11-08 | Docs | The project docs get a Docusaurus site in `website/` that reads `docs/project/` and `docs/diagrams/` in place (allowlist, plain Markdown), is built on every pull request that touches them, and is deployed to GitHub Pages from `develop`. ([details](#d-054)) | — | in force |
+| D-055 | 2026-11-08 | Branching | Short-lived branches from `develop`, merged by pull request. CI runs lint, the frontend build and the full backend suite on every pull request; a committed baseline of passing tests makes any regression, or any new pass left unrecorded, fail the check. ([details](#d-055)) | D-004 (git-flow), D-007, D-009 (flow) | in force |
+| D-056 | 2026-11-08 | Priority | Hackathon in production, re-planned: no real hackathon to load yet, so production gets staff and, when known, the next edition's hackathon from the seeder. New order: CI, security fixes, journey test, seeder, ops, checklist and deploy; PLANNED → CLOSED is a stretch goal. ([details](#d-056)) | D-052 (order, seeder scope) | in force |
 
 ## Details
 
@@ -263,3 +265,85 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
   [Markdown format](https://docusaurus.io/docs/api/docusaurus-config#markdown),
   [GitHub Pages custom workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages),
   [Jest `website/`](https://github.com/jestjs/jest/tree/main/website).
+
+### D-055
+- Why: work was piling up on long-lived branches (`release/v1.0.0`, `tests/acceptance`), and "every fix ships with a
+  test" (D-052) only holds if the tests run on every change.
+- Branches:
+  - `feat/<issue>-<slug>`, `fix/…`, `test/…`, `docs/…`, `chore/…`, cut from `develop` and merged back by pull request.
+  - Kept short: one roadmap step or less, merged as soon as its checks pass.
+  - `develop` = pre-production and `main` = production stay as in D-009; `main` only moves on releases.
+- Branch protection on `develop` and `main`: the CI checks must pass, and the branch must be up to date with its base.
+- CI (`.github/workflows/ci.yml`, on pull requests to `develop` and `main`): lint, frontend build, and the full
+  backend suite against a local Supabase stack started in the job.
+  - Full suite, no test selection: it runs in about 25 s (962 tests, measured 2026-11-08), far under the
+    ten-minute feedback target. Selection pays off only for suites of hundreds of thousands of tests.
+  - Revisit when the UI tests (#221) push the run towards ten minutes: API tests on every pull request, UI tests in
+    a later stage.
+- Test baseline (a ratchet):
+
+| Situation | `npm run test:baseline` (local) | CI |
+|---|---|---|
+| A test passes and isn't in the baseline | adds it | fails: record it |
+| A test in the baseline fails | refuses, lists it | fails: regression |
+| A test must leave the baseline | only with a flag naming it, visible in the diff | — |
+
+- Baseline rules:
+  - `backend/tests/baseline.json` lists only passing tests (file + full name), sorted, committed and reviewed.
+  - Tests stay where they are; no `skip` or `it.fails` marks.
+  - Flaky tests are fixed, never recorded. None found: three full runs on 2026-11-08 gave identical results.
+  - Only passing tests are named, so no tracked file lists open security tests.
+- Not adopted:
+  - Test selection (Google, Meta, `vitest --changed`): all our tests are black-box and load the whole app, and
+    import graphs miss changes to the API spec and migrations.
+  - Merge queue: it solves concurrent merges by many people; with one developer, the up-to-date rule gives the same
+    guarantee.
+- Sources:
+  - [DORA, trunk-based development](https://dora.dev/capabilities/trunk-based-development/) and
+    [test automation](https://dora.dev/capabilities/test-automation/) (current): short-lived branches; test feedback
+    in under ten minutes, locally and in CI.
+  - [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow) (current docs);
+    [Driessen, "A successful Git branching model", note of reflection](https://nvie.com/posts/a-successful-git-branching-model/)
+    (2020): git-flow's author recommends GitHub flow for continuously delivered web apps.
+  - Expectation files: [Chromium web test expectations](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/testing/web_test_expectations.md),
+    [web-platform-tests metadata](https://web-platform-tests.org/tools/wptrunner/docs/expectation.html),
+    [Betterer results file](https://phenomnomnominal.github.io/betterer/docs/results-file),
+    [pytest `xfail_strict`](https://docs.pytest.org/en/stable/how-to/skipping.html) (all current docs).
+  - Test selection at scale: [Future of Google Testing, ICST](https://conf.researchr.org/details/icst-2024/cciw-2024-papers/3/Future-of-Google-Testing)
+    (2024), [Regression Test Selection at Scale](https://research.google/pubs/regression-test-selection-at-scale-4/)
+    (Google, 2026), [Predictive Test Selection](https://arxiv.org/abs/1810.05286) (Meta, 2019, background),
+    [Vitest `--changed`](https://vitest.dev/guide/cli.html) (current).
+  - [How GitHub uses merge queue](https://github.blog/engineering/engineering-principles/how-github-uses-merge-queue-to-ship-hundreds-of-changes-every-day)
+    (2024).
+
+### D-056
+- Why: the Genetics 2026 edition has already finished and the next edition isn't open yet, so there is no real
+  hackathon to load at CLOSED / PREPARING (D-052).
+- Goal unchanged: the flow CLOSED / PREPARING → FINISHED is ready in production, with the security fixes and a
+  test for every fix.
+- Order:
+
+| # | Step | Test |
+|---|---|---|
+| 1 | Branching and CI (D-055) | CI green on its own pull request |
+| 2 | Security fixes for this flow (tracked privately) | One regression test per fix |
+| 3 | Journey test (#218), CLOSED / PREPARING → FINISHED | The production gate |
+| 4 | Seeder in `seeders/production/`: staff, plus an optional block for the next edition and its hackathon | Two runs on the test DB give the same data |
+| 5 | Ops: production env, `.env.example` (#236), DB backup | Smoke on pre-production |
+| 6 | Walkthrough checklist (#275) on pre-production, then production deploy | Manual run |
+| 7 | Stretch: PLANNED → CLOSED (#225) | Acceptance tests |
+
+- Seeder:
+  - Staff get profiles and role rows without accounts; they claim them by signing up with the same email (D-053).
+  - The next-edition block (edition, seeds, scientists, hackathon, participants) loads the next real hackathon at
+    CLOSED / PREPARING if PLANNED → CLOSED isn't ready in time. The seeder creates its Drive folders.
+  - The rest of D-052 still holds: data in a gitignored file, a tracked example, find-or-create by natural keys.
+  - Built last, when the next edition's data exists, so its shape follows real data, not guesses.
+- Validation without a real hackathon: the journey test, plus the rehearsal on pre-production (D-051).
+- Out of scope, added to D-052's list:
+  - #228 (an evaluator in two hackathons): there is only one hackathon at a time for now.
+  - #226 (meet link on on-site hackathons).
+  - Loading past editions, their hackathons and works: later, with the post-hackathon stage (Phase 5d), and once
+    profiles without an email are decided.
+- Open: a product owner question on real participants' personal data in production (privacy notice, legal basis).
+- Sources: D-052's sources for the seeder still apply.
