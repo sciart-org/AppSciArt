@@ -49,6 +49,9 @@ Closes #179
 ## 4. Approve, then commit
 - Show each planned commit with its files and its message, then wait for an explicit go-ahead. Approving
   a plan that includes commits is not a go-ahead to run `git commit`.
+  - A question about a message is not a go: answer it and wait. Partial approval ("rest is fine") isn't one either
+    while any question is open.
+  - Messages describe the effect accurately: not the mechanism, and not a narrower scope than the change.
 - Stage files explicitly (`git add <paths>`, never `git add -A` or `git add .`). Commit with
   `git commit -m "<subject>" -m "Refs #<n>"` (or `Closes #<n>`).
 - Never use `--no-verify`. The Husky pre-commit hook runs lint-staged (`lint:fix`). If the hook fails, show
