@@ -2191,6 +2191,25 @@
       "synced": "a14644bdb837a17a"
     },
     {
+      "key": "3.13",
+      "project": "public",
+      "parent": "P3",
+      "title": "Docs site with Docusaurus and GitHub Pages",
+      "body": "Docusaurus site in `website/` that publishes `docs/project/` and `docs/diagrams/`; a CI build on pull requests and a GitHub Pages deploy. Step 3.13.",
+      "phase": "3",
+      "kind": "Foundation",
+      "status": "In progress",
+      "ref": "3.13",
+      "commits": "3b2c273",
+      "labels": [
+        "documentation"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 281,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhG_n_I",
+      "synced": "f862af5b766ec93d"
+    },
+    {
       "key": "4.7",
       "project": "public",
       "parent": "P4",
