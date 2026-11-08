@@ -44,7 +44,10 @@ Decisions: D-015, D-016, D-024.
 | ended / past | state `FINISHED` |
 | group work / group presentations / team creation … | phases `GROUP_WORK`, `GROUP_PRESENTATION`, `TEAM_CREATION`, `TEAM_WORK`, `TEAM_PRESENTATION` |
 
-Decisions: D-014.
+- Facilitators, designers and administrators advance the phases, one at a time, never backwards. Participants don't.
+- Where a phase change only warns (e.g. undelivered maps or flowers), the warning is in the UI; the API allows it.
+
+Decisions: D-014, D-049.
 
 ## Announcing (fully specified)
 - Edition: name, year, short description, long description and logo (BRU-004). The Drive link and id are
@@ -53,14 +56,6 @@ Decisions: D-014.
 - Meet link: not needed to announce; needed before starting, only for online and hybrid hackathons.
 
 Decisions: D-014, D-015, D-021.
-
-## Other answers
-- UC-047: the facilitator marks assistance.
-- Reopening conceptual maps (UC-059) and flowers (UC-062) is a requirement (the SRS text only describes reopening
-  for seeds, UC-080, and fruits, UC-081). Tested with issues #207 and #213; moves to `UC-059.md` and `UC-062.md`
-  when those use cases are clarified.
-
-Decisions: D-014.
 
 ## Consistent states across entities
 Only states the system can reach exist (fixtures build nothing else):
