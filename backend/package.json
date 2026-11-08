@@ -27,6 +27,8 @@
     "db:ui": "open-cli http://localhost:54323",
     "db:ui:test": "open-cli http://localhost:54333",
     "test:watch": "cross-env NODE_ENV=testing vitest",
+    "test:baseline": "cross-env NODE_ENV=testing node scripts/test-baseline.js",
+    "test:baseline:check": "cross-env NODE_ENV=testing node scripts/test-baseline.js --check",
     "test:coverage": "cross-env NODE_ENV=testing c8 vitest run --pool=threads",
     "coverage:open": "open-cli coverage/index.html"
   },
