@@ -18,7 +18,7 @@ a test that reproduces it.
 - [ ] Real-data seeder in `seeders/production/`, data in a gitignored file; idempotent
 - [ ] #228 an evaluator in two hackathons
 - [ ] Security fixes for this flow (tracked privately)
-- [ ] Journey test #218, CLOSED / PREPARING → FINISHED
+- [ ] Journey test #218, CLOSED / PREPARING → FINISHED (`testing/plan.md` §4.9b)
 - [ ] Production env, `.env.example` per package (#236), DB backup
 - [ ] Walkthrough checklist #275 on pre-production, then production deploy
 - Out of scope: PLANNED → CLOSED (#225), ratings persistence (#229), minor bugs

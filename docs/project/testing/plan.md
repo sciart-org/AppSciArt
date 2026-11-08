@@ -36,7 +36,7 @@ Current status: `../README.md` "Now".
 | A3 | §4.3 enrolment + §4.4 scientists/seeds |
 | A4 | §4.5 editions + §4.6 hackathons |
 | A5 | §4.7 groups + §4.8 teams/flowers/rubrics (API + sockets) |
-| A6 | §4.9 journey + §4.10 RBAC matrix + status report §7 |
+| A6 | §4.9a journey before the hackathon (§4.9b comes first, D-052) + §4.10 RBAC matrix + status report §7 |
 | A7 | CI workflow |
 | A8 | Playwright §5 |
 | A9 | Baseline: full run, findings logged, report reviewed with the user |
@@ -297,11 +297,24 @@ Each line is one test (or a small group). Missing parts of these use cases are l
 **UC-067 End hackathon** (+ BRU-014)
 - Facilitator ends the hackathon after team presentations → it appears as past (UC-004).
 
-### 4.9 Full journey (one test)
-Edition created → announced → scientist invited → seed created and (fixture) published → hackathon created →
-announced → 4 participants join → closed → started → enter → groups → maps delivered → presentations + ratings →
-teams → flowers delivered → presentations → rubrics → ended. Acts only through the API/sockets; each step asserts the
-SRS postcondition. This test is expected to be red while any step is broken; it shows the first broken step.
+### 4.9 Full journey (two tests)
+Split at the moment the hackathon is closed, so each part runs on its own. Both act only through the API and
+sockets, assert only each step's postcondition (exact shapes stay in the per-UC tests, D-049), and stay red while
+any step is broken, showing the first broken one. Clarifications: `UC-044.md` … `UC-066.md`, `general.md`.
+
+**4.9a Before the hackathon** (step A6; written when Phase 1a gets there)
+- Edition created → announced → scientist invited → seed created and (fixture) published → hackathon created →
+  announced → 4 participants join → closed (`CLOSED` / `PREPARING`).
+- Needs PLANNED → OPEN → CLOSED working (#225).
+
+**4.9b Ongoing hackathon** (#218; production gate of the Hackathon in production milestone, D-052)
+- Arranged by fixture: a hackathon in `CLOSED` / `PREPARING` with published seeds, evaluators and enrolled
+  participants.
+- Started → participants enter → staff mark assistance → groups, each with its own seed and a voice →
+  `GROUP_WORK` → maps delivered → `GROUP_PRESENTATION` → groups present, participants submit ratings →
+  `TEAM_CREATION` → teams, each with its own seed and a speaker → `TEAM_WORK` → flowers delivered →
+  `TEAM_PRESENTATION` → a rubric per evaluator and delivered flower → teams present → `FINISHED`.
+- Rubric submission (UC-065) is not part of it: ending doesn't need it.
 
 ### 4.10 RBAC matrix (NFRQ "Role-based access control")
 One table-driven test: every restricted operation above × {guest, participant, scientist of another edition,

@@ -1023,7 +1023,7 @@
       "project": "public",
       "parent": "P1a",
       "title": "Acceptance tests: full hackathon journey",
-      "body": "One test through the API and sockets only, from a hackathon in CLOSED / PREPARING to FINISHED: started → groups → maps → presentations + ratings → teams → flowers → presentations → rubrics → ended. Shows the first broken step. Gate for the production deploy (D-052). Step A6, testing plan §4.9.",
+      "body": "One test through the API and sockets only, from a hackathon in CLOSED / PREPARING to FINISHED: started → groups → maps → presentations + ratings → teams → flowers → presentations → rubrics → ended. Shows the first broken step. Gate for the production deploy (D-052). Testing plan §4.9b.",
       "phase": "1a",
       "kind": "Test",
       "status": "Todo",
