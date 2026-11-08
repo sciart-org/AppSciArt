@@ -16,7 +16,7 @@ One requirement at a time. Rules: `.claude/rules/acceptance-tests.md`. Plan and 
 | 1 | Name the requirement | Quote its SRS text (`.claude/private/srs/srs-export.txt`), any `pending` row for it in `srs-changes.md`, and its plan lines (`plan.md` §4). |
 | 2 | Check for existing answers | Rule at the top of `docs/project/decisions.md`; also `.claude/private/decisions.md`. Cite what exists. |
 | 3 | Ask what's left | What the SRS and the clarifications don't settle, **including the exact allowed response fields per role** (the YAML validation is incomplete; never use it). **Stop.** |
-| 4 | Record new answers | `docs/project/clarifications/<UC>.md` (current truth) + a row in `docs/project/decisions.md` (history). If it changes the SRS, a dated row in `.claude/private/srs/srs-changes.md`. |
+| 4 | Record new answers | `docs/project/clarifications/<UC>.md` (current truth) + a row in `docs/project/decisions.md` (history). If it changes the SRS, a dated row in `.claude/private/srs/srs-changes.md`. Same commit, never deferred; then `python3 -I docs/project/tools/check_clarifications.py` must pass. |
 | 5 | Private expectations | If `.claude/private/testing-expectations.md` has rows for this requirement, ask the user how to brief them: public briefs can't name them. **Stop.** |
 | 6 | Add missing fixtures | Propose (files, why, infra tests). **Stop.** Build, document in `backend/tests/HELPERS.md`, separate commit. |
 | 7 | Write the brief | `docs/project/testing/briefs/<ID>.md` from the template in `briefs/README.md`: SRS text, link to the clarification file, vocabulary, numbered cases `**B<n>**`, fixture notes. |

@@ -37,7 +37,7 @@ Per-item status and commits live on the [production roadmap board](https://githu
 | `testing/plan.md` | Acceptance test scope, plan per use case, execution steps |
 | `testing/briefs/` | One brief per acceptance test file, for the test-writing agent |
 | `testing/consistency.md` | Fixture consistency rules: source, check, infra test |
-| `tools/` | Scripts for briefs and board sync |
+| `tools/` | Scripts for briefs, clarifications and board sync |
 | `tracking/` | Source of the production roadmap board |
 
 ### Where new information goes

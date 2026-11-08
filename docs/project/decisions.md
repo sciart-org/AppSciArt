@@ -7,6 +7,8 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
   **Supersedes**; only the replaced row's **Status** changes (`superseded by` / `partly superseded by`).
 - **Long decisions** get a one-line summary in the table and their full content under [Details](#details).
 - **Current product owner answers** are in `clarifications/`; this log keeps their history.
+  - An answer goes into `clarifications/` in the same commit as its row, never "later".
+  - `tools/check_clarifications.py` fails while an answer in force is cited in no clarification file.
 - **Missing numbers** are security-related decisions, kept private until the related fixes are released.
 
 | ID | Date | Topic | Decision | Supersedes | Status |
