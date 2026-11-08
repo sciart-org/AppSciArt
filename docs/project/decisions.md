@@ -60,7 +60,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-052 | 2026-11-06 | Priority | Hackathon in production: a real hackathon runs from CLOSED / PREPARING to FINISHED in production, loaded by a real-data seeder whose data stays out of the repo. Every fix ships with a test that reproduces it. ([details](#d-052)) | D-049 (cut order), D-050 (no data in production) | partly superseded by D-056 |
 | D-053 | 2026-11-06 | Requirement | Future requirement, not scheduled now: staff link and unlink an auth account with a user profile (matched by email), so profiles created before their owners sign up get claimed by them. ([details](#d-053)) | — | in force |
 | D-054 | 2026-11-08 | Docs | The project docs get a Docusaurus site in `website/` that reads `docs/project/` and `docs/diagrams/` in place (allowlist, plain Markdown), is built on every pull request that touches them, and is deployed to GitHub Pages from `develop`. ([details](#d-054)) | — | in force |
-| D-055 | 2026-11-08 | Branching | Short-lived branches from `develop`, merged by pull request. CI runs lint, the frontend build and the full backend suite on every pull request; a committed baseline of passing tests makes any regression, or any new pass left unrecorded, fail the check. ([details](#d-055)) | D-004 (git-flow), D-007, D-009 (flow) | in force |
+| D-055 | 2026-11-08 | Branching | Short-lived branches from `develop`, merged by pull request and deleted once merged. CI runs lint, the frontend build and the full backend suite on every pull request; a committed baseline of passing tests makes any regression, or any new pass left unrecorded, fail the check. ([details](#d-055)) | D-004 (git-flow), D-007, D-009 (flow) | in force |
 | D-056 | 2026-11-08 | Priority | Hackathon in production, re-planned: no real hackathon to load yet, so production gets staff and, when known, the next edition's hackathon from the seeder. New order: CI, security fixes, journey test, seeder, ops, checklist and deploy; PLANNED → CLOSED is a stretch goal. ([details](#d-056)) | D-052 (order, seeder scope) | in force |
 | D-057 | 2026-11-08 | Auth | The backend accepts access tokens from both Supabase signing systems: asymmetric keys (ES256/RS256), checked against the project's published keys, and the legacy shared secret (HS256). Done before the CI workflow, whose stack is created fresh. ([details](#d-057)) | — | in force |
 
@@ -273,6 +273,9 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
 - Branches:
   - `feat/<issue>-<slug>`, `fix/…`, `test/…`, `docs/…`, `chore/…`, cut from `develop` and merged back by pull request.
   - Kept short: one roadmap step or less, merged as soon as its checks pass.
+  - Deleted once merged:
+    - Remote: the repository setting "Automatically delete head branches" removes it when the pull request merges.
+    - Local: `git fetch --prune`, then delete the local branches whose upstream is gone.
   - `develop` = pre-production and `main` = production stay as in D-009; `main` only moves on releases.
 - Branch protection on `develop` and `main`: the CI checks must pass, and the branch must be up to date with its base.
 - CI (`.github/workflows/ci.yml`, on pull requests to `develop` and `main`): lint, frontend build, and the full
@@ -306,6 +309,8 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
   - [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow) (current docs);
     [Driessen, "A successful Git branching model", note of reflection](https://nvie.com/posts/a-successful-git-branching-model/)
     (2020): git-flow's author recommends GitHub flow for continuously delivered web apps.
+  - [Managing the automatic deletion of branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches)
+    (current GitHub docs): the head branch is deleted on merge and can be restored from the pull request.
   - Expectation files: [Chromium web test expectations](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/testing/web_test_expectations.md),
     [web-platform-tests metadata](https://web-platform-tests.org/tools/wptrunner/docs/expectation.html),
     [Betterer results file](https://phenomnomnominal.github.io/betterer/docs/results-file),
