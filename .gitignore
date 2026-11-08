@@ -57,3 +57,6 @@ node_modules
 CLAUDE.local.md
 .claude/settings.local.json
 .claude/private/
+
+website/build
+website/.docusaurus
