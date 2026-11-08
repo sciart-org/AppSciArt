@@ -16,6 +16,8 @@ Run from the repo root:
 Run from `backend/`:
 - `npm run db:migrate` / `db:migrate:test`
 - `npm run db:seed` / `db:seed:test` (and `:undo` variants)
+- `npm run db:reset`: undo and re-run every seeder, rebuilding the sample dataset (Drive folders included)
+- `npm run db:migrate:preprod` / `db:seed:preprod` / `db:reset:preprod`: the same against pre-production
 - `npm run db:migration:create <name>` / `db:seed:create <name>`
 - `npm run db:ui` / `db:ui:test`: open Supabase Studio (54323 dev / 54333 test)
 - Local Supabase stacks live in `backend/db/dev/supabase` and `backend/db/test/supabase`. Start one with the Supabase CLI from that directory.
@@ -28,10 +30,19 @@ Run from `frontend/`:
 
 ## Environments
 
-`NODE_ENV` is one of `development`, `testing`, `production`, and it selects:
+`NODE_ENV` is one of `development`, `testing`, `pre-production`, `production`, and it selects:
 - the `.env.<env>` file in `backend/` (loaded via `dotenv-flow`)
 - the Sequelize config in `src/config/config.cjs`
-- the seeder folder: `.sequelizerc` points `seeders-path` at `src/seeders/<env>/`, so seeders must be placed in the folder for the environment they target
+- the seeder folder (`SEEDERS_FOLDER_BY_ENV` in `.sequelizerc`, D-050):
+
+| `NODE_ENV` | Seeders folder |
+|---|---|
+| `development`, `pre-production` | `src/seeders/sample/` (sample dataset, built from `factories/`) |
+| `testing` | `src/seeders/testing/` |
+| `production` | `src/seeders/production/` |
+
+`pre-production` is only used locally, to migrate and seed the pre-production database from `.env.pre-production`.
+The deployed pre-production server runs with `NODE_ENV=production`.
 
 Seeders that create auth users go through `src/seeders/supabaseAdmin.js` (service-role key).
 

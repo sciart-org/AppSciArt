@@ -10,7 +10,7 @@ Drafted 2026-10-17. Per-item status and commits live on the [production roadmap 
 - [x] 0.2 Make WIP safe: `resend.js` recipient + `EMAIL_REDIRECT_TO` (non-production only); `userHackathonsService` emit `previousGroupId`; testing seeder `down()` scoped to seeded users; `.gitignore` (`docs/*` + `!docs/diagrams/`, `.vscode/`, `.claude/analysis/`)
 - [x] 0.3 Conventional Commits (gitignore · CLAUDE.md+settings · evaluators endpoint · error default msg · group-removal emit · seed enum+TODOs · seeders · email redirect · remove `oas-file.yaml.old`)
 - ~~0.4 Fast-forward `develop` to `bachelor_thesis_submision`~~ replaced: work accumulates on `release/v1.0.0` (D-007)
-- Not in Phase 0: push (ask first), release merge to `main` (after Phases 1–2), deleting local files (`.env.old_development`, `.Rhistory`, `fake.png`)
+- Not in Phase 0: push (ask first), release merge to `main` (after Phases 1–2), deleting the local `.env.old_development`
 
 ## Hackathon in production (D-052)
 A real hackathon runs from CLOSED / PREPARING to FINISHED in production. Listed in work order; every fix ships with
@@ -42,7 +42,7 @@ Tracked privately; described here only once released.
 ## Phase 2 — Functional bugs
 - [ ] #225 State classes return `{ canAdvance, errorMessage }`; fix `phase`/`state` message
 - [ ] #226 `isOnSite` inversion
-- [ ] #227 Scope maps keyed by `role.name`; replace `INTERNAL_BACKEND_ROLE` with `ROLES.STAFF`
+- [ ] #227 Scope maps keyed by `role.name` (internal role is already `ROLES.STAFF`)
 - [ ] #228 Migration: drop `evaluators_userProfileId_unique`
 - [ ] #229 `seed_ratings` table (participationId, seedId, rating, submittedAt); sockets persist; lock after submit (BRU-042)
 - [ ] #230 Migrations: seed state enum/default (convert `IN_BLANK` rows), `Edition.name` unique, `user_profiles.id` default, FK indexes; fix `handle_new_user.sql` (`authId`)

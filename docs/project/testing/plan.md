@@ -11,7 +11,7 @@ The rules (sources of expectations, black-box, arrange / act / assert, red tests
 `.claude/rules/acceptance-tests.md`, which Claude Code loads when working on the tests or these docs.
 
 ## 2. Scope
-**In scope: the 43 implemented use cases** (✅ or partly implemented in `02-srs-coverage.md`) and every business rule,
+**In scope: the 43 implemented use cases** (✅ or partly implemented in `../srs-coverage.md`) and every business rule,
 functional and information requirement attached to them:
 UC-002–008, 018–020, 024, 029, 031, 033–038, 041–044, 047–064, 066, 067; BRU-001, 002, 004, 007–012, 014, 015, 017,
 018, 023–025, 032, 034, 036–044, 048; FRQ-001, 003, 005, 007, 011, 017, 020–025; IRQ-001–003, 005–011; NFRQ RBAC.
