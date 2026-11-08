@@ -37,7 +37,7 @@ Current status: `../README.md` "Now".
 | A4 | §4.5 editions + §4.6 hackathons |
 | A5 | §4.7 groups + §4.8 teams/flowers/rubrics (API + sockets) |
 | A6 | §4.9a journey before the hackathon (§4.9b comes first, D-052) + §4.10 RBAC matrix + status report §7 |
-| A7 | CI workflow |
+| A7 | CI workflow: merged into roadmap step 3.3 (#235, D-055) |
 | A8 | Playwright §5 |
 | A9 | Baseline: full run, findings logged, report reviewed with the user |
 

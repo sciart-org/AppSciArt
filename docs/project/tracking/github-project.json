@@ -1063,10 +1063,10 @@
       "project": "public",
       "parent": "P1a",
       "title": "CI workflow for lint, build and tests",
-      "body": "Root `.github/workflows/ci.yml`: lint, build, backend acceptance tests, Playwright chromium. While Phase 2 is open the acceptance job is informative; anything green before is blocking. Step A7.",
+      "body": "Merged into #235 (step 3.3), which now covers the CI workflow. Step A7.",
       "phase": "1a",
       "kind": "Foundation",
-      "status": "Todo",
+      "status": "Done",
       "ref": "A7",
       "commits": "",
       "labels": [
@@ -1075,7 +1075,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 220,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrH8I",
-      "synced": "fe3bd1272ab470f8"
+      "synced": "366b7f688b9cfab4"
     },
     {
       "key": "A8",
@@ -1694,20 +1694,21 @@
       "key": "3.3",
       "project": "public",
       "parent": "P3",
-      "title": "Single root CI workflow",
-      "body": "Root workflow replaces `frontend/.github`; required checks on `develop` and `main`.",
+      "title": "CI workflow for lint, build and tests",
+      "body": "Root `.github/workflows/ci.yml` on pull requests to `develop` and `main`: lint, frontend build, and the full backend suite against a local Supabase stack, checked against a one-way baseline of passing tests (D-055). Replaces `frontend/.github`. Required checks and up-to-date branches on `develop` and `main`. Playwright joins with #221. Step 3.3, also covers A7 (#220).",
       "phase": "3",
       "kind": "Foundation",
       "status": "In progress",
       "ref": "3.3",
       "commits": "1f115ce",
       "labels": [
-        "hackathon-prod"
+        "hackathon-prod",
+        "test"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 235,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrLRQ",
-      "synced": "32dfe96f96ed9b8b"
+      "synced": "cdd6a07b70ba87c4"
     },
     {
       "key": "3.4",
