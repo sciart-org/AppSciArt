@@ -1546,13 +1546,12 @@
       "ref": "H4",
       "commits": "",
       "labels": [
-        "bug",
-        "hackathon-prod"
+        "bug"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 228,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrJ5I",
-      "synced": "454f5de5f6ab0cca"
+      "synced": "a5fef57700a1578d"
     },
     {
       "key": "H5",
@@ -1699,14 +1698,16 @@
       "body": "Root workflow replaces `frontend/.github`; required checks on `develop` and `main`.",
       "phase": "3",
       "kind": "Foundation",
-      "status": "Todo",
+      "status": "In progress",
       "ref": "3.3",
-      "commits": "",
-      "labels": [],
+      "commits": "1f115ce",
+      "labels": [
+        "hackathon-prod"
+      ],
       "milestone": "v1.0.0",
       "issueNumber": 235,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrLRQ",
-      "synced": "22b9f2b70baa5214"
+      "synced": "32dfe96f96ed9b8b"
     },
     {
       "key": "3.4",
@@ -2179,7 +2180,7 @@
       "body": "Seeder in `seeders/production/` that loads a real hackathon in CLOSED / PREPARING: the project's real editions, seeds, evaluators and participants. Data is read from a gitignored file (a tracked example documents the shape). Idempotent: a re-run never duplicates or deletes. Participants get user profiles without accounts (D-052, D-053).",
       "phase": "3",
       "kind": "Foundation",
-      "status": "In progress",
+      "status": "Todo",
       "ref": "3.12",
       "commits": "8327c47",
       "labels": [
@@ -2188,7 +2189,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 279,
       "itemId": "PVTI_lADODEgGw84BoNdFzhGj3vw",
-      "synced": "a14644bdb837a17a"
+      "synced": "17c7efb9762b8dea"
     },
     {
       "key": "3.13",
