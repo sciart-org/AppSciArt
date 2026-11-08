@@ -1028,7 +1028,7 @@
       "kind": "Test",
       "status": "Todo",
       "ref": "A6",
-      "commits": "5aa7e6d",
+      "commits": "5aa7e6d, 2b32ac8, 1725860",
       "labels": [
         "test",
         "hackathon-mvp",
@@ -1037,7 +1037,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 218,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrHds",
-      "synced": "280cffb23f6f6c9c"
+      "synced": "a14d6eadb99807f8"
     },
     {
       "key": "A6-rbac",
@@ -1791,12 +1791,12 @@
       "kind": "Foundation",
       "status": "Done",
       "ref": "3.9",
-      "commits": "217ee88, 377f674, acad010, 2fda549, 969c9af, 8fd6d73, 4b68a76, 82f442e, b3f691a, b200ae2, 268d6e2, f4b6106, 1d0364c, 8abb6f9, 6999b8a, 579630f, f34467d",
+      "commits": "217ee88, 377f674, acad010, 2fda549, 969c9af, 8fd6d73, 4b68a76, 82f442e, b3f691a, b200ae2, 268d6e2, f4b6106, 1d0364c, 8abb6f9, 6999b8a, 579630f, f34467d, 7078a4b",
       "labels": [],
       "milestone": "v1.0.0",
       "issueNumber": 258,
       "itemId": "PVTI_lADODEgGw84BoNdFzhC-Zkw",
-      "synced": "4ccf00c8f3aa8fd3"
+      "synced": "41d5c6e692ccb850"
     },
     {
       "key": "3.10",
@@ -2179,16 +2179,16 @@
       "body": "Seeder in `seeders/production/` that loads a real hackathon in CLOSED / PREPARING: the project's real editions, seeds, evaluators and participants. Data is read from a gitignored file (a tracked example documents the shape). Idempotent: a re-run never duplicates or deletes. Participants get user profiles without accounts (D-052, D-053).",
       "phase": "3",
       "kind": "Foundation",
-      "status": "Todo",
+      "status": "In progress",
       "ref": "3.12",
-      "commits": "",
+      "commits": "8327c47",
       "labels": [
         "hackathon-prod"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 279,
       "itemId": "PVTI_lADODEgGw84BoNdFzhGj3vw",
-      "synced": "a4b9e71d47515571"
+      "synced": "a14644bdb837a17a"
     },
     {
       "key": "4.7",
