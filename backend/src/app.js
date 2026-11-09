@@ -3,13 +3,12 @@ import http from 'http'
 import express, { json } from 'express'
 import { corsMiddleware } from './middlewares/cors.js'
 import { initialize } from '@oas-tools/core'
-import { bearerJwt } from '@oas-tools/auth/handlers'
+import { accessTokenVerifierFromEnv } from './middlewares/accessTokens.js'
 import { customErrorHandler } from './middlewares/customErrorHandler.js'
 import { initializeWebSockets } from './sockets/index.js'
 
 export const createApp = async () => {
-  const JWT_SECRET = process.env.JWT_SECRET
-  const JWT_ISSUER = process.env.JWT_ISSUER
+  const verifyAccessToken = accessTokenVerifierFromEnv()
 
   const app = express()
   const server = http.createServer(app)
@@ -19,16 +18,13 @@ export const createApp = async () => {
   app.use(corsMiddleware())
   app.use(customErrorHandler)
 
-  const io = initializeWebSockets(server)
+  const io = initializeWebSockets(server, verifyAccessToken)
 
   const config = {
     middleware: {
       security: {
         auth: {
-          bearerAuth: bearerJwt({
-            issuer: JWT_ISSUER,
-            secret: JWT_SECRET
-          })
+          bearerAuth: verifyAccessToken
         }
       }
     }

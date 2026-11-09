@@ -62,6 +62,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-054 | 2026-11-08 | Docs | The project docs get a Docusaurus site in `website/` that reads `docs/project/` and `docs/diagrams/` in place (allowlist, plain Markdown), is built on every pull request that touches them, and is deployed to GitHub Pages from `develop`. ([details](#d-054)) | — | in force |
 | D-055 | 2026-11-08 | Branching | Short-lived branches from `develop`, merged by pull request. CI runs lint, the frontend build and the full backend suite on every pull request; a committed baseline of passing tests makes any regression, or any new pass left unrecorded, fail the check. ([details](#d-055)) | D-004 (git-flow), D-007, D-009 (flow) | in force |
 | D-056 | 2026-11-08 | Priority | Hackathon in production, re-planned: no real hackathon to load yet, so production gets staff and, when known, the next edition's hackathon from the seeder. New order: CI, security fixes, journey test, seeder, ops, checklist and deploy; PLANNED → CLOSED is a stretch goal. ([details](#d-056)) | D-052 (order, seeder scope) | in force |
+| D-057 | 2026-11-08 | Auth | The backend accepts access tokens from both Supabase signing systems: asymmetric keys (ES256/RS256), checked against the project's published keys, and the legacy shared secret (HS256). Done before the CI workflow, whose stack is created fresh. ([details](#d-057)) | — | in force |
 
 ## Details
 
@@ -347,3 +348,25 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
     profiles without an email are decided.
 - Open: a product owner question on real participants' personal data in production (privacy notice, legal basis).
 - Sources: D-052's sources for the seeder still apply.
+
+### D-057
+- Why: Supabase stacks created by current CLI versions sign tokens with an asymmetric key (ES256), while the backend
+  only accepted the legacy secret (HS256). On such a stack, which is what CI starts, authenticated sockets failed
+  (#284). The hosted projects still use the legacy secret, so both must work.
+- How:
+  - The token header's `alg` picks the check: HS256 with the secret, ES256/RS256 with the keys at
+    `<SUPABASE_URL>/auth/v1/.well-known/jwks.json`, anything else rejected. The issuer is checked in both cases.
+  - Keys are fetched and cached by `jose` (`createRemoteJWKSet`, 10-minute cache, refetch on an unknown key id),
+    within Supabase's advice not to cache them longer than its own edge cache.
+  - One verifier serves HTTP (oas-tools security handler) and sockets (handshake).
+- Below the expert bar, on purpose: Supabase advises against checking HS256 tokens locally and recommends moving to
+  asymmetric keys. The local HS256 check stays until both hosted projects migrate (ops step, D-056 step 5); the
+  HS256 path is then removed.
+- Sources:
+  - [Supabase, JWT signing keys](https://supabase.com/docs/guides/auth/signing-keys) and
+    [JSON Web Tokens](https://supabase.com/docs/guides/auth/jwts) (current docs): verify with the published keys,
+    legacy secret "no longer recommended", both trusted during migration.
+  - [Supabase changelog, asymmetric keys support](https://supabase.com/changelog/29289-supabase-auth-asymmetric-keys-support-in-2025)
+    (2025).
+  - [jose, `createRemoteJWKSet`](https://github.com/panva/jose/blob/main/docs/functions/jwks_remote.createRemoteJWKSet.md)
+    (current, v6).
