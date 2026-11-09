@@ -2259,7 +2259,7 @@
       "kind": "Bug",
       "status": "In progress",
       "ref": "T31",
-      "commits": "",
+      "commits": "cbc1234, 25e0084",
       "labels": [
         "bug",
         "hackathon-prod"
@@ -2267,7 +2267,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 284,
       "itemId": "PVTI_lADODEgGw84BoNdFzhHBH80",
-      "synced": "a956ba9389abe6a0"
+      "synced": "611b114d89742386"
     }
   ]
 }

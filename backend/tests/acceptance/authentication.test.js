@@ -19,7 +19,9 @@ const INVALID_TOKENS = [
   ['an expired token', (user) => forgedTokens.expired(user)],
   ['a token signed with a wrong key', (user) => forgedTokens.wrongKey(user)],
   ['an unsigned token', (user) => forgedTokens.unsigned(user)],
-  ['a garbage token', () => forgedTokens.garbage()]
+  ['a garbage token', () => forgedTokens.garbage()],
+  ['a token with no expiry', (user) => forgedTokens.noExpiry(user)],
+  ['a token naming an unknown algorithm', (user) => forgedTokens.unknownAlgorithm(user)]
 ]
 
 describe('FRQ-001 · a session from a real login', () => {

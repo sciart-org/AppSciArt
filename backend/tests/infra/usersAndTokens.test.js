@@ -118,6 +118,23 @@ describe('forged tokens', () => {
     expect(claims.exp).toBeGreaterThan(nowInSeconds())
     expect(Buffer.from(signature, 'base64url')).toHaveLength(ES256_SIGNATURE_BYTES)
   })
+
+  it('a no-expiry token is signed with the app secret and has valid claims for the user but no expiry', () => {
+    const token = forgedTokens.noExpiry(user())
+    const { claims } = decodeJwt(token)
+
+    expect(isSignedWithAppSecret(token)).toBe(true)
+    expect(claims.sub).toBe(user().authId)
+    expect(Object.keys(claims)).not.toContain('exp')
+  })
+
+  it('an unknown-algorithm token has valid claims for the user but names no real signing algorithm', () => {
+    const { header, claims } = decodeJwt(forgedTokens.unknownAlgorithm(user()))
+
+    expect(header.alg).toBe('hasOwnProperty')
+    expect(claims.sub).toBe(user().authId)
+    expect(claims.exp).toBeGreaterThan(nowInSeconds())
+  })
 })
 
 describe('legacy tokens', () => {

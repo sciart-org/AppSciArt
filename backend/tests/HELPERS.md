@@ -72,6 +72,8 @@ The token helpers below are plain functions (no `await`).
 - `forgedTokens.expired(user)`: a correctly signed token whose expiry is in the past.
 - `forgedTokens.wrongKey(user)`: valid claims, signed with another key.
 - `forgedTokens.unknownKey(user)`: valid claims, signed with an asymmetric key the stack doesn't publish.
+- `forgedTokens.noExpiry(user)`: valid claims, signed with the app secret, but no expiry.
+- `forgedTokens.unknownAlgorithm(user)`: valid claims, but the header names no real signing algorithm.
 - `forgedTokens.unsigned(user)`: valid claims, `alg: none`, no signature.
 - `forgedTokens.garbage()`: not a JWT.
 

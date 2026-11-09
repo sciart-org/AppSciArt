@@ -9,13 +9,17 @@
     "FRQ-001 · an expired token is rejected with 401",
     "FRQ-001 · a token signed with a wrong key is rejected with 401",
     "FRQ-001 · an unsigned token is rejected with 401",
-    "FRQ-001 · a garbage token is rejected with 401"
+    "FRQ-001 · a garbage token is rejected with 401",
+    "FRQ-001 · a token with no expiry is rejected with 401",
+    "FRQ-001 · a token naming an unknown algorithm is rejected with 401"
   ],
   "B8": [
     "FRQ-001 · an expired token is refused on the real-time connection",
     "FRQ-001 · a token signed with a wrong key is refused on the real-time connection",
     "FRQ-001 · an unsigned token is refused on the real-time connection",
-    "FRQ-001 · a garbage token is refused on the real-time connection"
+    "FRQ-001 · a garbage token is refused on the real-time connection",
+    "FRQ-001 · a token with no expiry is refused on the real-time connection",
+    "FRQ-001 · a token naming an unknown algorithm is refused on the real-time connection"
   ],
   "B9": ["FRQ-001 · a request with no token is rejected with 401"]
 }

@@ -355,7 +355,9 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
   (#284). The hosted projects still use the legacy secret, so both must work.
 - How:
   - The token header's `alg` picks the check: HS256 with the secret, ES256/RS256 with the keys at
-    `<SUPABASE_URL>/auth/v1/.well-known/jwks.json`, anything else rejected. The issuer is checked in both cases.
+    `<SUPABASE_URL>/auth/v1/.well-known/jwks.json`, anything else rejected. The issuer is checked in both cases,
+    and a token must carry an expiry and a subject.
+  - The server doesn't start without `SUPABASE_URL`, `JWT_SECRET` and `JWT_ISSUER`.
   - Keys are fetched and cached by `jose` (`createRemoteJWKSet`, 10-minute cache, refetch on an unknown key id),
     within Supabase's advice not to cache them longer than its own edge cache.
   - One verifier serves HTTP (oas-tools security handler) and sockets (handshake).

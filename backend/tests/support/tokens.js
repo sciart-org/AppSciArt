@@ -35,8 +35,8 @@ const claimsOf = (user, { issuedAt = nowInSeconds() } = {}) => ({
   exp: issuedAt + ONE_HOUR_IN_SECONDS
 })
 
-const signedWith = (secret, claims) => {
-  const header = base64UrlJson({ alg: 'HS256', typ: 'JWT' })
+const signedWith = (secret, claims, { alg = 'HS256' } = {}) => {
+  const header = base64UrlJson({ alg, typ: 'JWT' })
   const payload = base64UrlJson(claims)
   const signature = createHmac('sha256', secret).update(`${header}.${payload}`).digest('base64url')
   return `${header}.${payload}.${signature}`
@@ -54,6 +54,10 @@ const signedWithUnpublishedKey = (claims) => {
   return `${header}.${payload}.${signature}`
 }
 
+const withoutExpiry = ({ exp, ...claims }) => claims
+
+const NOT_AN_ALGORITHM = 'hasOwnProperty'
+
 const unsigned = (claims) => `${base64UrlJson({ alg: 'none', typ: 'JWT' })}.${base64UrlJson(claims)}.`
 
 export const forgedTokens = {
@@ -61,6 +65,8 @@ export const forgedTokens = {
   wrongKey: (user) => signedWith('not-the-real-secret-not-the-real-secret', claimsOf(user)),
   unsigned: (user) => unsigned(claimsOf(user)),
   unknownKey: (user) => signedWithUnpublishedKey(claimsOf(user)),
+  noExpiry: (user) => signedWith(process.env.JWT_SECRET, withoutExpiry(claimsOf(user))),
+  unknownAlgorithm: (user) => signedWith(process.env.JWT_SECRET, claimsOf(user), { alg: NOT_AN_ALGORITHM }),
   garbage: () => 'not-a-jwt'
 }
 
