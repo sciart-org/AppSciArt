@@ -1,0 +1,25 @@
+{
+  "B1": ["FRQ-001 · a real login session gets its own profile"],
+  "B2": ["FRQ-001 · a real login session opens the real-time connection"],
+  "B3": ["FRQ-001 · a legacy session gets its own profile"],
+  "B4": ["FRQ-001 · a legacy session opens the real-time connection"],
+  "B5": ["FRQ-001 · a token signed with an unpublished key is rejected with 401"],
+  "B6": ["FRQ-001 · a token signed with an unpublished key is refused on the real-time connection"],
+  "B7": [
+    "FRQ-001 · an expired token is rejected with 401",
+    "FRQ-001 · a token signed with a wrong key is rejected with 401",
+    "FRQ-001 · an unsigned token is rejected with 401",
+    "FRQ-001 · a garbage token is rejected with 401",
+    "FRQ-001 · a token with no expiry is rejected with 401",
+    "FRQ-001 · a token naming an unknown algorithm is rejected with 401"
+  ],
+  "B8": [
+    "FRQ-001 · an expired token is refused on the real-time connection",
+    "FRQ-001 · a token signed with a wrong key is refused on the real-time connection",
+    "FRQ-001 · an unsigned token is refused on the real-time connection",
+    "FRQ-001 · a garbage token is refused on the real-time connection",
+    "FRQ-001 · a token with no expiry is refused on the real-time connection",
+    "FRQ-001 · a token naming an unknown algorithm is refused on the real-time connection"
+  ],
+  "B9": ["FRQ-001 · a request with no token is rejected with 401"]
+}

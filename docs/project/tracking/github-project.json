@@ -1700,7 +1700,7 @@
       "kind": "Foundation",
       "status": "In progress",
       "ref": "3.3",
-      "commits": "1f115ce",
+      "commits": "1f115ce, 1df0042, cf788da",
       "labels": [
         "hackathon-prod",
         "test"
@@ -1708,7 +1708,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 235,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrLRQ",
-      "synced": "cdd6a07b70ba87c4"
+      "synced": "95676edc91dff54e"
     },
     {
       "key": "3.4",
@@ -2248,6 +2248,26 @@
       "issueNumber": 280,
       "itemId": "PVTI_lADODEgGw84BoNdFzhGj37c",
       "synced": "95a8e8c519e9f5d2"
+    },
+    {
+      "key": "T31",
+      "project": "public",
+      "parent": "P2",
+      "title": "Auth: tokens signed with Supabase's asymmetric keys are rejected",
+      "body": "Supabase stacks created by current CLI versions sign access tokens with an asymmetric key (ES256). The backend only accepts tokens signed with the legacy shared secret (HS256), so on such a stack authenticated socket connections fail. The hosted projects still use the legacy secret.\n\nFix: accept both, checking asymmetric tokens against the project's published keys (D-057). Needed before CI, whose stack is created fresh.\n\nRed test on a fresh stack: `sockets.test.js` \"socketAs(user) connects to the running app with that user's token\".",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Done",
+      "ref": "T31",
+      "commits": "cbc1234, 25e0084, c804a7f",
+      "labels": [
+        "bug",
+        "hackathon-prod"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 284,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhHBH80",
+      "synced": "e7cc5e8d6f905516"
     }
   ]
 }

@@ -1,4 +1,3 @@
-import { bearerJwt } from '@oas-tools/auth/handlers'
 import * as UsersRepository from '../repositories/usersRepository.js'
 
 const getUserIdFromSocket = (socket) => {
@@ -11,13 +10,8 @@ export const getUserProfileIdFromSocket = async (socket) => {
   return userProfile?.id
 }
 
-export const useJwtAuthorization = (io) => {
-  const JWT_SECRET = process.env.JWT_SECRET
-  const JWT_ISSUER = process.env.JWT_ISSUER
-
-  const verifyJwt = bearerJwt({ issuer: JWT_ISSUER, secret: JWT_SECRET })
-
-  io.engine.use((req, res, next) => {
+export const useJwtAuthorization = (io, verifyAccessToken) => {
+  io.engine.use(async (req, res, next) => {
     const isHandshake = req._query.sid === undefined
     if (!isHandshake) return next()
 
@@ -25,8 +19,7 @@ export const useJwtAuthorization = (io) => {
     if (!header) return next(new Error('no token'))
 
     try {
-      const decoded = verifyJwt(header)
-      req.user = decoded
+      req.user = await verifyAccessToken(header)
       next()
     } catch (err) {
       next(new Error('Invalid token'))

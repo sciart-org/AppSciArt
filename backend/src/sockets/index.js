@@ -25,7 +25,7 @@ let io = null
 
 export const getIo = () => io
 
-export function initializeWebSockets (server) {
+export function initializeWebSockets (server, verifyAccessToken) {
   const FRONTEND_URL = process.env.FRONTEND_URL
   io = new Server(server, {
     cors: {
@@ -34,7 +34,7 @@ export function initializeWebSockets (server) {
     }
   })
 
-  useJwtAuthorization(io)
+  useJwtAuthorization(io, verifyAccessToken)
   initializeDiagramming(io)
 
   io.on('connection', (socket) => {
