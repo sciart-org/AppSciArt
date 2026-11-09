@@ -10,8 +10,8 @@ Security work is tracked privately and only described here in generic terms unti
 - **Milestone:** Hackathon in production (D-052, D-056, `roadmap.md`): the flow CLOSED / PREPARING → FINISHED ready
   in production
 - **Done:** Hackathon MVP on pre-production (D-048–D-051)
-- **Now:** CI with a test baseline (D-055): baseline done; first, accept Supabase's asymmetric signing keys (D-057),
-  then the workflow and branch protection
+- **Now:** CI with a test baseline (D-055): baseline and Supabase's asymmetric signing keys (D-057) done;
+  next the workflow and branch protection
 - **Next:** the security fixes for the flow
 - **Paused:** Phase 1a after UC-006 / UC-007; next there: FRQ-001 authentication
 
