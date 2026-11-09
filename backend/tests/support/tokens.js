@@ -1,4 +1,4 @@
-import { createHmac } from 'crypto'
+import { createHmac, generateKeyPairSync, sign } from 'crypto'
 
 const ONE_HOUR_IN_SECONDS = 3600
 const tokensByEmail = new Map()
@@ -42,11 +42,26 @@ const signedWith = (secret, claims) => {
   return `${header}.${payload}.${signature}`
 }
 
+const keyPairTheStackDoesNotPublish = generateKeyPairSync('ec', { namedCurve: 'P-256' })
+
+const signedWithUnpublishedKey = (claims) => {
+  const header = base64UrlJson({ alg: 'ES256', typ: 'JWT', kid: 'not-published-by-the-stack' })
+  const payload = base64UrlJson(claims)
+  const signature = sign('sha256', Buffer.from(`${header}.${payload}`), {
+    key: keyPairTheStackDoesNotPublish.privateKey,
+    dsaEncoding: 'ieee-p1363'
+  }).toString('base64url')
+  return `${header}.${payload}.${signature}`
+}
+
 const unsigned = (claims) => `${base64UrlJson({ alg: 'none', typ: 'JWT' })}.${base64UrlJson(claims)}.`
 
 export const forgedTokens = {
   expired: (user) => signedWith(process.env.JWT_SECRET, claimsOf(user, { issuedAt: nowInSeconds() - 2 * ONE_HOUR_IN_SECONDS })),
   wrongKey: (user) => signedWith('not-the-real-secret-not-the-real-secret', claimsOf(user)),
   unsigned: (user) => unsigned(claimsOf(user)),
+  unknownKey: (user) => signedWithUnpublishedKey(claimsOf(user)),
   garbage: () => 'not-a-jwt'
 }
+
+export const legacyTokenOf = (user) => signedWith(process.env.JWT_SECRET, claimsOf(user))

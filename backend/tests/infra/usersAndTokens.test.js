@@ -1,7 +1,7 @@
 import { createHmac } from 'crypto'
 import { describe, expect, it } from 'vitest'
 import {
-  administrator, designer, facilitator, participant, participants, login, tokenOf, forgedTokens
+  administrator, designer, facilitator, participant, participants, login, tokenOf, legacyTokenOf, forgedTokens
 } from '../support/index.js'
 
 const decodePart = (part) => JSON.parse(Buffer.from(part, 'base64url').toString())
@@ -18,6 +18,14 @@ const isSignedWithAppSecret = (token) => {
 }
 
 const nowInSeconds = () => Math.floor(Date.now() / 1000)
+
+const ES256_SIGNATURE_BYTES = 64
+
+const keyIdsPublishedByTheStack = async () => {
+  const response = await fetch(`${process.env.SUPABASE_URL}/auth/v1/.well-known/jwks.json`)
+  const { keys } = await response.json()
+  return keys.map(key => key.kid)
+}
 
 describe('base users', () => {
   it.each([
@@ -99,5 +107,27 @@ describe('forged tokens', () => {
 
   it('a garbage token is not a JWT at all', () => {
     expect(forgedTokens.garbage().split('.')).toHaveLength(1)
+  })
+
+  it('an unknown-key token has valid claims for the user but is signed by a key the stack does not publish', async () => {
+    const { header, claims, signature } = decodeJwt(forgedTokens.unknownKey(user()))
+
+    expect(header.alg).toBe('ES256')
+    expect(await keyIdsPublishedByTheStack()).not.toContain(header.kid)
+    expect(claims.sub).toBe(user().authId)
+    expect(claims.exp).toBeGreaterThan(nowInSeconds())
+    expect(Buffer.from(signature, 'base64url')).toHaveLength(ES256_SIGNATURE_BYTES)
+  })
+})
+
+describe('legacy tokens', () => {
+  it('legacyTokenOf(user) is a valid token of that user signed with the app secret', () => {
+    const token = legacyTokenOf(participant(3))
+    const { header, claims } = decodeJwt(token)
+
+    expect(header.alg).toBe('HS256')
+    expect(isSignedWithAppSecret(token)).toBe(true)
+    expect(claims.sub).toBe(participant(3).authId)
+    expect(claims.exp).toBeGreaterThan(nowInSeconds())
   })
 })

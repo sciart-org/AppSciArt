@@ -66,8 +66,12 @@ const res = await api.post('/editions').send({ name: 'E1', year: 2026 })
 - `await login({ email, password })` → `{ status, body }` straight from Supabase Auth. `body.access_token` is set on
   success.
 - `await tokenOf(user)` → the user's access token (one real login per user and file, then cached).
+The token helpers below are plain functions (no `await`).
+- `legacyTokenOf(user)` → a valid token of the user, signed with the project's legacy shared secret, as the hosted
+  projects still issue them (D-057). The local stack signs real logins with a published key instead.
 - `forgedTokens.expired(user)`: a correctly signed token whose expiry is in the past.
 - `forgedTokens.wrongKey(user)`: valid claims, signed with another key.
+- `forgedTokens.unknownKey(user)`: valid claims, signed with an asymmetric key the stack doesn't publish.
 - `forgedTokens.unsigned(user)`: valid claims, `alg: none`, no signature.
 - `forgedTokens.garbage()`: not a JWT.
 
