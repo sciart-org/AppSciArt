@@ -6,6 +6,8 @@ on:
     paths:
       - 'docs/project/**'
       - 'docs/diagrams/**'
+      - 'CLAUDE.md'
+      - 'backend/tests/HELPERS.md'
       - 'website/**'
       - '.github/workflows/docs-test.yml'
       - '.github/workflows/docs-deploy.yml'

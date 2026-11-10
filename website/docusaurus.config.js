@@ -2,6 +2,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 
 const REPO_URL = 'https://github.com/sciart-org/AppSciArt'
 const PUBLISHED_DOCS = ['project/**/*.md', 'diagrams/**/*.md']
+const REFERENCE_DOCS = ['CLAUDE.md', 'backend/tests/HELPERS.md']
 
 const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1)
 
@@ -62,6 +63,20 @@ const config = {
     ]
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'repo',
+        path: '..',
+        include: REFERENCE_DOCS,
+        routeBasePath: 'reference',
+        sidebarPath: './sidebarsReference.js',
+        editUrl: ({ docPath }) => `${REPO_URL}/edit/develop/${docPath}`
+      }
+    ]
+  ],
+
   themeConfig: {
     colorMode: {
       respectPrefersColorScheme: true
@@ -70,6 +85,7 @@ const config = {
       title: 'AppSciArt',
       items: [
         { type: 'docSidebar', sidebarId: 'docs', position: 'left', label: 'Docs' },
+        { type: 'docSidebar', sidebarId: 'reference', docsPluginId: 'repo', position: 'left', label: 'Reference' },
         { href: REPO_URL, label: 'GitHub', position: 'right' }
       ]
     },
