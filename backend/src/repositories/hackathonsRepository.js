@@ -54,7 +54,7 @@ export const getActiveHackathon = async (userId, role) => {
 
 export const getHackathons = async (userId, hackathonId, role) => {
   role ??= await getUserRole(userId, { hackathonId })
-  const scopes = [getHackathonRoleScope(role), 'withEdition', ...withEnrollmentScope(userId, role)]
+  const scopes = [getHackathonRoleScope(role), 'listItem', 'withEdition', ...withEnrollmentScope(userId, role)]
   return Hackathon.scope(scopes).findAll()
 }
 
