@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci --prefix backend
+
+      - name: Install frontend dependencies
+        run: npm ci --prefix frontend
+
+      - name: Lint
+        run: npm run lint
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+  backend-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.103.0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start the testing Supabase stack
+        working-directory: ./backend/db/test
+        run: supabase start -x studio
+
+      - name: Write .env.testing from the stack
+        working-directory: ./backend/db/test
+        run: |
+          set -euo pipefail
+          status="$(supabase status -o json)"
+          value () { jq -er --arg key "$1" '.[$key] | strings' <<< "$status"; }
+          db_url="$(value DB_URL)"
+          api_url="$(value API_URL)"
+          anon_key="$(value PUBLISHABLE_KEY)"
+          service_role_key="$(value SECRET_KEY)"
+          jwt_secret="$(value JWT_SECRET)"
+          {
+            echo "DATABASE_URL=$db_url"
+            echo "SUPABASE_URL=$api_url"
+            echo "SUPABASE_ANON_KEY=$anon_key"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$service_role_key"
+            echo "JWT_SECRET=$jwt_secret"
+            echo "JWT_ISSUER=$api_url/auth/v1"
+            echo "FRONTEND_URL=http://localhost:5173"
+          } > ../../.env.testing
+
+      - name: Migrate the database
+        run: npm run db:migrate:test
+
+      - name: Seed the database
+        run: npm run db:seed:test
+
+      - name: Check the test baseline
+        run: npm run test:baseline:check
