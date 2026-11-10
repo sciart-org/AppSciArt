@@ -2,7 +2,7 @@
 
 Drafted 2026-10-17. Per-item status and commits live on the [production roadmap board](https://github.com/orgs/sciart-org/projects/4).
 - Execute **one phase at a time**, each with its own detailed plan and approval.
-- Branching: short-lived branches from `develop`, merged by pull request with CI and a test baseline (D-055).
+- Branching: short-lived branches from `develop`, merged by pull request with CI and a test baseline, deleted once merged (D-055).
 - Bug numbers (#…) are the public issues; requirement IDs (UC/BRU/FRQ/IRQ/NFRQ) → `srs-coverage.md`.
 
 ## Phase 0 — Repo baseline

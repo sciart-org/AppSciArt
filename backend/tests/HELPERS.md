@@ -21,6 +21,20 @@ Prerequisites: the local testing Supabase stack running (`supabase start` in `db
 that isn't local. Seed only once, on an empty database: the testing seeders aren't tracked (no `SequelizeData`),
 so `db:seed:test` must not run again on a seeded database. Between files, the reset keeps the base users.
 
+## Baseline
+`tests/baseline.json` lists every passing test as `file > describe > … > test`, sorted. Failing tests stay
+red and unlisted, so CI can stay green while open findings exist (D-055).
+
+| Command | Does |
+|---|---|
+| `npm run test:baseline` | Runs the suite and adds new passes. Refuses, and lists them, if a listed test fails or is missing |
+| `npm run test:baseline:check` | What CI runs: fails on a regression and on a new pass left unrecorded |
+| `npm run test:baseline -- --drop "<key>"` | Removes one listed test that fails or no longer exists (renamed, deleted); repeat the flag for more |
+
+- A new pass: run `npm run test:baseline` and commit `tests/baseline.json` with the change that made it pass.
+- A renamed test: drop the old key and run again, so the rename shows in the diff.
+- Test names must be unique within a file; the script refuses duplicates.
+
 ## Rules
 - **Arrange** with the fixtures below, **act** and **assert** only through the API (`as`, `asGuest`, …) and sockets.
   Use `sentEmails()` and `drive.*` only to check what went to the email and Drive services.

@@ -9,14 +9,25 @@ jobs:
   ping:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - environment: production
+            database-url-secret: DATABASE_URL_PRODUCTION
+          - environment: pre-production
+            database-url-secret: DATABASE_URL_PRE_PRODUCTION
+
+    name: ping (${{ matrix.environment }})
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install dependencies
         working-directory: ./backend 
@@ -25,4 +36,4 @@ jobs:
       - name: Run Keep Alive Script
         run: node backend/scripts/keep-supabase-alive.js
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL_PRODUCTION }}
+          DATABASE_URL: ${{ secrets[matrix.database-url-secret] }}
