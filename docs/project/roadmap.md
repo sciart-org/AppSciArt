@@ -15,7 +15,7 @@ Drafted 2026-10-17. Per-item status and commits live on the [production roadmap 
 ## Hackathon in production (D-052, D-056)
 The flow CLOSED / PREPARING → FINISHED is ready in production. Listed in work order; every fix ships with a test
 that reproduces it.
-- [ ] Branching and CI: lint, frontend build, full backend suite with a test baseline (D-055)
+- [x] Branching and CI: lint, frontend build, full backend suite with a test baseline (D-055), #235
 - [ ] Security fixes for this flow (tracked privately)
 - [ ] Journey test #218, CLOSED / PREPARING → FINISHED (`testing/plan.md` §4.9b)
 - [ ] Seeder #279 in `seeders/production/`: staff, plus an optional next-edition and hackathon block; data in a

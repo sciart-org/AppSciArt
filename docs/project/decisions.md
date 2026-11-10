@@ -63,6 +63,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-055 | 2026-11-08 | Branching | Short-lived branches from `develop`, merged by pull request and deleted once merged. CI runs lint, the frontend build and the full backend suite on every pull request; a committed baseline of passing tests makes any regression, or any new pass left unrecorded, fail the check. ([details](#d-055)) | D-004 (git-flow), D-007, D-009 (flow) | in force |
 | D-056 | 2026-11-08 | Priority | Hackathon in production, re-planned: no real hackathon to load yet, so production gets staff and, when known, the next edition's hackathon from the seeder. New order: CI, security fixes, journey test, seeder, ops, checklist and deploy; PLANNED → CLOSED is a stretch goal. ([details](#d-056)) | D-052 (order, seeder scope) | in force |
 | D-057 | 2026-11-08 | Auth | The backend accepts access tokens from both Supabase signing systems: asymmetric keys (ES256/RS256), checked against the project's published keys, and the legacy shared secret (HS256). Done before the CI workflow, whose stack is created fresh. ([details](#d-057)) | — | in force |
+| D-058 | 2026-11-10 | CI | Every workflow pins its actions to a full commit SHA, with the version in a comment. Dependabot proposes updates weekly into `develop`, grouped into one pull request, after a 7-day cooldown; CI and the docs build test them before merging. ([details](#d-058)) | — | in force |
 
 ## Details
 
@@ -377,3 +378,29 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
     (2025).
   - [jose, `createRemoteJWKSet`](https://github.com/panva/jose/blob/main/docs/functions/jwks_remote.createRemoteJWKSet.md)
     (current, v6).
+
+### D-058
+- Why: a tag like `@v4` can be moved to other code, so a compromised action repository would run in our workflows
+  unnoticed. A commit SHA can't change. Pins don't update themselves, though, and the old workflows had fallen three
+  majors behind (`checkout`, `setup-node` v4 while v7 was current).
+- How:
+  - `uses: <action>@<sha> # vX.Y.Z` in every workflow, same versions across workflows.
+  - `.github/dependabot.yml`: ecosystem `github-actions` only, weekly, `target-branch: develop`, all actions in one
+    group, `cooldown.default-days: 7` (skips releases pulled or patched within days).
+  - Every update is tested on its own pull request: `ci.yml` uses the same actions, and `docs-test.yml` also builds
+    the Pages artifact and runs when `docs-deploy.yml` changes. Only `deploy-pages` and the keep-alive script run
+    after the merge (manual "Run workflow"); a failed Pages deploy keeps the previous site live.
+- Not adopted:
+  - Automatic revert of a failing update: a revert pull request opened with `GITHUB_TOKEN` starts no workflow, so
+    the required checks never run; it would need a GitHub App, too much for a handful of updates a year.
+  - Dependabot for npm packages: separate decision, far noisier.
+- Sources:
+  - [Security hardening for GitHub Actions](https://docs.github.com/en/actions/reference/security/secure-use)
+    (current GitHub docs): pin actions to a full-length commit SHA.
+  - [OpenSSF Scorecard, Pinned-Dependencies](https://github.com/ossf/scorecard/blob/main/docs/checks.md#pinned-dependencies)
+    (current).
+  - [Dependabot options reference](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference)
+    (current GitHub docs, read 2026-11-10): `groups`, `target-branch`, `cooldown` (only `default-days` for GitHub
+    Actions).
+  - [Triggering a workflow from a workflow](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)
+    (current GitHub docs): events made with `GITHUB_TOKEN` don't start new runs.
