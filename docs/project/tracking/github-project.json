@@ -1700,7 +1700,7 @@
       "kind": "Foundation",
       "status": "In progress",
       "ref": "3.3",
-      "commits": "1f115ce, af47d46, 9a10857, cb96fa7",
+      "commits": "1f115ce, af47d46, 9a10857, cb96fa7, 715a0a4",
       "labels": [
         "hackathon-prod",
         "test"
@@ -1708,7 +1708,7 @@
       "milestone": "v1.0.0",
       "issueNumber": 235,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrLRQ",
-      "synced": "a675992e21a2b07f"
+      "synced": "c3116701ddb5894f"
     },
     {
       "key": "3.4",
@@ -2268,6 +2268,26 @@
       "issueNumber": 284,
       "itemId": "PVTI_lADODEgGw84BoNdFzhHBH80",
       "synced": "e7cc5e8d6f905516"
+    },
+    {
+      "key": "O1",
+      "title": "Hosted databases still pause despite the keep-alive workflow",
+      "project": "public",
+      "parent": "P3",
+      "phase": "3",
+      "kind": "Bug",
+      "status": "Todo",
+      "commits": "",
+      "labels": [
+        "bug",
+        "hackathon-prod"
+      ],
+      "milestone": "v1.0.0",
+      "ref": "O1",
+      "body": "The free Supabase projects pause after a week without activity, and the keep-alive workflow didn't stop it:\n\n- The production project paused in late June 2026; every scheduled ping failed from then on, unnoticed.\n- GitHub disabled the schedule after 60 days without activity on `main`, which only moves on releases (D-055). Scheduled runs also use `main`'s copy of the workflow.\n- Pre-production wasn't pinged.\n\nA ping for pre-production is added with the CI work (#235). The lasting fix (paid plan, or a pinger that doesn't depend on `main`) is decided at the ops step (D-056 step 5), with the backups (#237).",
+      "issueNumber": 286,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhHla3Y",
+      "synced": "d99ba15c70e30560"
     }
   ]
 }
