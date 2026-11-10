@@ -60,7 +60,8 @@ workaround. Leave that case out and report what fixture it needs.
 ## Checking against the brief
 When the file is written:
 1. Write `docs/project/testing/briefs/<ID>.coverage.json`: `{ "B1": ["exact test name", …], … }`. Use every case in
-   the brief except struck-through ones, with the full names as Vitest reports them (`it.each` names expanded).
+   the brief except struck-through ones. Each name is the `it` name alone, without the `describe` names, with
+   `it.each` values filled in, e.g. `"UC-004 · IRQ-006 · guest never sees private hackathons, whatever their state"`.
    Leave out cases you couldn't write, and report them.
 2. Re-read the brief case by case. For each case, check that its tests assert exactly the expected behaviour (the
    actor, the input, the expected status and data), no less and no more. Fix the tests, not the expectations.
