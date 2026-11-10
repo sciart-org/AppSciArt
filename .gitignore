@@ -62,3 +62,4 @@ website/build
 website/.docusaurus
 
 TEMP_FILES/**
+.claude/worktrees/
