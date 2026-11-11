@@ -19,7 +19,7 @@ const mockHackathon = {
   type: "ON_SITE",
   location:
     "University of Arts Linz, Hauptplatz 8, Lecture Theater, 4th Floor (Altenberger Str. 69, 4040 Linz, Austria)",
-  description:
+  shortDescription:
     "Explore the boundaries of art and science around the brain and cognition, developing new ways to understand the human mind",
   isVisible: true,
   meetLink: null,

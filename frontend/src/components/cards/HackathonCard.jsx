@@ -67,7 +67,7 @@ export default function HackathonCard({ hackathon, hideButton, ...props }) {
             <text>{hackathon?.location}</text>
           </div>
           <div style={{ marginTop: "3vh" }}>
-            <text>{hackathon?.description}</text>
+            <text>{hackathon?.shortDescription}</text>
           </div>
         </div>
         {isStaff ? (

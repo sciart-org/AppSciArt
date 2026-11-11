@@ -46,7 +46,7 @@ export async function getHackathons (userId) {
 }
 
 export async function createHackathon (userId, body) {
-  const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink } = body
+  const { logo, startDate, endDate, type, location, shortDescription, editionId, internalName, isPrivate, meetLink } = body
   const edition = await validateIsActive(editionId, userId)
   await validateHackathonNameUnique(internalName)
   if (type !== 'ON_SITE') {
@@ -54,7 +54,7 @@ export async function createHackathon (userId, body) {
   }
   const driveLink = await createDriveHackathon(edition?.driveLink, internalName, logo)
   const createdHackathon = await HackathonRepository.createHackathon({
-    startDate, endDate, type, location, description, editionId, internalName, isPrivate, driveLink, meetLink
+    startDate, endDate, type, location, shortDescription, editionId, internalName, isPrivate, driveLink, meetLink
   })
   const hackathonsWithLogo = await getHackathonsWithLogo([createdHackathon])
   return hackathonsWithLogo[0]
@@ -78,7 +78,7 @@ export async function getHackathonDetails (hackathonId, userId) {
 export async function updateHackathon (currentUserId, hackathonId, body) {
   const hackathon = await validateHackathonExists(currentUserId, hackathonId)
 
-  const { logo, startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink } = body
+  const { logo, startDate, endDate, type, location, shortDescription, editionId, internalName, isPrivate, meetLink } = body
   let edition
 
   const isPreparing = hackathon.phase === 'PREPARING'
@@ -101,7 +101,7 @@ export async function updateHackathon (currentUserId, hackathonId, body) {
     await uploadImg(logo, hackathon.driveLink)
   }
 
-  const hackathonBody = { startDate, endDate, type, location, description, editionId, internalName, isPrivate, meetLink }
+  const hackathonBody = { startDate, endDate, type, location, shortDescription, editionId, internalName, isPrivate, meetLink }
 
   if (Object.values(hackathonBody).some(v => v !== undefined)) {
     await hackathon.update(hackathonBody)

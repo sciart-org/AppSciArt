@@ -48,7 +48,7 @@ export const Hackathon = sequelize.define(
     location: {
       type: DataTypes.STRING
     },
-    description: {
+    shortDescription: {
       type: DataTypes.STRING
     },
     state: {
