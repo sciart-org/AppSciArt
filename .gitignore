@@ -60,6 +60,7 @@ CLAUDE.local.md
 
 website/build
 website/.docusaurus
+website/reference
 
 TEMP_FILES/**
 .claude/worktrees/
