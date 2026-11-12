@@ -286,6 +286,10 @@ participantsByUser:
     responses:
       "201":
         description: Participation created
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorisedError"
+      default:
+        $ref: "../components/responses.yaml#/UnexpectedError"
   put:
     tags: [User Hackathons]
     summary: Update a participation
