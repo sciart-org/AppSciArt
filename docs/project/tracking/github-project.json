@@ -1161,16 +1161,16 @@
       "body": "List items carry `description`; the contract field is `shortDescription` (IRQ-006 short description).\n\nRed tests: `hackathonsList.test.js` \"guest list items carry every required field\", and the exact-shape tests.",
       "phase": "2",
       "kind": "Bug",
-      "status": "Todo",
+      "status": "In progress",
       "ref": "T8",
-      "commits": "",
+      "commits": "cfb630c",
       "labels": [
         "bug"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 256,
       "itemId": "PVTI_lADODEgGw84BoNdFzhC95RM",
-      "synced": "9c49c495967fc65f"
+      "synced": "1960a04d18d3a735"
     },
     {
       "key": "T9",
@@ -1180,16 +1180,16 @@
       "body": "Guest items carry `isEnrolled: false`. Only authenticated users should get `isEnrolled`.\n\nRed tests: `hackathonsList.test.js` \"guest items carry no isEnrolled\", and the guest exact-shape test.",
       "phase": "2",
       "kind": "Bug",
-      "status": "Todo",
+      "status": "In progress",
       "ref": "T9",
-      "commits": "",
+      "commits": "5c7ecba",
       "labels": [
         "bug"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 257,
       "itemId": "PVTI_lADODEgGw84BoNdFzhC95eU",
-      "synced": "656b87bfb72ad932"
+      "synced": "956ef289816c4cf6"
     },
     {
       "key": "T13",

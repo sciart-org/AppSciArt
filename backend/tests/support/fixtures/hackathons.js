@@ -66,7 +66,7 @@ export const aHackathon = async ({
     endDate,
     type,
     location,
-    description: shortDescription,
+    shortDescription,
     state,
     phase,
     meetLink,

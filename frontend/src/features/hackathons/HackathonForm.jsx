@@ -139,9 +139,9 @@ export default function HackathonForm({
       </div>
       <div className="long-input-box-container">
         <EditableFormInput
-          name={"Description"}
+          name={"Short description"}
           type={"text"}
-          value={formData.description}
+          value={formData.shortDescription}
           multiline={true}
           style={isEditable ? {} : { marginBottom: "0.5rem" }}
         />

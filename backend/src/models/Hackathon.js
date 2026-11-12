@@ -48,7 +48,7 @@ export const Hackathon = sequelize.define(
     location: {
       type: DataTypes.STRING
     },
-    description: {
+    shortDescription: {
       type: DataTypes.STRING
     },
     state: {
@@ -89,6 +89,11 @@ export const Hackathon = sequelize.define(
         },
         where: { isPrivate: false, state: { [Op.ne]: 'PLANNED' } },
         order: [['startDate', 'ASC']]
+      },
+      listItem: {
+        attributes: {
+          exclude: ['meetLink']
+        }
       },
       withEdition: {
         attributes: {

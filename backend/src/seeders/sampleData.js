@@ -100,7 +100,7 @@ export const ONGOING_HACKATHON = {
   endDate: hoursFromNow(48),
   type: 'HYBRID',
   location: 'Escuela Técnica Superior de Ingeniería Informática, Av. de la Reina Mercedes, s/n, 41012 Sevilla',
-  description: 'Hybrid hackathon in Sevilla for the ASTER+S Genetics edition.',
+  shortDescription: 'Hybrid hackathon in Sevilla for the ASTER+S Genetics edition.',
   state: 'CLOSED',
   phase: 'PREPARING',
   meetLink: 'https://meet.google.com/abc-defg-hij',

@@ -29,8 +29,10 @@ const HACKATHON_SCOPE_BY_ROLE = new Map([
 export const getHackathonRoleScope = (role) =>
   HACKATHON_SCOPE_BY_ROLE.get(role)?.name ?? ROLES.PUBLIC.name
 
+const isGuest = (userId) => !userId
+
 const withEnrollmentScope = (userId, role) => {
-  return !isStaff(role) ? [{ method: ['withEnrollment', userId] }] : []
+  return isGuest(userId) || isStaff(role) ? [] : [{ method: ['withEnrollment', userId] }]
 }
 
 export const getClosestHackathon = (userId) =>
@@ -54,7 +56,7 @@ export const getActiveHackathon = async (userId, role) => {
 
 export const getHackathons = async (userId, hackathonId, role) => {
   role ??= await getUserRole(userId, { hackathonId })
-  const scopes = [getHackathonRoleScope(role), 'withEdition', ...withEnrollmentScope(userId, role)]
+  const scopes = [getHackathonRoleScope(role), 'listItem', 'withEdition', ...withEnrollmentScope(userId, role)]
   return Hackathon.scope(scopes).findAll()
 }
 

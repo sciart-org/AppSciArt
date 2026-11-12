@@ -16,7 +16,7 @@ Hackathon:
       type: string
       maxLength: 255
       nullable: true
-    description:
+    shortDescription:
       type: string
       maxLength: 500
       nullable: true
