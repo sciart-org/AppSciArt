@@ -1,0 +1,19 @@
+{
+  "B1": [
+    "UC-005 · UC-041 · participant joining through participants/me is enrolled"
+  ],
+  "B2": [
+    "UC-005 · UC-041 · participant enrolling themselves through their own user id is enrolled"
+  ],
+  "B3": [
+    "UC-005 · participant enrolling another participant gets 403",
+    "UC-005 · participant enrolling another participant leaves them not enrolled"
+  ],
+  "B4": [
+    "UC-005 · guest enrolling a participant gets 401",
+    "UC-005 · guest enrolling a participant leaves them not enrolled"
+  ],
+  "B5": [
+    "UC-005 · UC-041 · facilitator enrolling a participant enrols them"
+  ]
+}

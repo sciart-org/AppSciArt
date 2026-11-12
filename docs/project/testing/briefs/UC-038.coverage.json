@@ -1,0 +1,26 @@
+{
+  "B1": [
+    "UC-038 · participant modifying the location gets 403",
+    "UC-038 · participant modifying the location leaves it unchanged"
+  ],
+  "B2": [
+    "UC-038 · participant enrolled in it modifying the location gets 403",
+    "UC-038 · evaluator of it modifying the location gets 403",
+    "UC-038 · participant enrolled in it modifying the location leaves it unchanged",
+    "UC-038 · evaluator of it modifying the location leaves it unchanged"
+  ],
+  "B3": [
+    "UC-038 · guest modifying the location gets 401",
+    "UC-038 · guest modifying the location leaves it unchanged"
+  ],
+  "B4": [
+    "UC-038 · facilitator modifying the location gets 2xx",
+    "UC-038 · facilitator modifying the location shows the new location when read back"
+  ],
+  "B5": [
+    "UC-038 · designer modifying the location gets 2xx",
+    "UC-038 · administrator modifying the location gets 2xx",
+    "UC-038 · designer modifying the location shows the new location when read back",
+    "UC-038 · administrator modifying the location shows the new location when read back"
+  ]
+}
