@@ -1,6 +1,5 @@
 import * as service from '../services/userHackathonsService.js'
 import { withController } from './controllerHandlers.js'
-import * as UsersService from '../services/usersService.js'
 import { validateHackathonIsOpen } from '../validators/hackathonValidators.js'
 import { broadcastParticipationUpdate, emitGroupsChangedToStaff, emitTeamsChangedToStaff } from '../sockets/hackathonPhases.js'
 import { validateAuthenticated, validateStaff } from '../middlewares/authMiddleware.js'
@@ -9,20 +8,27 @@ export function getUserEnrolledHackathons (req, res) {
   service.getUserEnrolledHackathons(req, res)
 }
 
-export const joinHackathon = withController(async (req, res) => {
+const enrolInOpenHackathon = async (req, currentUser, userId) => {
   const { roles, interests } = req.body
-  const { hackathonId, userId } = req.params
-  const currentUser = await UsersService.getCurrentUserProfile(req)
-  await validateHackathonIsOpen(currentUser?.id, hackathonId)
+  const { hackathonId } = req.params
+  await validateHackathonIsOpen(currentUser.id, hackathonId)
+  return await service.joinHackathon(userId, hackathonId, roles, interests)
+}
 
-  const participation = await service.joinHackathon(userId, hackathonId, roles, interests)
+export const joinHackathon = withController(async (req, res) => {
+  const currentUser = await validateAuthenticated(req)
+  const { userId } = req.params
+  const isEnrollingSomeoneElse = userId !== currentUser.id
+  if (isEnrollingSomeoneElse) await validateStaff(req)
+
+  const participation = await enrolInOpenHackathon(req, currentUser, userId)
   return res.status(201).send(participation)
 })
 
 export const joinMeHackathon = withController(async (req, res) => {
   const currentUser = await validateAuthenticated(req)
-  req.params = { ...req.params, userId: currentUser.id }
-  return await joinHackathon(req, res)
+  const participation = await enrolInOpenHackathon(req, currentUser, currentUser.id)
+  return res.status(201).send(participation)
 })
 
 export function getUserHackathonContributions (req, res) {
