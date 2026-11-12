@@ -1,6 +1,7 @@
 import { themes as prismThemes } from 'prism-react-renderer'
 
 import { REFERENCE_DIR } from './reference.config.js'
+import markTokenCells from './rehype/markTokenCells.js'
 
 const REPO_URL = 'https://github.com/sciart-org/AppSciArt'
 const PUBLISHED_DOCS = ['project/**/*.md', 'diagrams/**/*.md']
@@ -51,6 +52,7 @@ const config = {
           include: PUBLISHED_DOCS,
           routeBasePath: '/',
           sidebarPath: './sidebars.js',
+          rehypePlugins: [markTokenCells],
           editUrl: ({ docPath }) => `${REPO_URL}/edit/develop/docs/${docPath}`,
           async sidebarItemsGenerator ({ defaultSidebarItemsGenerator, ...args }) {
             return capitalizeCategories(await defaultSidebarItemsGenerator(args))
@@ -72,6 +74,7 @@ const config = {
         path: REFERENCE_DIR,
         routeBasePath: 'reference',
         sidebarPath: './sidebarsReference.js',
+        rehypePlugins: [markTokenCells],
         editUrl: ({ docPath }) => `${REPO_URL}/edit/develop/${docPath}`
       }
     ]
