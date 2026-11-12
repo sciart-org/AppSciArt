@@ -29,8 +29,10 @@ const HACKATHON_SCOPE_BY_ROLE = new Map([
 export const getHackathonRoleScope = (role) =>
   HACKATHON_SCOPE_BY_ROLE.get(role)?.name ?? ROLES.PUBLIC.name
 
+const isGuest = (userId) => !userId
+
 const withEnrollmentScope = (userId, role) => {
-  return !isStaff(role) ? [{ method: ['withEnrollment', userId] }] : []
+  return isGuest(userId) || isStaff(role) ? [] : [{ method: ['withEnrollment', userId] }]
 }
 
 export const getClosestHackathon = (userId) =>
