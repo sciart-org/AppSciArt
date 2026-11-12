@@ -1,5 +1,8 @@
 import { themes as prismThemes } from 'prism-react-renderer'
 
+import { REFERENCE_DIR } from './reference.config.js'
+import markTokenCells from './rehype/markTokenCells.js'
+
 const REPO_URL = 'https://github.com/sciart-org/AppSciArt'
 const PUBLISHED_DOCS = ['project/**/*.md', 'diagrams/**/*.md']
 
@@ -49,6 +52,7 @@ const config = {
           include: PUBLISHED_DOCS,
           routeBasePath: '/',
           sidebarPath: './sidebars.js',
+          rehypePlugins: [markTokenCells],
           editUrl: ({ docPath }) => `${REPO_URL}/edit/develop/docs/${docPath}`,
           async sidebarItemsGenerator ({ defaultSidebarItemsGenerator, ...args }) {
             return capitalizeCategories(await defaultSidebarItemsGenerator(args))
@@ -62,6 +66,20 @@ const config = {
     ]
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'repo',
+        path: REFERENCE_DIR,
+        routeBasePath: 'reference',
+        sidebarPath: './sidebarsReference.js',
+        rehypePlugins: [markTokenCells],
+        editUrl: ({ docPath }) => `${REPO_URL}/edit/develop/${docPath}`
+      }
+    ]
+  ],
+
   themeConfig: {
     colorMode: {
       respectPrefersColorScheme: true
@@ -70,6 +88,7 @@ const config = {
       title: 'AppSciArt',
       items: [
         { type: 'docSidebar', sidebarId: 'docs', position: 'left', label: 'Docs' },
+        { type: 'docSidebar', sidebarId: 'reference', docsPluginId: 'repo', position: 'left', label: 'Reference' },
         { href: REPO_URL, label: 'GitHub', position: 'right' }
       ]
     },
