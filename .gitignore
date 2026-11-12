@@ -63,3 +63,4 @@ website/.docusaurus
 website/reference
 
 TEMP_FILES/**
+.claude/worktrees/
