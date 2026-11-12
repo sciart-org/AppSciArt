@@ -1,8 +1,9 @@
 import { themes as prismThemes } from 'prism-react-renderer'
 
+import { REFERENCE_DIR } from './reference.config.js'
+
 const REPO_URL = 'https://github.com/sciart-org/AppSciArt'
 const PUBLISHED_DOCS = ['project/**/*.md', 'diagrams/**/*.md']
-const REFERENCE_DOCS = ['CLAUDE.md', 'backend/tests/HELPERS.md']
 
 const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1)
 
@@ -68,8 +69,7 @@ const config = {
       '@docusaurus/plugin-content-docs',
       {
         id: 'repo',
-        path: '..',
-        include: REFERENCE_DOCS,
+        path: REFERENCE_DIR,
         routeBasePath: 'reference',
         sidebarPath: './sidebarsReference.js',
         editUrl: ({ docPath }) => `${REPO_URL}/edit/develop/${docPath}`
