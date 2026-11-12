@@ -19,7 +19,7 @@ Security work is tracked privately and only described here in generic terms unti
 |---|---|---|---|
 | 0 | Repository baseline | #164 | done |
 | 1a | Acceptance tests from the SRS | #165 | in progress |
-| 1 | Security fixes (tracked privately) | — | todo |
+| 1 | Security fixes (tracked privately) | — | in progress |
 | 2 | Functional bugs | #166 | todo |
 | 3 | Production foundations (CI, ops, hardening) | #167 | todo |
 | 4 | Finish mocked basics | #168 | todo |
