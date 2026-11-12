@@ -65,6 +65,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-057 | 2026-11-08 | Auth | The backend accepts access tokens from both Supabase signing systems: asymmetric keys (ES256/RS256), checked against the project's published keys, and the legacy shared secret (HS256). Done before the CI workflow, whose stack is created fresh. ([details](#d-057)) | — | in force |
 | D-058 | 2026-11-10 | CI | Every workflow pins its actions to a full commit SHA, with the version in a comment. Dependabot proposes updates weekly into `develop`, grouped into one pull request, after a 7-day cooldown; CI and the docs build test them before merging. ([details](#d-058)) | — | in force |
 | D-059 | 2026-11-10 | Docs | The docs site also publishes `CLAUDE.md` and `backend/tests/HELPERS.md` in place. Architecture and commands stay in `CLAUDE.md` and are not moved into `docs/project/`: `CLAUDE.md` is loaded into Claude's context every session, `docs/project/` is only read on demand. | D-054 (scope) | in force |
+| D-060 | 2026-11-12 | Security | Security fixes leave a public record once released: at each production release, one issue on the roadmap board lists the released fixes in generic terms with their commits, and is closed. Nothing about them is public before that: no issue, no commit trailer. ([details](#d-060)) | — | in force |
 
 ## Details
 
@@ -405,3 +406,23 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
     Actions).
   - [Triggering a workflow from a workflow](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)
     (current GitHub docs): events made with `GITHUB_TOKEN` don't start new runs.
+
+### D-060
+- Why: the docs promise a generic description of security work once released; without a public record the board never
+  shows that work, nor which commits did it.
+- At each production release:
+  1. Open one issue on the roadmap board, e.g. "Security fixes released in v1.1.0". One generic line per fix, with its
+     commit SHAs, which GitHub links to the commits.
+  2. Close it, and link it from Phase 1 in `README.md`.
+- Before the release, nothing about these fixes is public: no issue, and no `Refs #n` trailer, which would mark the
+  pushed commits as security fixes while production still runs the old code.
+- Considered: GitHub repository security advisories. Rejected for this project:
+  - There's no field that links commits; links go in the free-text description.
+  - The temporary private fork runs no CI and enforces no branch protection, which bypasses D-055.
+  - For a web app (ecosystem `other`) the advisory stays in the repository, so it adds little over an issue.
+- Sources (current GitHub docs, read 2026-11-12):
+  - [About repository security advisories](https://docs.github.com/en/code-security/security-advisories/working-with-repository-security-advisories/about-repository-security-advisories)
+  - [Temporary private forks](https://docs.github.com/en/code-security/security-advisories/working-with-repository-security-advisories/collaborating-in-a-temporary-private-fork-to-resolve-a-repository-security-vulnerability):
+    "integrations, including CI, cannot access temporary private forks"
+  - [Repository security advisories REST API](https://docs.github.com/en/rest/security-advisories/repository-advisories)
+    (API version 2026-03-10): no field for commits or pull requests

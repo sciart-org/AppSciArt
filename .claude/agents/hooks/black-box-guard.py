@@ -30,13 +30,14 @@ ALLOWED_COMMANDS = re.compile(
 )
 REPORT_TOOLS = {'SubagentHandback'}
 HIDDEN_IN_COMMAND = re.compile(r'(?:^|[\s/=])(?:src|frontend|support|infra|analysis|private)(?:[\s/]|$)')
+WORKTREE_PREFIX = re.compile(r'^\.claude/worktrees/[^/]+/')
 
 
 def relative(path, cwd):
     absolute = os.path.realpath(os.path.join(cwd, os.path.expanduser(path)))
     if absolute != ROOT and not absolute.startswith(ROOT + os.sep):
         return None
-    return os.path.relpath(absolute, ROOT).replace(os.sep, '/')
+    return WORKTREE_PREFIX.sub('', os.path.relpath(absolute, ROOT).replace(os.sep, '/'), count=1)
 
 
 def literal_prefix(pattern):

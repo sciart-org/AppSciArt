@@ -22,6 +22,7 @@ that reproduces it.
   gitignored file; idempotent
 - [ ] Production env, `.env.example` per package (#236), DB backup
 - [ ] Walkthrough checklist #275 on pre-production, then production deploy
+  - After the deploy: open and close the issue listing the released security fixes (D-060)
 - [ ] Stretch: PLANNED → CLOSED (#225)
 - Out of scope: #228, #226, ratings persistence (#229), minor bugs, loading past editions (Phase 5d)
 - Open: product owner question on real participants' personal data
@@ -40,7 +41,7 @@ Ongoing hackathon from CLOSED / PREPARING to FINISHED on pre-production (D-048, 
 Black-box test safety net before any fix (D-012). Plan and steps: `testing/plan.md`.
 
 ## Phase 1 — Security fixes
-Tracked privately; described here only once released.
+Tracked privately; described here only once released, in one issue per production release (D-060).
 
 ## Phase 2 — Functional bugs
 - [ ] #225 State classes return `{ canAdvance, errorMessage }`; fix `phase`/`state` message

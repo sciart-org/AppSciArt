@@ -2,7 +2,7 @@ import * as service from '../services/hackathonsService.js'
 import { withController } from './controllerHandlers.js'
 import * as UsersService from '../services/usersService.js'
 import { broadcastHackathonUpdate } from '../sockets/hackathonPhases.js'
-import { validateAuthenticated, validateStaff } from '../middlewares/authMiddleware.js'
+import { validateStaff } from '../middlewares/authMiddleware.js'
 
 export const getHackathons = withController(async (req, res) => {
   const { filter } = req.query
@@ -41,7 +41,7 @@ export const getHackathonDetails = withController(async (req, res) => {
 })
 
 export const updateHackathon = withController(async (req, res, addAfterCommit) => {
-  const currentUser = await validateAuthenticated(req)
+  const currentUser = await validateStaff(req)
 
   const hackathonId = req.params.hackathonId
   const hackathon = req.body
