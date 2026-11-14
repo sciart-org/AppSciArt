@@ -2288,6 +2288,25 @@
       "issueNumber": 286,
       "itemId": "PVTI_lADODEgGw84BoNdFzhHla3Y",
       "synced": "8259413607a1326d"
+    },
+    {
+      "key": "F3",
+      "project": "public",
+      "parent": "P2",
+      "title": "Server exits with code 0 when startup fails",
+      "body": "When the server fails during startup (e.g. the database is unreachable), the process exits with code 0 instead of 1: the API library's own error handler exits first. Logs and process managers then see a clean exit rather than a failed start. Minor: a deploy still fails when the server never listens on its port.\n\nTest tooling: `productionStartup()` in `backend/tests/HELPERS.md` reports `exitCode`.",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "F3",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 305,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIw1xI",
+      "synced": "40a0394afe078711"
     }
   ]
 }
