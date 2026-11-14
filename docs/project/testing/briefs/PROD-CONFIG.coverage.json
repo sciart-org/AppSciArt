@@ -1,0 +1,37 @@
+{
+  "B1": ["PROD-CONFIG · a request from the frontend origin is allowed for that origin"],
+  "B2": ["PROD-CONFIG · a preflight from the frontend origin is allowed for that origin"],
+  "B3": [
+    "PROD-CONFIG · a request from the local development origin gets no CORS headers",
+    "PROD-CONFIG · a request from the local development origin is not answered with a 500"
+  ],
+  "B4": [
+    "PROD-CONFIG · a request from an unknown origin gets no CORS headers",
+    "PROD-CONFIG · a request from an unknown origin is not answered with a 500"
+  ],
+  "B5": [
+    "PROD-CONFIG · a preflight from an unknown origin gets no CORS headers",
+    "PROD-CONFIG · a preflight from an unknown origin is not answered with a 500"
+  ],
+  "B6": [
+    "PROD-CONFIG · an unexpected error is answered with a 500",
+    "PROD-CONFIG · an unexpected error body has only the generic error and its error ID",
+    "PROD-CONFIG · an unexpected error body has the fixed message and a non-empty error ID",
+    "PROD-CONFIG · an unexpected error response names no internal error"
+  ],
+  "B7": [
+    "PROD-CONFIG · the error ID of an unexpected error appears in the server log",
+    "PROD-CONFIG · the server log shows the error details next to its error ID"
+  ],
+  "B8": ["PROD-CONFIG · two unexpected errors get different error IDs"],
+  "B9": [
+    "PROD-CONFIG · a hackathon that does not exist is answered with a 404",
+    "PROD-CONFIG · a hackathon that does not exist is not turned into the generic error"
+  ],
+  "B10": [
+    "PROD-CONFIG · production without FRONTEND_URL does not start",
+    "PROD-CONFIG · production without FRONTEND_URL names FRONTEND_URL in its output"
+  ],
+  "B11": ["PROD-CONFIG · the testing app still accepts the local development origin"],
+  "B12": ["PROD-CONFIG · a production instance serves the API documentation at /docs"]
+}

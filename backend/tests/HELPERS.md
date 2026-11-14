@@ -138,7 +138,7 @@ The instance:
 | `asGuest()`, `await as(user)`, `withToken(token)` | API clients against the instance, as in "Calling the API" |
 | `cutDatabase()` | the instance loses its database: open connections drop and new ones are refused |
 | `restoreDatabase()` | the instance can reach the database again |
-| `output()` | everything the instance printed so far (its log), stdout and stderr together |
+| `output()` | everything the instance printed so far (its log), stdout and stderr together. Its first line is the helper's own start line, `productionApp: NODE_ENV=…, FRONTEND_URL=… (or (unset)), fake Google and Resend in place`; every other line comes from the server. `productionStartup`'s `output` has the same first line |
 | `await stop()` | ends it. Instances still running are stopped when the file ends |
 
 ```js
