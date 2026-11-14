@@ -17,6 +17,7 @@ The flow CLOSED / PREPARING → FINISHED is ready in production. Listed in work 
 that reproduces it.
 - [x] Branching and CI: lint, frontend build, full backend suite with a test baseline (D-055), #235
 - [ ] Security fixes for this flow (tracked privately)
+- [ ] #296: facilitator screens miss live updates after a reconnect (found in the pre-production test, 2026-11-13)
 - [ ] Journey test #218, CLOSED / PREPARING → FINISHED (`testing/plan.md` §4.9b)
 - [ ] Seeder #279 in `seeders/production/`: staff, plus an optional next-edition and hackathon block; data in a
   gitignored file; idempotent
@@ -48,7 +49,7 @@ Tracked privately; described here only once released, in one issue per productio
 - [ ] #226 `isOnSite` inversion
 - [ ] #227 Scope maps keyed by `role.name` (internal role is already `ROLES.STAFF`)
 - [ ] #228 Migration: drop `evaluators_userProfileId_unique`
-- [ ] #229 `seed_ratings` table (participationId, seedId, rating, submittedAt); sockets persist; lock after submit (BRU-042)
+- On hold (D-062): #229 `seed_ratings` table; ratings stay in memory until a reason to store them appears
 - [ ] #230 Migrations: seed state enum/default (convert `IN_BLANK` rows), `Edition.name` unique, `user_profiles.id` default, FK indexes; fix `handle_new_user.sql` (`authId`)
 - [ ] #231 Frontend `socket.off` cleanups + functional `setState` in `HackathonManagement`
 - [ ] #232 `authService` null guard; email regex (escape `-`); `customErrorHandler` null body; `joinMeHackathon` nesting; `EditionActionButton`; `Carousel`
@@ -71,6 +72,9 @@ Tracked privately; described here only once released, in one issue per productio
 - [ ] UC-030/045 delete edition/hackathon (BRU-003/013, FRQ-012)
 - [ ] UC-027 role management (FRQ-002); UC-028 delete user + data export (NFRQ-009)
 - [ ] Staff link and unlink accounts with user profiles by email (D-053)
+- [ ] Non-binary gender option (D-061)
+- [ ] Private, temporary rating notes per seed (D-062)
+- [ ] Seed numbers per edition; groups and teams take their seed's number (D-063)
 - [ ] Frontend: `AuthContext`, `<ProtectedRoute role>`, `useFetcher` (loading, `response.ok`, AbortController)
 
 ## Phase 5 — Complete SRS workflows (sub-plan each)
@@ -92,6 +96,8 @@ Tracked privately; described here only once released, in one issue per productio
 - [ ] Persist diagram state periodically; plan socket.io Redis adapter for multi-instance (NFRQ-005/010)
 - [ ] Frontend: dedupe Group/Team & Edition/Hackathon components; a11y + `eslint-plugin-jsx-a11y` (NFRQ-001/016); lazy routes; strings module for i18n (NFRQ-011)
 - [ ] Remove unused deps (`zod`, `@google-cloud/local-auth`, `reactflow`, `dotenv`); replace `cls-hooked` with `AsyncLocalStorage`; upgrade `googleapis`
+- [ ] Hackathon screens, from the 2026-11-13 review: gender-neutral default avatar; group voice and team speaker
+  badges and a labelled control; "Delivered" in green; team creation layout redesign
 
 ## Every phase
 - CI green (lint, build, `npm run test:back`, `npx playwright test --project=chromium`)

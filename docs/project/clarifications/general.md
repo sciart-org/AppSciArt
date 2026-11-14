@@ -69,3 +69,18 @@ Only states the system can reach exist (fixtures build nothing else):
 - In edition details, unpublished fruits are shown to nobody (staff included).
 
 Decisions: D-026.
+
+## Seed, group and team numbers
+- Each seed of an edition has a number: its position among the edition's seeds sorted by the seed's creation date
+  (oldest is 1), then by title. Computed when read, never stored.
+- Numbers are per edition: the same seed can have another number in another edition.
+- A group or team takes its seed's number, so the same seed gives the same number in every hackathon of the edition.
+- In one hackathon each group and each team has its own seed (`UC-058.md`, `UC-061.md`). If several ever share a
+  seed, they are numbered 1.1, 1.2, 1.3…
+
+Decisions: D-063.
+
+## User profile data
+- Gender is optional. Values: female, male, non-binary, other.
+
+Decisions: D-061.

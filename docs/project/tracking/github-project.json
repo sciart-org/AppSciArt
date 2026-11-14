@@ -1557,8 +1557,8 @@
       "key": "H5",
       "project": "public",
       "parent": "P2",
-      "title": "Seed ratings are lost on restart",
-      "body": "Ratings live only in process memory. IRQ-007 requires storing them, and the free hosting plan restarts the server when idle. Add a ratings table, persist from the socket handlers, lock after submit (BRU-042).",
+      "title": "Seed ratings are lost on restart (on hold)",
+      "body": "Ratings live only in server memory, so a restart before team creation loses them. On hold (D-062): ratings are only used until team creation, so memory is accepted; a ratings table waits until a reason for it appears. If it resumes: add a ratings table, persist from the socket handlers, lock after submit (BRU-042).",
       "phase": "2",
       "kind": "Bug",
       "status": "Todo",
@@ -1568,10 +1568,10 @@
         "bug",
         "hackathon-mvp"
       ],
-      "milestone": "v1.0.0",
+      "milestone": null,
       "issueNumber": 229,
       "itemId": "PVTI_lADODEgGw84BoNdFzhCrKGA",
-      "synced": "6ab2bb7ef56887f4"
+      "synced": "bb0524d27da7daae"
     },
     {
       "key": "H6",
@@ -2288,6 +2288,179 @@
       "issueNumber": 286,
       "itemId": "PVTI_lADODEgGw84BoNdFzhHla3Y",
       "synced": "8259413607a1326d"
+    },
+    {
+      "key": "W17",
+      "project": "public",
+      "parent": "P2",
+      "title": "Conceptual map delivery sometimes not shown to facilitators until a reload",
+      "body": "When a group delivers its conceptual map, the facilitator's group follow-up screen sometimes doesn't mark it as delivered until the page is reloaded. Intermittent; seen in Safari. Found in the pre-production hackathon test (2026-11-13).",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "W17",
+      "commits": "",
+      "labels": [
+        "bug",
+        "hackathon-prod"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 296,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIwyGs",
+      "synced": "e25dd8825c7bd9c9"
+    },
+    {
+      "key": "W18",
+      "project": "public",
+      "parent": "P2",
+      "title": "Delivery message: \"Group X have submitted\"",
+      "body": "The follow-up screens say \"Group X have submitted their conceptual map!\" and \"Team X have submitted their flower!\". They should say \"has submitted\". Found in the pre-production hackathon test (2026-11-13).",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "W18",
+      "commits": "",
+      "labels": [
+        "bug",
+        "hackathon-prod"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 297,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIwyOI",
+      "synced": "49c5e58a3593348a"
+    },
+    {
+      "key": "4.8",
+      "project": "public",
+      "parent": "P4",
+      "title": "Non-binary gender option",
+      "body": "Add non-binary to the gender values (female, male, non-binary, other) in sign-up and profiles. Gender stays optional (D-061).",
+      "phase": "4",
+      "kind": "Feature",
+      "status": "Todo",
+      "ref": "4.8",
+      "commits": "4a99ae8",
+      "labels": [
+        "enhancement"
+      ],
+      "milestone": null,
+      "issueNumber": 298,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIwyWM",
+      "synced": "1103104cfcc7c897"
+    },
+    {
+      "key": "4.9",
+      "project": "public",
+      "parent": "P4",
+      "title": "Private notes while rating seeds",
+      "body": "While rating, a participant can write an optional note per seed to remember why they liked it. Private to its author; kept in server memory like the ratings, until team creation, never in the database (D-062). New step of UC-050, pending in the SRS.",
+      "phase": "4",
+      "kind": "Feature",
+      "status": "Todo",
+      "ref": "4.9",
+      "commits": "4a99ae8",
+      "labels": [
+        "enhancement"
+      ],
+      "milestone": null,
+      "issueNumber": 299,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIwyf8",
+      "synced": "e73b355aff3a5327"
+    },
+    {
+      "key": "4.10",
+      "project": "public",
+      "parent": "P4",
+      "title": "Seed numbers per edition",
+      "body": "Number each seed of an edition by its position among the edition's seeds sorted by creation date (then title), computed when read. Groups and teams show their seed's number instead of their list position; 1.1, 1.2… if several in one hackathon ever share a seed (D-063).",
+      "phase": "4",
+      "kind": "Feature",
+      "status": "Todo",
+      "ref": "4.10",
+      "commits": "4a99ae8",
+      "labels": [
+        "enhancement"
+      ],
+      "milestone": null,
+      "issueNumber": 300,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIwyp0",
+      "synced": "64b74fdcb6a01a68"
+    },
+    {
+      "key": "6.6",
+      "project": "public",
+      "parent": "P6",
+      "title": "Gender-neutral default avatar",
+      "body": "The default user icon is a male figure. Use a gender-neutral one. From the pre-production hackathon test review (2026-11-13).",
+      "phase": "6",
+      "kind": "Quality",
+      "status": "Todo",
+      "ref": "6.6",
+      "commits": "",
+      "labels": [
+        "enhancement"
+      ],
+      "milestone": null,
+      "issueNumber": 301,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIwywU",
+      "synced": "6b648ab2bac1659b"
+    },
+    {
+      "key": "6.7",
+      "project": "public",
+      "parent": "P6",
+      "title": "Group voice and team speaker: badges and a clear control",
+      "body": "Show an icon or badge for the group voice and the team speaker, and replace the unlabelled checkbox that sets them with a labelled control. From the pre-production hackathon test review (2026-11-13).",
+      "phase": "6",
+      "kind": "Quality",
+      "status": "Todo",
+      "ref": "6.7",
+      "commits": "",
+      "labels": [
+        "enhancement"
+      ],
+      "milestone": null,
+      "issueNumber": 302,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIwy2s",
+      "synced": "9bd9cf8596f41bc3"
+    },
+    {
+      "key": "6.8",
+      "project": "public",
+      "parent": "P6",
+      "title": "Show \"Delivered\" in green on group and team management",
+      "body": "On the manage groups and manage teams screens, show the delivered status in green so it stands out. From the pre-production hackathon test review (2026-11-13).",
+      "phase": "6",
+      "kind": "Quality",
+      "status": "Todo",
+      "ref": "6.8",
+      "commits": "",
+      "labels": [
+        "enhancement"
+      ],
+      "milestone": null,
+      "issueNumber": 303,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIwy9I",
+      "synced": "b1323b2748eee134"
+    },
+    {
+      "key": "6.9",
+      "project": "public",
+      "parent": "P6",
+      "title": "Team creation screen layout",
+      "body": "Redesign of the team creation screen, from the 2026-11-13 review sketch:\n- Left column: participant cards. Each card expands to show that participant's ratings, grouped by score (5★, 4★, 3★…), listing the seed numbers at each score (D-063).\n- Right column: one panel per seed, with the seed title (collapsible) and its team members grouped by discipline (artist, technologist, other).",
+      "phase": "6",
+      "kind": "Quality",
+      "status": "Todo",
+      "ref": "6.9",
+      "commits": "",
+      "labels": [
+        "enhancement"
+      ],
+      "milestone": null,
+      "issueNumber": 304,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhIwzFU",
+      "synced": "7795ebe402635f32"
     }
   ]
 }
