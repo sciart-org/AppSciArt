@@ -1,0 +1,13 @@
+{
+  "B1": [
+    "GRQ-003 · NFRQ-013 · UC-005 · guest quick registration answers 201 when the email is delivered",
+    "GRQ-003 · NFRQ-013 · UC-005 · guest quick registration sends one email to the registered address",
+    "GRQ-003 · NFRQ-013 · the server keeps running after sending a delivered email"
+  ],
+  "B2": [
+    "GRQ-003 · NFRQ-013 · UC-005 · guest quick registration still answers 201 when the email service is down",
+    "GRQ-003 · NFRQ-013 · UC-005 · the email to the registered address is not delivered when the email service is down",
+    "GRQ-003 · NFRQ-013 · UC-005 · no email is sent to the registered address when the email service is down",
+    "GRQ-003 · NFRQ-013 · the server keeps running when the email service is down"
+  ]
+}

@@ -66,6 +66,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-058 | 2026-11-10 | CI | Every workflow pins its actions to a full commit SHA, with the version in a comment. Dependabot proposes updates weekly into `develop`, grouped into one pull request, after a 7-day cooldown; CI and the docs build test them before merging. ([details](#d-058)) | — | in force |
 | D-059 | 2026-11-10 | Docs | The docs site also publishes `CLAUDE.md` and `backend/tests/HELPERS.md` in place. Architecture and commands stay in `CLAUDE.md` and are not moved into `docs/project/`: `CLAUDE.md` is loaded into Claude's context every session, `docs/project/` is only read on demand. | D-054 (scope) | in force |
 | D-060 | 2026-11-12 | Security | Security fixes leave a public record once released: at each production release, one issue on the roadmap board lists the released fixes in generic terms with their commits, and is closed. Nothing about them is public before that: no issue, no commit trailer. ([details](#d-060)) | — | in force |
+| D-065 | 2026-11-14 | Email | When the email service is down, a request that sends an email still succeeds: the email is lost, recorded as not delivered and logged, and the server keeps running. Retrying lost emails is later work (Phase 5e outbox). | — | in force |
 
 ## Details
 
