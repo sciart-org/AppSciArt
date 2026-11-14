@@ -12,9 +12,10 @@ Run them with `npm test` from `backend/`. Each test file starts from a clean sta
 - the database holds only the base users,
 - a fresh app is running,
 - the fake Drive is empty,
-- the email outbox is empty.
+- the email outbox is empty and email delivery works.
 
-Tests inside one file share that state. Files run one at a time.
+Tests inside one file share that state, except email failures (`failEmailDelivery`) and recorded server crashes,
+which reset after each test. Files run one at a time.
 
 Prerequisites: the local testing Supabase stack running (`supabase start` in `db/test/supabase`), migrated
 (`npm run db:migrate:test`) and seeded (`npm run db:seed:test`). The suite refuses to run against anything
@@ -37,7 +38,7 @@ red and unlisted, so CI can stay green while open findings exist (D-055).
 
 ## Rules
 - **Arrange** with the fixtures below, **act** and **assert** only through the API (`as`, `asGuest`, …) and sockets.
-  Use `sentEmails()` and `drive.*` only to check what went to the email and Drive services.
+  Use `sentEmails()`, `undeliveredEmails()` and `drive.*` only to check what went to the email and Drive services.
 - Name every test after the requirements it checks, e.g. `UC-041 · BRU-010 · announcing … is cancelled`.
 - A failing test is a finding. Never `skip` it or mark it `it.fails`.
 
@@ -219,8 +220,10 @@ curatorVision, seedDescription })`: a SciArt fruit and everything it comes from.
 - Each call makes a new seed and flower, so several fruits can share one `hackathon` or `edition`.
 
 ## Checking the email and Drive services
-- `sentEmails()` → every email sent so far in this file: `[{ to: [address], subject, html, from }]`.
-- `clearOutbox()` empties it, e.g. between tests.
+- `sentEmails()` → every email delivered so far in this file: `[{ to: [address], subject, html, from }]`.
+- `undeliveredEmails()` → the emails the system tried to send while delivery was failing, same shape.
+- `clearOutbox()` empties both, e.g. between tests.
+- Emails go out after the response, so `await settle()` before reading either list.
 - `drive.*` (async) finds the template documents the system creates. Each one returns the document `{ id, name,
   mimeType, parents, copiedFrom, permissions }`, or `undefined` if it doesn't exist. `copiedFrom` is the id of the
   document it was copied from.
@@ -234,6 +237,41 @@ curatorVision, seedDescription })`: a SciArt fruit and everything it comes from.
 
 - `driveFiles()` → every file in the fake Drive (last resort, for counts).
 
+### Email service down
+| Helper | Effect |
+|---|---|
+| `failEmailDelivery()` | every send fails until the end of the test |
+| `failEmailDelivery({ times: n })` | only the next `n` sends fail |
+| `restoreEmailDelivery()` | sends succeed again (e.g. "the service comes back") |
+
+- A failed send answers the way the real email service does during an outage (an error result, no exception).
+- The email is not delivered: it shows in `undeliveredEmails()`, not in `sentEmails()`.
+- Delivery works again at the start of every test without calling `restoreEmailDelivery()`.
+
+```js
+failEmailDelivery()
+const res = await asGuest().post('/register').query({ method: 'quick' }).send({ email: 'new.user@example.org' })
+await settle()
+expect(res.status).toBe(201)
+expect(undeliveredEmails()).toHaveLength(1)
+expect(await serverCrashes()).toEqual([])
+```
+
+## Work after the response, and server crashes
+Some work runs after the system has answered the request: emails and socket broadcasts.
+
+- `await settle()` waits until that work has finished. Call it before checking emails or crashes.
+  - It waits until the app has no database query and no email send running, for a few event-loop turns in a row.
+  - Rejects if the app is still busy after 5 s; `settle({ timeout: ms })` changes that.
+  - Socket messages still travel to the clients after it: wait for those with `nextEvent`.
+- `await serverCrashes()` → the crashes since the test started: `[{ kind, message }]`.
+  - `kind` is `'unhandled rejection'` or `'uncaught exception'`: the two events on which the real server
+    (`src/server.js`) logs and exits.
+  - `message` is `'<ErrorName>: <message>'`, e.g. `'TypeError: Cannot read properties of null'`.
+  - It settles first, so crashes of the after-response work are included.
+  - Check "the server does not crash" with `expect(await serverCrashes()).toEqual([])`.
+- A crash the test never checked with `serverCrashes()` makes that test fail anyway, with the crash in the message.
+
 ## How it works
 - `npm test` runs Vitest with `NODE_ENV=testing`; `vitest.config.js` loads `tests/support/setup.js` first.
 - Setup refuses to run unless `DATABASE_URL` and `SUPABASE_URL` point at `127.0.0.1` or `localhost`, then
@@ -245,6 +283,14 @@ curatorVision, seedDescription })`: a SciArt fruit and everything it comes from.
 - Because of that, the fakes are wired in at Node's module resolution: `tests/support/fakes/hooks.js` resolves
   `googleapis` and `resend` to `fakes/googleapis.js` and `fakes/resend.js`. The app and the tests share the fakes'
   state through `globalThis`. If the app didn't load both fakes, setup stops before any test runs.
+- The app runs in-process without `src/server.js`, so nothing exits on a crash. Setup listens to the process's
+  `unhandledRejection` and `uncaughtException` instead and records them for `serverCrashes()`.
+  - With that listener in place, Vitest no longer reports them as "Unhandled Rejection" errors of the run, so
+    every test ends with `settle()` and fails if a crash happened that it didn't check.
+  - The listener sees the whole test process, so a test's own stray rejection counts too.
+- `settle()` knows what the app is doing by counting the app Sequelize's running queries (setup wraps
+  `sequelize.query`) and the fake email client's running sends. After-commit work starts right when the
+  `COMMIT` query ends, so a few idle turns in a row mean it is done.
 - `tests/infra/` checks this tooling itself (users, tokens, fixtures, fakes, sockets, clean state). It tests no
   requirement.
 
