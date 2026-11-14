@@ -1,4 +1,5 @@
-export { asGuest, as, withToken, socketAs, nextEvent, noEventArrives } from './api.js'
+export { asGuest, as, withToken, corsHeadersOf, socketAs, nextEvent, noEventArrives } from './api.js'
+export { productionApp, productionStartup } from './production/productionApp.js'
 export { login, tokenOf, legacyTokenOf, forgedTokens } from './tokens.js'
 export { administrator, designer, facilitator, participant, participants } from './users.js'
 export * from './fixtures/index.js'

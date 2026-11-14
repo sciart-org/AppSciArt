@@ -76,6 +76,22 @@ const api = await as(designer(1))
 const res = await api.post('/editions').send({ name: 'E1', year: 2026 })
 ```
 
+Every client also has `options(path)`. Set any request header with `.set(name, value)` before awaiting.
+
+### CORS
+- Send an origin with `.set('Origin', origin)`. For a preflight, use `options(path)` and also set
+  `Access-Control-Request-Method`.
+- `corsHeadersOf(res)` → every `Access-Control-*` header of the response, named in camelCase without the prefix:
+  `{ allowOrigin, allowMethods, allowHeaders, allowCredentials, … }`. Only the headers present are included, so a
+  response with no CORS header gives `{}`.
+
+```js
+const res = await asGuest().options('/editions')
+  .set('Origin', 'https://elsewhere.example.com')
+  .set('Access-Control-Request-Method', 'GET')
+expect(corsHeadersOf(res)).toEqual({})
+```
+
 ### Login and tokens (FRQ-001)
 - `await login({ email, password })` → `{ status, body }` straight from Supabase Auth. `body.access_token` is set on
   success.
@@ -99,6 +115,46 @@ The token helpers below are plain functions (no `await`).
 - `await nextEvent(socket, event, timeout = 2000)` → the payload of the next `event` (an array if there is more than
   one argument). Rejects on timeout.
 - `await noEventArrives(socket, event, timeout = 500)` → `true` if `event` did **not** arrive in time.
+
+## Production instance
+The app every file gets runs as `testing`. To check how the app behaves when deployed, start a second instance
+with `NODE_ENV=production`, the way `npm start` runs it.
+
+| Helper | Returns |
+|---|---|
+| `await productionApp({ frontendUrl, env })` | a running production instance (below); rejects, with the app's output, if it doesn't start |
+| `await productionStartup({ frontendUrl, env })` | `{ started, exitCode, output }`: whether the app started listening. The instance is stopped right after |
+
+Options:
+- `frontendUrl`: the `FRONTEND_URL` it runs with. Default `https://sciart.example.org`; `null` starts it without one.
+- `env`: other environment variables, e.g. `{ BACKEND_URL: '…' }`. `null` removes one.
+- Everything else comes from the testing environment: the local Supabase stack and database, fake Google and Resend.
+
+The instance:
+
+| Member | Meaning |
+|---|---|
+| `url` | its base URL |
+| `asGuest()`, `await as(user)`, `withToken(token)` | API clients against the instance, as in "Calling the API" |
+| `cutDatabase()` | the instance loses its database: open connections drop and new ones are refused |
+| `restoreDatabase()` | the instance can reach the database again |
+| `output()` | everything the instance printed so far (its log), stdout and stderr together |
+| `await stop()` | ends it. Instances still running are stopped when the file ends |
+
+```js
+const app = await productionApp()
+app.cutDatabase()
+const res = await app.asGuest().get('/editions')
+app.restoreDatabase()
+expect(res.status).toBe(500)
+```
+
+- An unexpected server error: cut the database, then call any endpoint that reads it. Restore it before the
+  next request that needs data.
+- Startup: `productionStartup` waits until the server listens or exits, up to 20 s. Check `started`, and look for
+  the reason in `output`. Don't rely on `exitCode` alone: the app may exit with 0 after a failed start.
+- The instance has its own fakes: `sentEmails()` and `drive.*` don't see what it sends.
+- Starting one takes about a second. Share one instance per `describe` (`beforeAll`) when the options are the same.
 
 ## Fixtures (arrange only)
 All async. Each one creates the state the system would be in after that step, and returns the created row (`id` and
@@ -245,7 +301,17 @@ curatorVision, seedDescription })`: a SciArt fruit and everything it comes from.
 - Because of that, the fakes are wired in at Node's module resolution: `tests/support/fakes/hooks.js` resolves
   `googleapis` and `resend` to `fakes/googleapis.js` and `fakes/resend.js`. The app and the tests share the fakes'
   state through `globalThis`. If the app didn't load both fakes, setup stops before any test runs.
-- `tests/infra/` checks this tooling itself (users, tokens, fixtures, fakes, sockets, clean state). It tests no
+- `productionApp` runs `src/server.js` in a child process with `NODE_ENV=production`, so module-level reads of
+  the environment see production. The tests' own `process.env` is never changed.
+  - Its working directory is a temporary folder with links to `.oastoolsrc`, `package.json`, `api/` and `src/` only,
+    so no `.env*` file (e.g. a real `.env.production`) is loaded. It gets only the variables the helper passes.
+  - It reaches the database through a small TCP proxy in the test process; `cutDatabase()` closes that proxy.
+  - The production database config requires SSL, and the local stack has none. The helper adds `?ssl=` to the
+    instance's `DATABASE_URL`, which turns SSL off. This is the one way it differs from a real production start.
+  - `tests/support/production/boot.js` is loaded first (`node --import`). It redirects Google and Resend to the
+    fakes and stops the instance if they aren't in place.
+- `tests/infra/` checks this tooling itself (users, tokens, fixtures, fakes, sockets, clean state, production
+  instances, CORS helpers). It tests no
   requirement.
 
 ## Coverage

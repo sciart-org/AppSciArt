@@ -4,6 +4,7 @@ import { closeDb } from './db.js'
 import { startApp, stopApp, closeSockets } from './api.js'
 import { importFromSrc, redirectThirdPartyServicesToFakes } from './native.js'
 import { startFromCleanState } from './state.js'
+import { stopProductionApps } from './production/productionApp.js'
 
 redirectThirdPartyServicesToFakes()
 loadLocalTestingEnvironment()
@@ -16,6 +17,7 @@ beforeAll(async () => {
 afterEach(() => closeSockets())
 
 afterAll(async () => {
+  await stopProductionApps()
   await stopApp()
   const { sequelize } = await importFromSrc('config/sequelize.js')
   await sequelize.close()
