@@ -21,7 +21,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-007 | 2026-10-19 | Branching | Branch `release/v1.0.0` (from `bachelor_thesis_submision`) holds all production prep until the merge to `main`. | — | superseded by D-055 |
 | D-008 | 2026-10-19 | Hosting | Hosting as defined in the memoir (§4.6): Netlify, Render, Supabase Cloud, Google Drive, Resend; pre-production auto-deploys. ([details](#d-008)) | — | in force |
 | D-009 | 2026-10-19 | Environments | Environments: **pre-production = `develop`**, **production = `main`**. Flow: `release/v1.0.0` → `develop` (verify on pre-prod) → `main`. | — | partly superseded by D-055 (flow) |
-| D-010 | 2026-10-19 | Hosting | **Free plans only** on every service for now; their limits shape Phases 2–3. ([details](#d-010)) | — | in force |
+| D-010 | 2026-10-19 | Hosting | **Free plans only** on every service for now; their limits shape Phases 2–3. ([details](#d-010)) | — | partly superseded by D-062 |
 | D-012 | 2026-10-19 | Priority | Tests come first: Phase 1a (testing foundation) before any fix, focused on what already works. | — | in force |
 | D-013 | 2026-10-19 | Testing | Testing plan v2: black-box from the SRS, bugs show red, silent cases asked to the user first (v1 from code rejected). | — | in force |
 | D-014 | 2026-10-20 | Product owner | Testing §9 answered: staff hierarchy (designer ⊃ facilitator), required fields for announcing, meet link only before start, facilitator marks assistance, reopen maps/flowers is a requirement. Open: 3b, 4b, 7b, 8, 9. | — | in force |
@@ -66,6 +66,9 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-058 | 2026-11-10 | CI | Every workflow pins its actions to a full commit SHA, with the version in a comment. Dependabot proposes updates weekly into `develop`, grouped into one pull request, after a 7-day cooldown; CI and the docs build test them before merging. ([details](#d-058)) | — | in force |
 | D-059 | 2026-11-10 | Docs | The docs site also publishes `CLAUDE.md` and `backend/tests/HELPERS.md` in place. Architecture and commands stay in `CLAUDE.md` and are not moved into `docs/project/`: `CLAUDE.md` is loaded into Claude's context every session, `docs/project/` is only read on demand. | D-054 (scope) | in force |
 | D-060 | 2026-11-12 | Security | Security fixes leave a public record once released: at each production release, one issue on the roadmap board lists the released fixes in generic terms with their commits, and is closed. Nothing about them is public before that: no issue, no commit trailer. ([details](#d-060)) | — | in force |
+| D-061 | 2026-11-13 | Product owner | Gender gets a non-binary option, next to female, male and other. ([details](#d-061)) | — | in force |
+| D-062 | 2026-11-13 | Product owner | Seed ratings stay in server memory until team creation and aren't stored in the database until there's a reason to. While rating, a participant can write a private note per seed, kept in server memory like the ratings. ([details](#d-062)) | D-010 (ratings may rely on memory) | in force |
+| D-063 | 2026-11-13 | Product owner | Every seed of an edition has a number, computed by sorting the edition's seeds by creation date. A group or team takes its seed's number; if several in one hackathon ever share a seed, they get 1.1, 1.2… ([details](#d-063)) | — | in force |
 
 ## Details
 
@@ -426,3 +429,40 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
     "integrations, including CI, cannot access temporary private forks"
   - [Repository security advisories REST API](https://docs.github.com/en/rest/security-advisories/repository-advisories)
     (API version 2026-03-10): no field for commits or pull requests
+
+### D-061
+- Source: review of the pre-production hackathon test, 2026-11-13 (product owner and team).
+- The SRS only says gender is stored if the user wants to share it (IRQ-001); it doesn't list the values, so this
+  changes no SRS text.
+- Values become female, male, non-binary and other. The field stays optional.
+
+### D-062
+- Source: review of the pre-production hackathon test, 2026-11-13 (product owner and team).
+- Ratings are only used until team creation (as in D-052), so server memory is enough to meet IRQ-007 ("stored, in
+  order to take them into account during team creation"). A database table waits until a reason for it appears.
+- Accepted risk: a server restart before team creation (a redeploy, or a free-tier host sleeping when idle, see
+  D-010) loses the ratings, and participants rate again.
+- Rating notes:
+  - Optional, one per seed, written while rating, so a participant remembers why they liked each seed.
+  - Private to their author: staff and evaluators don't see them.
+  - Temporary, like the ratings: kept in server memory until team creation, never stored in the database, and lost
+    on a restart.
+  - A new step of UC-050: pending SRS change.
+- #229 (ratings table) is put on hold, not done.
+
+### D-063
+- Source: review of the pre-production hackathon test, 2026-11-13 (product owner and team).
+- Why: the same seed should keep the same number on every screen and in every hackathon of an edition, so the team
+  can name groups, teams and seeds by number.
+- Rule:
+  - A seed's number is its position among the edition's seeds sorted by the seed's creation date (oldest is 1);
+    seeds created at the same time are sorted by title. Numbers are computed when read, never stored.
+  - Numbers are per edition: the same seed can have another number in another edition.
+  - A group or team takes its seed's number. In one hackathon each group and each team has its own seed (D-049),
+    so numbers don't repeat; in different hackathons the same seed gives the same number.
+  - If several groups or teams of one hackathon ever share a seed (not allowed now, may change), they are numbered
+    1.1, 1.2, 1.3…
+- Consequence: the order uses the seed's creation date, not the date it joined the edition. Adding an older seed to
+  an edition later shifts the numbers of newer ones, so numbers are stable once the edition's seeds are set.
+- Today groups and teams are numbered by their position in the list, which can differ between screens and
+  hackathons.
