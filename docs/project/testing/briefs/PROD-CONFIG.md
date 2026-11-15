@@ -6,8 +6,10 @@
 
 ## Requirement
 - No SRS requirement covers production settings. The expected behaviour comes from the user's decisions
-  (D-064, private until released; 2026-11-14):
-  - Browsers may call the API only from the frontend (`FRONTEND_URL`). The server refuses to start without it.
+  (D-064 and D-066, private until released; 2026-11-14 and 2026-11-15):
+  - Browsers may call the API only from the frontend (`FRONTEND_URL`) and from the origins listed in
+    `EXTRA_ALLOWED_ORIGINS` (comma-separated, e.g. a website that embeds the widgets). The server refuses to start
+    without `FRONTEND_URL`.
   - An unexpected error (`500`) returns a fixed message and an error ID; the details go only to the server log,
     under the same ID. Storing errors with their ID is left for later.
   - The API documentation (`/docs`) stays available in every environment.
@@ -33,6 +35,8 @@ Browser origins
   as usual).
 - **B4** A request from an unknown origin (e.g. `https://unknown.example`) → no CORS headers, and not a `500`.
 - **B5** A preflight from an unknown origin → no CORS headers, and not a `500`.
+- **B13** With two origins in `EXTRA_ALLOWED_ORIGINS` (`env`, comma-separated with a space after the comma), a
+  request and a preflight from the second one → allowed for that origin.
 
 Unexpected errors
 - **B6** An unexpected error → `500` with exactly the error body above; the body names no internal error (e.g. no

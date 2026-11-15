@@ -33,5 +33,9 @@
     "PROD-CONFIG · production without FRONTEND_URL names FRONTEND_URL in its output"
   ],
   "B11": ["PROD-CONFIG · the testing app still accepts the local development origin"],
-  "B12": ["PROD-CONFIG · a production instance serves the API documentation at /docs"]
+  "B12": ["PROD-CONFIG · a production instance serves the API documentation at /docs"],
+  "B13": [
+    "PROD-CONFIG · a request from an origin in EXTRA_ALLOWED_ORIGINS is allowed for that origin",
+    "PROD-CONFIG · a preflight from an origin in EXTRA_ALLOWED_ORIGINS is allowed for that origin"
+  ]
 }

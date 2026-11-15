@@ -14,6 +14,12 @@ const LOCAL_DEV_ORIGIN = 'http://localhost:5173'
 
 const UNKNOWN_ORIGIN = 'https://unknown.example'
 
+const FIRST_EXTRA_ORIGIN = 'https://widgets.example.org'
+
+const SECOND_EXTRA_ORIGIN = 'https://landing.example.org'
+
+const EXTRA_ALLOWED_ORIGINS = `${FIRST_EXTRA_ORIGIN}, ${SECOND_EXTRA_ORIGIN}`
+
 const PUBLIC_PATH = '/editions'
 
 const GENERIC_ERROR_MESSAGE = 'Internal Server Error'
@@ -108,6 +114,26 @@ describe('PROD-CONFIG · browser origins in production', () => {
     const res = await preflight(app.asGuest(), UNKNOWN_ORIGIN)
 
     expect(res.status).not.toBe(500)
+  })
+})
+
+describe('PROD-CONFIG · extra browser origins in production', () => {
+  let app
+
+  beforeAll(async () => {
+    app = await productionApp({ frontendUrl: FRONTEND_URL, env: { EXTRA_ALLOWED_ORIGINS } })
+  })
+
+  it('PROD-CONFIG · a request from an origin in EXTRA_ALLOWED_ORIGINS is allowed for that origin', async () => {
+    const res = await app.asGuest().get(PUBLIC_PATH).set('Origin', SECOND_EXTRA_ORIGIN)
+
+    expect({ allowOrigin: corsHeadersOf(res).allowOrigin }).toEqual({ allowOrigin: SECOND_EXTRA_ORIGIN })
+  })
+
+  it('PROD-CONFIG · a preflight from an origin in EXTRA_ALLOWED_ORIGINS is allowed for that origin', async () => {
+    const res = await preflight(app.asGuest(), SECOND_EXTRA_ORIGIN)
+
+    expect({ allowOrigin: corsHeadersOf(res).allowOrigin }).toEqual({ allowOrigin: SECOND_EXTRA_ORIGIN })
   })
 })
 
