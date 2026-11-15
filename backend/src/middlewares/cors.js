@@ -1,24 +1,30 @@
 import cors from 'cors'
 
+const LOCAL_ORIGINS = ['http://localhost:3000', 'http://localhost:5173']
+
+const isProduction = () => process.env.NODE_ENV === 'production'
+
+const parseOriginList = (value = '') =>
+  value.split(',').map(origin => origin.trim()).filter(Boolean)
+
+const productionOrigins = () => {
+  const frontendUrl = process.env.FRONTEND_URL
+  if (!frontendUrl) throw new Error('FRONTEND_URL must be set in production')
+  return [frontendUrl, ...parseOriginList(process.env.EXTRA_ALLOWED_ORIGINS)]
+}
+
+const developmentOrigins = () => [
+  ...LOCAL_ORIGINS,
+  process.env.FRONTEND_URL || 'http://localhost:5173',
+  process.env.BACKEND_URL || 'http://localhost:3000',
+  ...parseOriginList(process.env.EXTRA_ALLOWED_ORIGINS)
+]
+
 export function corsMiddleware () {
-  const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
-  const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000'
-  const ACCEPTED_ORIGINS = [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    FRONTEND_URL,
-    BACKEND_URL
-  ]
+  const ACCEPTED_ORIGINS = isProduction() ? productionOrigins() : developmentOrigins()
   console.log('ACCEPTED_ORIGINS', ACCEPTED_ORIGINS)
 
   return cors({
-    origin: (origin, callback) => {
-      if (ACCEPTED_ORIGINS.includes(origin) || !origin) {
-        return callback(null, true)
-      } else {
-        return callback(new Error('Not allowed by CORS'))
-      }
-    }
-  }
-  )
+    origin: (origin, callback) => callback(null, !origin || ACCEPTED_ORIGINS.includes(origin))
+  })
 }

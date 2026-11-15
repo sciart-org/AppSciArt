@@ -1,4 +1,5 @@
 import { sequelize } from '../config/sequelize.js'
+import { expectedErrorBody, internalErrorBody, isInternalError } from '../middlewares/errorBodies.js'
 
 export const withController = (f) => withErrorHandler(withTransaction(f))
 
@@ -7,9 +8,9 @@ export const withErrorHandler = (f) => {
     try {
       await f(req, res)
     } catch (error) {
+      if (isInternalError(error)) return res.status(500).send(internalErrorBody(error))
       console.log(error)
-      const status = error.status || 500
-      res.status(status).send({ error: error.message || 'Internal Server Error' })
+      res.status(error.status).send(expectedErrorBody(error))
     }
   }
 }
