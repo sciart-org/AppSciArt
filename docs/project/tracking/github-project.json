@@ -2307,6 +2307,82 @@
       "issueNumber": 305,
       "itemId": "PVTI_lADODEgGw84BoNdFzhIw1xI",
       "synced": "40a0394afe078711"
+    },
+    {
+      "project": "public",
+      "parent": "P2",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "key": "F6",
+      "ref": "F6",
+      "title": "A change can be reported as saved when the database did not store it",
+      "body": "The server answers a request before its database transaction is committed. If the commit then fails (for example, the database connection drops), the client has already received a success response, but nothing was stored. The failure only shows in the server log.\n\nExpected: a success response only after the change is stored; otherwise an error response.\n\nThe log also hides the real cause: the server then tries to send an error on the response it already sent, and that second failure is logged as well.",
+      "issueNumber": 310,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhI9eNw",
+      "synced": "14617a3e01b8f295"
+    },
+    {
+      "project": "public",
+      "parent": "P2",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "key": "F7",
+      "ref": "F7",
+      "title": "Expired Drive access sends staff to the \"unauthorized\" page",
+      "body": "When the server's Google Drive access has expired or was revoked, staff actions that use Drive (for example, creating an edition) answer 401. The frontend treats any 401 as a problem with the user's own session and opens the \"unauthorized\" page, although the user's session is fine.\n\nExpected: an error that says Drive needs to be re-authorised (e.g. 503), following the \"HTTP meaning\" clarification.",
+      "issueNumber": 311,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhI9eZc",
+      "synced": "951e2455dabcb0c9"
+    },
+    {
+      "project": "public",
+      "parent": "P2",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "key": "F8",
+      "ref": "F8",
+      "title": "Decide: remove the placeholder cluster endpoints",
+      "body": "The hackathon cluster endpoints are live but only return a placeholder message. Clusters are not part of the requirements.\n\nTo decide: remove them from the API contract, or keep them for a planned feature.",
+      "issueNumber": 312,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhI9ekQ",
+      "synced": "adecb6a3ef3318e9"
+    },
+    {
+      "project": "public",
+      "parent": "P2",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 313,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhI9es8",
+      "synced": "72223ee9ccadf96f",
+      "key": "F9",
+      "ref": "F9",
+      "title": "A trailing slash in an allowed origin blocks that site in production",
+      "body": "In production, the API accepts browser calls only from the configured origins (`FRONTEND_URL`, `EXTRA_ALLOWED_ORIGINS`). They are compared exactly with the origin the browser sends, which never ends in a slash. A configured value such as `https://example.org/` therefore never matches, and the browser blocks every call from that site without any error on the server.\n\nExpected: each configured value is reduced to its origin; a value that is not a URL stops the server at startup."
     }
   ]
 }
