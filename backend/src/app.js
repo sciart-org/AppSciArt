@@ -6,7 +6,7 @@ import { initialize } from '@oas-tools/core'
 import { accessTokenVerifierFromEnv } from './middlewares/accessTokens.js'
 import { customErrorHandler } from './middlewares/customErrorHandler.js'
 import { initializeWebSockets } from './sockets/index.js'
-import { expectedErrorBody, internalErrorBody, isInternalError } from './middlewares/errorBodies.js'
+import { expectedErrorBody, internalErrorBody, isInternalError, isProduction } from './middlewares/errorBodies.js'
 
 const sendUnhandledError = (error, send) => {
   if (isInternalError(error)) return send(500, internalErrorBody(error))
@@ -34,7 +34,8 @@ export const createApp = async () => {
         }
       },
       error: {
-        customHandler: sendUnhandledError
+        customHandler: sendUnhandledError,
+        printStackTrace: !isProduction()
       }
     }
   }

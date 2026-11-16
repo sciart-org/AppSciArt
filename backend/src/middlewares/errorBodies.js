@@ -3,7 +3,7 @@ import { STATUS_CODES } from 'node:http'
 
 const INTERNAL_ERROR_MESSAGE = 'Internal Server Error'
 
-const isProduction = () => process.env.NODE_ENV === 'production'
+export const isProduction = () => process.env.NODE_ENV === 'production'
 
 const visibleMessageOf = (error) =>
   isProduction() ? INTERNAL_ERROR_MESSAGE : (error?.message || INTERNAL_ERROR_MESSAGE)
