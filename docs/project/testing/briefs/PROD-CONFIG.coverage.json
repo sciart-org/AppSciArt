@@ -24,6 +24,18 @@
     "PROD-CONFIG · the server log shows the error details next to its error ID"
   ],
   "B8": ["PROD-CONFIG · two unexpected errors get different error IDs"],
+  "B14": [
+    "PROD-CONFIG · the stack trace of an unexpected error appears in the server log next to its error ID",
+    "PROD-CONFIG · the server log has no copy of an unexpected error stack trace away from its error ID"
+  ],
+  "B15": [
+    "PROD-CONFIG · a request without a token to an endpoint that needs one is answered with a 401",
+    "PROD-CONFIG · a request without a token to an endpoint that needs one is logged as an entry naming the error",
+    "PROD-CONFIG · the log entry of a request without a token has no stack trace",
+    "PROD-CONFIG · an invalid request is answered with a 400",
+    "PROD-CONFIG · an invalid request is logged as an entry naming the error",
+    "PROD-CONFIG · the log entry of an invalid request has no stack trace"
+  ],
   "B9": [
     "PROD-CONFIG · a hackathon that does not exist is answered with a 404",
     "PROD-CONFIG · a hackathon that does not exist is not turned into the generic error"

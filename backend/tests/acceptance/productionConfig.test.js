@@ -61,6 +61,66 @@ const logAround = (output, errorId) => {
     .replace(errorId, '')
 }
 
+const STACK_FRAME = /^\s+at /
+
+const LINES_BEFORE_ENTRY = 2
+
+const startsLogEntry = (line) => line.trim() !== '' && !/^\s/.test(line) && !line.startsWith('}')
+
+const logEntriesOf = (output) => {
+  const lines = output.split('\n')
+  const entries = []
+  lines.forEach((line, index) => {
+    if (startsLogEntry(line) || entries.length === 0) {
+      entries.push({ before: lines.slice(Math.max(0, index - LINES_BEFORE_ENTRY), index), lines: [line] })
+      return
+    }
+    entries.at(-1).lines.push(line)
+  })
+  return entries
+}
+
+const stackTracesOf = (output) =>
+  logEntriesOf(output)
+    .filter((entry) => entry.lines.some((line) => STACK_FRAME.test(line)))
+    .map((entry) => ({
+      firstLine: entry.lines[0],
+      nearby: [...entry.before, ...entry.lines].join('\n')
+    }))
+
+const stackTracesAwayFrom = (output, errorId) =>
+  stackTracesOf(output)
+    .filter((trace) => !trace.nearby.includes(errorId))
+    .map((trace) => trace.firstLine)
+
+const stackTracesNextTo = (output, errorId) =>
+  stackTracesOf(output)
+    .filter((trace) => trace.nearby.includes(errorId))
+    .map((trace) => trace.firstLine)
+
+const PROTECTED_PATH = '/me'
+
+const INVALID_HACKATHON_PATH = '/hackathons/not-a-uuid'
+
+const MISSING_TOKEN_ERROR = /SecurityError: Missing token/
+
+const VALIDATION_ERROR = /RequestValidationError: Parameter hackathonId does not match the schema/
+
+const LOG_RECORD_START = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}|^Executing \(/
+
+const entryNaming = (output, errorPattern) => {
+  const lines = output.split('\n')
+  const start = lines.findIndex((line) => errorPattern.test(line))
+  if (start === -1) return undefined
+  const nextRecord = lines.findIndex((line, index) => index > start && LOG_RECORD_START.test(line))
+  return lines.slice(start, nextRecord === -1 ? lines.length : nextRecord)
+}
+
+const entryNamingSummary = (output, errorPattern) =>
+  ({ entryNaming: errorPattern.source, found: entryNaming(output, errorPattern) !== undefined })
+
+const stackFramesOf = (entryLines = []) => entryLines.filter((line) => STACK_FRAME.test(line))
+
 describe('PROD-CONFIG · browser origins in production', () => {
   let app
 
@@ -203,6 +263,33 @@ describe('PROD-CONFIG · unexpected errors in production', () => {
     await expect.poll(() => logAround(app.output(), errorId)).toMatch(ERROR_DETAILS)
   })
 
+  it('PROD-CONFIG · the stack trace of an unexpected error appears in the server log next to its error ID', async () => {
+    const logStart = app.output().length
+    app.cutDatabase()
+    const res = await app.asGuest().get(PUBLIC_PATH)
+    const errorId = res.body.errorId
+
+    app.restoreDatabase()
+
+    expect({ errorIdIsNonEmptyString: isNonEmptyString(errorId) }).toEqual({ errorIdIsNonEmptyString: true })
+    await expect.poll(() => ({ stackTracesNextToErrorId: stackTracesNextTo(app.output().slice(logStart), errorId) }))
+      .not.toEqual({ stackTracesNextToErrorId: [] })
+  })
+
+  it('PROD-CONFIG · the server log has no copy of an unexpected error stack trace away from its error ID', async () => {
+    const logStart = app.output().length
+    app.cutDatabase()
+    const res = await app.asGuest().get(PUBLIC_PATH)
+    const errorId = res.body.errorId
+
+    app.restoreDatabase()
+    await expect.poll(() => stackTracesNextTo(app.output().slice(logStart), errorId).length).toBeGreaterThan(0)
+    const newOutput = app.output().slice(logStart)
+
+    expect({ stackTracesAwayFromErrorId: stackTracesAwayFrom(newOutput, errorId) })
+      .toEqual({ stackTracesAwayFromErrorId: [] })
+  })
+
   it('PROD-CONFIG · two unexpected errors get different error IDs', async () => {
     app.cutDatabase()
 
@@ -228,6 +315,70 @@ describe('PROD-CONFIG · unexpected errors in production', () => {
     const res = await api.get(`/hackathons/${randomUUID()}`)
 
     expect(genericErrorMarksOf(res.body)).toEqual([])
+  })
+})
+
+describe('PROD-CONFIG · refused requests in production', () => {
+  let app
+
+  beforeAll(async () => {
+    app = await productionApp({ frontendUrl: FRONTEND_URL })
+  })
+
+  it('PROD-CONFIG · a request without a token to an endpoint that needs one is answered with a 401', async () => {
+    const res = await app.asGuest().get(PROTECTED_PATH)
+
+    expect(res.status).toBe(401)
+  })
+
+  it('PROD-CONFIG · a request without a token to an endpoint that needs one is logged as an entry naming the error', async () => {
+    const logStart = app.output().length
+
+    await app.asGuest().get(PROTECTED_PATH)
+
+    await expect.poll(() => entryNamingSummary(app.output().slice(logStart), MISSING_TOKEN_ERROR))
+      .toEqual({ entryNaming: MISSING_TOKEN_ERROR.source, found: true })
+  })
+
+  it('PROD-CONFIG · the log entry of a request without a token has no stack trace', async () => {
+    const logStart = app.output().length
+
+    await app.asGuest().get(PROTECTED_PATH)
+    await expect.poll(() => entryNamingSummary(app.output().slice(logStart), MISSING_TOKEN_ERROR))
+      .toEqual({ entryNaming: MISSING_TOKEN_ERROR.source, found: true })
+
+    expect({ stackFrames: stackFramesOf(entryNaming(app.output().slice(logStart), MISSING_TOKEN_ERROR)) })
+      .toEqual({ stackFrames: [] })
+  })
+
+  it('PROD-CONFIG · an invalid request is answered with a 400', async () => {
+    const api = await app.as(participant(1))
+
+    const res = await api.get(INVALID_HACKATHON_PATH)
+
+    expect(res.status).toBe(400)
+  })
+
+  it('PROD-CONFIG · an invalid request is logged as an entry naming the error', async () => {
+    const api = await app.as(participant(1))
+    const logStart = app.output().length
+
+    await api.get(INVALID_HACKATHON_PATH)
+
+    await expect.poll(() => entryNamingSummary(app.output().slice(logStart), VALIDATION_ERROR))
+      .toEqual({ entryNaming: VALIDATION_ERROR.source, found: true })
+  })
+
+  it('PROD-CONFIG · the log entry of an invalid request has no stack trace', async () => {
+    const api = await app.as(participant(1))
+    const logStart = app.output().length
+
+    await api.get(INVALID_HACKATHON_PATH)
+    await expect.poll(() => entryNamingSummary(app.output().slice(logStart), VALIDATION_ERROR))
+      .toEqual({ entryNaming: VALIDATION_ERROR.source, found: true })
+
+    expect({ stackFrames: stackFramesOf(entryNaming(app.output().slice(logStart), VALIDATION_ERROR)) })
+      .toEqual({ stackFrames: [] })
   })
 })
 
