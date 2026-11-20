@@ -69,6 +69,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-061 | 2026-11-13 | Product owner | Gender gets a non-binary option, next to female, male and other. ([details](#d-061)) | — | in force |
 | D-062 | 2026-11-13 | Product owner | Seed ratings stay in server memory until team creation and aren't stored in the database until there's a reason to. While rating, a participant can write a private note per seed, kept in server memory like the ratings. ([details](#d-062)) | D-010 (ratings may rely on memory) | in force |
 | D-063 | 2026-11-13 | Product owner | Every seed of an edition has a number, computed by sorting the edition's seeds by creation date. A group or team takes its seed's number; if several in one hackathon ever share a seed, they get 1.1, 1.2… ([details](#d-063)) | — | in force |
+| D-065 | 2026-11-14 | Email | When the email service is down, a request that sends an email still succeeds: the email is lost, recorded as not delivered and logged, and the server keeps running. Retrying lost emails is later work (Phase 5e outbox). | — | in force |
 
 ## Details
 
