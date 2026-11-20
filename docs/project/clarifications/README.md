@@ -14,7 +14,7 @@ files here only point to it (e.g. "pending SRS change, D-049 Q4") instead of rep
 
 | File | Scope |
 |---|---|
-| `general.md` | Actors and staff hierarchy, vocabulary (SRS terms → API values), HTTP meaning, announcing, state consistency |
+| `general.md` | Actors and staff hierarchy, vocabulary (SRS terms → API values), HTTP meaning, announcing, state consistency, seed numbers, profile data |
 | `UC-002.md` | View editions |
 | `UC-003.md` | Edition details |
 | `UC-004.md` | View hackathons |

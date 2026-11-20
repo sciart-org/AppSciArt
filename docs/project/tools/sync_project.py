@@ -4,6 +4,7 @@ import json
 import subprocess
 import sys
 import time
+from datetime import date
 from pathlib import Path
 
 PROJECT_DOCS = Path(__file__).resolve().parents[1]
@@ -11,6 +12,7 @@ MANIFEST = PROJECT_DOCS / 'tracking' / 'github-project.json'
 PRIVATE_ITEMS = PROJECT_DOCS.parents[1] / '.claude' / 'private' / 'tracking' / 'security-items.json'
 SINGLE_SELECT_FIELDS = {'status': 'Status', 'phase': 'Phase', 'kind': 'Kind'}
 TEXT_FIELDS = {'ref': 'Ref', 'commits': 'Commits'}
+MOVED_FIELD = 'Moved'
 CREATION_PAUSE_SECONDS = 1.5
 
 
@@ -81,6 +83,27 @@ def set_fields(project, item_id, item):
               fieldId:$f}){projectV2Item{id}}}''', p=project['id'], i=item_id, f=field_id)
 
 
+def board_status(item_id):
+    node = graphql('''query($i:ID!){node(id:$i){... on ProjectV2Item{fieldValueByName(name:"Status"){
+      ... on ProjectV2ItemFieldSingleSelectValue{name}}}}}''', i=item_id)['node']
+    value = node['fieldValueByName']
+    return value['name'] if value else None
+
+
+def mark_moved(project, item_id):
+    graphql('''mutation($p:ID!,$i:ID!,$f:ID!,$d:Date!){updateProjectV2ItemFieldValue(input:{projectId:$p,itemId:$i,
+      fieldId:$f,value:{date:$d}}){projectV2Item{id}}}''',
+            p=project['id'], i=item_id, f=project['fields'][MOVED_FIELD]['id'], d=date.today().isoformat())
+
+
+def update_fields(project, item, existed):
+    tracks_moves = existed and MOVED_FIELD in project['fields']
+    moved = tracks_moves and board_status(item['itemId']) != item['status']
+    set_fields(project, item['itemId'], item)
+    if moved:
+        mark_moved(project, item['itemId'])
+
+
 def issue_ids(repo, number):
     issue = json.loads(gh('api', f'repos/{repo}/issues/{number}'))
     return issue['node_id'], issue['id'], issue['state']
@@ -122,6 +145,7 @@ def match_issue_state(repo, item, state):
 
 
 def sync_public(repo, project, item, by_key, save):
+    existed = item['itemId'] is not None
     if item['issueNumber'] is None:
         item['issueNumber'] = create_issue(repo, item)
         save()
@@ -133,13 +157,14 @@ def sync_public(repo, project, item, by_key, save):
         item['itemId'] = graphql('''mutation($p:ID!,$c:ID!){addProjectV2ItemById(input:{projectId:$p,contentId:$c})
           {item{id}}}''', p=project['id'], c=node_id)['addProjectV2ItemById']['item']['id']
         save()
-    set_fields(project, item['itemId'], item)
+    update_fields(project, item, existed)
     if item['parent']:
         link_parent(repo, by_key[item['parent']]['issueNumber'], database_id)
     match_issue_state(repo, item, state)
 
 
 def sync_draft(project, item, save):
+    existed = item['itemId'] is not None
     if item['itemId'] is None:
         created = graphql('''mutation($p:ID!,$t:String!,$b:String!){addProjectV2DraftIssue(input:{projectId:$p,
           title:$t,body:$b}){projectItem{id content{... on DraftIssue{id}}}}}''',
@@ -149,7 +174,7 @@ def sync_draft(project, item, save):
     else:
         graphql('''mutation($d:ID!,$t:String!,$b:String!){updateProjectV2DraftIssue(input:{draftIssueId:$d,title:$t,
           body:$b}){draftIssue{id}}}''', d=item['draftId'], t=item['title'], b=item['body'])
-    set_fields(project, item['itemId'], item)
+    update_fields(project, item, existed)
 
 
 def main():
