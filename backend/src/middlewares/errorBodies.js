@@ -8,7 +8,7 @@ export const isProduction = () => process.env.NODE_ENV === 'production'
 const visibleMessageOf = (error) =>
   isProduction() ? INTERNAL_ERROR_MESSAGE : (error?.message || INTERNAL_ERROR_MESSAGE)
 
-export const isInternalError = (error) => !error?.status || error.status >= 500
+export const isInternalError = (error) => !error?.status || (error.status >= 500 && !error.expose)
 
 export const expectedErrorBody = (error) => ({ error: error.message || STATUS_CODES[error.status] })
 
