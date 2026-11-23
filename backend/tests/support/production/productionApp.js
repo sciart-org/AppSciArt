@@ -51,7 +51,7 @@ const withoutSsl = (databaseUrl) => {
 
 const isDefined = (value) => value !== undefined && value !== null
 
-const environmentOf = ({ port, databaseUrl, frontendUrl, env }) => {
+const environmentOf = ({ port, databaseUrl, frontendUrl, driveAccess, env }) => {
   const fromTestingEnv = Object.fromEntries(
     VARIABLES_TAKEN_FROM_THE_TESTING_ENV.filter(name => isDefined(process.env[name])).map(name => [name, process.env[name]]))
   const merged = {
@@ -60,6 +60,7 @@ const environmentOf = ({ port, databaseUrl, frontendUrl, env }) => {
     PORT: String(port),
     DATABASE_URL: withoutSsl(databaseUrl),
     FRONTEND_URL: frontendUrl,
+    FAKE_DRIVE_ACCESS: driveAccess,
     ...env
   }
   return Object.fromEntries(Object.entries(merged).filter(([, value]) => isDefined(value)))
@@ -86,13 +87,13 @@ const listeningOrExited = async ({ port, exited, hasExited }) => {
   return { started: false, timedOut: true }
 }
 
-const launch = async ({ frontendUrl = DEFAULT_PRODUCTION_FRONTEND_URL, env = {} } = {}) => {
+const launch = async ({ frontendUrl = DEFAULT_PRODUCTION_FRONTEND_URL, driveAccess, env = {} } = {}) => {
   const workDir = await workingDirWithoutEnvFiles()
   const database = await startDatabaseProxy(process.env.DATABASE_URL)
   const port = await freeLocalPort()
   const child = spawn(process.execPath, ['--import', BOOT_MODULE, SERVER_ENTRY], {
     cwd: workDir,
-    env: environmentOf({ port, databaseUrl: database.url, frontendUrl, env }),
+    env: environmentOf({ port, databaseUrl: database.url, frontendUrl, driveAccess, env }),
     stdio: ['ignore', 'pipe', 'pipe']
   })
   runningProcesses.add(child)

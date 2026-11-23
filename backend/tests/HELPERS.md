@@ -11,7 +11,7 @@ import { asGuest, as, facilitator, anAnnouncedEdition } from '../support/index.j
 Run them with `npm test` from `backend/`. Each test file starts from a clean state:
 - the database holds only the base users,
 - a fresh app is running,
-- the fake Drive is empty,
+- the fake Drive is empty and the app's Drive access works,
 - the email outbox is empty.
 
 Tests inside one file share that state. Files run one at a time.
@@ -122,11 +122,13 @@ with `NODE_ENV=production`, the way `npm start` runs it.
 
 | Helper | Returns |
 |---|---|
-| `await productionApp({ frontendUrl, env })` | a running production instance (below); rejects, with the app's output, if it doesn't start |
-| `await productionStartup({ frontendUrl, env })` | `{ started, exitCode, output }`: whether the app started listening. The instance is stopped right after |
+| `await productionApp({ frontendUrl, driveAccess, env })` | a running production instance (below); rejects, with the app's output, if it doesn't start |
+| `await productionStartup({ frontendUrl, driveAccess, env })` | `{ started, exitCode, output }`: whether the app started listening. The instance is stopped right after |
 
 Options:
 - `frontendUrl`: the `FRONTEND_URL` it runs with. Default `https://sciart.example.org`; `null` starts it without one.
+- `driveAccess`: `'revoked'` starts it with its Drive access expired, as `revokeDriveAccess()` does for the main
+  app. The main app's helpers don't reach the instance.
 - `env`: other environment variables, e.g. `{ BACKEND_URL: '…' }`. `null` removes one.
 - Everything else comes from the testing environment: the local Supabase stack and database, fake Google and Resend.
 
@@ -289,6 +291,19 @@ curatorVision, seedDescription })`: a SciArt fruit and everything it comes from.
   | `drive.flowerTemplateOf(flower)` | UC-053 | the team's flower template |
 
 - `driveFiles()` → every file in the fake Drive (last resort, for counts).
+
+### When the server's Drive access has expired
+- `revokeDriveAccess()` → from now on, every Drive call the app makes fails the way Google answers when the
+  server's sign-in has expired or was revoked.
+- `restoreDriveAccess()` → the app can use Drive again. A revoke lasts until the file ends, so restore it (e.g. in
+  `afterEach`) before tests that need Drive.
+- Fixtures still create their Drive folders while access is revoked: arrange first or after, either works.
+
+```js
+const api = await as(designer(1))
+revokeDriveAccess()
+const res = await api.post('/editions').send({ name: 'E1', year: 2026 })
+```
 
 ## How it works
 - `npm test` runs Vitest with `NODE_ENV=testing`; `vitest.config.js` loads `tests/support/setup.js` first.
