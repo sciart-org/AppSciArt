@@ -2370,15 +2370,15 @@
       "parent": "P2",
       "phase": "2",
       "kind": "Bug",
-      "status": "Todo",
-      "commits": "",
+      "status": "Done",
+      "commits": "46b7532, f7b8084",
       "labels": [
         "bug"
       ],
       "milestone": "v1.0.0",
       "issueNumber": 313,
       "itemId": "PVTI_lADODEgGw84BoNdFzhI9es8",
-      "synced": "72223ee9ccadf96f",
+      "synced": "c31ca8a9759c355c",
       "key": "F9",
       "ref": "F9",
       "title": "A trailing slash in an allowed origin blocks that site in production",
