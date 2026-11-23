@@ -15,6 +15,9 @@
   - A request the server refuses on purpose (`400`, `401`) is logged as one entry naming the error, with no stack
     trace.
   - The API documentation (`/docs`) stays available in every environment.
+  - Each configured origin is reduced to its origin (scheme, host, port) the way a browser builds the `Origin`
+    header; a value that is not an `http`/`https` URL stops the server at startup, naming the variable (#313,
+    2026-11-23). Sockets use the same frontend origin.
 - Background: OWASP API Security Top 10 2023, API8 (CORS policy, error messages) and the OWASP Error Handling Cheat
   Sheet (generic response, details logged server side).
 
@@ -40,6 +43,21 @@ Browser origins
 - **B5** A preflight from an unknown origin → no CORS headers, and not a `500`.
 - **B13** With two origins in `EXTRA_ALLOWED_ORIGINS` (`env`, comma-separated with a space after the comma), a
   request and a preflight from the second one → allowed for that origin.
+
+Configured origins as written by hand
+- A browser's `Origin` is only `scheme://host[:port]`: no trailing slash, no path. A configured value is reduced to
+  that origin before it is compared.
+- **B16** `FRONTEND_URL` ends in a slash (`https://sciart.example.org/`) → a request and a preflight from
+  `https://sciart.example.org` are allowed, and `Access-Control-Allow-Origin` is exactly that origin, with no
+  slash.
+- **B17** An `EXTRA_ALLOWED_ORIGINS` entry has a path and a trailing slash (`https://widgets.example.org/page/`) →
+  a request and a preflight from `https://widgets.example.org` are allowed for exactly that origin.
+- **B18** A value without a scheme → the server does not start, and its own output names the variable. Once for
+  `FRONTEND_URL` (`sciart.example.org`) and once for an `EXTRA_ALLOWED_ORIGINS` entry (`widgets.example.org`,
+  next to a valid one). Leave out the helper's start line, as in B10.
+- **B19** Sockets: with `FRONTEND_URL` ending in a slash, the socket.io handshake
+  (`GET /socket.io/?EIO=4&transport=polling`) from `https://sciart.example.org` → `Access-Control-Allow-Origin` is
+  exactly `https://sciart.example.org`.
 
 Unexpected errors
 - **B6** An unexpected error → `500` with exactly the error body above; the body names no internal error (e.g. no

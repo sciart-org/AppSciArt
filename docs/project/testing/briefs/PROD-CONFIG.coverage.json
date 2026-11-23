@@ -49,5 +49,22 @@
   "B13": [
     "PROD-CONFIG · a request from an origin in EXTRA_ALLOWED_ORIGINS is allowed for that origin",
     "PROD-CONFIG · a preflight from an origin in EXTRA_ALLOWED_ORIGINS is allowed for that origin"
+  ],
+  "B16": [
+    "PROD-CONFIG · with a trailing slash in FRONTEND_URL a request from the frontend origin is allowed for exactly that origin",
+    "PROD-CONFIG · with a trailing slash in FRONTEND_URL a preflight from the frontend origin is allowed for exactly that origin"
+  ],
+  "B17": [
+    "PROD-CONFIG · with a path in an EXTRA_ALLOWED_ORIGINS entry a request from its origin is allowed for exactly that origin",
+    "PROD-CONFIG · with a path in an EXTRA_ALLOWED_ORIGINS entry a preflight from its origin is allowed for exactly that origin"
+  ],
+  "B18": [
+    "PROD-CONFIG · production with a FRONTEND_URL without a scheme does not start",
+    "PROD-CONFIG · production with a FRONTEND_URL without a scheme names FRONTEND_URL in its output",
+    "PROD-CONFIG · production with an EXTRA_ALLOWED_ORIGINS entry without a scheme does not start",
+    "PROD-CONFIG · production with an EXTRA_ALLOWED_ORIGINS entry without a scheme names EXTRA_ALLOWED_ORIGINS in its output"
+  ],
+  "B19": [
+    "PROD-CONFIG · with a trailing slash in FRONTEND_URL the socket handshake from the frontend origin is allowed for exactly that origin"
   ]
 }

@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { describe, it, expect, beforeAll, afterEach } from 'vitest'
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest'
 import {
   asGuest,
   participant,
@@ -19,6 +19,18 @@ const FIRST_EXTRA_ORIGIN = 'https://widgets.example.org'
 const SECOND_EXTRA_ORIGIN = 'https://landing.example.org'
 
 const EXTRA_ALLOWED_ORIGINS = `${FIRST_EXTRA_ORIGIN}, ${SECOND_EXTRA_ORIGIN}`
+
+const FRONTEND_URL_WITH_SLASH = `${FRONTEND_URL}/`
+
+const EXTRA_ORIGIN_WITH_PATH = `${FIRST_EXTRA_ORIGIN}/page/`
+
+const FRONTEND_HOST_WITHOUT_SCHEME = 'sciart.example.org'
+
+const EXTRA_HOST_WITHOUT_SCHEME = 'widgets.example.org'
+
+const EXTRA_ORIGINS_WITH_ONE_WITHOUT_SCHEME = `${SECOND_EXTRA_ORIGIN}, ${EXTRA_HOST_WITHOUT_SCHEME}`
+
+const SOCKET_HANDSHAKE_PATH = '/socket.io/?EIO=4&transport=polling'
 
 const PUBLIC_PATH = '/editions'
 
@@ -194,6 +206,99 @@ describe('PROD-CONFIG · extra browser origins in production', () => {
     const res = await preflight(app.asGuest(), SECOND_EXTRA_ORIGIN)
 
     expect({ allowOrigin: corsHeadersOf(res).allowOrigin }).toEqual({ allowOrigin: SECOND_EXTRA_ORIGIN })
+  })
+})
+
+describe('PROD-CONFIG · a frontend URL written with a trailing slash', () => {
+  let app
+
+  beforeAll(async () => {
+    app = await productionApp({ frontendUrl: FRONTEND_URL_WITH_SLASH })
+  })
+
+  afterAll(async () => {
+    await app?.stop()
+  })
+
+  it('PROD-CONFIG · with a trailing slash in FRONTEND_URL a request from the frontend origin is allowed for exactly that origin', async () => {
+    const res = await app.asGuest().get(PUBLIC_PATH).set('Origin', FRONTEND_URL)
+
+    expect({ allowOrigin: corsHeadersOf(res).allowOrigin }).toEqual({ allowOrigin: FRONTEND_URL })
+  })
+
+  it('PROD-CONFIG · with a trailing slash in FRONTEND_URL a preflight from the frontend origin is allowed for exactly that origin', async () => {
+    const res = await preflight(app.asGuest(), FRONTEND_URL)
+
+    expect({ allowOrigin: corsHeadersOf(res).allowOrigin }).toEqual({ allowOrigin: FRONTEND_URL })
+  })
+
+  it('PROD-CONFIG · with a trailing slash in FRONTEND_URL the socket handshake from the frontend origin is allowed for exactly that origin', async () => {
+    const res = await app.asGuest().get(SOCKET_HANDSHAKE_PATH).set('Origin', FRONTEND_URL)
+
+    expect({ allowOrigin: corsHeadersOf(res).allowOrigin }).toEqual({ allowOrigin: FRONTEND_URL })
+  })
+})
+
+describe('PROD-CONFIG · an extra origin written with a path and a trailing slash', () => {
+  let app
+
+  beforeAll(async () => {
+    app = await productionApp({ frontendUrl: FRONTEND_URL, env: { EXTRA_ALLOWED_ORIGINS: EXTRA_ORIGIN_WITH_PATH } })
+  })
+
+  afterAll(async () => {
+    await app?.stop()
+  })
+
+  it('PROD-CONFIG · with a path in an EXTRA_ALLOWED_ORIGINS entry a request from its origin is allowed for exactly that origin', async () => {
+    const res = await app.asGuest().get(PUBLIC_PATH).set('Origin', FIRST_EXTRA_ORIGIN)
+
+    expect({ allowOrigin: corsHeadersOf(res).allowOrigin }).toEqual({ allowOrigin: FIRST_EXTRA_ORIGIN })
+  })
+
+  it('PROD-CONFIG · with a path in an EXTRA_ALLOWED_ORIGINS entry a preflight from its origin is allowed for exactly that origin', async () => {
+    const res = await preflight(app.asGuest(), FIRST_EXTRA_ORIGIN)
+
+    expect({ allowOrigin: corsHeadersOf(res).allowOrigin }).toEqual({ allowOrigin: FIRST_EXTRA_ORIGIN })
+  })
+})
+
+describe('PROD-CONFIG · production startup with a frontend URL without a scheme', () => {
+  let startup
+
+  beforeAll(async () => {
+    startup = await productionStartup({ frontendUrl: FRONTEND_HOST_WITHOUT_SCHEME })
+  })
+
+  it('PROD-CONFIG · production with a FRONTEND_URL without a scheme does not start', () => {
+    expect({ started: startup.started }).toEqual({ started: false })
+  })
+
+  it('PROD-CONFIG · production with a FRONTEND_URL without a scheme names FRONTEND_URL in its output', () => {
+    const serverLinesNamingFrontendUrl = serverLinesOf(startup.output).filter((line) => line.includes('FRONTEND_URL'))
+
+    expect({ serverLinesNamingFrontendUrl }).not.toEqual({ serverLinesNamingFrontendUrl: [] })
+  })
+})
+
+describe('PROD-CONFIG · production startup with an extra origin without a scheme', () => {
+  let startup
+
+  beforeAll(async () => {
+    startup = await productionStartup({
+      frontendUrl: FRONTEND_URL,
+      env: { EXTRA_ALLOWED_ORIGINS: EXTRA_ORIGINS_WITH_ONE_WITHOUT_SCHEME }
+    })
+  })
+
+  it('PROD-CONFIG · production with an EXTRA_ALLOWED_ORIGINS entry without a scheme does not start', () => {
+    expect({ started: startup.started }).toEqual({ started: false })
+  })
+
+  it('PROD-CONFIG · production with an EXTRA_ALLOWED_ORIGINS entry without a scheme names EXTRA_ALLOWED_ORIGINS in its output', () => {
+    const serverLinesNamingExtraOrigins = serverLinesOf(startup.output).filter((line) => line.includes('EXTRA_ALLOWED_ORIGINS'))
+
+    expect({ serverLinesNamingExtraOrigins }).not.toEqual({ serverLinesNamingExtraOrigins: [] })
   })
 })
 
