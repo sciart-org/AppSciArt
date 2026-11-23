@@ -1,6 +1,9 @@
 # SRS coverage
 
 Assessed 2026-10-17: how much of each SRS requirement the current code covers.
+
+> **Snapshot.** Rows are updated as fixes land (`/log-step`); a full reassessment is a TODO at the start of Phase 4
+> (`roadmap.md`). Until then, treat unchanged rows as of 2026-10-17.
 - **Source:** SRS v1.0 (2026-06-24), from the Proteus project (kept private, D-033).
 - **Bugs:** referenced by public issue number (#…).
 

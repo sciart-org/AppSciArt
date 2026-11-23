@@ -57,8 +57,8 @@ Tracked privately; described here only once released, in one issue per productio
 
 ## Phase 3 — Production foundations
 - [ ] Backend integration tests (Vitest + Supertest) on `testing` DB; regression tests for Phases 1–2
-- [ ] Playwright smoke tests (`baseURL`, `webServer`); delete template spec
-- [ ] Root `.github/workflows/ci.yml` (lint, build, backend tests, Playwright chromium); delete `frontend/.github`
+- [ ] Playwright smoke tests (`baseURL`, `webServer`), run in CI (chromium); delete template spec
+- [x] Root `.github/workflows/ci.yml` (lint, build, backend tests, D-055, #235); `frontend/.github` deleted
 - [ ] Deploy config (hosting: D-008) + `.env.example` per package
 - [ ] DB with backups + restore drill (NFRQ-017) — Supabase paid plan or alternative
 - [ ] `engines`/`.nvmrc`; `concurrently` for root scripts; root README (NFRQ-003)
@@ -66,6 +66,7 @@ Tracked privately; described here only once released, in one issue per productio
 - [ ] Seeders idempotent; fix broken migration `down()`s (document, never rename applied migrations)
 
 ## Phase 4 — Finish mocked basics
+- [ ] TODO first: reassess `srs-coverage.md` in full (snapshot of 2026-10-17, rows updated only as fixes land)
 - [ ] UC-009/010 profile edit/view + FRQ-004 visibility (`visibility` JSON column)
 - [ ] UC-012 contributions; UC-014–016 likes
 - [ ] UC-011 withdraw (BRU-020, FRQ-006)

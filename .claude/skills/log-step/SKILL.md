@@ -22,12 +22,15 @@ Claude runs it after such commits; the user can also run `/log-step <item>`, e.g
 | # | Update | Where | Notes |
 |---|---|---|---|
 | 1 | Board item | `docs/project/tracking/github-project.json` (security: `.claude/private/tracking/security-items.json`) | `status`; append short hashes to `commits` (`a1b2c3d, e4f5g6h`). |
-| 2 | Status | `docs/project/README.md` "Now" and the Phases table | Only if the phase, the done list or the next item changed. |
-| 3 | Decisions | `docs/project/decisions.md` (security: `.claude/private/decisions.md`) | Redundancy check first (rule at the top of the log). Supersede, never edit. Then `python3 -I docs/project/tools/check_clarifications.py` must pass. |
-| 4 | Findings | `.claude/private/findings.md` | New red tests or fixes: status `fixed <sha>`, issue number. A new non-security bug also gets a public item (kind `Bug`, parent `P2`, label `bug`). A fixed security finding also gets a row in "Fixed, waiting for release" in `.claude/private/roadmap-security.md`: a generic public line and its commits (D-060). |
+| 2 | Status | `docs/project/README.md` "Now" and the Phases table; `docs/project/roadmap.md` | README only if the phase, the done list or the next item changed. Tick the step's item in `roadmap.md`. A fix that changes a use case's coverage also updates its row in `docs/project/srs-coverage.md`. |
+| 3 | Decisions | `docs/project/decisions.md` (security: `.claude/private/decisions.md`) | Every decision of this step already has a row (it's committed with its change). Record any that's missing with the `decision` skill. |
+| 4 | Findings | `.claude/private/findings.md` | New red tests or fixes: status `fixed <sha>`, issue number. A new non-security bug also gets a public item, as in the `bug` skill's "Recording" table. A fixed security finding also gets a row in "Fixed, waiting for release" in `.claude/private/roadmap-security.md`: a generic public line and its commits (D-060). |
 | 5 | Dry run | `python3 -I docs/project/tools/sync_project.py --dry-run` | Show the list. Creating public issues is outward-facing: **stop** for approval if the list has `create public` lines. |
 | 6 | Sync | `python3 -I docs/project/tools/sync_project.py` | Then a second dry run must show 0 items. |
-| 7 | Commit | `commit` skill | The tracked files changed here (manifest, README, decisions) go with the task's next commit; if none follows, a `chore: update board status` commit. |
+| 7 | Commit | `commit` skill | The tracked files changed here (manifest, README, decisions) go with the task's next commit; if none follows, a `chore: update board status` commit. If the task's branches are already merged, keep that commit local and carry it on the next branch: no own branch or PR, never pushed without asking. |
+
+**From a worktree:** `.claude/private/` isn't in it. Copy `security-items.json` into the worktree's
+`.claude/private/tracking/`, sync, copy it back to the main checkout, then remove the copy.
 
 Public text never names open security findings: they stay in the private files until the fix is released.
 When the step is a production release, follow "Fixed, waiting for release" in `.claude/private/roadmap-security.md`:
