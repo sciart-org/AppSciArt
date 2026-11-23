@@ -23,6 +23,8 @@ Request: $ARGUMENTS
   repo consistent. For example, an API spec change goes together with its controller change, and a
   migration goes together with its model change.
 - If there are changes the user did not mention and that are unrelated, ask whether to include them.
+- A decision made in this change goes in the same commit as the change (D-068). If the diff or the chat holds a
+  decision with no row yet, record it with the `decision` skill before drafting the commits.
 
 ## 3. Draft messages
 - The subject is a single line, `type: summary`: lowercase, imperative, no trailing period, at most 72

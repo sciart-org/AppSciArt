@@ -44,6 +44,10 @@ Run from `frontend/`:
 `pre-production` is only used locally, to migrate and seed the pre-production database from `.env.pre-production`.
 The deployed pre-production server runs with `NODE_ENV=production`.
 
+Hosted databases (`.env.pre-production`, `.env.production`) connect through Supabase's transaction pooler (port
+6543), so a session-level `SET` sticks to a shared connection and leaks into later work. Keep settings
+transaction-scoped: `BEGIN READ ONLY … COMMIT` for read-only checks, `SET LOCAL` otherwise.
+
 Seeders that create auth users go through `src/seeders/supabaseAdmin.js` (service-role key).
 
 Emails are sent with Resend (`src/emails/resend.js`). Outside production, set `EMAIL_REDIRECT_TO` in `backend/.env.<env>` to send every email to that one address instead of the real recipients. It is ignored when `NODE_ENV=production`.

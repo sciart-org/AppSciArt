@@ -47,7 +47,7 @@ Rules for writing, briefing and reviewing the black-box acceptance tests. Plan a
 
 ## Red tests
 9. **Bugs are red.** If the system doesn't do what the SRS says, the test fails. No `skip`, no `it.fails`.
-   Every failing test becomes a finding (plan §8 step 9).
+   Every failing test becomes a finding (`/test-requirement` step 11).
 10. **Two kinds of red**, both visible:
     - `bug`: the implemented behaviour is wrong (e.g. announcing doesn't work).
     - `gap`: part of an implemented use case is missing (e.g. UC-008 has no public/private distinction). Gap tests

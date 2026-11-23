@@ -3,9 +3,18 @@
 Append-only log of project decisions, numbered `D-nnn` in date order.
 - **Before adding a row:** check this log and `clarifications/` for an answer that already covers the point, also
   implicitly (e.g. a field list that only makes sense if access is allowed). If one exists, cite it instead.
+  - Record rows with the `decision` skill: a row goes in the same commit as the change it governs (D-068).
 - **Rows are never edited**, details included. A change of mind is a new row naming the replaced one in
   **Supersedes**; only the replaced row's **Status** changes (`superseded by` / `partly superseded by`).
-- **Long decisions** get a one-line summary in the table and their full content under [Details](#details).
+- **What gets a row** (D-068): a choice that limits future work, is costly to reverse, or is a product owner answer.
+  Not a fact about how something works (it goes into the doc for that thing, e.g. `backend/tests/HELPERS.md`), nor
+  tracking admin (the board), nor a one-off approval (the commit or PR).
+- **Long decisions** get a one-line summary in the table and their full content under [Details](#details): the
+  decision, why, and the options not adopted, about 15 lines at most. Steps and plans live in `roadmap.md` or
+  `testing/plan.md`, linked from the row (D-068).
+- **Topic** (D-068): a product owner answer takes its use case ID (`UC-006/007`), or `Product owner` when it spans
+  several. Otherwise one of: Repository, Branching, Environments, Hosting, Priority, Testing, Test infrastructure,
+  Fixtures, Tracking, Docs, Tooling, CI, Auth, Requirement, Security. Add a topic here only when none fits.
 - **Current product owner answers** are in `clarifications/`; this log keeps their history.
   - An answer goes into `clarifications/` in the same commit as its row, never "later".
   - `tools/check_clarifications.py` fails while an answer in force is cited in no clarification file.
@@ -69,6 +78,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-061 | 2026-11-13 | Product owner | Gender gets a non-binary option, next to female, male and other. ([details](#d-061)) | — | in force |
 | D-062 | 2026-11-13 | Product owner | Seed ratings stay in server memory until team creation and aren't stored in the database until there's a reason to. While rating, a participant can write a private note per seed, kept in server memory like the ratings. ([details](#d-062)) | D-010 (ratings may rely on memory) | in force |
 | D-063 | 2026-11-13 | Product owner | Every seed of an edition has a number, computed by sorting the edition's seeds by creation date. A group or team takes its seed's number; if several in one hackathon ever share a seed, they get 1.1, 1.2… ([details](#d-063)) | — | in force |
+| D-068 | 2026-11-16 | Docs | Only choices that limit future work, are costly to reverse, or answer the product owner get a row; facts go into the doc they describe. Details stay short (decision, why, options not adopted) and link plans instead of holding them. Topics come from a fixed list in the header. A row is committed with the change it governs. ([details](#d-068)) | — | in force |
 
 ## Details
 
@@ -466,3 +476,22 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
   an edition later shifts the numbers of newer ones, so numbers are stable once the edition's seeds are set.
 - Today groups and teams are numbered by their position in the list, which can differ between screens and
   hackathons.
+
+### D-068
+- Why: the log is read before every product question and decision ("check for an existing answer"). Rows that are
+  facts (D-019), board admin (D-035) or long plans (D-049, D-055: about 50 lines each) make that check slower, and
+  plans inside never-edited rows go stale while staying "in force".
+- Rule: the three header bullets "What gets a row", "Long decisions" and "Topic". Existing rows stay as they are.
+- When: a row goes in the same commit as the change it governs; a decision with no code gets its own docs commit in
+  the current step. The `decision` skill records it as soon as it's made. Before, rows other than product owner
+  answers waited for `/log-step`, so between the commit and that step a decision existed only in chat.
+- Not adopted:
+  - One file per decision with a generated index: more churn than a one-developer log needs.
+  - Renaming existing topics: rows are never edited.
+- Sources:
+  - [When should I write an Architecture Decision Record](https://engineering.atspotify.com/2020/4/when-should-i-write-an-architecture-decision-record)
+    (Spotify Engineering, 2020; background): record decisions whose reasons matter later.
+  - [Documenting decisions](https://playbook.platformdev.amdigital.co.uk/Ways-of-Working/Toolkit/Architectural-Design/Documenting-Decision)
+    (AM Digital playbook, current): one decision per record, link supporting design material instead of copying it.
+  - [The purpose of an architectural decision record](https://www.infoq.com/articles/architectural-decision-record-purpose)
+    (InfoQ): putting every decision in the log dilutes it.

@@ -14,18 +14,23 @@ Note: $ARGUMENTS
 ## 1. Check
 | Check | How | Blocks clearing when |
 |---|---|---|
-| Uncommitted changes | `git status --short` | A change isn't committed and isn't in the memory's "never commit" list or noted as going with a later commit |
+| Uncommitted changes | `git status --short` | A change isn't committed and isn't in the "Never commit" list of `CLAUDE.local.md` or noted as going with a later commit |
 | Unpushed commits | `git log --oneline @{u}..` | Never: the user pushes. Just list them |
 | Log-step | Board item `commits` in `docs/project/tracking/github-project.json` (security: `.claude/private/tracking/security-items.json`) vs `git log` | A committed step hasn't been logged |
 | Board sync | `python3 -I docs/project/tools/sync_project.py --dry-run` | It lists items to sync |
-| Open questions | This conversation | The user hasn't answered something Claude asked, or a decision isn't recorded yet |
+| Open questions | This conversation | The user hasn't answered something Claude asked, or a decision isn't recorded yet (fix: `decision` skill) |
 | Background work | Running agents, background shells (`caffeinate`, dev servers) | Something is still running that the user may forget |
 
 ## 2. Update the memory
-Rewrite the "State" part of `current-work.md` in the auto-memory directory:
-- Date, branch, unpushed commits, uncommitted changes and where each one goes.
-- Next step, and any open question the next session must ask first.
-- The note from the arguments, if any.
+Rewrite the sections of `current-work.md` in the auto-memory directory:
+
+| Section | Content |
+|---|---|
+| State | Date, branches, unpushed commits, uncommitted changes and where each one goes, test baseline |
+| Next | The next steps, in order; the note from the arguments, if any |
+| Open questions | What the next session must ask or the user must decide first |
+| Waiting on others | Items blocked on someone outside the session, with what to do once unblocked |
+| Pending offers | Things Claude offered that the user hasn't answered |
 
 Keep it short: milestone and step order stay in `docs/project/README.md` "Now". Don't copy them.
 
