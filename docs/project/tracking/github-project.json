@@ -2461,6 +2461,44 @@
       "issueNumber": 304,
       "itemId": "PVTI_lADODEgGw84BoNdFzhIwzFU",
       "synced": "7795ebe402635f32"
+    },
+    {
+      "key": "F4",
+      "project": "public",
+      "parent": "P2",
+      "title": "Scientist invited to a second edition before signing up gets no email",
+      "body": "When a person who has not signed up yet is invited as a scientist to a second edition, they get no email about that invitation. The invitation is stored, but the email step only runs when a new pre-registration is created, and the first invitation already created it.\n\nRequirement: the Notify step of the \"Organization to invite scientists\" use case (GRQ-003).\n\nPlanned fix: with Phase 5e (notifications).",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "F4",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 307,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhI8szU",
+      "synced": "f895b5c499ab0ca7"
+    },
+    {
+      "key": "F5",
+      "project": "public",
+      "parent": "P2",
+      "title": "Decide what sendEmail=false means when inviting a new scientist",
+      "body": "Inviting a new address as a scientist with `sendEmail=false` still sends the pre-registration email.\n\n- Without that email the person cannot sign up, so sending it may be intended.\n- But the flag suggests staff can turn the invitation email off.\n\nNeeds a product decision from ASTER+S before any change.",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "F5",
+      "commits": "",
+      "labels": [
+        "question"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 308,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhI8s20",
+      "synced": "d3a5c64601d168bd"
     }
   ]
 }
