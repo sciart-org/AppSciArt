@@ -7,21 +7,23 @@ if (RESEND_KEY) {
   resend = new Resend(RESEND_KEY)
 }
 
+const EMAILS_DISABLED = {
+  data: null,
+  error: { status: 500, message: 'Emails temporarily disabled' }
+}
+
+const toSendResult = ({ data, error }) => ({
+  data,
+  error: error ? { status: error.statusCode, message: error.message } : null
+})
+
 export const sendEmail = async ({ recipient, subject, html }) => {
-  if (!RESEND_KEY) {
-    return {
-      data: null,
-      error: {
-        status: 500,
-        message: 'Emails temporarily disabled'
-      }
-    }
-  }
-  const { data, error } = await resend.emails.send({
+  if (!RESEND_KEY) return EMAILS_DISABLED
+  const result = await resend.emails.send({
     from: 'AppSciArt <info@appsciart.ovh>',
     to: [EMAIL_REDIRECT_TO || recipient],
     subject,
     html
   })
-  return { data, error: { status: error.statusCode, message: error.message } }
+  return toSendResult(result)
 }

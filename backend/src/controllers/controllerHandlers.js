@@ -15,6 +15,16 @@ export const withErrorHandler = (f) => {
   }
 }
 
+const runAfterResponse = async (callbacks) => {
+  for (const callback of callbacks) {
+    try {
+      await callback()
+    } catch (error) {
+      console.error('Work after the response failed:', error)
+    }
+  }
+}
+
 export const withTransaction = (f) => {
   return async (req, res) => {
     const afterCommitStack = []
@@ -25,6 +35,6 @@ export const withTransaction = (f) => {
       await f(req, res, addAfterCommit)
     })
 
-    for (const fn of afterCommitStack) await fn()
+    await runAfterResponse(afterCommitStack)
   }
 }
