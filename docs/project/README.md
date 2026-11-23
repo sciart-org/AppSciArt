@@ -39,19 +39,25 @@ Per-item status and commits live on the [production roadmap board](https://githu
 | `testing/plan.md` | Acceptance test scope, plan per use case, execution steps |
 | `testing/briefs/` | One brief per acceptance test file, for the test-writing agent |
 | `testing/consistency.md` | Fixture consistency rules: source, check, infra test |
-| `tools/` | Scripts for briefs, clarifications and board sync |
+| `testing/history.md` | Frozen record of how the testing plan was decided |
+| `tools/` | `check_brief_coverage.py` (brief vs test file), `check_clarifications.py` (answers in force are cited), `sync_project.py` (board sync) |
 | `tracking/` | Source of the production roadmap board |
+
+The docs site (`website/`, D-054, D-059) publishes this folder, `docs/diagrams/`, `CLAUDE.md` and
+`backend/tests/HELPERS.md` in place.
 
 ### Where new information goes
 | New information | Goes to |
 |---|---|
-| A product owner answer | `clarifications/<UC>.md` + a row in `decisions.md` (check for an existing answer first) |
-| Any other decision | a row in `decisions.md`; supersede, never edit |
-| A finished step | `/log-step` (board item, "Now", sync) |
-| A red test | a bug issue via `/log-step`; security-related ones stay private |
+| A decision or a product owner answer | the `decision` skill: a row in `decisions.md`, plus `clarifications/<UC>.md` and SRS changes when they apply |
+| A fact about how code or tooling works | the doc for that thing: `CLAUDE.md` (architecture, commands, code style), `backend/tests/HELPERS.md` (test helpers), `tracking/README.md` (boards) |
+| A fixture consistency rule | `testing/consistency.md` |
 | A rule for writing tests | `.claude/rules/acceptance-tests.md` |
-| A repeatable procedure | a skill in `.claude/skills/` |
-| Architecture, commands, code style | `CLAUDE.md` |
+| A repeatable procedure, or a rule about how to work | the skill it belongs to in `.claude/skills/` |
+| A bug seen while using the app | `/bug`: a finding, then a board item |
+| A bug found while changing code | fixed in the change if only the change has it; otherwise `/bug` ("Found while fixing") |
+| A red test | a finding and a bug issue via `/log-step`; security-related ones stay private |
+| A finished step | `/log-step`: board item, "Now", roadmap tick, sync |
 | Anything security-sensitive | the private folder only, until the fix is released |
 
 ## How a requirement flows

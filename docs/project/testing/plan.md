@@ -25,7 +25,7 @@ Closing and publishing editions are not implemented yet (UC-032, UC-072, Phase 4
 editions are only created by fixtures here.
 
 ## 3. Execution steps
-Branch `tests/acceptance` off `release/v1.0.0`, one approval each; from A2 on, one requirement at a time (§8).
+Short-lived branches from `develop` (D-055), one approval each; from A2 on, one requirement at a time (§8).
 Current status: `../README.md` "Now".
 
 | Step | Content |
@@ -357,12 +357,14 @@ Same black-box rule; only through the browser. Chromium in CI.
 
 
 ## 7. Reporting
-- Test names start with requirement IDs, so the run doubles as a **requirements status report**: a small script turns
-  the Vitest JSON output into `requirements-status.md` (per UC/BRU/FRQ: pass, bug, gap).
-- First full run = the baseline. Red tests are logged as in §8 step 9.
-- **CI**: runs everything on every push/PR to `develop` and `main` and publishes the report. While Phase 2 is open the
-  acceptance job is informative (doesn't block merges); lint, build and any test that was green before are blocking,
-  so nothing that works can silently break. Once Phase 2 is done, the whole suite blocks.
+- Test names start with requirement IDs, so the run can double as a **requirements status report**. Planned (A6),
+  not built yet: a small script that turns the Vitest JSON output into `requirements-status.md` (per UC/BRU/FRQ:
+  pass, bug, gap).
+- Red tests are logged as in `/test-requirement` step 11.
+- **CI** (D-055): every pull request to `develop` and `main` runs lint, the frontend build and the full backend
+  suite. `backend/tests/baseline.json` lists every passing test; `npm run test:baseline:check` fails when one of them
+  stops passing, so nothing that works can silently break. Red tests stay visible without blocking merges. It also
+  fails on new passing tests until `npm run test:baseline` adds them, so a fix commits its updated baseline.
 
 
 ## 8. Writing the tests black-box
