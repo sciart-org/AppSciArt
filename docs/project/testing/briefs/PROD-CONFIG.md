@@ -6,14 +6,15 @@
 
 ## Requirement
 - No SRS requirement covers production settings. The expected behaviour comes from the user's decisions
-  (D-064, D-066 and D-067, private until released; 2026-11-14 to 2026-11-16):
+  (D-064, D-066, D-067 and D-070, private until released; 2026-11-14 to 2026-11-24):
   - Browsers may call the API only from the frontend (`FRONTEND_URL`) and from the origins listed in
     `EXTRA_ALLOWED_ORIGINS` (comma-separated, e.g. a website that embeds the widgets). The server refuses to start
     without `FRONTEND_URL`.
   - An unexpected error (`500`) returns a fixed message and an error ID; the details go only to the server log,
     under the same ID. Storing errors with their ID is left for later.
   - A request the server refuses on purpose (`400`, `401`) is logged as one entry naming the error, with no stack
-    trace.
+    trace. This holds for every refusal, whichever part of the server makes it (e.g. a `404` for an item that
+    doesn't exist), and for the `503` when the server's Drive access has expired (2026-11-24).
   - The API documentation (`/docs`) stays available in every environment.
   - Each configured origin is reduced to its origin (scheme, host, port) the way a browser builds the `Origin`
     header; a value that is not an `http`/`https` URL stops the server at startup, naming the variable (#313,
@@ -74,6 +75,11 @@ Refused requests
   to an endpoint that needs one (`401`), and an invalid request (`400`). The error's entry and its stack trace, if
   any, are written to the log together, so wait for the entry naming the error, then check it; never wait a fixed
   time.
+- **B20** A logged-in designer asks for the details of a hackathon that doesn't exist (`GET /hackathons/<random
+  uuid>`) → `404`; the log has one entry naming the error, with no stack trace. Wait for the entry as in B15.
+- **B21** On a production instance whose Drive access has expired (`productionApp({ driveAccess: 'revoked' })`), a
+  designer creates an edition → `503`; the log has one entry naming the error, with no stack trace. Wait for the
+  entry as in B15.
 
 Startup and documentation
 - **B10** Production without `FRONTEND_URL` → the server does not start, and the server's own output names
@@ -87,3 +93,4 @@ Startup and documentation
 - Start one production instance per `describe` in `beforeAll`, and restore its database after each test that cuts
   it.
 - Use any public endpoint for the origin checks (e.g. `GET /editions`).
+- B21 needs its own production instance (its own `describe`), started with `driveAccess: 'revoked'`.

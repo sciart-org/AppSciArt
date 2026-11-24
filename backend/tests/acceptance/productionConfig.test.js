@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest'
 import {
   asGuest,
+  designer,
   participant,
   productionApp,
   productionStartup,
@@ -132,6 +133,21 @@ const entryNamingSummary = (output, errorPattern) =>
   ({ entryNaming: errorPattern.source, found: entryNaming(output, errorPattern) !== undefined })
 
 const stackFramesOf = (entryLines = []) => entryLines.filter((line) => STACK_FRAME.test(line))
+
+const NEW_EDITION = { name: 'PROD-CONFIG edition', year: 2026 }
+
+const escapeForPattern = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+const errorPatternOf = (body) => new RegExp(escapeForPattern(body.error))
+
+const errorMessageSummary = (body) => ({ errorMessageIsNonEmptyString: isNonEmptyString(body.error) })
+
+const loggedEntryOf = async (app, logStart, body) => {
+  const errorPattern = errorPatternOf(body)
+  await expect.poll(() => entryNamingSummary(app.output().slice(logStart), errorPattern))
+    .toEqual({ entryNaming: errorPattern.source, found: true })
+  return entryNaming(app.output().slice(logStart), errorPattern)
+}
 
 describe('PROD-CONFIG · browser origins in production', () => {
   let app
@@ -484,6 +500,88 @@ describe('PROD-CONFIG · refused requests in production', () => {
 
     expect({ stackFrames: stackFramesOf(entryNaming(app.output().slice(logStart), VALIDATION_ERROR)) })
       .toEqual({ stackFrames: [] })
+  })
+})
+
+describe('PROD-CONFIG · refused requests for items that do not exist in production', () => {
+  let app
+
+  beforeAll(async () => {
+    app = await productionApp({ frontendUrl: FRONTEND_URL })
+  })
+
+  afterAll(async () => {
+    await app?.stop()
+  })
+
+  it('PROD-CONFIG · a designer asking for a hackathon that does not exist is answered with a 404', async () => {
+    const api = await app.as(designer(1))
+
+    const res = await api.get(`/hackathons/${randomUUID()}`)
+
+    expect(res.status).toBe(404)
+  })
+
+  it('PROD-CONFIG · a designer asking for a hackathon that does not exist is logged as an entry naming the error', async () => {
+    const api = await app.as(designer(1))
+    const logStart = app.output().length
+
+    const res = await api.get(`/hackathons/${randomUUID()}`)
+
+    expect(errorMessageSummary(res.body)).toEqual({ errorMessageIsNonEmptyString: true })
+    await loggedEntryOf(app, logStart, res.body)
+  })
+
+  it('PROD-CONFIG · the log entry of a hackathon that does not exist has no stack trace', async () => {
+    const api = await app.as(designer(1))
+    const logStart = app.output().length
+
+    const res = await api.get(`/hackathons/${randomUUID()}`)
+
+    expect(errorMessageSummary(res.body)).toEqual({ errorMessageIsNonEmptyString: true })
+    const entry = await loggedEntryOf(app, logStart, res.body)
+    expect({ stackFrames: stackFramesOf(entry) }).toEqual({ stackFrames: [] })
+  })
+})
+
+describe('PROD-CONFIG · refused requests when the Drive access has expired in production', () => {
+  let app
+
+  beforeAll(async () => {
+    app = await productionApp({ frontendUrl: FRONTEND_URL, driveAccess: 'revoked' })
+  })
+
+  afterAll(async () => {
+    await app?.stop()
+  })
+
+  it('PROD-CONFIG · a designer creating an edition while the Drive access has expired is answered with a 503', async () => {
+    const api = await app.as(designer(1))
+
+    const res = await api.post('/editions').send(NEW_EDITION)
+
+    expect(res.status).toBe(503)
+  })
+
+  it('PROD-CONFIG · a designer creating an edition while the Drive access has expired is logged as an entry naming the error', async () => {
+    const api = await app.as(designer(1))
+    const logStart = app.output().length
+
+    const res = await api.post('/editions').send(NEW_EDITION)
+
+    expect(errorMessageSummary(res.body)).toEqual({ errorMessageIsNonEmptyString: true })
+    await loggedEntryOf(app, logStart, res.body)
+  })
+
+  it('PROD-CONFIG · the log entry of an edition created while the Drive access has expired has no stack trace', async () => {
+    const api = await app.as(designer(1))
+    const logStart = app.output().length
+
+    const res = await api.post('/editions').send(NEW_EDITION)
+
+    expect(errorMessageSummary(res.body)).toEqual({ errorMessageIsNonEmptyString: true })
+    const entry = await loggedEntryOf(app, logStart, res.body)
+    expect({ stackFrames: stackFramesOf(entry) }).toEqual({ stackFrames: [] })
   })
 })
 

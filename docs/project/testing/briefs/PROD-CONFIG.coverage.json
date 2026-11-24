@@ -36,6 +36,16 @@
     "PROD-CONFIG · an invalid request is logged as an entry naming the error",
     "PROD-CONFIG · the log entry of an invalid request has no stack trace"
   ],
+  "B20": [
+    "PROD-CONFIG · a designer asking for a hackathon that does not exist is answered with a 404",
+    "PROD-CONFIG · a designer asking for a hackathon that does not exist is logged as an entry naming the error",
+    "PROD-CONFIG · the log entry of a hackathon that does not exist has no stack trace"
+  ],
+  "B21": [
+    "PROD-CONFIG · a designer creating an edition while the Drive access has expired is answered with a 503",
+    "PROD-CONFIG · a designer creating an edition while the Drive access has expired is logged as an entry naming the error",
+    "PROD-CONFIG · the log entry of an edition created while the Drive access has expired has no stack trace"
+  ],
   "B9": [
     "PROD-CONFIG · a hackathon that does not exist is answered with a 404",
     "PROD-CONFIG · a hackathon that does not exist is not turned into the generic error"

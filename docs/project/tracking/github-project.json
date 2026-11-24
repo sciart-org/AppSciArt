@@ -2371,7 +2371,7 @@
       "phase": "2",
       "kind": "Bug",
       "status": "Done",
-      "commits": "d092d5d, 7549c1f, c3347e0",
+      "commits": "d092d5d, 7549c1f, c3347e0, 0445f36",
       "labels": [
         "bug"
       ],
@@ -2382,7 +2382,7 @@
       "body": "When the server's Google Drive access has expired or was revoked, staff actions that use Drive (for example, creating an edition) answer 401. The frontend treats any 401 as a problem with the user's own session and opens the \"unauthorized\" page, although the user's session is fine.\n\nExpected: an error that says Drive needs to be re-authorised (e.g. 503), following the \"HTTP meaning\" clarification.",
       "issueNumber": 311,
       "itemId": "PVTI_lADODEgGw84BoNdFzhI9eZc",
-      "synced": "0e65a781f2565bf6"
+      "synced": "43ca063541a2e6d7"
     },
     {
       "project": "public",
