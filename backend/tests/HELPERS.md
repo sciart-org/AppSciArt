@@ -141,6 +141,7 @@ The instance:
 | `asGuest()`, `await as(user)`, `withToken(token)` | API clients against the instance, as in "Calling the API" |
 | `cutDatabase()` | the instance loses its database: open connections drop and new ones are refused |
 | `restoreDatabase()` | the instance can reach the database again |
+| `failNextCommit()` | the next transaction the instance commits fails: its connection drops at `COMMIT`, after the transaction's other queries went through. Only that one commit fails. Returns a promise that settles once it has failed |
 | `output()` | everything the instance printed so far (its log), stdout and stderr together. Its first line is the helper's own start line, `productionApp: NODE_ENV=…, FRONTEND_URL=… (or (unset)), fake Google and Resend in place`; every other line comes from the server. `productionStartup`'s `output` has the same first line |
 | `await stop()` | ends it. Instances still running are stopped when the file ends |
 
@@ -154,6 +155,8 @@ expect(res.status).toBe(500)
 
 - An unexpected server error: cut the database, then call any endpoint that reads it. Restore it before the
   next request that needs data.
+- A commit that fails: call `failNextCommit()` right before the request under test. Every request commits a
+  transaction, reads included, so the next request of any kind takes the failure.
 - Startup: `productionStartup` waits until the server listens or exits, up to 20 s. Check `started`, and look for
   the reason in `output`. Don't rely on `exitCode` alone: the app may exit with 0 after a failed start.
 - The instance has its own fakes: `sentEmails()` and `drive.*` don't see what it sends.
@@ -359,6 +362,8 @@ Some work runs after the system has answered the request: emails and socket broa
   - Its working directory is a temporary folder with links to `.oastoolsrc`, `package.json`, `api/` and `src/` only,
     so no `.env*` file (e.g. a real `.env.production`) is loaded. It gets only the variables the helper passes.
   - It reaches the database through a small TCP proxy in the test process; `cutDatabase()` closes that proxy.
+    `failNextCommit()` reads the app's messages to the database and drops the connection that sends the plain
+    `COMMIT;` query.
   - The production database config requires SSL, and the local stack has none. The helper adds `?ssl=` to the
     instance's `DATABASE_URL`, which turns SSL off. This is the one way it differs from a real production start.
   - `tests/support/production/boot.js` is loaded first (`node --import`). It redirects Google and Resend to the

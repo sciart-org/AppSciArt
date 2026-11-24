@@ -116,6 +116,7 @@ const launch = async ({ frontendUrl = DEFAULT_PRODUCTION_FRONTEND_URL, driveAcce
     output: () => output,
     cutDatabase: database.cut,
     restoreDatabase: database.restore,
+    failNextCommit: database.failNextCommit,
     stop: async () => {
       runningInstances.delete(instance)
       if (!hasExited()) {
