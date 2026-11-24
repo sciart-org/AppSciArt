@@ -61,6 +61,7 @@ Emails are sent with Resend (`src/emails/resend.js`). Outside production, set `E
 
 The layers are controllers → services → repositories → models:
 - **Controllers** wrap handlers in `withController` (`controllerHandlers.js`). It opens a Sequelize transaction exposed as `req.transaction`, maps thrown errors with `.status` to HTTP responses, and supports `addAfterCommit` callbacks (e.g. emails, socket broadcasts).
+  - The response reaches the client only after the commit (D-072): send it whole with `res.send`; `res.write` inside the transaction throws.
 - **Authorization** happens in controllers via `validateAuthenticated` / `validateStaff` (`middlewares/authMiddleware.js`). The current user is resolved from the JWT email to a `UserProfile`.
 - **Services** contain business logic. They throw with `errorThrower(condition, message, status)` (`services/errorThrower.js`), use mappers in `services/mappers/`, and use reusable Sequelize includes in `services/includes/`.
 - **Roles** are defined in `services/Roles.js`:
