@@ -73,17 +73,19 @@ const waitUntilConnected = (socket) => new Promise((resolve, reject) => {
   socket.once('connect_error', reject)
 })
 
-export const socketAs = async (user, { room, token } = {}) => {
+const JOIN_TIMEOUT_MS = 2000
+
+export const socketAs = async (user, { hackathon, token } = {}) => {
   const jwt = token ?? await tokenOf(user)
   const socket = ioClient(appUrl(), {
-    extraHeaders: { authorization: `Bearer ${jwt}` },
+    auth: { token: jwt },
     transports: ['polling', 'websocket'],
     reconnection: false,
     forceNew: true
   })
   openSockets.add(socket)
   await waitUntilConnected(socket)
-  if (room) socket.emit('join_room', room)
+  if (hackathon) await socket.timeout(JOIN_TIMEOUT_MS).emitWithAck('join_hackathon_rooms', hackathon.id)
   return socket
 }
 

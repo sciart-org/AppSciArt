@@ -1,12 +1,29 @@
 import { EventEmitter } from 'events'
 import { describe, expect, it } from 'vitest'
-import { socketAs, nextEvent, noEventArrives, participant } from '../support/index.js'
+import { socketAs, nextEvent, noEventArrives, participant, facilitator, as, aClosedHackathon } from '../support/index.js'
 
 describe('socket client', () => {
   it('socketAs(user) connects to the running app with that user\'s token', async () => {
     const socket = await socketAs(participant(1))
 
     expect(socket.connected).toBe(true)
+  })
+
+  it('socketAs(user) sends the token in the auth payload', async () => {
+    const socket = await socketAs(participant(1))
+
+    expect(socket.auth).toEqual({ token: expect.any(String) })
+  })
+
+  it('socketAs(user, { hackathon }) joins that hackathon\'s rooms before it resolves', async () => {
+    const hackathon = await aClosedHackathon()
+    const socket = await socketAs(facilitator(1), { hackathon })
+    const update = nextEvent(socket, 'hackathon:updated')
+    const api = await as(facilitator(1))
+
+    await api.put(`/hackathons/${hackathon.id}`).query({ broadcast: 'ALL' }).send({ location: 'Granada' })
+
+    expect(await update).toMatchObject({ id: hackathon.id })
   })
 })
 

@@ -1,8 +1,10 @@
 import { createHmac } from 'crypto'
 import { describe, expect, it } from 'vitest'
 import {
-  administrator, designer, facilitator, participant, participants, login, tokenOf, legacyTokenOf, forgedTokens
+  administrator, designer, facilitator, participant, participants, login, tokenOf, legacyTokenOf, forgedTokens,
+  shortLivedTokenOf, tokenOfUserWithoutProfile
 } from '../support/index.js'
+import { hasProfile } from './database.js'
 
 const decodePart = (part) => JSON.parse(Buffer.from(part, 'base64url').toString())
 
@@ -146,5 +148,43 @@ describe('legacy tokens', () => {
     expect(isSignedWithAppSecret(token)).toBe(true)
     expect(claims.sub).toBe(participant(3).authId)
     expect(claims.exp).toBeGreaterThan(nowInSeconds())
+  })
+})
+
+describe('short-lived tokens', () => {
+  const LIFETIME_IN_SECONDS = 3
+
+  it('shortLivedTokenOf(user, seconds) is a token of that user signed with the app secret', () => {
+    const token = shortLivedTokenOf(participant(3), LIFETIME_IN_SECONDS)
+
+    expect(isSignedWithAppSecret(token)).toBe(true)
+    expect(decodeJwt(token).claims.sub).toBe(participant(3).authId)
+  })
+
+  it('shortLivedTokenOf(user, seconds) expires that many seconds from now', () => {
+    const { claims } = decodeJwt(shortLivedTokenOf(participant(3), LIFETIME_IN_SECONDS))
+
+    expect(claims.exp - nowInSeconds()).toBe(LIFETIME_IN_SECONDS)
+  })
+})
+
+describe('tokens of users without a profile', () => {
+  it('tokenOfUserWithoutProfile() is an unexpired token signed with the app secret', () => {
+    const token = tokenOfUserWithoutProfile()
+
+    expect(isSignedWithAppSecret(token)).toBe(true)
+    expect(decodeJwt(token).claims.exp).toBeGreaterThan(nowInSeconds())
+  })
+
+  it('tokenOfUserWithoutProfile() names an account that has no user profile', async () => {
+    const { claims } = decodeJwt(tokenOfUserWithoutProfile())
+
+    expect(await hasProfile(claims.sub)).toBe(false)
+  })
+
+  it('tokenOfUserWithoutProfile() names a different account each time', () => {
+    const subjects = [tokenOfUserWithoutProfile(), tokenOfUserWithoutProfile()].map(token => decodeJwt(token).claims.sub)
+
+    expect(new Set(subjects).size).toBe(2)
   })
 })
