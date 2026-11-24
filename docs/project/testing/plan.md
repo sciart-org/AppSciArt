@@ -280,7 +280,7 @@ Each line is one test (or a small group). Missing parts of these use cases are l
   rejected; participants cannot reopen (`general.md`).
 
 **UC-063 Manage team presentations / UC-055 View presenting flower / UC-056 Present flower** (+ BRU-025)
-- Facilitator sets the presenting team → assisting participants and evaluators receive it, with a summary of the
+- Facilitator sets the presenting team → enrolled participants and evaluators receive it (D-075), with a summary of the
   flower and its original seed (UC-055).
 - The team speaker's team receives "your turn" (UC-056).
 - The current presenting team is stored (IRQ-006).

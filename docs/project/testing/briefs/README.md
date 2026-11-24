@@ -18,6 +18,9 @@ The agent's fixed rules (allowed sources, style, run and report) live in the age
 SRS IDs and where to find them in `srs-export.txt` (line numbers), plus the SRS text quoted. Note any pending
 change to it (`srs-changes.md`), with its source decision.
 
+Scope (only when the brief covers part of the requirement): what it covers, and the step of `plan.md` §3 that
+briefs the rest. That step extends this same brief and test file.
+
 ## Clarifications
 Links to the product owner's answers that apply (`docs/project/clarifications/<UC>.md`, sections), plus any
 case-specific note. Link, don't quote: the agent reads the clarification files.

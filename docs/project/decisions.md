@@ -89,6 +89,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-068 | 2026-11-16 | Docs | Only choices that limit future work, are costly to reverse, or answer the product owner get a row; facts go into the doc they describe. Details stay short (decision, why, options not adopted) and link plans instead of holding them. Topics come from a fixed list in the header. A row is committed with the change it governs. ([details](#d-068)) | — | in force |
 | D-071 | 2026-11-24 | Docs | A decision is applied in every living doc whose current truth it changes: the doc states the rule and cites the row, while the why stays in this log. A superseding row also updates the docs citing the replaced one, and `tools/check_decision_citations.py` fails while a living doc cites a fully superseded row. ([details](#d-071)) | — | in force |
 | D-072 | 2026-11-24 | Architecture | A request's response reaches the client only after its transaction has committed; if the commit fails, the client gets a `500` instead. Handlers keep calling `res.send`: the controller wrapper holds the finished response until the commit. ([details](#d-072)) | — | in force |
+| D-075 | 2026-11-24 | Requirement | A participant enrolled in the ongoing hackathon can view the presenting flower (UC-055), assisting or not. The SRS precondition "the participant is assisting" was wrong: assistance is only an indicator for staff (UC-057, D-049). | — | in force |
 
 ## Details
 
