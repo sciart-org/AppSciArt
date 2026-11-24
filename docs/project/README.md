@@ -40,7 +40,7 @@ Per-item status and commits live on the [production roadmap board](https://githu
 | `testing/briefs/` | One brief per acceptance test file, for the test-writing agent |
 | `testing/consistency.md` | Fixture consistency rules: source, check, infra test |
 | `testing/history.md` | Frozen record of how the testing plan was decided |
-| `tools/` | `check_brief_coverage.py` (brief vs test file), `check_clarifications.py` (answers in force are cited), `sync_project.py` (board sync) |
+| `tools/` | `check_brief_coverage.py` (brief vs test file), `check_clarifications.py` (answers in force are cited), `check_decision_citations.py` (no living doc cites a superseded decision), `sync_project.py` (board sync) |
 | `tracking/` | Source of the production roadmap board |
 
 The docs site (`website/`, D-054, D-059) publishes this folder, `docs/diagrams/`, `CLAUDE.md` and
@@ -49,7 +49,7 @@ The docs site (`website/`, D-054, D-059) publishes this folder, `docs/diagrams/`
 ### Where new information goes
 | New information | Goes to |
 |---|---|
-| A decision or a product owner answer | the `decision` skill: a row in `decisions.md`, plus `clarifications/<UC>.md` and SRS changes when they apply |
+| A decision or a product owner answer | the `decision` skill: a row in `decisions.md`, plus `clarifications/<UC>.md`, SRS changes when they apply, and every doc whose current truth it changes |
 | A fact about how code or tooling works | the doc for that thing: `CLAUDE.md` (architecture, commands, code style), `backend/tests/HELPERS.md` (test helpers), `tracking/README.md` (boards) |
 | A fixture consistency rule | `testing/consistency.md` |
 | A rule for writing tests | `.claude/rules/acceptance-tests.md` |
