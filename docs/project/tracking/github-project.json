@@ -2395,6 +2395,25 @@
         "bug"
       ],
       "milestone": "v1.0.0",
+      "key": "F11",
+      "ref": "F11",
+      "title": "Drive folders can be left behind when creating an item fails",
+      "body": "Creating an edition, a seed, a hackathon or a flower first creates its Drive folder, then stores the item. If the request fails after the folder exists (for example, a later check refuses it, or storing it fails at the last moment), the item is not stored but its folder stays in Drive, with nothing in the app pointing to it.\n\nExpected: a request that fails leaves no new Drive folder behind.",
+      "issueNumber": 317,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhLdQAw",
+      "synced": "c9a40b8a8e511252"
+    },
+    {
+      "project": "public",
+      "parent": "P2",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
       "key": "F8",
       "ref": "F8",
       "title": "Decide: remove the placeholder cluster endpoints",
