@@ -5,7 +5,14 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
   implicitly (e.g. a field list that only makes sense if access is allowed). If one exists, cite it instead.
   - Record rows with the `decision` skill: a row goes in the same commit as the change it governs (D-068).
 - **Rows are never edited**, details included. A change of mind is a new row naming the replaced one in
-  **Supersedes**; only the replaced row's **Status** changes (`superseded by` / `partly superseded by`).
+  **Supersedes**; only the replaced row's **Status** changes (`superseded by` / `partly superseded by`), and the
+  docs citing the replaced row are updated in the same commit (D-071).
+- **Rows are applied in the docs they change** (D-071): each living doc whose current truth a row changes states the
+  rule and cites the row; the why, the options and the sources stay here.
+  - Living docs: `CLAUDE.md`, `backend/tests/HELPERS.md`, `docs/project/` (except this log and
+    `testing/history.md`), `.claude/rules/`, `.claude/skills/`, `.claude/agents/`.
+  - `tools/check_decision_citations.py` fails while a living doc cites a fully superseded row, unless the same line
+    also cites the row that replaced it.
 - **What gets a row** (D-068): a choice that limits future work, is costly to reverse, or is a product owner answer.
   Not a fact about how something works (it goes into the doc for that thing, e.g. `backend/tests/HELPERS.md`), nor
   tracking admin (the board), nor a one-off approval (the commit or PR).
@@ -80,6 +87,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-063 | 2026-11-13 | Product owner | Every seed of an edition has a number, computed by sorting the edition's seeds by creation date. A group or team takes its seed's number; if several in one hackathon ever share a seed, they get 1.1, 1.2… ([details](#d-063)) | — | in force |
 | D-065 | 2026-11-14 | Email | When the email service is down, a request that sends an email still succeeds: the email is lost, recorded as not delivered and logged, and the server keeps running. Retrying lost emails is later work (Phase 5e outbox). | — | in force |
 | D-068 | 2026-11-16 | Docs | Only choices that limit future work, are costly to reverse, or answer the product owner get a row; facts go into the doc they describe. Details stay short (decision, why, options not adopted) and link plans instead of holding them. Topics come from a fixed list in the header. A row is committed with the change it governs. ([details](#d-068)) | — | in force |
+| D-071 | 2026-11-24 | Docs | A decision is applied in every living doc whose current truth it changes: the doc states the rule and cites the row, while the why stays in this log. A superseding row also updates the docs citing the replaced one, and `tools/check_decision_citations.py` fails while a living doc cites a fully superseded row. ([details](#d-071)) | — | in force |
 
 ## Details
 
@@ -496,3 +504,27 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
     (AM Digital playbook, current): one decision per record, link supporting design material instead of copying it.
   - [The purpose of an architectural decision record](https://www.infoq.com/articles/architectural-decision-record-purpose)
     (InfoQ): putting every decision in the log dilutes it.
+
+### D-071
+- Why: this log is the history and the other docs are the current truth (as D-034 set up for clarifications). Only
+  clarifications had a rule and a check, so the other docs were updated from memory, and one cited a superseded row
+  (`roadmap.md`, D-007).
+- Rule: the header bullets "Rows are never edited" and "Rows are applied in the docs they change".
+  - A living doc states the rule as a present fact and cites the row, without copying the why, options or sources.
+  - The check skips a fully superseded row cited on the same line as its replacement: that line is a history note.
+- Not adopted:
+  - Copying the why into each doc: the two copies drift apart, and the never-edited row is the one that goes stale.
+  - An "Applied in" list per row: rows are never edited, so the list goes stale with the next doc.
+  - Checking partly superseded rows: a script can't tell which part a citation means. The supersede step covers them.
+- Sources:
+  - [Architecture decision record](https://learn.microsoft.com/en-us/azure/well-architected/architect-role/architecture-decision-record)
+    (Microsoft Azure Well-Architected, as of 2026): append-only log; the record isn't a design guide, supporting
+    material is linked.
+  - [ADR process](https://docs.aws.amazon.com/prescriptive-guidance/latest/architectural-decision-records/adr-process.html)
+    (AWS Prescriptive Guidance, 2022): accepted records are immutable, replaced only by a newer one.
+  - [Architecture decision records overview](https://docs.cloud.google.com/architecture/architecture-decision-records)
+    (Google Cloud, as of 2026): keep records next to what they govern.
+  - [How to create ADRs — and how not to](https://ozimmer.ch/practices/2023/04/03/ADRCreation.html) (Olaf
+    Zimmermann, 2023): the "Mega-ADR" anti-pattern.
+  - [Architecture decisions](https://gds-way.digital.cabinet-office.gov.uk/standards/architecture-decisions.html)
+    (UK GDS Way, as of 2026): mark superseded records and link to the replacement.
