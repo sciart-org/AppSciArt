@@ -2351,8 +2351,8 @@
       "parent": "P2",
       "phase": "2",
       "kind": "Bug",
-      "status": "Todo",
-      "commits": "",
+      "status": "In progress",
+      "commits": "61abb7b",
       "labels": [
         "bug"
       ],
@@ -2363,7 +2363,7 @@
       "body": "The server answers a request before its database transaction is committed. If the commit then fails (for example, the database connection drops), the client has already received a success response, but nothing was stored. The failure only shows in the server log.\n\nExpected: a success response only after the change is stored; otherwise an error response.\n\nThe log also hides the real cause: the server then tries to send an error on the response it already sent, and that second failure is logged as well.",
       "issueNumber": 310,
       "itemId": "PVTI_lADODEgGw84BoNdFzhI9eNw",
-      "synced": "14617a3e01b8f295"
+      "synced": "768d787876127b66"
     },
     {
       "project": "public",

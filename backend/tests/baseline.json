@@ -522,6 +522,7 @@
   "tests/acceptance/productDetails.test.js > UC-007 · every product type > UC-007 · the authors of a published flower are its co-creation team members",
   "tests/acceptance/productDetails.test.js > UC-007 · every product type > UC-007 · the authors of a published seed are its inspiring scientists",
   "tests/acceptance/productionConfig.test.js > PROD-CONFIG · API documentation in production > PROD-CONFIG · a production instance serves the API documentation at /docs",
+  "tests/acceptance/productionConfig.test.js > PROD-CONFIG · a change whose commit fails in production > PROD-CONFIG · an address whose quick registration commit failed can be quick-registered again",
   "tests/acceptance/productionConfig.test.js > PROD-CONFIG · a frontend URL written with a trailing slash > PROD-CONFIG · with a trailing slash in FRONTEND_URL a preflight from the frontend origin is allowed for exactly that origin",
   "tests/acceptance/productionConfig.test.js > PROD-CONFIG · a frontend URL written with a trailing slash > PROD-CONFIG · with a trailing slash in FRONTEND_URL a request from the frontend origin is allowed for exactly that origin",
   "tests/acceptance/productionConfig.test.js > PROD-CONFIG · a frontend URL written with a trailing slash > PROD-CONFIG · with a trailing slash in FRONTEND_URL the socket handshake from the frontend origin is allowed for exactly that origin",

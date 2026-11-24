@@ -76,5 +76,13 @@
   ],
   "B19": [
     "PROD-CONFIG · with a trailing slash in FRONTEND_URL the socket handshake from the frontend origin is allowed for exactly that origin"
-  ]
+  ],
+  "B22": [
+    "PROD-CONFIG · a quick registration whose commit fails is answered with a 500, not a 201",
+    "PROD-CONFIG · a quick registration whose commit fails has only the generic error and its error ID in its body",
+    "PROD-CONFIG · a quick registration whose commit fails has the fixed message and a non-empty error ID in its body"
+  ],
+  "B23": ["PROD-CONFIG · an address whose quick registration commit failed can be quick-registered again"],
+  "B24": ["PROD-CONFIG · the error ID of a failed commit appears in the server log next to details naming COMMIT"],
+  "B25": ["PROD-CONFIG · the server log of a failed commit has no second error about a response already sent"]
 }

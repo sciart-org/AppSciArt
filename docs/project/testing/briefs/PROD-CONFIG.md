@@ -19,6 +19,9 @@
   - Each configured origin is reduced to its origin (scheme, host, port) the way a browser builds the `Origin`
     header; a value that is not an `http`/`https` URL stops the server at startup, naming the variable (#313,
     2026-11-23). Sockets use the same frontend origin.
+- A change is reported as saved only once it is stored: if storing it fails at the last moment (the commit), the
+  request answers as an unexpected error, with no success response, and the log shows that failure without a second
+  error hiding it (D-072, #310, 2026-11-24).
 - Background: OWASP API Security Top 10 2023, API8 (CORS policy, error messages) and the OWASP Error Handling Cheat
   Sheet (generic response, details logged server side).
 
@@ -31,6 +34,9 @@
 - Unexpected error = a request that needs the database while it is cut (`cutDatabase()`), e.g. `GET /editions`.
 - CORS headers = `corsHeadersOf(res)`; "no CORS headers" = `{}`. Send the origin with `.set('Origin', …)`.
 - Stack trace = the `    at …` frame lines that follow an error's name in the server log.
+- A commit that fails = `failNextCommit()` on the production instance, armed right before the request under test
+  (`HELPERS.md`, "Production instance").
+- Quick registration = `POST /register?method=quick` with `{ email }`, as a guest.
 - Error body for an unexpected error = exactly `{ "error": "Internal Server Error", "errorId": "<id>" }`, `errorId`
   a non-empty string.
 
@@ -81,6 +87,14 @@ Refused requests
   designer creates an edition → `503`; the log has one entry naming the error, with no stack trace. Wait for the
   entry as in B15.
 
+A commit that fails
+- Each case: a guest quick-registers a fresh address while the instance's next commit fails.
+- **B22** → `500` with exactly the error body above, not `201`.
+- **B23** Afterwards, the same address is quick-registered again → `201`: the first one was not stored.
+- **B24** The `errorId` of B22 appears in the server log next to the failed commit's details, which name `COMMIT`.
+- **B25** Once B24's entry is in the log, the log has no `ERR_HTTP_HEADERS_SENT` (no second error about a response
+  already sent).
+
 Startup and documentation
 - **B10** Production without `FRONTEND_URL` → the server does not start, and the server's own output names
   `FRONTEND_URL`. Leave out the start line the helper itself prints (`HELPERS.md`, "Production instance"), which
@@ -93,4 +107,6 @@ Startup and documentation
 - Start one production instance per `describe` in `beforeAll`, and restore its database after each test that cuts
   it.
 - Use any public endpoint for the origin checks (e.g. `GET /editions`).
+- B22–B25 share one production instance in their own `describe`; each test uses its own address. Wait for B24's
+  entry as in B15, never for a fixed time.
 - B21 needs its own production instance (its own `describe`), started with `driveAccess: 'revoked'`.

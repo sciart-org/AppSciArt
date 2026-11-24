@@ -149,6 +149,24 @@ const loggedEntryOf = async (app, logStart, body) => {
   return entryNaming(app.output().slice(logStart), errorPattern)
 }
 
+const freshAddress = () => `prod-config.${randomUUID()}@example.org`
+
+const quickRegister = (app, email) =>
+  app.asGuest().post('/register').query({ method: 'quick' }).send({ email })
+
+const SQL_QUERY_LOG = /^Executing \(/
+
+const COMMIT_DETAILS = /COMMIT/
+
+const commitDetailsSummary = (output, errorId) => {
+  const nearbyLines = logAround(output, errorId).split('\n').filter((line) => !SQL_QUERY_LOG.test(line))
+  return { errorId: output.includes(errorId) ? errorId : null, detailsNameCommit: nearbyLines.some((line) => COMMIT_DETAILS.test(line)) }
+}
+
+const HEADERS_SENT_ERROR = 'ERR_HTTP_HEADERS_SENT'
+
+const headersSentLinesOf = (output) => output.split('\n').filter((line) => line.includes(HEADERS_SENT_ERROR))
+
 describe('PROD-CONFIG · browser origins in production', () => {
   let app
 
@@ -582,6 +600,84 @@ describe('PROD-CONFIG · refused requests when the Drive access has expired in p
     expect(errorMessageSummary(res.body)).toEqual({ errorMessageIsNonEmptyString: true })
     const entry = await loggedEntryOf(app, logStart, res.body)
     expect({ stackFrames: stackFramesOf(entry) }).toEqual({ stackFrames: [] })
+  })
+})
+
+describe('PROD-CONFIG · a change whose commit fails in production', () => {
+  let app
+
+  beforeAll(async () => {
+    app = await productionApp({ frontendUrl: FRONTEND_URL })
+  })
+
+  afterAll(async () => {
+    await app?.stop()
+  })
+
+  it('PROD-CONFIG · a quick registration whose commit fails is answered with a 500, not a 201', async () => {
+    const email = freshAddress()
+    app.failNextCommit()
+
+    const res = await quickRegister(app, email)
+
+    expect(res.status).toBe(500)
+  })
+
+  it('PROD-CONFIG · a quick registration whose commit fails has only the generic error and its error ID in its body', async () => {
+    const email = freshAddress()
+    app.failNextCommit()
+
+    const res = await quickRegister(app, email)
+
+    expect(fieldsOutsideAllowed(res.body)).toEqual([])
+  })
+
+  it('PROD-CONFIG · a quick registration whose commit fails has the fixed message and a non-empty error ID in its body', async () => {
+    const email = freshAddress()
+    app.failNextCommit()
+
+    const res = await quickRegister(app, email)
+
+    expect({ error: res.body.error, errorIdIsNonEmptyString: isNonEmptyString(res.body.errorId) })
+      .toEqual({ error: GENERIC_ERROR_MESSAGE, errorIdIsNonEmptyString: true })
+  })
+
+  it('PROD-CONFIG · an address whose quick registration commit failed can be quick-registered again', async () => {
+    const email = freshAddress()
+    app.failNextCommit()
+    await quickRegister(app, email)
+
+    const res = await quickRegister(app, email)
+
+    expect(res.status).toBe(201)
+  })
+
+  it('PROD-CONFIG · the error ID of a failed commit appears in the server log next to details naming COMMIT', async () => {
+    const email = freshAddress()
+    const logStart = app.output().length
+    app.failNextCommit()
+
+    const res = await quickRegister(app, email)
+    const errorId = res.body.errorId
+
+    expect({ errorIdIsNonEmptyString: isNonEmptyString(errorId) }).toEqual({ errorIdIsNonEmptyString: true })
+    await expect.poll(() => commitDetailsSummary(app.output().slice(logStart), errorId))
+      .toEqual({ errorId, detailsNameCommit: true })
+  })
+
+  it('PROD-CONFIG · the server log of a failed commit has no second error about a response already sent', async () => {
+    const email = freshAddress()
+    const logStart = app.output().length
+    app.failNextCommit()
+
+    const res = await quickRegister(app, email)
+    const errorId = res.body.errorId
+
+    expect({ errorIdIsNonEmptyString: isNonEmptyString(errorId) }).toEqual({ errorIdIsNonEmptyString: true })
+    await expect.poll(() => commitDetailsSummary(app.output().slice(logStart), errorId))
+      .toEqual({ errorId, detailsNameCommit: true })
+    expect({ headersSentErrors: headersSentLinesOf(app.output().slice(logStart)) })
+      .toEqual({ headersSentErrors: [] })
   })
 })
 
