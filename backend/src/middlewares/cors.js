@@ -40,7 +40,6 @@ const developmentOrigins = () => [
 
 export function corsMiddleware () {
   const ACCEPTED_ORIGINS = isProduction() ? productionOrigins() : developmentOrigins()
-  console.log('ACCEPTED_ORIGINS', ACCEPTED_ORIGINS)
 
   return cors({
     origin: (origin, callback) => callback(null, !origin || ACCEPTED_ORIGINS.includes(origin))

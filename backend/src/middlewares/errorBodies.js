@@ -12,6 +12,12 @@ export const isInternalError = (error) => !error?.status || (error.status >= 500
 
 export const expectedErrorBody = (error) => ({ error: error.message || STATUS_CODES[error.status] })
 
+const refusalLine = (error) => `Refused ${error.status}: ${expectedErrorBody(error).error}`
+
+const loggerFor = (error) => error.status >= 500 ? console.error : console.log
+
+export const logRefusal = (error) => loggerFor(error)(isProduction() ? refusalLine(error) : error)
+
 export const internalErrorBody = (error) => {
   const errorId = randomUUID()
   console.error(`Internal error ${errorId}:`, error)
