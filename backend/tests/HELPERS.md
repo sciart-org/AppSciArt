@@ -298,8 +298,8 @@ curatorVision, seedDescription })`: a SciArt fruit and everything it comes from.
 ### When the server's Drive access has expired
 - `revokeDriveAccess()` → from now on, every Drive call the app makes fails the way Google answers when the
   server's sign-in has expired or was revoked.
-- `restoreDriveAccess()` → the app can use Drive again. A revoke lasts until the file ends, so restore it (e.g. in
-  `afterEach`) before tests that need Drive.
+- `restoreDriveAccess()` → the app can use Drive again (e.g. "access is re-authorised").
+- Access works again at the start of every test without calling `restoreDriveAccess()`.
 - Fixtures still create their Drive folders while access is revoked: arrange first or after, either works.
 
 ```js

@@ -26,7 +26,20 @@ describe('fake third-party services', () => {
     revokeDriveAccess()
 
     await expect(client.files.list({})).rejects.toMatchObject(EXPIRED_GRANT)
+  })
+
+  it('Drive access works again in the next test without restoring it by hand', async () => {
+    const client = await appDriveClient()
+
+    await expect(client.files.list({})).resolves.toBeDefined()
+  })
+
+  it("restoreDriveAccess() lets the app's Drive client work again", async () => {
+    const client = await appDriveClient()
+    revokeDriveAccess()
+
     restoreDriveAccess()
+
     await expect(client.files.list({})).resolves.toBeDefined()
   })
 

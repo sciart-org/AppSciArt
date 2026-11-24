@@ -8,6 +8,7 @@ import { stopProductionApps } from './production/productionApp.js'
 import { settle, trackAppQueries } from './appWork.js'
 import { failIfServerCrashedUnnoticed, forgetServerCrashes, recordServerCrashes } from './crashes.js'
 import { restoreEmailDelivery } from './fakes/emailDelivery.js'
+import { restoreDriveAccess } from './fakes/driveStore.js'
 
 redirectThirdPartyServicesToFakes()
 recordServerCrashes()
@@ -31,6 +32,7 @@ afterEach(async () => {
   } finally {
     forgetServerCrashes()
     restoreEmailDelivery()
+    restoreDriveAccess()
   }
 })
 
