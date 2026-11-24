@@ -1,4 +1,5 @@
 import { Server } from 'socket.io'
+import { frontendOrigin } from '../middlewares/cors.js'
 import { initializeDiagramming, onConnectDiagramming, onDisconnectDiagramming } from './diagramming.js'
 import { onConnectGroupPresentations } from './groupPresentations.js'
 import { useJwtAuthorization } from './socketUtils.js'
@@ -26,10 +27,9 @@ let io = null
 export const getIo = () => io
 
 export function initializeWebSockets (server, verifyAccessToken) {
-  const FRONTEND_URL = process.env.FRONTEND_URL
   io = new Server(server, {
     cors: {
-      origin: FRONTEND_URL,
+      origin: frontendOrigin(),
       methods: ['GET', 'POST']
     }
   })

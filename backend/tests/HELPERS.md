@@ -11,7 +11,7 @@ import { asGuest, as, facilitator, anAnnouncedEdition } from '../support/index.j
 Run them with `npm test` from `backend/`. Each test file starts from a clean state:
 - the database holds only the base users,
 - a fresh app is running,
-- the fake Drive is empty,
+- the fake Drive is empty and the app's Drive access works,
 - the email outbox is empty and email delivery works.
 
 Tests inside one file share that state, except email failures (`failEmailDelivery`) and recorded server crashes,
@@ -77,6 +77,22 @@ const api = await as(designer(1))
 const res = await api.post('/editions').send({ name: 'E1', year: 2026 })
 ```
 
+Every client also has `options(path)`. Set any request header with `.set(name, value)` before awaiting.
+
+### CORS
+- Send an origin with `.set('Origin', origin)`. For a preflight, use `options(path)` and also set
+  `Access-Control-Request-Method`.
+- `corsHeadersOf(res)` → every `Access-Control-*` header of the response, named in camelCase without the prefix:
+  `{ allowOrigin, allowMethods, allowHeaders, allowCredentials, … }`. Only the headers present are included, so a
+  response with no CORS header gives `{}`.
+
+```js
+const res = await asGuest().options('/editions')
+  .set('Origin', 'https://elsewhere.example.com')
+  .set('Access-Control-Request-Method', 'GET')
+expect(corsHeadersOf(res)).toEqual({})
+```
+
 ### Login and tokens (FRQ-001)
 - `await login({ email, password })` → `{ status, body }` straight from Supabase Auth. `body.access_token` is set on
   success.
@@ -100,6 +116,51 @@ The token helpers below are plain functions (no `await`).
 - `await nextEvent(socket, event, timeout = 2000)` → the payload of the next `event` (an array if there is more than
   one argument). Rejects on timeout.
 - `await noEventArrives(socket, event, timeout = 500)` → `true` if `event` did **not** arrive in time.
+
+## Production instance
+The app every file gets runs as `testing`. To check how the app behaves when deployed, start a second instance
+with `NODE_ENV=production`, the way `npm start` runs it.
+
+| Helper | Returns |
+|---|---|
+| `await productionApp({ frontendUrl, driveAccess, env })` | a running production instance (below); rejects, with the app's output, if it doesn't start |
+| `await productionStartup({ frontendUrl, driveAccess, env })` | `{ started, exitCode, output }`: whether the app started listening. The instance is stopped right after |
+
+Options:
+- `frontendUrl`: the `FRONTEND_URL` it runs with. Default `https://sciart.example.org`; `null` starts it without one.
+- `driveAccess`: `'revoked'` starts it with its Drive access expired, as `revokeDriveAccess()` does for the main
+  app. The main app's helpers don't reach the instance.
+- `env`: other environment variables, e.g. `{ BACKEND_URL: '…' }`. `null` removes one.
+- Everything else comes from the testing environment: the local Supabase stack and database, fake Google and Resend.
+
+The instance:
+
+| Member | Meaning |
+|---|---|
+| `url` | its base URL |
+| `asGuest()`, `await as(user)`, `withToken(token)` | API clients against the instance, as in "Calling the API" |
+| `cutDatabase()` | the instance loses its database: open connections drop and new ones are refused |
+| `restoreDatabase()` | the instance can reach the database again |
+| `failNextCommit()` | the next transaction the instance commits fails: its connection drops at `COMMIT`, after the transaction's other queries went through. Only that one commit fails. Returns a promise that settles once it has failed |
+| `output()` | everything the instance printed so far (its log), stdout and stderr together. Its first line is the helper's own start line, `productionApp: NODE_ENV=…, FRONTEND_URL=… (or (unset)), fake Google and Resend in place`; every other line comes from the server. `productionStartup`'s `output` has the same first line |
+| `await stop()` | ends it. Instances still running are stopped when the file ends |
+
+```js
+const app = await productionApp()
+app.cutDatabase()
+const res = await app.asGuest().get('/editions')
+app.restoreDatabase()
+expect(res.status).toBe(500)
+```
+
+- An unexpected server error: cut the database, then call any endpoint that reads it. Restore it before the
+  next request that needs data.
+- A commit that fails: call `failNextCommit()` right before the request under test. Every request commits a
+  transaction, reads included, so the next request of any kind takes the failure.
+- Startup: `productionStartup` waits until the server listens or exits, up to 20 s. Check `started`, and look for
+  the reason in `output`. Don't rely on `exitCode` alone: the app may exit with 0 after a failed start.
+- The instance has its own fakes: `sentEmails()` and `drive.*` don't see what it sends.
+- Starting one takes about a second. Share one instance per `describe` (`beforeAll`) when the options are the same.
 
 ## Fixtures (arrange only)
 All async. Each one creates the state the system would be in after that step, and returns the created row (`id` and
@@ -237,6 +298,19 @@ curatorVision, seedDescription })`: a SciArt fruit and everything it comes from.
 
 - `driveFiles()` → every file in the fake Drive (last resort, for counts).
 
+### When the server's Drive access has expired
+- `revokeDriveAccess()` → from now on, every Drive call the app makes fails the way Google answers when the
+  server's sign-in has expired or was revoked.
+- `restoreDriveAccess()` → the app can use Drive again (e.g. "access is re-authorised").
+- Access works again at the start of every test without calling `restoreDriveAccess()`.
+- Fixtures still create their Drive folders while access is revoked: arrange first or after, either works.
+
+```js
+const api = await as(designer(1))
+revokeDriveAccess()
+const res = await api.post('/editions').send({ name: 'E1', year: 2026 })
+```
+
 ### Email service down
 | Helper | Effect |
 |---|---|
@@ -283,6 +357,17 @@ Some work runs after the system has answered the request: emails and socket broa
 - Because of that, the fakes are wired in at Node's module resolution: `tests/support/fakes/hooks.js` resolves
   `googleapis` and `resend` to `fakes/googleapis.js` and `fakes/resend.js`. The app and the tests share the fakes'
   state through `globalThis`. If the app didn't load both fakes, setup stops before any test runs.
+- `productionApp` runs `src/server.js` in a child process with `NODE_ENV=production`, so module-level reads of
+  the environment see production. The tests' own `process.env` is never changed.
+  - Its working directory is a temporary folder with links to `.oastoolsrc`, `package.json`, `api/` and `src/` only,
+    so no `.env*` file (e.g. a real `.env.production`) is loaded. It gets only the variables the helper passes.
+  - It reaches the database through a small TCP proxy in the test process; `cutDatabase()` closes that proxy.
+    `failNextCommit()` reads the app's messages to the database and drops the connection that sends the plain
+    `COMMIT;` query.
+  - The production database config requires SSL, and the local stack has none. The helper adds `?ssl=` to the
+    instance's `DATABASE_URL`, which turns SSL off. This is the one way it differs from a real production start.
+  - `tests/support/production/boot.js` is loaded first (`node --import`). It redirects Google and Resend to the
+    fakes and stops the instance if they aren't in place.
 - The app runs in-process without `src/server.js`, so nothing exits on a crash. Setup listens to the process's
   `unhandledRejection` and `uncaughtException` instead and records them for `serverCrashes()`.
   - With that listener in place, Vitest no longer reports them as "Unhandled Rejection" errors of the run, so
@@ -291,8 +376,8 @@ Some work runs after the system has answered the request: emails and socket broa
 - `settle()` knows what the app is doing by counting the app Sequelize's running queries (setup wraps
   `sequelize.query`) and the fake email client's running sends. After-commit work starts right when the
   `COMMIT` query ends, so a few idle turns in a row mean it is done.
-- `tests/infra/` checks this tooling itself (users, tokens, fixtures, fakes, sockets, clean state). It tests no
-  requirement.
+- `tests/infra/` checks this tooling itself (users, tokens, fixtures, fakes, sockets, clean state, production
+  instances, CORS helpers). It tests no requirement.
 
 ## Coverage
 Run `npm run test:coverage`. It prints a table and writes an HTML report to `coverage/index.html` (gitignored);

@@ -30,24 +30,41 @@ const appUrl = () => {
   return runningApp.url
 }
 
-const httpClient = (authorizationHeader) => {
+const httpClient = (baseUrl, authorizationHeader) => {
   const authorized = (pendingRequest) =>
     authorizationHeader ? pendingRequest.set('Authorization', authorizationHeader) : pendingRequest
-  const agent = request(appUrl())
+  const agent = request(baseUrl)
   return {
     get: (path) => authorized(agent.get(path)),
     post: (path) => authorized(agent.post(path)),
     put: (path) => authorized(agent.put(path)),
     patch: (path) => authorized(agent.patch(path)),
-    delete: (path) => authorized(agent.delete(path))
+    delete: (path) => authorized(agent.delete(path)),
+    options: (path) => authorized(agent.options(path))
   }
 }
 
-export const asGuest = () => httpClient()
+export const clientsFor = (baseUrl) => ({
+  asGuest: () => httpClient(baseUrl),
+  as: async (user) => httpClient(baseUrl, `Bearer ${await tokenOf(user)}`),
+  withToken: (token) => httpClient(baseUrl, `Bearer ${token}`)
+})
 
-export const as = async (user) => httpClient(`Bearer ${await tokenOf(user)}`)
+export const asGuest = () => clientsFor(appUrl()).asGuest()
 
-export const withToken = (token) => httpClient(`Bearer ${token}`)
+export const as = async (user) => clientsFor(appUrl()).as(user)
+
+export const withToken = (token) => clientsFor(appUrl()).withToken(token)
+
+const CORS_HEADER_PREFIX = 'access-control-'
+
+const camelCased = (dashedName) => dashedName.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+
+export const corsHeadersOf = (response) => Object.fromEntries(
+  Object.entries(response.headers)
+    .filter(([name]) => name.toLowerCase().startsWith(CORS_HEADER_PREFIX))
+    .map(([name, value]) => [camelCased(name.toLowerCase().slice(CORS_HEADER_PREFIX.length)), value])
+)
 
 const openSockets = new Set()
 

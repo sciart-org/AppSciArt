@@ -21,7 +21,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
   `testing/plan.md`, linked from the row (D-068).
 - **Topic** (D-068): a product owner answer takes its use case ID (`UC-006/007`), or `Product owner` when it spans
   several. Otherwise one of: Repository, Branching, Environments, Hosting, Priority, Testing, Test infrastructure,
-  Fixtures, Tracking, Docs, Tooling, CI, Auth, Requirement, Security. Add a topic here only when none fits.
+  Fixtures, Tracking, Docs, Tooling, CI, Auth, Requirement, Security, Architecture. Add a topic here only when none fits.
 - **Current product owner answers** are in `clarifications/`; this log keeps their history.
   - An answer goes into `clarifications/` in the same commit as its row, never "later".
   - `tools/check_clarifications.py` fails while an answer in force is cited in no clarification file.
@@ -88,6 +88,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-065 | 2026-11-14 | Email | When the email service is down, a request that sends an email still succeeds: the email is lost, recorded as not delivered and logged, and the server keeps running. Retrying lost emails is later work (Phase 5e outbox). | — | in force |
 | D-068 | 2026-11-16 | Docs | Only choices that limit future work, are costly to reverse, or answer the product owner get a row; facts go into the doc they describe. Details stay short (decision, why, options not adopted) and link plans instead of holding them. Topics come from a fixed list in the header. A row is committed with the change it governs. ([details](#d-068)) | — | in force |
 | D-071 | 2026-11-24 | Docs | A decision is applied in every living doc whose current truth it changes: the doc states the rule and cites the row, while the why stays in this log. A superseding row also updates the docs citing the replaced one, and `tools/check_decision_citations.py` fails while a living doc cites a fully superseded row. ([details](#d-071)) | — | in force |
+| D-072 | 2026-11-24 | Architecture | A request's response reaches the client only after its transaction has committed; if the commit fails, the client gets a `500` instead. Handlers keep calling `res.send`: the controller wrapper holds the finished response until the commit. ([details](#d-072)) | — | in force |
 
 ## Details
 
@@ -528,3 +529,31 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
     Zimmermann, 2023): the "Mega-ADR" anti-pattern.
   - [Architecture decisions](https://gds-way.digital.cabinet-office.gov.uk/standards/architecture-decisions.html)
     (UK GDS Way, as of 2026): mark superseded records and link to the replacement.
+
+### D-072
+- Source: finding F6 (#310), production error handling review, 2026-11-15.
+- Why: handlers sent their response inside the transaction, so a commit that failed left the client with a success
+  response and nothing stored.
+- Rule:
+  - `withTransaction` holds `res.end` while the transaction runs. The response, including its OpenAPI response check,
+    is built inside the transaction: an invalid response still rolls the change back.
+  - After the commit the held response is sent, then the after-commit work (emails, sockets) runs.
+  - If the commit fails, the held response is dropped and the error handler sends one `500` with the real cause.
+  - A response sent in pieces (`res.write`, streaming) inside a transaction is an error: its first piece would reach
+    the client before the commit. An endpoint that must stream commits first and streams afterwards.
+  - If a response has already started when an error arrives, the error handler closes the connection instead of
+    sending a second response.
+- Not adopted: handlers return `{ status, body }` and the wrapper sends it after the commit. It is more explicit, but
+  the response check would then run after the commit (an invalid response would leave the change stored), and it
+  changes every controller.
+- Cost: the order is implicit (handlers look like they respond inside the transaction). A test fails if it breaks.
+- Sources:
+  - [Database transactions](https://docs.djangoproject.com/en/6.0/topics/db/transactions/) (Django 6.0, 2025): the
+    view builds the response inside the transaction; it is delivered after the commit.
+  - [Transactions](https://sequelize.org/v6/manual/transactions.html) (Sequelize v6, 6.37 current): a managed
+    transaction commits when its callback ends; respond after awaiting it.
+  - [Error handling](https://expressjs.com/en/guide/error-handling/) (Express 5.x, as of 2026): when
+    `res.headersSent`, don't send again; the connection is closed.
+  - Precedent for holding `res.end`: [`express-session`](https://github.com/expressjs/session/blob/master/index.js)
+    (1.19.0, 2026) delays it until the session is saved; `compression` (1.8.2, 2026) overrides `res.write` and
+    `res.end`.

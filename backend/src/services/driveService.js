@@ -1,9 +1,17 @@
 import { PassThrough } from 'stream'
 import { loadDriveAuthConfig } from '../config/drive.js'
 import { toPlainObject } from './mappers/utils.js'
-import { errorThrower } from './errorThrower.js'
 
 const ROOT_FOLDER_ID = process.env.DRIVE_FOLDER_ID
+const DRIVE_REAUTH_REQUIRED_MESSAGE = 'Google Drive access has expired. An administrator must re-authorise it.'
+const SERVICE_UNAVAILABLE = 503
+
+const isExpiredGrant = (error) => error.response?.data?.error === 'invalid_grant'
+
+const driveReauthRequiredError = () => Object.assign(new Error(DRIVE_REAUTH_REQUIRED_MESSAGE),
+  { status: SERVICE_UNAVAILABLE, expose: true, driveReauthRequired: true })
+
+const isDriveReauthRequired = (error) => error.driveReauthRequired === true
 
 let driveInstance = await loadDriveAuthConfig()
 
@@ -23,11 +31,7 @@ const drive = new Proxy({}, {
           try {
             return await driveInstance[prop][method](...args)
           } catch (retryError) {
-            errorThrower(
-              retryError.response?.data?.error === 'invalid_grant',
-              'Google OAuth token expired or revoked. Re-authorization required.',
-              401
-            )
+            if (isExpiredGrant(retryError)) throw driveReauthRequiredError()
             console.error('Drive retry error:', { message: retryError.message, status: retryError.response?.status })
             throw retryError
           }
@@ -314,7 +318,7 @@ export const getEntitiesWithImage = async (entitiesList, Model, imageName = 'log
         const image = await getImgFromDrive(driveLink, imageName)
         return { ...toPlainObject(entity), [imageName]: image }
       } catch (err) {
-        if (err.status === 401 || err.message === 'REAUTH_REQUIRED') {
+        if (isDriveReauthRequired(err)) {
           console.warn('Drive auth expired, skipping image for entity:', entity.id)
           return { ...toPlainObject(entity), [imageName]: null }
         }

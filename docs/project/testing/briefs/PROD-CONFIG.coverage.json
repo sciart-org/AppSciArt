@@ -1,0 +1,88 @@
+{
+  "B1": ["PROD-CONFIG · a request from the frontend origin is allowed for that origin"],
+  "B2": ["PROD-CONFIG · a preflight from the frontend origin is allowed for that origin"],
+  "B3": [
+    "PROD-CONFIG · a request from the local development origin gets no CORS headers",
+    "PROD-CONFIG · a request from the local development origin is not answered with a 500"
+  ],
+  "B4": [
+    "PROD-CONFIG · a request from an unknown origin gets no CORS headers",
+    "PROD-CONFIG · a request from an unknown origin is not answered with a 500"
+  ],
+  "B5": [
+    "PROD-CONFIG · a preflight from an unknown origin gets no CORS headers",
+    "PROD-CONFIG · a preflight from an unknown origin is not answered with a 500"
+  ],
+  "B6": [
+    "PROD-CONFIG · an unexpected error is answered with a 500",
+    "PROD-CONFIG · an unexpected error body has only the generic error and its error ID",
+    "PROD-CONFIG · an unexpected error body has the fixed message and a non-empty error ID",
+    "PROD-CONFIG · an unexpected error response names no internal error"
+  ],
+  "B7": [
+    "PROD-CONFIG · the error ID of an unexpected error appears in the server log",
+    "PROD-CONFIG · the server log shows the error details next to its error ID"
+  ],
+  "B8": ["PROD-CONFIG · two unexpected errors get different error IDs"],
+  "B14": [
+    "PROD-CONFIG · the stack trace of an unexpected error appears in the server log next to its error ID",
+    "PROD-CONFIG · the server log has no copy of an unexpected error stack trace away from its error ID"
+  ],
+  "B15": [
+    "PROD-CONFIG · a request without a token to an endpoint that needs one is answered with a 401",
+    "PROD-CONFIG · a request without a token to an endpoint that needs one is logged as an entry naming the error",
+    "PROD-CONFIG · the log entry of a request without a token has no stack trace",
+    "PROD-CONFIG · an invalid request is answered with a 400",
+    "PROD-CONFIG · an invalid request is logged as an entry naming the error",
+    "PROD-CONFIG · the log entry of an invalid request has no stack trace"
+  ],
+  "B20": [
+    "PROD-CONFIG · a designer asking for a hackathon that does not exist is answered with a 404",
+    "PROD-CONFIG · a designer asking for a hackathon that does not exist is logged as an entry naming the error",
+    "PROD-CONFIG · the log entry of a hackathon that does not exist has no stack trace"
+  ],
+  "B21": [
+    "PROD-CONFIG · a designer creating an edition while the Drive access has expired is answered with a 503",
+    "PROD-CONFIG · a designer creating an edition while the Drive access has expired is logged as an entry naming the error",
+    "PROD-CONFIG · the log entry of an edition created while the Drive access has expired has no stack trace"
+  ],
+  "B9": [
+    "PROD-CONFIG · a hackathon that does not exist is answered with a 404",
+    "PROD-CONFIG · a hackathon that does not exist is not turned into the generic error"
+  ],
+  "B10": [
+    "PROD-CONFIG · production without FRONTEND_URL does not start",
+    "PROD-CONFIG · production without FRONTEND_URL names FRONTEND_URL in its output"
+  ],
+  "B11": ["PROD-CONFIG · the testing app still accepts the local development origin"],
+  "B12": ["PROD-CONFIG · a production instance serves the API documentation at /docs"],
+  "B13": [
+    "PROD-CONFIG · a request from an origin in EXTRA_ALLOWED_ORIGINS is allowed for that origin",
+    "PROD-CONFIG · a preflight from an origin in EXTRA_ALLOWED_ORIGINS is allowed for that origin"
+  ],
+  "B16": [
+    "PROD-CONFIG · with a trailing slash in FRONTEND_URL a request from the frontend origin is allowed for exactly that origin",
+    "PROD-CONFIG · with a trailing slash in FRONTEND_URL a preflight from the frontend origin is allowed for exactly that origin"
+  ],
+  "B17": [
+    "PROD-CONFIG · with a path in an EXTRA_ALLOWED_ORIGINS entry a request from its origin is allowed for exactly that origin",
+    "PROD-CONFIG · with a path in an EXTRA_ALLOWED_ORIGINS entry a preflight from its origin is allowed for exactly that origin"
+  ],
+  "B18": [
+    "PROD-CONFIG · production with a FRONTEND_URL without a scheme does not start",
+    "PROD-CONFIG · production with a FRONTEND_URL without a scheme names FRONTEND_URL in its output",
+    "PROD-CONFIG · production with an EXTRA_ALLOWED_ORIGINS entry without a scheme does not start",
+    "PROD-CONFIG · production with an EXTRA_ALLOWED_ORIGINS entry without a scheme names EXTRA_ALLOWED_ORIGINS in its output"
+  ],
+  "B19": [
+    "PROD-CONFIG · with a trailing slash in FRONTEND_URL the socket handshake from the frontend origin is allowed for exactly that origin"
+  ],
+  "B22": [
+    "PROD-CONFIG · a quick registration whose commit fails is answered with a 500, not a 201",
+    "PROD-CONFIG · a quick registration whose commit fails has only the generic error and its error ID in its body",
+    "PROD-CONFIG · a quick registration whose commit fails has the fixed message and a non-empty error ID in its body"
+  ],
+  "B23": ["PROD-CONFIG · an address whose quick registration commit failed can be quick-registered again"],
+  "B24": ["PROD-CONFIG · the error ID of a failed commit appears in the server log next to details naming COMMIT"],
+  "B25": ["PROD-CONFIG · the server log of a failed commit has no second error about a response already sent"]
+}

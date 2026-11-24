@@ -6,6 +6,12 @@ import { initialize } from '@oas-tools/core'
 import { accessTokenVerifierFromEnv } from './middlewares/accessTokens.js'
 import { customErrorHandler } from './middlewares/customErrorHandler.js'
 import { initializeWebSockets } from './sockets/index.js'
+import { expectedErrorBody, internalErrorBody, isInternalError, isProduction } from './middlewares/errorBodies.js'
+
+const sendUnhandledError = (error, send) => {
+  if (isInternalError(error)) return send(500, internalErrorBody(error))
+  send(error.status, expectedErrorBody(error))
+}
 
 export const createApp = async () => {
   const verifyAccessToken = accessTokenVerifierFromEnv()
@@ -26,6 +32,10 @@ export const createApp = async () => {
         auth: {
           bearerAuth: verifyAccessToken
         }
+      },
+      error: {
+        customHandler: sendUnhandledError,
+        printStackTrace: !isProduction()
       }
     }
   }

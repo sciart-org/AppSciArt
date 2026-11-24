@@ -5,7 +5,12 @@ export const FOLDER_MIME = 'application/vnd.google-apps.folder'
 export const DOCUMENT_MIME = 'application/vnd.google-apps.document'
 export const PNG_MIME = 'image/png'
 
+export const REVOKED_DRIVE_ACCESS = 'revoked'
+
 const filesById = stateSharedWithApp('driveFiles', () => new Map())
+const driveAccess = stateSharedWithApp('driveAccess', () => ({
+  revoked: process.env.FAKE_DRIVE_ACCESS === REVOKED_DRIVE_ACCESS
+}))
 
 const newDriveId = () => randomBytes(24).toString('base64url').slice(0, 33)
 
@@ -15,6 +20,21 @@ const fileNotFoundError = (fileId) => {
   error.response = { status: 404 }
   return error
 }
+
+const expiredGrantError = () => {
+  const error = new Error('invalid_grant')
+  error.status = 400
+  error.response = { status: 400, data: { error: 'invalid_grant', error_description: 'Token has been expired or revoked.' } }
+  return error
+}
+
+const refusingWhileRevoked = (methods) => Object.fromEntries(Object.entries(methods).map(([name, method]) => [
+  name,
+  async (...args) => {
+    if (driveAccess.revoked) throw expiredGrantError()
+    return method(...args)
+  }
+]))
 
 const existingFile = (fileId) => {
   const file = filesById.get(fileId)
@@ -47,7 +67,7 @@ const storeFile = ({ name, mimeType = 'application/octet-stream', parents = [] }
   return file
 }
 
-export const driveApi = {
+const unguardedDriveApi = {
   files: {
     create: async ({ requestBody = {}, fields } = {}) => {
       return { data: onlyRequestedFields(storeFile(requestBody), fields) }
@@ -94,7 +114,18 @@ export const driveApi = {
   }
 }
 
-export const resetDrive = () => filesById.clear()
+export const driveApi = Object.fromEntries(
+  Object.entries(unguardedDriveApi).map(([resource, methods]) => [resource, refusingWhileRevoked(methods)])
+)
+
+export const revokeDriveAccess = () => { driveAccess.revoked = true }
+
+export const restoreDriveAccess = () => { driveAccess.revoked = false }
+
+export const resetDrive = () => {
+  filesById.clear()
+  restoreDriveAccess()
+}
 
 export const allFiles = () => [...filesById.values()].map(file => ({ ...file, parents: [...file.parents] }))
 

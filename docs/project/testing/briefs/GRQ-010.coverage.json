@@ -1,0 +1,25 @@
+{
+  "B1": [
+    "GRQ-010 · NFRQ-015 · UC-029 · designer creating an edition gets 503, not 401 or 403",
+    "GRQ-010 · NFRQ-015 · UC-029 · designer creating an edition is told Google Drive access must be re-authorised"
+  ],
+  "B2": [
+    "GRQ-010 · UC-029 · the edition refused for expired Drive access is not listed to the designer",
+    "GRQ-010 · NFRQ-015 · the edition refused for expired Drive access leaves no new file in Drive"
+  ],
+  "B3": [
+    "GRQ-010 · UC-029 · the designer's session still works after the refusal for expired Drive access"
+  ],
+  "B4": [
+    "GRQ-010 · NFRQ-015 · guest still gets the edition list, with the announced edition in it",
+    "GRQ-010 · NFRQ-015 · guest sees the announced edition's logo as null"
+  ],
+  "B5": [
+    "GRQ-010 · NFRQ-015 · UC-029 · designer creates an edition once Drive access works again"
+  ],
+  "B6": [
+    "GRQ-010 · NFRQ-015 · UC-029 · in production, designer creating an edition gets 503",
+    "GRQ-010 · NFRQ-015 · UC-029 · in production, designer is told Google Drive access must be re-authorised",
+    "GRQ-010 · NFRQ-015 · UC-029 · in production, the refusal is not turned into the generic unexpected error"
+  ]
+}

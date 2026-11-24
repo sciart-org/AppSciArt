@@ -4,6 +4,10 @@ ErrorResponse:
     error:
       type: string
       example: Internal Server Error
+    errorId:
+      type: string
+      description: Identifies an unexpected error in the server log. Only sent with a 500.
+      example: 3f6c2a9e-8b1d-4c7a-9e2f-5d4b3a2c1e0f
 
 DomainItem:
   type: object
