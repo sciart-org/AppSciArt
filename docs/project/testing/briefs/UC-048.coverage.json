@@ -1,0 +1,44 @@
+{
+  "B1": ["UC-048 · FRQ-017 · a member's node update reaches another member of the group with the same nodes"],
+  "B2": ["UC-048 · FRQ-017 · a member's edge update reaches another member of the group with the same edges"],
+  "B3": ["UC-048 · FRQ-017 · after a member's change, another member's initial state has the changed nodes"],
+  "B4": ["UC-048 · FRQ-017 · a participant placed in a group after joining joins again and receives the group's node updates"],
+  "B5": ["UC-048 · a member of another group does not receive this group's node updates"],
+  "B6": ["UC-048 · a member of another group's node update does not reach this group's members"],
+  "B7": [
+    "UC-048 · an enrolled participant with no group gets an error message asking for the initial state",
+    "UC-048 · an enrolled participant with no group gets an error message updating nodes"
+  ],
+  "B8": [
+    "UC-048 · a participant gets an error message watching another group",
+    "UC-048 · a participant gets an error message watching their own group"
+  ],
+  "B9": ["UC-048 · BRU-025 · an evaluator watching the group receives the members' node updates"],
+  "B10": [
+    "UC-048 · BRU-025 · an evaluator's node update gets an error message",
+    "UC-048 · BRU-025 · an evaluator's node update does not reach the members"
+  ],
+  "B11": ["UC-048 · a facilitator watching the group receives the members' node updates"],
+  "B12": ["UC-048 · a facilitator's node update reaches the members with the same nodes"],
+  "B13": ["UC-048 · watching a group of another hackathon gets an error message"],
+  "B14": ["UC-048 · after stopping watching, a facilitator no longer receives the group's node updates"],
+  "B15": ["UC-048 · IRQ-009 · after every socket leaves, the stored map has the last nodes a member sent"],
+  "B16": ["UC-048 · IRQ-009 · BRU-025 · an evaluator's refused change is not stored"],
+  "B17": [
+    "UC-048 · a node update with a text instead of a list gets an error message",
+    "UC-048 · a node update with an object instead of a list gets an error message",
+    "UC-048 · a node update with nodes without an id gets an error message",
+    "UC-048 · a node update with a text instead of a list does not reach the other members",
+    "UC-048 · a node update with an object instead of a list does not reach the other members",
+    "UC-048 · a node update with nodes without an id does not reach the other members",
+    "UC-048 · a node update with a text instead of a list does not crash the server",
+    "UC-048 · a node update with an object instead of a list does not crash the server",
+    "UC-048 · a node update with nodes without an id does not crash the server"
+  ],
+  "B18": [
+    "UC-048 · get_initial_state from a socket that joined no hackathon gets an error message",
+    "UC-048 · update_nodes from a socket that joined no hackathon gets an error message",
+    "UC-048 · get_initial_state from a socket that joined no hackathon does not crash the server",
+    "UC-048 · update_nodes from a socket that joined no hackathon does not crash the server"
+  ]
+}

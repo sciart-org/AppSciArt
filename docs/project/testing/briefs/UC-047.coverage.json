@@ -1,0 +1,47 @@
+{
+  "B1": ["UC-047 · BRU-048 · an enrolled participant who is not assisting joins and receives the participant updates"],
+  "B2": ["UC-047 · BRU-048 · an enrolled, assisting participant joins and receives the participant updates"],
+  "B3": ["UC-047 · BRU-048 · an enrolled participant does not receive the management updates"],
+  "B4": ["UC-047 · BRU-048 · BRU-025 · an evaluator of the hackathon joins and receives the management updates"],
+  "B5": [
+    "UC-047 · BRU-048 · a facilitator joins and receives the management updates",
+    "UC-047 · BRU-048 · a designer joins and receives the management updates",
+    "UC-047 · BRU-048 · an administrator joins and receives the management updates"
+  ],
+  "B6": [
+    "UC-047 · BRU-048 · a registered user who is not enrolled gets an error message",
+    "UC-047 · BRU-048 · a registered user who is not enrolled receives no participant updates"
+  ],
+  "B7": [
+    "UC-047 · BRU-048 · an inspiring scientist of the edition who is not enrolled gets an error message",
+    "UC-047 · BRU-048 · an inspiring scientist of the edition who is not enrolled receives no participant updates"
+  ],
+  "B8": [
+    "UC-047 · BRU-048 · an evaluator of another hackathon gets an error message",
+    "UC-047 · BRU-048 · an evaluator of another hackathon receives no participant updates of this one",
+    "UC-047 · BRU-048 · an evaluator of another hackathon receives no management updates of this one"
+  ],
+  "B9": [
+    "UC-047 · an enrolled participant joins an ongoing hackathon in PREPARING and receives the participant updates",
+    "UC-047 · an enrolled participant joins an ongoing hackathon in TEAM_WORK and receives the participant updates"
+  ],
+  "B10": [
+    "UC-047 · BRU-048 · a facilitator gets an error message joining a not announced hackathon",
+    "UC-047 · BRU-048 · a facilitator gets an error message joining an announced hackathon",
+    "UC-047 · BRU-048 · a facilitator gets an error message joining an ended hackathon"
+  ],
+  "B11": [
+    "UC-047 · a join with a value that is not an id gets an error message",
+    "UC-047 · a join with no value gets an error message",
+    "UC-047 · a join with a number gets an error message",
+    "UC-047 · a join with a value that is not an id does not crash the server",
+    "UC-047 · a join with no value does not crash the server",
+    "UC-047 · a join with a number does not crash the server"
+  ],
+  "B12": ["UC-047 · after a malformed join, the same socket joins the hackathon and receives its participant updates"],
+  "B13": ["UC-047 · a join with the id of a hackathon that does not exist gets an error message"],
+  "B14": [
+    "UC-047 · an enrolled participant gets an error message joining an announced hackathon",
+    "UC-047 · an enrolled participant gets an error message joining an ended hackathon"
+  ]
+}

@@ -6,13 +6,31 @@ import {
   tokenOf,
   legacyTokenOf,
   forgedTokens,
-  socketAs
+  socketAs,
+  nextEvent,
+  shortLivedTokenOf,
+  tokenOfUserWithoutProfile
 } from '../support/index.js'
+
+const SHORT_SESSION_SECONDS = 2
+
+const WAIT_PAST_EXPIRY_MS = (SHORT_SESSION_SECONDS + 4) * 1000
+
+const TEST_TIMEOUT_MS = WAIT_PAST_EXPIRY_MS + 10000
+
+const detailOf = (error) =>
+  ['string', 'number'].includes(typeof error?.description) ? ` (${error.description})` : ''
 
 const connectionOutcome = (user, token) =>
   socketAs(user, { token }).then(
     () => 'accepted',
-    (error) => `refused: ${error?.message ?? error}`
+    (error) => `refused: ${error?.message ?? error}${detailOf(error)}`
+  )
+
+const afterConnecting = (user, token, observe) =>
+  socketAs(user, { token }).then(
+    observe,
+    (error) => `connection refused before its session expired: ${error?.message ?? error}${detailOf(error)}`
   )
 
 const INVALID_TOKENS = [
@@ -106,4 +124,52 @@ describe('FRQ-001 · no token', () => {
 
     expect({ status: res.status }).toEqual({ status: 401 })
   })
+})
+
+describe('FRQ-001 · a valid session of an account with no user profile', () => {
+  it('FRQ-001 · a session of an account without a user profile is refused on the real-time connection', async () => {
+    const token = await tokenOfUserWithoutProfile()
+
+    const outcome = await connectionOutcome(participant(5), token)
+
+    expect(outcome).toMatch(/^refused/)
+  })
+})
+
+describe('FRQ-001 · an empty session', () => {
+  it('FRQ-001 · an empty session is refused on the real-time connection', async () => {
+    const outcome = await connectionOutcome(participant(6), '')
+
+    expect(outcome).toMatch(/^refused/)
+  })
+})
+
+describe('FRQ-001 · a real-time connection that outlives its session', () => {
+  it('FRQ-001 · the connection is told its session expired once it expires', async () => {
+    const user = participant(7)
+    const token = shortLivedTokenOf(user, SHORT_SESSION_SECONDS)
+
+    const notice = await afterConnecting(user, token, (socket) =>
+      nextEvent(socket, 'session_expired', WAIT_PAST_EXPIRY_MS).then(
+        () => 'session_expired received',
+        () => `no session_expired within ${WAIT_PAST_EXPIRY_MS} ms`
+      )
+    )
+
+    expect(notice).toBe('session_expired received')
+  }, TEST_TIMEOUT_MS)
+
+  it('FRQ-001 · the server closes the connection after its session expires', async () => {
+    const user = participant(8)
+    const token = shortLivedTokenOf(user, SHORT_SESSION_SECONDS)
+
+    const state = await afterConnecting(user, token, (socket) =>
+      nextEvent(socket, 'disconnect', WAIT_PAST_EXPIRY_MS).then(
+        () => 'closed',
+        () => `still open ${WAIT_PAST_EXPIRY_MS} ms after connecting`
+      )
+    )
+
+    expect(state).toBe('closed')
+  }, TEST_TIMEOUT_MS)
 })

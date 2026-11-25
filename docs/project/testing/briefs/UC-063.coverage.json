@@ -1,0 +1,51 @@
+{
+  "B1": [
+    "UC-063 · UC-055 · an assisting member of a team who joined receives the new presenting team number",
+    "UC-063 · UC-055 · a member of a team who is not assisting who joined receives the new presenting team number",
+    "UC-063 · UC-055 · an enrolled participant in no team who joined receives the new presenting team number"
+  ],
+  "B2": [
+    "UC-063 · another staff member who joined receives the new presenting team number",
+    "UC-063 · BRU-025 · an evaluator who joined receives the new presenting team number"
+  ],
+  "B3": [
+    "UC-063 · a designer sets the presenting team and a participant who joined receives it",
+    "UC-063 · an administrator sets the presenting team and a participant who joined receives it"
+  ],
+  "B4": [
+    "UC-063 · IRQ-006 · a client that joins after the change reads the new presenting team"
+  ],
+  "B5": [
+    "UC-063 · a participant's presenting team change gets an error message",
+    "UC-063 · a participant's presenting team change reaches nobody",
+    "UC-063 · IRQ-006 · after a participant's refused change, the presenting team is unchanged"
+  ],
+  "B6": [
+    "UC-063 · BRU-025 · an evaluator's presenting team change gets an error message",
+    "UC-063 · BRU-025 · an evaluator's presenting team change reaches nobody",
+    "UC-063 · IRQ-006 · BRU-025 · after an evaluator's refused change, the presenting team is unchanged"
+  ],
+  "B7": [
+    "UC-063 · a participant who joined another hackathon does not receive this hackathon's presenting team"
+  ],
+  "B8": [
+    "UC-063 · a presenting team change with 0 gets an error message",
+    "UC-063 · a presenting team change with -1 gets an error message",
+    "UC-063 · a presenting team change with the text '2' gets an error message",
+    "UC-063 · a presenting team change with no team number gets an error message",
+    "UC-063 · IRQ-006 · after a presenting team change with 0, the presenting team is unchanged",
+    "UC-063 · IRQ-006 · after a presenting team change with -1, the presenting team is unchanged",
+    "UC-063 · IRQ-006 · after a presenting team change with the text '2', the presenting team is unchanged",
+    "UC-063 · IRQ-006 · after a presenting team change with no team number, the presenting team is unchanged",
+    "UC-063 · a presenting team change with 0 does not crash the server",
+    "UC-063 · a presenting team change with -1 does not crash the server",
+    "UC-063 · a presenting team change with the text '2' does not crash the server",
+    "UC-063 · a presenting team change with no team number does not crash the server"
+  ],
+  "B9": [
+    "UC-063 · set_presenting_team from a socket that joined no hackathon gets an error message",
+    "UC-063 · get_team_presenting_state from a socket that joined no hackathon gets an error message",
+    "UC-063 · set_presenting_team from a socket that joined no hackathon does not crash the server",
+    "UC-063 · get_team_presenting_state from a socket that joined no hackathon does not crash the server"
+  ]
+}

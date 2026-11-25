@@ -21,5 +21,9 @@
     "FRQ-001 · a token with no expiry is refused on the real-time connection",
     "FRQ-001 · a token naming an unknown algorithm is refused on the real-time connection"
   ],
-  "B9": ["FRQ-001 · a request with no token is rejected with 401"]
+  "B9": ["FRQ-001 · a request with no token is rejected with 401"],
+  "B10": ["FRQ-001 · a session of an account without a user profile is refused on the real-time connection"],
+  "B11": ["FRQ-001 · an empty session is refused on the real-time connection"],
+  "B12": ["FRQ-001 · the connection is told its session expired once it expires"],
+  "B13": ["FRQ-001 · the server closes the connection after its session expires"]
 }
