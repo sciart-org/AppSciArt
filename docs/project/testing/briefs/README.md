@@ -14,12 +14,12 @@ The agent's fixed rules (allowed sources, style, run and report) live in the age
 ```markdown
 # <ID> <use case name> → `backend/tests/acceptance/<file>.test.js`
 
+> Scope (<date>): only when the brief covers part of the requirement. What it covers, and when the rest is tested
+> (a step of `plan.md` §3); that step extends this same brief and test file.
+
 ## Requirement
 SRS IDs and where to find them in `srs-export.txt` (line numbers), plus the SRS text quoted. Note any pending
 change to it (`srs-changes.md`), with its source decision.
-
-Scope (only when the brief covers part of the requirement): what it covers, and the step of `plan.md` §3 that
-briefs the rest. That step extends this same brief and test file.
 
 ## Clarifications
 Links to the product owner's answers that apply (`docs/project/clarifications/<UC>.md`, sections), plus any
