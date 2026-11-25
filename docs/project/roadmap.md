@@ -90,6 +90,8 @@ Tracked privately; described here only once released, in one issue per productio
   - curator's vision (UC-077), exhibition images (UC-076), deadlines (IRQ-006), follow-up (UC-070/078)
   - evaluation results (UC-068), catalogue upload (UC-072, BRU-030)
 - [ ] 5e Notifications: `notify(event, recipients, data)` + EJS templates via `addAfterCommit`; FRQ-005–015; retry/outbox table
+- [ ] 5f Inspiring scientists during the hackathon: they may take part in some way; not decided or implemented yet
+  (product owner question). Until then they can't join a hackathon's real-time rooms unless enrolled (BRU-048)
 
 ## Phase 6 — Quality & scale
 - [ ] Repositories own all model access; break Roles cycle; states emit events instead of importing sockets
