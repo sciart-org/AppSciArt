@@ -77,6 +77,8 @@ Tracked privately; described here only once released, in one issue per productio
 - [ ] Private, temporary rating notes per seed (D-062)
 - [ ] Seed numbers per edition; groups and teams take their seed's number (D-063)
 - [ ] Frontend: `AuthContext`, `<ProtectedRoute role>`, `useFetcher` (loading, `response.ok`, AbortController)
+- [ ] Session refresh: HTTP calls refresh the session before it expires, then real-time connections reconnect
+  silently with the refreshed session instead of sending the user to sign in
 
 ## Phase 5 — Complete SRS workflows (sub-plan each)
 - [ ] 5a Seed lifecycle

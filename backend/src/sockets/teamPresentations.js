@@ -1,3 +1,4 @@
+import { onEvent } from './socketEvents.js'
 const presentingTeams = {}
 
 const initTeams = (clusterRoom) => {
@@ -13,12 +14,12 @@ const getPresentingState = (clusterRoom) => {
 }
 
 export function onConnectTeamPresentations (socket) {
-  socket.on('get_team_presenting_state', (clusterRoom) => {
+  onEvent(socket, 'get_team_presenting_state', (clusterRoom) => {
     initTeams(clusterRoom)
     socket.emit('team_presenting_state', getPresentingState(clusterRoom))
   })
 
-  socket.on('set_presenting_team', ({ room, teamNumber }) => {
+  onEvent(socket, 'set_presenting_team', ({ room, teamNumber }) => {
     presentingTeams[room].previous.push(presentingTeams[room].current)
     presentingTeams[room].current = teamNumber
     socket.to(room).emit('new_presenting_team', teamNumber)

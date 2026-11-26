@@ -1,3 +1,4 @@
+import { onEvent } from './socketEvents.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
 
 const rooms = {}
@@ -60,18 +61,18 @@ export function initializeDiagramming (socketIoInstance) {
 }
 
 export function onConnectDiagramming (socket) {
-  socket.on('get_initial_state', async (room) => {
+  onEvent(socket, 'get_initial_state', async (room) => {
     await loadInitialRoom(room)
     socket.emit('initial_state', rooms[room])
   })
 
-  socket.on('update_nodes', ({ room, nodes }) => {
+  onEvent(socket, 'update_nodes', ({ room, nodes }) => {
     if (!room) return
     rooms[room].nodes = nodes
     socket.to(room).emit('new_nodes', nodes)
   })
 
-  socket.on('update_edges', ({ room, edges }) => {
+  onEvent(socket, 'update_edges', ({ room, edges }) => {
     if (!room) return
     rooms[room].edges = edges
     socket.to(room).emit('new_edges', edges)

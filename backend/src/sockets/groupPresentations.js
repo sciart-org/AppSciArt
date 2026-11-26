@@ -1,5 +1,6 @@
+import { onEvent } from './socketEvents.js'
 import { getHackathonExploringGroups, getConceptualMap } from '../services/groupsAndTeamsService.js'
-import { getUserProfileIdFromSocket } from './socketUtils.js'
+import { userProfileIdOf } from './socketSession.js'
 
 const presentingGroups = {}
 const ratings = {}
@@ -15,7 +16,7 @@ async function getPreviousGroupSeeds (socket, clusterRoom) {
   for (const groupNumber of uniqueGroups) {
     const groupToSearchId = groups.find(g => g.number === groupNumber)?.id
     if (!groupToSearchId) continue
-    const conceptualMap = await getConceptualMap(await getUserProfileIdFromSocket(socket), groupToSearchId)
+    const conceptualMap = await getConceptualMap(userProfileIdOf(socket), groupToSearchId)
     previousSeeds.push({ ...conceptualMap.seed.toJSON(), groupNumber })
   }
   return previousSeeds
@@ -47,27 +48,27 @@ const getPresentingState = (clusterRoom, previousSeeds, userId = null) => {
 }
 
 export function onConnectGroupPresentations (socket) {
-  socket.on('get_group_presenting_state', async (clusterRoom) => {
+  onEvent(socket, 'get_group_presenting_state', async (clusterRoom) => {
     initGroups(clusterRoom)
-    const userId = await getUserProfileIdFromSocket(socket)
+    const userId = userProfileIdOf(socket)
     getPreviousGroupSeeds(socket, clusterRoom).then((previousSeeds) => {
       socket.emit('group_presenting_state', getPresentingState(clusterRoom, previousSeeds, userId))
     })
   })
 
-  socket.on('submit_ratings', async (clusterRoom, submittedRatings) => {
+  onEvent(socket, 'submit_ratings', async (clusterRoom, submittedRatings) => {
     const storedRatings = ratings[clusterRoom]
     if (submittedRatings.length < storedRatings.numberOfGroups) {
       socket.emit('error_message', 'You must rate all groups before submitting.')
       return
     }
-    const userId = await getUserProfileIdFromSocket(socket)
+    const userId = userProfileIdOf(socket)
     storedRatings.participantRatings[userId] = submittedRatings
     const hackathonId = clusterRoom.split('/cluster/')[0]
     socket.to(`${hackathonId}/staff`).emit('ratings', storedRatings.participantRatings)
   })
 
-  socket.on('set_presenting_group', ({ room, groupNumber }) => {
+  onEvent(socket, 'set_presenting_group', ({ room, groupNumber }) => {
     presentingGroups[room].previous.push(presentingGroups[room].current)
     presentingGroups[room].current = groupNumber
     socket.to(room).emit('new_presenting_group', groupNumber)
@@ -75,7 +76,7 @@ export function onConnectGroupPresentations (socket) {
     socket.to(`${hackathonId}/staff`).emit('new_presenting_group', groupNumber)
   })
 
-  socket.on('enable_ratings_submission', (room) => {
+  onEvent(socket, 'enable_ratings_submission', (room) => {
     if (ratings[room].submissionEnabled) return
     ratings[room].submissionEnabled = true
     const hackathonId = room.split('/cluster/')[0]
@@ -91,7 +92,7 @@ export function onConnectGroupPresentations (socket) {
     })
   })
 
-  socket.on('get_ratings', (room) => {
+  onEvent(socket, 'get_ratings', (room) => {
     socket.emit('ratings', ratings[room]?.participantRatings)
   })
 }
