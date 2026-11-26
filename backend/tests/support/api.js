@@ -44,28 +44,6 @@ const httpClient = (baseUrl, authorizationHeader) => {
   }
 }
 
-export const clientsFor = (baseUrl) => ({
-  asGuest: () => httpClient(baseUrl),
-  as: async (user) => httpClient(baseUrl, `Bearer ${await tokenOf(user)}`),
-  withToken: (token) => httpClient(baseUrl, `Bearer ${token}`)
-})
-
-export const asGuest = () => clientsFor(appUrl()).asGuest()
-
-export const as = async (user) => clientsFor(appUrl()).as(user)
-
-export const withToken = (token) => clientsFor(appUrl()).withToken(token)
-
-const CORS_HEADER_PREFIX = 'access-control-'
-
-const camelCased = (dashedName) => dashedName.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
-
-export const corsHeadersOf = (response) => Object.fromEntries(
-  Object.entries(response.headers)
-    .filter(([name]) => name.toLowerCase().startsWith(CORS_HEADER_PREFIX))
-    .map(([name, value]) => [camelCased(name.toLowerCase().slice(CORS_HEADER_PREFIX.length)), value])
-)
-
 const openSockets = new Set()
 
 const waitUntilConnected = (socket) => new Promise((resolve, reject) => {
@@ -75,9 +53,9 @@ const waitUntilConnected = (socket) => new Promise((resolve, reject) => {
 
 const JOIN_TIMEOUT_MS = 2000
 
-export const socketAs = async (user, { hackathon, token } = {}) => {
+const openSocket = async (baseUrl, user, { hackathon, token } = {}) => {
   const jwt = token ?? await tokenOf(user)
-  const socket = ioClient(appUrl(), {
+  const socket = ioClient(baseUrl, {
     auth: { token: jwt },
     transports: ['polling', 'websocket'],
     reconnection: false,
@@ -88,6 +66,31 @@ export const socketAs = async (user, { hackathon, token } = {}) => {
   if (hackathon) await socket.timeout(JOIN_TIMEOUT_MS).emitWithAck('join_hackathon_rooms', hackathon.id)
   return socket
 }
+
+export const clientsFor = (baseUrl) => ({
+  asGuest: () => httpClient(baseUrl),
+  as: async (user) => httpClient(baseUrl, `Bearer ${await tokenOf(user)}`),
+  withToken: (token) => httpClient(baseUrl, `Bearer ${token}`),
+  socketAs: (user, options) => openSocket(baseUrl, user, options)
+})
+
+export const asGuest = () => clientsFor(appUrl()).asGuest()
+
+export const as = async (user) => clientsFor(appUrl()).as(user)
+
+export const withToken = (token) => clientsFor(appUrl()).withToken(token)
+
+export const socketAs = (user, options) => clientsFor(appUrl()).socketAs(user, options)
+
+const CORS_HEADER_PREFIX = 'access-control-'
+
+const camelCased = (dashedName) => dashedName.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+
+export const corsHeadersOf = (response) => Object.fromEntries(
+  Object.entries(response.headers)
+    .filter(([name]) => name.toLowerCase().startsWith(CORS_HEADER_PREFIX))
+    .map(([name, value]) => [camelCased(name.toLowerCase().slice(CORS_HEADER_PREFIX.length)), value])
+)
 
 export const nextEvent = (socket, event, timeoutMs = 2000) => new Promise((resolve, reject) => {
   const onEvent = (...payload) => {

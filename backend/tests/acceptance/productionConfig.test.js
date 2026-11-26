@@ -6,7 +6,9 @@ import {
   participant,
   productionApp,
   productionStartup,
-  corsHeadersOf
+  corsHeadersOf,
+  forgedTokens,
+  tokenOfUserWithoutProfile
 } from '../support/index.js'
 
 const FRONTEND_URL = 'https://sciart.example.org'
@@ -166,6 +168,30 @@ const commitDetailsSummary = (output, errorId) => {
 const HEADERS_SENT_ERROR = 'ERR_HTTP_HEADERS_SENT'
 
 const headersSentLinesOf = (output) => output.split('\n').filter((line) => line.includes(HEADERS_SENT_ERROR))
+
+const REFUSED_CONNECTION = 'Refused real-time connection'
+
+const refusalEntryPattern = (reason) =>
+  new RegExp(`^(?=.*${escapeForPattern(REFUSED_CONNECTION)})(?=.*\\b${escapeForPattern(reason)}\\b)`)
+
+const NO_TOKEN_REFUSAL = refusalEntryPattern('no token')
+
+const INVALID_TOKEN_REFUSAL = refusalEntryPattern('invalid token')
+
+const NO_USER_PROFILE_REFUSAL = refusalEntryPattern('no user profile')
+
+const NO_TOKEN = ''
+
+const connectionAttemptOf = (app, token) =>
+  app.socketAs(participant(1), { token }).then(() => 'connected', () => 'refused')
+
+const loggedRefusalOf = async (app, logStart, refusalPattern) => {
+  await expect.poll(() => entryNamingSummary(app.output().slice(logStart), refusalPattern))
+    .toEqual({ entryNaming: refusalPattern.source, found: true })
+  return entryNaming(app.output().slice(logStart), refusalPattern)
+}
+
+const linesContaining = (output, text) => output.split('\n').filter((line) => line.includes(text))
 
 describe('PROD-CONFIG · browser origins in production', () => {
   let app
@@ -678,6 +704,106 @@ describe('PROD-CONFIG · a change whose commit fails in production', () => {
       .toEqual({ errorId, detailsNameCommit: true })
     expect({ headersSentErrors: headersSentLinesOf(app.output().slice(logStart)) })
       .toEqual({ headersSentErrors: [] })
+  })
+})
+
+describe('PROD-CONFIG · refused real-time connections in production', () => {
+  let app
+
+  beforeAll(async () => {
+    app = await productionApp({ frontendUrl: FRONTEND_URL })
+  })
+
+  afterAll(async () => {
+    await app?.stop()
+  })
+
+  it('PROD-CONFIG · a real-time connection with no token is refused', async () => {
+    const connection = await connectionAttemptOf(app, NO_TOKEN)
+
+    expect({ connection }).toEqual({ connection: 'refused' })
+  })
+
+  it('PROD-CONFIG · a real-time connection with no token is logged as an entry naming the reason no token', async () => {
+    const logStart = app.output().length
+
+    await connectionAttemptOf(app, NO_TOKEN)
+
+    await loggedRefusalOf(app, logStart, NO_TOKEN_REFUSAL)
+  })
+
+  it('PROD-CONFIG · the log entry of a real-time connection with no token has no stack trace', async () => {
+    const logStart = app.output().length
+
+    await connectionAttemptOf(app, NO_TOKEN)
+
+    const entry = await loggedRefusalOf(app, logStart, NO_TOKEN_REFUSAL)
+    expect({ stackFrames: stackFramesOf(entry) }).toEqual({ stackFrames: [] })
+  })
+
+  it('PROD-CONFIG · a real-time connection with a token signed with a wrong key is refused', async () => {
+    const token = forgedTokens.wrongKey(participant(1))
+
+    const connection = await connectionAttemptOf(app, token)
+
+    expect({ connection }).toEqual({ connection: 'refused' })
+  })
+
+  it('PROD-CONFIG · a real-time connection with a token signed with a wrong key is logged as an entry naming the reason invalid token', async () => {
+    const token = forgedTokens.wrongKey(participant(1))
+    const logStart = app.output().length
+
+    await connectionAttemptOf(app, token)
+
+    await loggedRefusalOf(app, logStart, INVALID_TOKEN_REFUSAL)
+  })
+
+  it('PROD-CONFIG · the log entry of a real-time connection with a token signed with a wrong key has no stack trace', async () => {
+    const token = forgedTokens.wrongKey(participant(1))
+    const logStart = app.output().length
+
+    await connectionAttemptOf(app, token)
+
+    const entry = await loggedRefusalOf(app, logStart, INVALID_TOKEN_REFUSAL)
+    expect({ stackFrames: stackFramesOf(entry) }).toEqual({ stackFrames: [] })
+  })
+
+  it('PROD-CONFIG · a real-time connection of an account without a user profile is refused', async () => {
+    const token = tokenOfUserWithoutProfile()
+
+    const connection = await connectionAttemptOf(app, token)
+
+    expect({ connection }).toEqual({ connection: 'refused' })
+  })
+
+  it('PROD-CONFIG · a real-time connection of an account without a user profile is logged as an entry naming the reason no user profile', async () => {
+    const token = tokenOfUserWithoutProfile()
+    const logStart = app.output().length
+
+    await connectionAttemptOf(app, token)
+
+    await loggedRefusalOf(app, logStart, NO_USER_PROFILE_REFUSAL)
+  })
+
+  it('PROD-CONFIG · the log entry of a real-time connection of an account without a user profile has no stack trace', async () => {
+    const token = tokenOfUserWithoutProfile()
+    const logStart = app.output().length
+
+    await connectionAttemptOf(app, token)
+
+    const entry = await loggedRefusalOf(app, logStart, NO_USER_PROFILE_REFUSAL)
+    expect({ stackFrames: stackFramesOf(entry) }).toEqual({ stackFrames: [] })
+  })
+
+  it('PROD-CONFIG · the server log of a real-time connection refused for an invalid token has no copy of the token', async () => {
+    const token = forgedTokens.wrongKey(participant(1))
+    const logStart = app.output().length
+
+    await connectionAttemptOf(app, token)
+
+    await loggedRefusalOf(app, logStart, INVALID_TOKEN_REFUSAL)
+    expect({ linesWithTheToken: linesContaining(app.output().slice(logStart), token) })
+      .toEqual({ linesWithTheToken: [] })
   })
 })
 

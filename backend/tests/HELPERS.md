@@ -146,6 +146,7 @@ The instance:
 |---|---|
 | `url` | its base URL |
 | `asGuest()`, `await as(user)`, `withToken(token)` | API clients against the instance, as in "Calling the API" |
+| `await socketAs(user, { hackathon, token })` | a socket.io client connected to the instance, as in "Sockets" |
 | `cutDatabase()` | the instance loses its database: open connections drop and new ones are refused |
 | `restoreDatabase()` | the instance can reach the database again |
 | `failNextCommit()` | the next transaction the instance commits fails: its connection drops at `COMMIT`, after the transaction's other queries went through. Only that one commit fails. Returns a promise that settles once it has failed |
