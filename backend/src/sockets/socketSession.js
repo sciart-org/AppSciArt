@@ -7,7 +7,16 @@ const UNAUTHORIZED = 'Unauthorized'
 const CONNECTION_FAILED = 'Connection failed'
 const MILLISECONDS_PER_SECOND = 1000
 
-const refused = () => new Error(UNAUTHORIZED)
+const REFUSAL_REASON = {
+  NO_TOKEN: 'no token',
+  INVALID_TOKEN: 'invalid token',
+  NO_USER_PROFILE: 'no user profile'
+}
+
+const refused = (reason) => {
+  console.log(`Refused real-time connection: ${reason}`)
+  return new Error(UNAUTHORIZED)
+}
 
 const tokenOf = (socket) => {
   const token = socket.handshake.auth?.token
@@ -24,14 +33,14 @@ const sessionOf = async (token, verifyAccessToken) => {
 export const authenticateSockets = (io, verifyAccessToken) => {
   io.use(async (socket, next) => {
     const token = tokenOf(socket)
-    if (!token) return next(refused())
+    if (!token) return next(refused(REFUSAL_REASON.NO_TOKEN))
     try {
       const session = await sessionOf(token, verifyAccessToken)
-      if (!session) return next(refused())
+      if (!session) return next(refused(REFUSAL_REASON.NO_USER_PROFILE))
       socket.data = session
       next()
     } catch (error) {
-      if (error instanceof SecurityError) return next(refused())
+      if (error instanceof SecurityError) return next(refused(REFUSAL_REASON.INVALID_TOKEN))
       console.error('A real-time connection could not be authenticated:', error)
       next(new Error(CONNECTION_FAILED))
     }
