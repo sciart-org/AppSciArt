@@ -301,3 +301,16 @@ describe('UC-047 · bad join requests', () => {
     expect(outcome).toEqual(REFUSAL)
   })
 })
+
+describe('UC-047 · joining another hackathon', () => {
+  it('UC-047 · a socket that joins another hackathon no longer receives the first one\'s participant updates', async () => {
+    const firstHackathon = await aClosedHackathon()
+    const secondHackathon = await aClosedHackathon()
+    const socket = await connectAs(facilitator(4), { hackathon: firstHackathon })
+
+    await emitJoin(socket, secondHackathon.id)
+    const outcome = await missesUpdate(socket, firstHackathon, PARTICIPANT_UPDATES)
+
+    expect(outcome).toEqual(NOT_RECEIVED)
+  })
+})

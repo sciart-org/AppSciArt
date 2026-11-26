@@ -43,5 +43,6 @@
   "B14": [
     "UC-047 · an enrolled participant gets an error message joining an announced hackathon",
     "UC-047 · an enrolled participant gets an error message joining an ended hackathon"
-  ]
+  ],
+  "B16": ["UC-047 · a socket that joins another hackathon no longer receives the first one's participant updates"]
 }
