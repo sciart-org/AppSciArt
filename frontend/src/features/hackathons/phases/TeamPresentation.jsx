@@ -39,7 +39,7 @@ export default function TeamPresentation() {
       setPresentingTeamNumber(teamNumber);
     });
 
-    socket.emit("get_team_presenting_state", `${hackathonId}/cluster/${0}`);
+    socket.emit("get_team_presenting_state");
   }, [socket, hackathonId]);
 
   return (

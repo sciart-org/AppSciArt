@@ -47,7 +47,6 @@ export default function CreateTeams() {
   const { fetcher } = useFetcher(error, setError);
 
   const isCurrentPhase = hackathon.phase === "TEAM_CREATION";
-  const socketRoom = `${hackathon.id}/cluster/${0}`;
 
   const ParticipantCardWithRatings = (props) => {
     const p = props.participant;
@@ -61,7 +60,7 @@ export default function CreateTeams() {
   };
 
   useEffect(() => {
-    socket.emit("get_ratings", socketRoom);
+    socket.emit("get_ratings");
     socket.on("ratings", (ratings) => {
       setRatings(ratings);
     });

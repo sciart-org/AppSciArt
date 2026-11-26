@@ -40,8 +40,6 @@ export default function ManageGroupPresentations() {
     (g) => g.number === showingGroupNumber,
   )?.id;
 
-  const socketRoom = `${hackathon.id}/cluster/${0}`;
-
   useEffect(() => {
     if (!socket || !hackathon?.id) return;
     socket.on("group_presenting_state", (presentingState) => {
@@ -58,12 +56,12 @@ export default function ManageGroupPresentations() {
     socket.on("ratings", (ratings) => {
       setRatings(ratings);
     });
-    socket.emit("get_group_presenting_state", socketRoom);
+    socket.emit("get_group_presenting_state");
   }, [socket, hackathon?.id]);
 
   useEffect(() => {
     if (!canSubmitRatings) return;
-    socket.emit("get_ratings", socketRoom);
+    socket.emit("get_ratings");
   }, [canSubmitRatings]);
 
   useEffect(() => {
@@ -80,10 +78,7 @@ export default function ManageGroupPresentations() {
   const sendNewPresentingGroup = (group) => {
     setPresentingGroup(group.number);
     setViewingGroup(null);
-    socket.emit("set_presenting_group", {
-      room: socketRoom,
-      groupNumber: group.number,
-    });
+    socket.emit("set_presenting_group", group.number);
   };
 
   if (loading) {
@@ -185,7 +180,7 @@ export default function ManageGroupPresentations() {
           <AsterButton
             onClick={() => {
               if (isEvaluatorOfHackathon) return;
-              socket.emit("enable_ratings_submission", socketRoom);
+              socket.emit("enable_ratings_submission");
               setCanSubmitRatings(true);
             }}
           >

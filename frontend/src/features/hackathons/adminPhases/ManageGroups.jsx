@@ -41,8 +41,8 @@ export default function ManageGroups() {
 
   useEffect(() => {
     if (!socket || !selectedGroup?.id) return;
-    socket.emit("join_room", groupRoom);
-    return () => socket.emit("leave_room", groupRoom);
+    socket.emit("watch_group", selectedGroup.id);
+    return () => socket.emit("stop_watching_group");
   }, [socket, selectedGroup?.id]);
 
   useEffect(() => {

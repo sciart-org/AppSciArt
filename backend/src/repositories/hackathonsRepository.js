@@ -73,6 +73,9 @@ export const getHackathonById = async (userId, hackathonId, role) => {
   return Hackathon.scope(scopes).findByPk(hackathonId)
 }
 
+export const getHackathonState = (hackathonId) =>
+  Hackathon.unscoped().findByPk(hackathonId, { attributes: ['id', 'state'] })
+
 export const countExistingHackathonsWithAttributes = (attributes) => {
   return Hackathon.count({ where: attributes })
 }

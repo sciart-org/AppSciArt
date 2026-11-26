@@ -8,7 +8,7 @@ const SESSION_EXPIRED_MESSAGE =
   "Your session has expired. Please, log in again.";
 const MESSAGE_AFTER_NAVIGATION_MS = 100;
 
-export default function useWebSockets(connectCondition, room = null) {
+export default function useWebSockets(connectCondition, hackathonId) {
   const API_URL = import.meta.env.VITE_API_URL;
   const [socket, setSocket] = useState(null);
   const navigate = useNavigate();
@@ -21,7 +21,11 @@ export default function useWebSockets(connectCondition, room = null) {
       auth: (sendAuth) =>
         sendAuth({ token: tokenService.getLocalAccessToken() }),
     });
-    setSocket(newSocket);
+    newSocket.on("connect", () => {
+      newSocket.emit("join_hackathon_rooms", hackathonId, () =>
+        setSocket(newSocket),
+      );
+    });
 
     newSocket.on("session_expired", () => {
       tokenService.removeUser();
@@ -32,14 +36,11 @@ export default function useWebSockets(connectCondition, room = null) {
       navigate("/signin");
     });
 
-    if (room) {
-      newSocket.emit("join_room", room);
-    }
-
     return () => {
       newSocket.disconnect();
+      setSocket(null);
     };
-  }, [connectCondition, room]);
+  }, [connectCondition, hackathonId]);
 
   return { socket, setSocket };
 }

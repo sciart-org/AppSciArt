@@ -89,6 +89,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-068 | 2026-11-16 | Docs | Only choices that limit future work, are costly to reverse, or answer the product owner get a row; facts go into the doc they describe. Details stay short (decision, why, options not adopted) and link plans instead of holding them. Topics come from a fixed list in the header. A row is committed with the change it governs. ([details](#d-068)) | — | in force |
 | D-071 | 2026-11-24 | Docs | A decision is applied in every living doc whose current truth it changes: the doc states the rule and cites the row, while the why stays in this log. A superseding row also updates the docs citing the replaced one, and `tools/check_decision_citations.py` fails while a living doc cites a fully superseded row. ([details](#d-071)) | — | in force |
 | D-072 | 2026-11-24 | Architecture | A request's response reaches the client only after its transaction has committed; if the commit fails, the client gets a `500` instead. Handlers keep calling `res.send`: the controller wrapper holds the finished response until the commit. ([details](#d-072)) | — | in force |
+| D-074 | 2026-11-27 | Architecture | Each ongoing hackathon has three kinds of real-time rooms: a participants room (everyone who entered: participants, evaluators and staff), a management room (evaluators and staff) and one room per exploring group's map (its members, plus staff and evaluators watching it). A socket is in one hackathon's rooms at a time. Cluster rooms are removed. ([details](#d-074)) | — | in force |
 | D-075 | 2026-11-24 | Requirement | A participant enrolled in the ongoing hackathon can view the presenting flower (UC-055), assisting or not. The SRS precondition "the participant is assisting" was wrong: assistance is only an indicator for staff (UC-057, D-049). | — | in force |
 
 ## Details
@@ -558,3 +559,17 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
   - Precedent for holding `res.end`: [`express-session`](https://github.com/expressjs/session/blob/master/index.js)
     (1.19.0, 2026) delays it until the session is saved; `compression` (1.8.2, 2026) overrides `res.write` and
     `res.end`.
+
+### D-074
+- **Why one participants room:** the SRS has no clusters. Every hackathon used cluster 0, and `clusterNumber` was
+  already marked for deletion.
+- **Why staff are in both rooms:** socket.io treats a send to several rooms as one set of recipients, so each socket
+  gets an event at most once. An "everyone" update goes once to both rooms, and staff aren't sent duplicates.
+- **Not adopted:**
+  - Keeping the cluster rooms for later: the SRS has no feature that needs them.
+  - A room per role: participants, evaluators and staff get the same presentation events, so it would only add rooms
+    to keep in sync.
+- **Sources:** socket.io v4 docs, current as of 2026:
+  - [Rooms](https://socket.io/docs/v4/rooms/): rooms exist only on the server; a send to several rooms reaches each
+    socket once.
+  - [Server API](https://socket.io/docs/v4/server-api/): `to([...])`, `except`.

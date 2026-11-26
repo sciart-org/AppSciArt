@@ -24,7 +24,8 @@ export default function CreatedGroups() {
 
   const { fetcher } = useFetcher(error, setError);
 
-  const groupRoom = `${participation?.hackathonId}/group/${participation?.conceptualMap.id}`;
+  const groupRoom = `${participation?.hackathonId}/group/${participation?.conceptualMap?.id}`;
+
   useEffect(() => {
     const shouldNotConnect =
       !socket ||
@@ -35,8 +36,8 @@ export default function CreatedGroups() {
 
     if (shouldNotConnect || shouldNotJoinGroup) return;
 
-    socket.emit("join_room", groupRoom);
-  }, [participation, socket, isPhaseActive]);
+    socket.emit("join_hackathon_rooms", participation.hackathonId);
+  }, [participation?.conceptualMap?.id, socket, isPhaseActive]);
 
   if (!isPhaseActive) {
     return <h2>This phase is not active</h2>;
