@@ -93,6 +93,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-075 | 2026-11-24 | Requirement | A participant enrolled in the ongoing hackathon can view the presenting flower (UC-055), assisting or not. The SRS precondition "the participant is assisting" was wrong: assistance is only an indicator for staff (UC-057, D-049). | — | in force |
 | D-078 | 2026-11-27 | Priority | First production deploy as soon as possible: before it, only the security fixes for the flow, a staff-only production seeder, the walkthrough checklist on pre-production as its gate, and the production env check. The journey test, the database backups, the next-edition seeder block, `.env.example` and the rest of the hardening move after it, each with the point it must be done by. ([details](#d-078)) | D-056 (order, gate) | partly superseded by D-079 (staff seeder) |
 | D-079 | 2026-11-27 | Priority | The staff seeder (#279) moves after the first production deploy: the user creates the staff accounts in production by hand, and the production env check confirms no sample account is there. Done before the next hackathon, with its next-edition block. | D-078 (before-deploy list) | in force |
+| D-080 | 2026-11-27 | Architecture | Conceptual maps and flowers store the hackathon they belong to (`hackathonId`). Every lookup by hackathon filters on it instead of going through the seed, which can be in several hackathons (D-063). Done after the first deploy, before two hackathons share a seed. ([details](#d-080)) | — | in force |
 
 ## Details
 
@@ -603,3 +604,22 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
 - Not adopted: D-056's order (journey test and ops before the deploy): a later deploy, with no protection the
   first deploy needs.
 - Unchanged from D-056: the goal, one test per fix, #225 as a stretch.
+
+### D-080
+- **Why:** a map or a flower belongs to one hackathon, but today it only stores its seed. Since a seed can be in
+  several hackathons (D-063), a lookup "by hackathon" through the seed also returns the other hackathon's maps and
+  flowers.
+- **How:** a `hackathonId` foreign key on `conceptual_maps` and `flowers`, filled for existing rows by the
+  migration, part of their keys, and used by every lookup by hackathon.
+- **Not adopted:**
+  - Keep deriving the hackathon through the seed and the participations: maps and flowers with no participants yet
+    have no participation to go through.
+  - Forbid a seed in two hackathons: against D-063.
+- **Sources:** the usual way to scope shared tables is a scoping column on every row, not one derived through joins:
+  - Citus docs, [Multi-tenant schema migration](https://docs.citusdata.com/en/v12.1/develop/migration_mt_schema.html)
+    (v12.1, 2023): add the tenant column to tables that reach it only through a foreign key, backfill it, and
+    include it in keys.
+  - AWS Well-Architected SaaS Lens,
+    [Preventing cross-tenant access](https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/preventing-cross-tenant-access.html)
+    (2023): each row carries the key that scopes access to its own data.
+- **Timing:** production has one hackathon at first, so the fix waits until after the first deploy.

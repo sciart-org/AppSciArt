@@ -32,6 +32,8 @@ After the deploy, each before its deadline (D-078):
 - [ ] DB backup #237 (D-077): before real participants' data reaches production
 - [ ] Seeder #279 in `seeders/production/` (D-079): staff (data in a gitignored file, idempotent) and the
   next-edition and hackathon block, or PLANNED → CLOSED (#225): before the next hackathon
+- [ ] #323: open conceptual maps are stored so a restart loses nothing (D-010): before the next hackathon
+- [ ] Maps and flowers store their hackathon (D-080): before two hackathons share a seed
 - [ ] `.env.example` per package (#236)
 - [ ] Rest of the hardening for this milestone (tracked privately)
 - [ ] Stretch: PLANNED → CLOSED (#225)
