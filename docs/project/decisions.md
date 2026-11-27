@@ -77,7 +77,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-053 | 2026-11-06 | Requirement | Future requirement, not scheduled now: staff link and unlink an auth account with a user profile (matched by email), so profiles created before their owners sign up get claimed by them. ([details](#d-053)) | — | in force |
 | D-054 | 2026-11-08 | Docs | The project docs get a Docusaurus site in `website/` that reads `docs/project/` and `docs/diagrams/` in place (allowlist, plain Markdown), is built on every pull request that touches them, and is deployed to GitHub Pages from `develop`. ([details](#d-054)) | — | partly superseded by D-059 |
 | D-055 | 2026-11-08 | Branching | Short-lived branches from `develop`, merged by pull request and deleted once merged. CI runs lint, the frontend build and the full backend suite on every pull request; a committed baseline of passing tests makes any regression, or any new pass left unrecorded, fail the check. ([details](#d-055)) | D-004 (git-flow), D-007, D-009 (flow) | in force |
-| D-056 | 2026-11-08 | Priority | Hackathon in production, re-planned: no real hackathon to load yet, so production gets staff and, when known, the next edition's hackathon from the seeder. New order: CI, security fixes, journey test, seeder, ops, checklist and deploy; PLANNED → CLOSED is a stretch goal. ([details](#d-056)) | D-052 (order, seeder scope) | in force |
+| D-056 | 2026-11-08 | Priority | Hackathon in production, re-planned: no real hackathon to load yet, so production gets staff and, when known, the next edition's hackathon from the seeder. New order: CI, security fixes, journey test, seeder, ops, checklist and deploy; PLANNED → CLOSED is a stretch goal. ([details](#d-056)) | D-052 (order, seeder scope) | partly superseded by D-078 (order, gate) |
 | D-057 | 2026-11-08 | Auth | The backend accepts access tokens from both Supabase signing systems: asymmetric keys (ES256/RS256), checked against the project's published keys, and the legacy shared secret (HS256). Done before the CI workflow, whose stack is created fresh. ([details](#d-057)) | — | in force |
 | D-058 | 2026-11-10 | CI | Every workflow pins its actions to a full commit SHA, with the version in a comment. Dependabot proposes updates weekly into `develop`, grouped into one pull request, after a 7-day cooldown; CI and the docs build test them before merging. ([details](#d-058)) | — | in force |
 | D-059 | 2026-11-10 | Docs | The docs site also publishes `CLAUDE.md` and `backend/tests/HELPERS.md` in place. Architecture and commands stay in `CLAUDE.md` and are not moved into `docs/project/`: `CLAUDE.md` is loaded into Claude's context every session, `docs/project/` is only read on demand. | D-054 (scope) | in force |
@@ -89,6 +89,7 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-068 | 2026-11-16 | Docs | Only choices that limit future work, are costly to reverse, or answer the product owner get a row; facts go into the doc they describe. Details stay short (decision, why, options not adopted) and link plans instead of holding them. Topics come from a fixed list in the header. A row is committed with the change it governs. ([details](#d-068)) | — | in force |
 | D-071 | 2026-11-24 | Docs | A decision is applied in every living doc whose current truth it changes: the doc states the rule and cites the row, while the why stays in this log. A superseding row also updates the docs citing the replaced one, and `tools/check_decision_citations.py` fails while a living doc cites a fully superseded row. ([details](#d-071)) | — | in force |
 | D-072 | 2026-11-24 | Architecture | A request's response reaches the client only after its transaction has committed; if the commit fails, the client gets a `500` instead. Handlers keep calling `res.send`: the controller wrapper holds the finished response until the commit. ([details](#d-072)) | — | in force |
+| D-078 | 2026-11-27 | Priority | First production deploy as soon as possible: before it, only the security fixes for the flow, a staff-only production seeder, the walkthrough checklist on pre-production as its gate, and the production env check. The journey test, the database backups, the next-edition seeder block, `.env.example` and the rest of the hardening move after it, each with the point it must be done by. ([details](#d-078)) | D-056 (order, gate) | in force |
 
 ## Details
 
@@ -557,3 +558,31 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
   - Precedent for holding `res.end`: [`express-session`](https://github.com/expressjs/session/blob/master/index.js)
     (1.19.0, 2026) delays it until the session is saved; `compression` (1.8.2, 2026) overrides `res.write` and
     `res.end`.
+
+### D-078
+- Source: user, 2026-11-27: production must be deployed as soon as possible.
+- Before the deploy, in order:
+
+| # | Step | Test |
+|---|---|---|
+| 1 | Security fixes for this flow (tracked privately), with #296, which comes with them | One regression test per fix |
+| 2 | Seeder #279, staff only | Two runs on the test DB give the same data |
+| 3 | A privacy fix for the production logs (tracked privately), only if its quick form holds | Its check |
+| 4 | Walkthrough checklist #275 on pre-production | Manual run: the gate for this deploy |
+| 5 | Production env check, then deploy from `main` | Smoke on production |
+
+- After the deploy, each done before:
+
+| Item | Done before |
+|---|---|
+| Journey test #218 | The next release, whose gate it becomes |
+| Database backups #237 (D-077) | Real participants' data reaches production (the next edition's sign-ups) |
+| Seeder next-edition block, or PLANNED → CLOSED #225 | The next hackathon |
+| `.env.example` #236 | No deadline: developer convenience |
+| Rest of the hardening, and the logs fix if it didn't go before (tracked privately) | Real participants' data, where it applies |
+
+- Accepted: the first deploy is gated by a manual checklist, not the automated journey test; production has no
+  backups until #237, while it holds only staff.
+- Not adopted: D-056's order (journey test and ops before the deploy): a later deploy, with no protection the
+  first deploy needs.
+- Unchanged from D-056: the goal, one test per fix, #225 as a stretch.
