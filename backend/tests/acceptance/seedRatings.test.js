@@ -388,6 +388,79 @@ describe('UC-052 · a facilitator\'s submission is refused', () => {
   })
 })
 
+const repeatingFirstSeed = (seeds) => ratingsFor([seeds[0], seeds[0]])
+
+const replacingSecondSeedWith = (seeds, outsideSeed) => ratingsFor([seeds[0], outsideSeed])
+
+describe('UC-052 · a submission that repeats a group\'s seed in place of another\'s is refused', () => {
+  it('UC-052 · a submission repeating a group\'s seed in place of another\'s gets an error message', async () => {
+    const { hackathon, seeds } = await aRatingsHackathon()
+    await openRatings(hackathon)
+    const socket = await connectAs(assistingInNoGroup(), { hackathon })
+
+    const outcome = await errorMessageTypeOn(socket, (s) => submit(s, repeatingFirstSeed(seeds)))
+
+    expect(outcome).toEqual(REFUSAL)
+  })
+
+  it('UC-052 · a submission repeating a group\'s seed in place of another\'s reaches no staff member', async () => {
+    const { hackathon, seeds } = await aRatingsHackathon()
+    const receiver = await connectAs(staffObserver(), { hackathon })
+    await openRatings(hackathon)
+    const sender = await connectAs(assistingInNoGroup(), { hackathon })
+
+    const outcome = await ratingsMissedBy(receiver, sender, repeatingFirstSeed(seeds))
+
+    expect(outcome).toEqual({ ratings: NOT_RECEIVED })
+  })
+
+  it('UC-052 · after a submission repeating a group\'s seed in place of another\'s, a facilitator reads no ratings of that participant', async () => {
+    const { hackathon, seeds } = await aRatingsHackathon()
+    await openRatings(hackathon)
+    await submittedBy(hackathon, assistingInNoGroup(), repeatingFirstSeed(seeds))
+
+    const outcome = await ratingsOf(hackathon, assistingInNoGroup())
+
+    expect(outcome).toEqual(noEntry(assistingInNoGroup()))
+  })
+})
+
+describe('UC-052 · a submission that replaces a group\'s seed with a seed outside the hackathon is refused', () => {
+  it('UC-052 · a submission replacing a group\'s seed with a seed outside the hackathon gets an error message', async () => {
+    const { hackathon, seeds } = await aRatingsHackathon()
+    const outsideSeed = await aPublishedSeed()
+    await openRatings(hackathon)
+    const socket = await connectAs(assistingInNoGroup(), { hackathon })
+
+    const outcome = await errorMessageTypeOn(socket, (s) => submit(s, replacingSecondSeedWith(seeds, outsideSeed)))
+
+    expect(outcome).toEqual(REFUSAL)
+  })
+
+  it('UC-052 · a submission replacing a group\'s seed with a seed outside the hackathon reaches no staff member', async () => {
+    const { hackathon, seeds } = await aRatingsHackathon()
+    const outsideSeed = await aPublishedSeed()
+    const receiver = await connectAs(staffObserver(), { hackathon })
+    await openRatings(hackathon)
+    const sender = await connectAs(assistingInNoGroup(), { hackathon })
+
+    const outcome = await ratingsMissedBy(receiver, sender, replacingSecondSeedWith(seeds, outsideSeed))
+
+    expect(outcome).toEqual({ ratings: NOT_RECEIVED })
+  })
+
+  it('UC-052 · after a submission replacing a group\'s seed with a seed outside the hackathon, a facilitator reads no ratings of that participant', async () => {
+    const { hackathon, seeds } = await aRatingsHackathon()
+    const outsideSeed = await aPublishedSeed()
+    await openRatings(hackathon)
+    await submittedBy(hackathon, assistingInNoGroup(), replacingSecondSeedWith(seeds, outsideSeed))
+
+    const outcome = await ratingsOf(hackathon, assistingInNoGroup())
+
+    expect(outcome).toEqual(noEntry(assistingInNoGroup()))
+  })
+})
+
 const MALFORMED_SUBMISSIONS = [
   ['a value that is not a list', () => 'not a list'],
   ['a seedId that is not an id', (seeds) => [{ seedId: 'not an id', rating: RATING }, { seedId: seeds[1].id, rating: RATING }]],

@@ -44,5 +44,15 @@
     "UC-052 · get_ratings from a socket that joined no hackathon gets an error message",
     "UC-052 · submit_ratings from a socket that joined no hackathon does not crash the server",
     "UC-052 · get_ratings from a socket that joined no hackathon does not crash the server"
+  ],
+  "B15": [
+    "UC-052 · a submission repeating a group's seed in place of another's gets an error message",
+    "UC-052 · a submission repeating a group's seed in place of another's reaches no staff member",
+    "UC-052 · after a submission repeating a group's seed in place of another's, a facilitator reads no ratings of that participant"
+  ],
+  "B16": [
+    "UC-052 · a submission replacing a group's seed with a seed outside the hackathon gets an error message",
+    "UC-052 · a submission replacing a group's seed with a seed outside the hackathon reaches no staff member",
+    "UC-052 · after a submission replacing a group's seed with a seed outside the hackathon, a facilitator reads no ratings of that participant"
   ]
 }

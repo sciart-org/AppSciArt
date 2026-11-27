@@ -60,5 +60,10 @@
     "UC-060 · set_presenting_group from a socket that joined no hackathon does not crash the server",
     "UC-060 · enable_ratings_submission from a socket that joined no hackathon does not crash the server",
     "UC-060 · get_group_presenting_state from a socket that joined no hackathon does not crash the server"
+  ],
+  "B12": [
+    "UC-060 · a presenting group change to a number that matches no group gets an error message",
+    "UC-060 · a presenting group change to a number that matches no group reaches nobody",
+    "UC-060 · IRQ-006 · after a presenting group change to a number that matches no group, the presenting group is unchanged"
   ]
 }
