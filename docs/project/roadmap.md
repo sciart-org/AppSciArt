@@ -12,7 +12,7 @@ Drafted 2026-10-17. Per-item status and commits live on the [production roadmap 
 - ~~0.4 Fast-forward `develop` to `bachelor_thesis_submision`~~ replaced by `release/v1.0.0` (D-007), itself replaced by short-lived branches (D-055)
 - Not in Phase 0: push (ask first), release merge to `main` (after Phases 1–2), deleting the local `.env.old_development`
 
-## Hackathon in production (D-052, D-056, D-078)
+## Hackathon in production (D-052, D-056, D-078, D-079)
 The flow CLOSED / PREPARING → FINISHED is ready in production. Listed in work order; every fix ships with a test
 that reproduces it. First deploy as soon as possible (D-078).
 - [x] Branching and CI: lint, frontend build, full backend suite with a test baseline (D-055), #235
@@ -20,15 +20,18 @@ that reproduces it. First deploy as soon as possible (D-078).
 Before the deploy:
 - [ ] Security fixes for this flow (tracked privately)
 - [ ] #296: facilitator screens miss live updates after a reconnect (found in the pre-production test, 2026-11-13)
-- [ ] Seeder #279 in `seeders/production/`, staff part: data in a gitignored file; idempotent
 - [ ] A privacy fix for the production logs (tracked privately), if its quick form holds; otherwise after
-- [ ] Walkthrough checklist #275 on pre-production (the gate), production env check, then production deploy
+- [ ] Walkthrough checklist #275 on pre-production (the gate): run with browser automation, the user plays the
+  actors needed at the same time
+- [ ] Staff accounts created by hand in production (D-079), production env check (no sample account), then
+  production deploy
   - After the deploy: open and close the issue listing the released security fixes (D-060)
 
 After the deploy, each before its deadline (D-078):
 - [ ] Journey test #218, CLOSED / PREPARING → FINISHED (`testing/plan.md` §4.9b): before the next release
 - [ ] DB backup #237 (D-077): before real participants' data reaches production
-- [ ] Seeder #279 next-edition and hackathon block, or PLANNED → CLOSED (#225): before the next hackathon
+- [ ] Seeder #279 in `seeders/production/` (D-079): staff (data in a gitignored file, idempotent) and the
+  next-edition and hackathon block, or PLANNED → CLOSED (#225): before the next hackathon
 - [ ] `.env.example` per package (#236)
 - [ ] Rest of the hardening for this milestone (tracked privately)
 - [ ] Stretch: PLANNED → CLOSED (#225)
