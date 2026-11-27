@@ -1,8 +1,9 @@
-import * as FlowersRepository from '../repositories/flowersRepository.js'
 import { errorThrower } from '../services/errorThrower.js'
-import { INTERNAL_BACKEND_ROLE, ROLES } from '../services/Roles.js'
+import { getHackathonCoCreationTeams } from '../services/groupsAndTeamsService.js'
+import { ROLES } from '../services/Roles.js'
 import { joinedHackathonIdOf, participantsRoomOf } from './hackathonRooms.js'
 import { onEvent } from './socketEvents.js'
+import { userProfileIdOf } from './socketSession.js'
 
 const FIRST_TEAM_NUMBER = 1
 
@@ -22,14 +23,14 @@ const checkIsStaff = (socket) =>
 
 const isTeamNumber = (value) => Number.isInteger(value) && value >= FIRST_TEAM_NUMBER
 
-const teamCountOf = async (hackathonId) => {
-  const teams = await FlowersRepository.getFlowersOfHackathon(hackathonId, { role: INTERNAL_BACKEND_ROLE })
+const teamCountOf = async (socket, hackathonId) => {
+  const teams = await getHackathonCoCreationTeams(userProfileIdOf(socket), hackathonId)
   return teams.length
 }
 
-const checkIsTeamOf = async (hackathonId, teamNumber) => {
+const checkIsTeamOf = async (socket, hackathonId, teamNumber) => {
   errorThrower(!isTeamNumber(teamNumber), 'A valid team number is required', 400)
-  const teamCount = await teamCountOf(hackathonId)
+  const teamCount = await teamCountOf(socket, hackathonId)
   errorThrower(teamNumber > teamCount, 'Team not found in this hackathon', 404)
 }
 
@@ -48,7 +49,7 @@ export function onConnectTeamPresentations (socket) {
   onEvent(socket, 'set_presenting_team', async (teamNumber) => {
     const hackathonId = joinedHackathonIdOf(socket)
     checkIsStaff(socket)
-    await checkIsTeamOf(hackathonId, teamNumber)
+    await checkIsTeamOf(socket, hackathonId, teamNumber)
     teamPresentationOf(hackathonId).presentingTeamNumber = teamNumber
     socket.to(participantsRoomOf(hackathonId)).emit('new_presenting_team', teamNumber)
   })
