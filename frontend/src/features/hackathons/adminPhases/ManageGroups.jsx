@@ -37,12 +37,18 @@ export default function ManageGroups() {
 
   const isCurrentPhase = hackathon.phase === "GROUP_WORK";
 
-  const groupRoom = `${hackathon?.id}/group/${selectedGroup?.id}`;
+  const [watchedGroupId, setWatchedGroupId] = useState(null);
+  const isWatchingSelectedGroup =
+    !!selectedGroup?.id && watchedGroupId === selectedGroup.id;
 
   useEffect(() => {
     if (!socket || !selectedGroup?.id) return;
-    socket.emit("join_room", groupRoom);
-    return () => socket.emit("leave_room", groupRoom);
+    const groupId = selectedGroup.id;
+    socket.emit("watch_group", groupId, () => setWatchedGroupId(groupId));
+    return () => {
+      setWatchedGroupId(null);
+      socket.emit("stop_watching_group");
+    };
   }, [socket, selectedGroup?.id]);
 
   useEffect(() => {
@@ -181,12 +187,16 @@ export default function ManageGroups() {
         </h3>
         <div style={{ flex: 1 }}>
           <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
-            <Diagram
-              socket={socket}
-              room={groupRoom}
-              editionMode={false}
-              style={{ width: "70vw" }}
-            />
+            {isWatchingSelectedGroup ? (
+              <Diagram
+                key={watchedGroupId}
+                socket={socket}
+                editionMode={false}
+                style={{ width: "70vw" }}
+              />
+            ) : (
+              <Loading />
+            )}
           </DiagramContext>
         </div>
         {isCurrentPhase && !isEvaluatorOfHackathon && (
@@ -208,7 +218,15 @@ export default function ManageGroups() {
         <GroupSeedResources pdf={groupSeed?.seedPDF} seed={groupSeed} />
         <div style={{ flex: 1 }}>
           <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
-            <Diagram socket={socket} room={groupRoom} editionMode={false} />
+            {isWatchingSelectedGroup ? (
+              <Diagram
+                key={watchedGroupId}
+                socket={socket}
+                editionMode={false}
+              />
+            ) : (
+              <Loading />
+            )}
           </DiagramContext>
         </div>
       </div>

@@ -1,6 +1,6 @@
 export { asGuest, as, withToken, corsHeadersOf, socketAs, nextEvent, noEventArrives } from './api.js'
 export { productionApp, productionStartup } from './production/productionApp.js'
-export { login, tokenOf, legacyTokenOf, forgedTokens } from './tokens.js'
+export { login, tokenOf, legacyTokenOf, forgedTokens, shortLivedTokenOf, tokenOfUserWithoutProfile } from './tokens.js'
 export { administrator, designer, facilitator, participant, participants } from './users.js'
 export * from './fixtures/index.js'
 export { sentEmails, undeliveredEmails, clearOutbox } from './fakes/outbox.js'

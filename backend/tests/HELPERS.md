@@ -107,10 +107,17 @@ The token helpers below are plain functions (no `await`).
 - `forgedTokens.unknownAlgorithm(user)`: valid claims, but the header names no real signing algorithm.
 - `forgedTokens.unsigned(user)`: valid claims, `alg: none`, no signature.
 - `forgedTokens.garbage()`: not a JWT.
+- `shortLivedTokenOf(user, seconds)`: a valid token of the user, signed with the app secret, that expires `seconds`
+  from now. For checks on a connection that outlives its token.
+- `tokenOfUserWithoutProfile()`: a valid token, signed with the app secret, of an account that has no user profile:
+  what a deleted user, or one who never completed registration, still holds. A different account each call.
 
 ## Sockets
-- `await socketAs(user, { room, token })` → a connected socket.io client that sends the token the way the frontend
-  does. `room` makes it emit `join_room` right away. `token` overrides the user's real token.
+- `await socketAs(user, { hackathon, token })` → a connected socket.io client that sends the token the way the
+  frontend does, in the connection's `auth` payload. `token` overrides the user's real token.
+  - `hackathon` makes it emit `join_hackathon_rooms` with the hackathon's id and wait for the server's answer, so
+    the socket is in the hackathon's rooms when the promise resolves. A join the server refuses still resolves:
+    check it through the events.
   - If the connection is refused, the promise rejects.
   - Sockets are closed after each test.
 - `await nextEvent(socket, event, timeout = 2000)` → the payload of the next `event` (an array if there is more than
@@ -139,6 +146,7 @@ The instance:
 |---|---|
 | `url` | its base URL |
 | `asGuest()`, `await as(user)`, `withToken(token)` | API clients against the instance, as in "Calling the API" |
+| `await socketAs(user, { hackathon, token })` | a socket.io client connected to the instance, as in "Sockets" |
 | `cutDatabase()` | the instance loses its database: open connections drop and new ones are refused |
 | `restoreDatabase()` | the instance can reach the database again |
 | `failNextCommit()` | the next transaction the instance commits fails: its connection drops at `COMMIT`, after the transaction's other queries went through. Only that one commit fails. Returns a promise that settles once it has failed |

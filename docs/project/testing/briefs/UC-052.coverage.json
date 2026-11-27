@@ -1,0 +1,58 @@
+{
+  "B1": ["UC-052 · UC-050 · the joined facilitator receives the ratings a participant submitted for every group's seed"],
+  "B2": ["UC-052 · BRU-025 · the joined evaluator receives the ratings a participant submitted"],
+  "B3": ["UC-052 · UC-057 · an enrolled participant who is not assisting submits their ratings"],
+  "B4": ["UC-052 · BRU-023 · a participant submits a rating for their own group's seed"],
+  "B5": ["UC-052 · a facilitator reads the ratings a participant submitted"],
+  "B6": ["UC-052 · BRU-025 · an evaluator reads the ratings a participant submitted"],
+  "B7": ["UC-052 · a participant's request for the ratings gets an error message"],
+  "B8": [
+    "UC-052 · a submission before ratings open gets an error message",
+    "UC-052 · a submission before ratings open reaches no staff member",
+    "UC-052 · after a submission before ratings open, a facilitator reads no ratings of that participant"
+  ],
+  "B9": [
+    "UC-052 · a submission missing a group's seed gets an error message",
+    "UC-052 · a submission missing a group's seed reaches no staff member",
+    "UC-052 · after a submission missing a group's seed, a facilitator reads no ratings of that participant"
+  ],
+  "B10": [
+    "UC-052 · BRU-042 · a second submission gets an error message",
+    "UC-052 · BRU-042 · a second submission reaches no staff member",
+    "UC-052 · BRU-042 · after a second submission, a facilitator still reads the first ratings"
+  ],
+  "B11": [
+    "UC-052 · BRU-025 · an evaluator's submission gets an error message",
+    "UC-052 · BRU-025 · an evaluator's submission reaches no staff member",
+    "UC-052 · BRU-025 · after an evaluator's submission, a facilitator reads no ratings of that evaluator"
+  ],
+  "B12": [
+    "UC-052 · a facilitator's submission gets an error message",
+    "UC-052 · a facilitator's submission reaches no other staff member",
+    "UC-052 · after a facilitator's submission, a facilitator reads no ratings of that facilitator"
+  ],
+  "B13": [
+    "UC-052 · a submission with a value that is not a list gets an error message",
+    "UC-052 · a submission with a seedId that is not an id gets an error message",
+    "UC-052 · a submission with a rating that is not a number gets an error message",
+    "UC-052 · a submission with a value that is not a list does not crash the server",
+    "UC-052 · a submission with a seedId that is not an id does not crash the server",
+    "UC-052 · a submission with a rating that is not a number does not crash the server"
+  ],
+  "B14": [
+    "UC-052 · submit_ratings from a socket that joined no hackathon gets an error message",
+    "UC-052 · get_ratings from a socket that joined no hackathon gets an error message",
+    "UC-052 · submit_ratings from a socket that joined no hackathon does not crash the server",
+    "UC-052 · get_ratings from a socket that joined no hackathon does not crash the server"
+  ],
+  "B15": [
+    "UC-052 · a submission repeating a group's seed in place of another's gets an error message",
+    "UC-052 · a submission repeating a group's seed in place of another's reaches no staff member",
+    "UC-052 · after a submission repeating a group's seed in place of another's, a facilitator reads no ratings of that participant"
+  ],
+  "B16": [
+    "UC-052 · a submission replacing a group's seed with a seed outside the hackathon gets an error message",
+    "UC-052 · a submission replacing a group's seed with a seed outside the hackathon reaches no staff member",
+    "UC-052 · after a submission replacing a group's seed with a seed outside the hackathon, a facilitator reads no ratings of that participant"
+  ]
+}

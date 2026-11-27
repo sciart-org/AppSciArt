@@ -6,7 +6,7 @@
 
 ## Requirement
 - No SRS requirement covers production settings. The expected behaviour comes from the user's decisions
-  (D-064, D-066, D-067 and D-070, private until released; 2026-11-14 to 2026-11-24):
+  (D-064, D-066, D-067, D-070 and D-076, private until released; 2026-11-14 to 2026-11-25):
   - Browsers may call the API only from the frontend (`FRONTEND_URL`) and from the origins listed in
     `EXTRA_ALLOWED_ORIGINS` (comma-separated, e.g. a website that embeds the widgets). The server refuses to start
     without `FRONTEND_URL`.
@@ -15,6 +15,8 @@
   - A request the server refuses on purpose (`400`, `401`) is logged as one entry naming the error, with no stack
     trace. This holds for every refusal, whichever part of the server makes it (e.g. a `404` for an item that
     doesn't exist), and for the `503` when the server's Drive access has expired (2026-11-24).
+  - A refused real-time connection is logged the same way: one entry naming why it was refused, with no stack trace
+    and never the token (2026-11-25).
   - The API documentation (`/docs`) stays available in every environment.
   - Each configured origin is reduced to its origin (scheme, host, port) the way a browser builds the `Origin`
     header; a value that is not an `http`/`https` URL stops the server at startup, naming the variable (#313,
@@ -33,6 +35,9 @@
 - Startup check = `productionStartup({ frontendUrl: null })`; use `started` and `output`, not `exitCode`.
 - Unexpected error = a request that needs the database while it is cut (`cutDatabase()`), e.g. `GET /editions`.
 - CORS headers = `corsHeadersOf(res)`; "no CORS headers" = `{}`. Send the origin with `.set('Origin', …)`.
+- Real-time connection = `app.socketAs(user, { token })` on the production instance; a refused connection rejects.
+- Entry naming a refused connection = a log line with `Refused real-time connection` and its reason: `no token`,
+  `invalid token` or `no user profile`.
 - Stack trace = the `    at …` frame lines that follow an error's name in the server log.
 - A commit that fails = `failNextCommit()` on the production instance, armed right before the request under test
   (`HELPERS.md`, "Production instance").
@@ -87,6 +92,16 @@ Refused requests
   designer creates an edition → `503`; the log has one entry naming the error, with no stack trace. Wait for the
   entry as in B15.
 
+Refused real-time connections
+- Each case: the connection is refused, and the log gets one entry naming the refusal, with no stack trace. Wait
+  for the entry as in B15.
+- **B26** A connection with no token (`token: ''`) → entry with reason `no token`.
+- **B27** A connection with a token signed with a wrong key (`forgedTokens.wrongKey(user)`) → entry with reason
+  `invalid token`.
+- **B28** A connection with a valid session of an account that has no user profile (`tokenOfUserWithoutProfile()`)
+  → entry with reason `no user profile`.
+- **B29** Once B27's entry is in the log, the log written since the connection has no copy of the token.
+
 A commit that fails
 - Each case: a guest quick-registers a fresh address while the instance's next commit fails.
 - **B22** → `500` with exactly the error body above, not `201`.
@@ -109,4 +124,5 @@ Startup and documentation
 - Use any public endpoint for the origin checks (e.g. `GET /editions`).
 - B22–B25 share one production instance in their own `describe`; each test uses its own address. Wait for B24's
   entry as in B15, never for a fixed time.
+- B26–B29 share one production instance in their own `describe`.
 - B21 needs its own production instance (its own `describe`), started with `driveAccess: 'revoked'`.

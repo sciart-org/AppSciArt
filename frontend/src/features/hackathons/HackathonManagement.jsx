@@ -36,7 +36,7 @@ export default function HackathonManagement({
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { socket } = useWebSockets(!!hackathon, `${hackathon.id}/staff`);
+  const { socket } = useWebSockets(!!hackathon, hackathon.id);
   const { fetcher } = useFetcher(error, setError);
 
   const hackathonPhases = [

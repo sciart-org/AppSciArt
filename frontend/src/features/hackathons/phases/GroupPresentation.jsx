@@ -87,7 +87,7 @@ export default function GroupPresentation() {
       setCanSubmitRatings(true);
     });
 
-    socket.emit("get_group_presenting_state", `${hackathonId}/cluster/${0}`);
+    socket.emit("get_group_presenting_state");
   }, [socket, hackathonId]);
 
   if (ratingsSubmitted) {
@@ -101,7 +101,6 @@ export default function GroupPresentation() {
   const submitRatings = () => {
     socket.emit(
       "submit_ratings",
-      `${hackathonId}/cluster/${0}`,
       ratingItems.map((ri) => {
         return { seedId: ri.id, rating: ri.rating || 0.5 };
       }),

@@ -2276,8 +2276,8 @@
       "parent": "P3",
       "phase": "3",
       "kind": "Bug",
-      "status": "Todo",
-      "commits": "23d1ef7",
+      "status": "In progress",
+      "commits": "23d1ef7, 8fc0bdb",
       "labels": [
         "bug",
         "hackathon-prod"
@@ -2287,7 +2287,7 @@
       "body": "The free Supabase projects pause after a week without activity, and the keep-alive workflow didn't stop it:\n\n- The production project paused in late June 2026; every scheduled ping failed from then on, unnoticed.\n- GitHub disabled the schedule after 60 days without activity on `main`, which only moves on releases (D-055). Scheduled runs also use `main`'s copy of the workflow.\n- Pre-production wasn't pinged.\n\nA ping for pre-production is added with the CI work (#235). The lasting fix (paid plan, or a pinger that doesn't depend on `main`) is decided at the ops step (D-056 step 5), with the backups (#237).",
       "issueNumber": 286,
       "itemId": "PVTI_lADODEgGw84BoNdFzhHla3Y",
-      "synced": "8259413607a1326d"
+      "synced": "2ca10741376ffc4a"
     },
     {
       "key": "F3",
@@ -2480,6 +2480,64 @@
       "issueNumber": 297,
       "itemId": "PVTI_lADODEgGw84BoNdFzhIwyOI",
       "synced": "49c5e58a3593348a"
+    },
+    {
+      "key": "W19",
+      "project": "public",
+      "parent": "P2",
+      "title": "Open conceptual maps are lost when the server restarts",
+      "body": "A conceptual map being edited is only stored when the last person leaves it. If the server restarts, crashes, sleeps or is redeployed while a group is working, every change since the map was opened is lost. The map must not depend on server memory (D-010).\n\nNeeded before the next hackathon runs in production. Found while checking the real-time fixes on dev (2026-11-27).",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "W19",
+      "commits": "",
+      "labels": [
+        "bug",
+        "hackathon-prod"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 323,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhMZoTQ",
+      "synced": "7731bc34db81eb6a"
+    },
+    {
+      "key": "W20",
+      "project": "public",
+      "parent": "P2",
+      "title": "Each conceptual map change is sent twice",
+      "body": "When a group member changes the conceptual map, every other member's browser sends the whole map back after showing the change, so each change travels twice. Nothing is lost and it doesn't loop, but it doubles the traffic. Found while checking the real-time fixes on dev (2026-11-27).",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "W20",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 324,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhMZohk",
+      "synced": "4c8d8a023bbdb7fa"
+    },
+    {
+      "key": "W21",
+      "project": "public",
+      "parent": "P2",
+      "title": "Invalid text tag on the home page and two forms",
+      "body": "The home page, the quick sign-up bar and the scientist email form use a tag that doesn't exist in HTML, so the browser logs an error on every load and the text isn't styled as intended. Found while checking the real-time fixes on dev (2026-11-27).",
+      "phase": "2",
+      "kind": "Bug",
+      "status": "Todo",
+      "ref": "W21",
+      "commits": "",
+      "labels": [
+        "bug"
+      ],
+      "milestone": "v1.0.0",
+      "issueNumber": 325,
+      "itemId": "PVTI_lADODEgGw84BoNdFzhMZous",
+      "synced": "62a5f6a206b195b0"
     },
     {
       "key": "4.8",

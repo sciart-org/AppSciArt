@@ -34,8 +34,6 @@ export default function ManageTeamPresentations() {
     (f) => f.flowerId === showingTeam.id,
   );
 
-  const socketRoom = `${hackathon.id}/cluster/${0}`;
-
   const { fetcher } = useFetcher(error, setError);
 
   useEffect(() => {
@@ -47,7 +45,7 @@ export default function ManageTeamPresentations() {
     socket.on("new_presenting_team", (teamNumber) => {
       setPresentingTeam(teamNumber);
     });
-    socket.emit("get_team_presenting_state", socketRoom);
+    socket.emit("get_team_presenting_state");
   }, [socket, hackathon?.id]);
 
   useEffect(() => {
@@ -60,10 +58,7 @@ export default function ManageTeamPresentations() {
   const sendNewPresentingTeam = (team) => {
     setPresentingTeam(team.number);
     setViewingTeam(null);
-    socket.emit("set_presenting_team", {
-      room: socketRoom,
-      teamNumber: team.number,
-    });
+    socket.emit("set_presenting_team", team.number);
   };
 
   if (loading) {

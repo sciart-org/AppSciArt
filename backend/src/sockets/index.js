@@ -1,25 +1,25 @@
 import { Server } from 'socket.io'
 import { frontendOrigin } from '../middlewares/cors.js'
-import { initializeDiagramming, onConnectDiagramming, onDisconnectDiagramming } from './diagramming.js'
+import { initializeDiagramming, onConnectDiagramming, storeUnusedGroupMaps } from './diagramming.js'
 import { onConnectGroupPresentations } from './groupPresentations.js'
-import { useJwtAuthorization } from './socketUtils.js'
+import { onConnectHackathonRooms } from './hackathonRooms.js'
+import { logSocketErrors } from './socketEvents.js'
+import { authenticateSockets, closeWhenSessionExpires } from './socketSession.js'
 import { onConnectTeamPresentations } from './teamPresentations.js'
 
 const onConnect = (socket) => {
   console.log(`User connected: ${socket.id}`)
+  logSocketErrors(socket)
+  closeWhenSessionExpires(socket)
+  onConnectHackathonRooms(socket, storeUnusedGroupMaps)
   onConnectDiagramming(socket)
   onConnectGroupPresentations(socket)
   onConnectTeamPresentations(socket)
 }
 
-const onJoinRoom = (socket, room) => {
-  socket.join(room)
-  console.log(`User ${socket.id} joined room ${room}`)
-}
-
 const onDisconnect = (socket) => {
   console.log(`User disconnected: ${socket.id}`)
-  onDisconnectDiagramming()
+  storeUnusedGroupMaps()
 }
 
 let io = null
@@ -34,25 +34,12 @@ export function initializeWebSockets (server, verifyAccessToken) {
     }
   })
 
-  useJwtAuthorization(io, verifyAccessToken)
+  authenticateSockets(io, verifyAccessToken)
   initializeDiagramming(io)
 
   io.on('connection', (socket) => {
     onConnect(socket)
-
-    socket.on('join_room', (room) => {
-      onJoinRoom(socket, room)
-    })
-
-    socket.on('disconnect', () => {
-      onDisconnect(socket)
-    })
-
-    socket.on('leave_room', (room) => {
-      socket.leave(room)
-      console.log(`User ${socket.id} left room ${room}`)
-      onDisconnectDiagramming()
-    })
+    socket.on('disconnect', () => onDisconnect(socket))
   })
 
   return io

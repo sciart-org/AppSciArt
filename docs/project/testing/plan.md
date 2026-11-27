@@ -215,6 +215,8 @@ Each line is one test (or a small group). Missing parts of these use cases are l
 - Not-enrolled user cannot enter (BRU-048).
 - Hackathon not ongoing → cannot enter.
 - Admins, facilitators and the hackathon's evaluators can enter (BRU-048).
+- Not briefed yet: a socket that joins a second hackathon leaves the first one's rooms (needs a decision: one
+  hackathon per socket).
 
 **UC-057 Assistance control**
 - Facilitator lists assisting participants; adds and removes one manually → reflected.
@@ -233,6 +235,7 @@ Each line is one test (or a small group). Missing parts of these use cases are l
 - Two members of the same group connected by socket: a change from one reaches the other.
 - The map content is stored: after everyone disconnects, reading the map returns the last content (IRQ-009).
 - After delivery, edits from members are not applied (BRU-040).
+- Not briefed yet: staff and evaluators watching a group get its map when they ask for it (`get_initial_state`).
 
 **UC-049 Submit conceptual map** (+ BRU-024)
 - Group voice delivers → map delivery status is "delivered".
@@ -256,6 +259,8 @@ Each line is one test (or a small group). Missing parts of these use cases are l
 - After submitting, changing a rating is rejected (BRU-042).
 - Ratings are stored: still available after a server restart (IRQ-007). (#229)
 - Facilitator receives the submitted ratings (input for team creation).
+- Not briefed yet: the submitted ratings name exactly the seeds of the hackathon's groups; a foreign or repeated
+  seed is rejected.
 
 ### 4.8 Ongoing hackathon — teams, flowers, rubrics
 **UC-061 Create co-creation teams** (+ BRU-032, BRU-041, IRQ-010)
@@ -280,7 +285,7 @@ Each line is one test (or a small group). Missing parts of these use cases are l
   rejected; participants cannot reopen (`general.md`).
 
 **UC-063 Manage team presentations / UC-055 View presenting flower / UC-056 Present flower** (+ BRU-025)
-- Facilitator sets the presenting team → assisting participants and evaluators receive it, with a summary of the
+- Facilitator sets the presenting team → enrolled participants and evaluators receive it (D-075), with a summary of the
   flower and its original seed (UC-055).
 - The team speaker's team receives "your turn" (UC-056).
 - The current presenting team is stored (IRQ-006).

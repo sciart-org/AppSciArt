@@ -32,6 +32,8 @@ After the deploy, each before its deadline (D-078):
 - [ ] DB backup #237 (D-077): before real participants' data reaches production
 - [ ] Seeder #279 in `seeders/production/` (D-079): staff (data in a gitignored file, idempotent) and the
   next-edition and hackathon block, or PLANNED → CLOSED (#225): before the next hackathon
+- [ ] #323: open conceptual maps are stored so a restart loses nothing (D-010): before the next hackathon
+- [ ] Maps and flowers store their hackathon (D-080): before two hackathons share a seed
 - [ ] `.env.example` per package (#236)
 - [ ] Rest of the hardening for this milestone (tracked privately)
 - [ ] Stretch: PLANNED → CLOSED (#225)
@@ -88,6 +90,8 @@ Tracked privately; described here only once released, in one issue per productio
 - [ ] Private, temporary rating notes per seed (D-062)
 - [ ] Seed numbers per edition; groups and teams take their seed's number (D-063)
 - [ ] Frontend: `AuthContext`, `<ProtectedRoute role>`, `useFetcher` (loading, `response.ok`, AbortController)
+- [ ] Session refresh: HTTP calls refresh the session before it expires, then real-time connections reconnect
+  silently with the refreshed session instead of sending the user to sign in
 
 ## Phase 5 — Complete SRS workflows (sub-plan each)
 - [ ] 5a Seed lifecycle
@@ -101,6 +105,8 @@ Tracked privately; described here only once released, in one issue per productio
   - curator's vision (UC-077), exhibition images (UC-076), deadlines (IRQ-006), follow-up (UC-070/078)
   - evaluation results (UC-068), catalogue upload (UC-072, BRU-030)
 - [ ] 5e Notifications: `notify(event, recipients, data)` + EJS templates via `addAfterCommit`; FRQ-005–015; retry/outbox table
+- [ ] 5f Inspiring scientists during the hackathon: they may take part in some way; not decided or implemented yet
+  (product owner question). Until then they can't join a hackathon's real-time rooms unless enrolled (BRU-048)
 
 ## Phase 6 — Quality & scale
 - [ ] Repositories own all model access; break Roles cycle; states emit events instead of importing sockets

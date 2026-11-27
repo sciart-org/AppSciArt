@@ -12,13 +12,8 @@ import useFetcher from "../../utils/useFetcher";
 import TeamPresentation from "./phases/TeamPresentation";
 
 export default function ActiveHackathon() {
-  const {
-    hackathon,
-    setHackathon,
-    participation,
-    setParticipation,
-    setSocket,
-  } = useContext(HackathonContext);
+  const { hackathon, setHackathon, setParticipation, setSocket } =
+    useContext(HackathonContext);
 
   const date = new Date(hackathon?.startDate);
   const rawDays = new Date() - date;
@@ -43,16 +38,6 @@ export default function ActiveHackathon() {
   useEffect(() => {
     fetchParticipation();
   }, []);
-
-  useEffect(() => {
-    const shouldNotConnect =
-      !socket || !participation || !participation?.hackathonId;
-
-    if (shouldNotConnect) return;
-
-    const presentationsRoom = `${participation.hackathonId}/cluster/0`;
-    socket.emit("join_room", presentationsRoom);
-  }, [participation, socket]);
 
   useEffect(() => {
     if (!socket) return;

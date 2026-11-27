@@ -89,8 +89,11 @@ Append-only log of project decisions, numbered `D-nnn` in date order.
 | D-068 | 2026-11-16 | Docs | Only choices that limit future work, are costly to reverse, or answer the product owner get a row; facts go into the doc they describe. Details stay short (decision, why, options not adopted) and link plans instead of holding them. Topics come from a fixed list in the header. A row is committed with the change it governs. ([details](#d-068)) | — | in force |
 | D-071 | 2026-11-24 | Docs | A decision is applied in every living doc whose current truth it changes: the doc states the rule and cites the row, while the why stays in this log. A superseding row also updates the docs citing the replaced one, and `tools/check_decision_citations.py` fails while a living doc cites a fully superseded row. ([details](#d-071)) | — | in force |
 | D-072 | 2026-11-24 | Architecture | A request's response reaches the client only after its transaction has committed; if the commit fails, the client gets a `500` instead. Handlers keep calling `res.send`: the controller wrapper holds the finished response until the commit. ([details](#d-072)) | — | in force |
+| D-074 | 2026-11-27 | Architecture | Each ongoing hackathon has three kinds of real-time rooms: a participants room (everyone who entered: participants, evaluators and staff), a management room (evaluators and staff) and one room per exploring group's map (its members, plus staff and evaluators watching it). A socket is in one hackathon's rooms at a time. Cluster rooms are removed. ([details](#d-074)) | — | in force |
+| D-075 | 2026-11-24 | Requirement | A participant enrolled in the ongoing hackathon can view the presenting flower (UC-055), assisting or not. The SRS precondition "the participant is assisting" was wrong: assistance is only an indicator for staff (UC-057, D-049). | — | in force |
 | D-078 | 2026-11-27 | Priority | First production deploy as soon as possible: before it, only the security fixes for the flow, a staff-only production seeder, the walkthrough checklist on pre-production as its gate, and the production env check. The journey test, the database backups, the next-edition seeder block, `.env.example` and the rest of the hardening move after it, each with the point it must be done by. ([details](#d-078)) | D-056 (order, gate) | partly superseded by D-079 (staff seeder) |
 | D-079 | 2026-11-27 | Priority | The staff seeder (#279) moves after the first production deploy: the user creates the staff accounts in production by hand, and the production env check confirms no sample account is there. Done before the next hackathon, with its next-edition block. | D-078 (before-deploy list) | in force |
+| D-080 | 2026-11-27 | Architecture | Conceptual maps and flowers store the hackathon they belong to (`hackathonId`). Every lookup by hackathon filters on it instead of going through the seed, which can be in several hackathons (D-063). Done after the first deploy, before two hackathons share a seed. ([details](#d-080)) | — | in force |
 
 ## Details
 
@@ -560,6 +563,20 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
     (1.19.0, 2026) delays it until the session is saved; `compression` (1.8.2, 2026) overrides `res.write` and
     `res.end`.
 
+### D-074
+- **Why one participants room:** the SRS has no clusters. Every hackathon used cluster 0, and `clusterNumber` was
+  already marked for deletion.
+- **Why staff are in both rooms:** socket.io treats a send to several rooms as one set of recipients, so each socket
+  gets an event at most once. An "everyone" update goes once to both rooms, and staff aren't sent duplicates.
+- **Not adopted:**
+  - Keeping the cluster rooms for later: the SRS has no feature that needs them.
+  - A room per role: participants, evaluators and staff get the same presentation events, so it would only add rooms
+    to keep in sync.
+- **Sources:** socket.io v4 docs, current as of 2026:
+  - [Rooms](https://socket.io/docs/v4/rooms/): rooms exist only on the server; a send to several rooms reaches each
+    socket once.
+  - [Server API](https://socket.io/docs/v4/server-api/): `to([...])`, `except`.
+
 ### D-078
 - Source: user, 2026-11-27: production must be deployed as soon as possible.
 - Before the deploy, in order:
@@ -587,3 +604,22 @@ Answers for the Hackathon MVP flow. They go into per-UC files in `clarifications
 - Not adopted: D-056's order (journey test and ops before the deploy): a later deploy, with no protection the
   first deploy needs.
 - Unchanged from D-056: the goal, one test per fix, #225 as a stretch.
+
+### D-080
+- **Why:** a map or a flower belongs to one hackathon, but today it only stores its seed. Since a seed can be in
+  several hackathons (D-063), a lookup "by hackathon" through the seed also returns the other hackathon's maps and
+  flowers.
+- **How:** a `hackathonId` foreign key on `conceptual_maps` and `flowers`, filled for existing rows by the
+  migration, part of their keys, and used by every lookup by hackathon.
+- **Not adopted:**
+  - Keep deriving the hackathon through the seed and the participations: maps and flowers with no participants yet
+    have no participation to go through.
+  - Forbid a seed in two hackathons: against D-063.
+- **Sources:** the usual way to scope shared tables is a scoping column on every row, not one derived through joins:
+  - Citus docs, [Multi-tenant schema migration](https://docs.citusdata.com/en/v12.1/develop/migration_mt_schema.html)
+    (v12.1, 2023): add the tenant column to tables that reach it only through a foreign key, backfill it, and
+    include it in keys.
+  - AWS Well-Architected SaaS Lens,
+    [Preventing cross-tenant access](https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/preventing-cross-tenant-access.html)
+    (2023): each row carries the key that scopes access to its own data.
+- **Timing:** production has one hackathon at first, so the fix waits until after the first deploy.

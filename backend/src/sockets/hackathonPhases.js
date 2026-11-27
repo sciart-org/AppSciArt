@@ -1,34 +1,35 @@
 import { toPlainObject } from '../services/mappers/utils.js'
+import { managementRoomOf, participantsRoomOf } from './hackathonRooms.js'
 import { getIo } from './index.js'
 
-const emitHackathonUpdateToParticipants = (hackathonId, changes) => {
-  const io = getIo()
-  io?.to(hackathonId).emit('hackathon:updated', { id: hackathonId, ...toPlainObject(changes) })
-}
+const everyoneIn = (hackathonId) => [participantsRoomOf(hackathonId), managementRoomOf(hackathonId)]
 
-const emitHackathonUpdateToStaff = (hackathonId, changes) => {
+const roomsFor = (broadcast, hackathonId) =>
+  broadcast === 'ALL' ? everyoneIn(hackathonId) : [managementRoomOf(hackathonId)]
+
+const emitHackathonUpdate = (broadcast, hackathonId, changes) => {
   const io = getIo()
-  io?.to(`${hackathonId}/staff`).emit('hackathon:updated', { id: hackathonId, ...toPlainObject(changes) })
+  io?.to(roomsFor(broadcast, hackathonId)).emit('hackathon:updated', { id: hackathonId, ...toPlainObject(changes) })
 }
 
 const emitParticipationUpdateToStaff = (hackathonId, participationId, changes) => {
   const io = getIo()
-  io?.to(`${hackathonId}/staff`).emit('participation:updated', { id: participationId, ...toPlainObject(changes) })
+  io?.to(managementRoomOf(hackathonId)).emit('participation:updated', { id: participationId, ...toPlainObject(changes) })
 }
 
 const emitParticipationUpdateToParticipants = (hackathonId) => {
   const io = getIo()
-  io?.to(hackathonId).emit('participation:updated')
+  io?.to(participantsRoomOf(hackathonId)).except(managementRoomOf(hackathonId)).emit('participation:updated')
 }
 
 const emitGroupUpdateToStaff = (hackathonId, groupId, changes) => {
   const io = getIo()
-  io?.to(`${hackathonId}/staff`).emit('group:updated', { id: groupId, ...toPlainObject(changes) })
+  io?.to(managementRoomOf(hackathonId)).emit('group:updated', { id: groupId, ...toPlainObject(changes) })
 }
 
 const emitTeamUpdateToStaff = (hackathonId, teamId, changes) => {
   const io = getIo()
-  io?.to(`${hackathonId}/staff`).emit('team:updated', { id: teamId, ...toPlainObject(changes) })
+  io?.to(managementRoomOf(hackathonId)).emit('team:updated', { id: teamId, ...toPlainObject(changes) })
 }
 
 const UNKNOWN_ID_TO_FORCE_RELOAD = null
@@ -59,10 +60,7 @@ export const broadcastGroupUpdate = (broadcast, hackathonId, groupId, changes) =
 
 export const broadcastHackathonUpdate = (broadcast, hackathonId, updatedHackathon) => {
   if (!broadcast || broadcast === 'NONE') return
-  emitHackathonUpdateToStaff(hackathonId, updatedHackathon)
-  if (broadcast === 'ALL') {
-    emitHackathonUpdateToParticipants(hackathonId, updatedHackathon)
-  }
+  emitHackathonUpdate(broadcast, hackathonId, updatedHackathon)
 }
 
 export const broadcastParticipationUpdate = (broadcast, hackathonId, participationId, updatedParticipation) => {

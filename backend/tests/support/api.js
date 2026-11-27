@@ -44,10 +44,34 @@ const httpClient = (baseUrl, authorizationHeader) => {
   }
 }
 
+const openSockets = new Set()
+
+const waitUntilConnected = (socket) => new Promise((resolve, reject) => {
+  socket.once('connect', resolve)
+  socket.once('connect_error', reject)
+})
+
+const JOIN_TIMEOUT_MS = 2000
+
+const openSocket = async (baseUrl, user, { hackathon, token } = {}) => {
+  const jwt = token ?? await tokenOf(user)
+  const socket = ioClient(baseUrl, {
+    auth: { token: jwt },
+    transports: ['polling', 'websocket'],
+    reconnection: false,
+    forceNew: true
+  })
+  openSockets.add(socket)
+  await waitUntilConnected(socket)
+  if (hackathon) await socket.timeout(JOIN_TIMEOUT_MS).emitWithAck('join_hackathon_rooms', hackathon.id)
+  return socket
+}
+
 export const clientsFor = (baseUrl) => ({
   asGuest: () => httpClient(baseUrl),
   as: async (user) => httpClient(baseUrl, `Bearer ${await tokenOf(user)}`),
-  withToken: (token) => httpClient(baseUrl, `Bearer ${token}`)
+  withToken: (token) => httpClient(baseUrl, `Bearer ${token}`),
+  socketAs: (user, options) => openSocket(baseUrl, user, options)
 })
 
 export const asGuest = () => clientsFor(appUrl()).asGuest()
@@ -55,6 +79,8 @@ export const asGuest = () => clientsFor(appUrl()).asGuest()
 export const as = async (user) => clientsFor(appUrl()).as(user)
 
 export const withToken = (token) => clientsFor(appUrl()).withToken(token)
+
+export const socketAs = (user, options) => clientsFor(appUrl()).socketAs(user, options)
 
 const CORS_HEADER_PREFIX = 'access-control-'
 
@@ -65,27 +91,6 @@ export const corsHeadersOf = (response) => Object.fromEntries(
     .filter(([name]) => name.toLowerCase().startsWith(CORS_HEADER_PREFIX))
     .map(([name, value]) => [camelCased(name.toLowerCase().slice(CORS_HEADER_PREFIX.length)), value])
 )
-
-const openSockets = new Set()
-
-const waitUntilConnected = (socket) => new Promise((resolve, reject) => {
-  socket.once('connect', resolve)
-  socket.once('connect_error', reject)
-})
-
-export const socketAs = async (user, { room, token } = {}) => {
-  const jwt = token ?? await tokenOf(user)
-  const socket = ioClient(appUrl(), {
-    extraHeaders: { authorization: `Bearer ${jwt}` },
-    transports: ['polling', 'websocket'],
-    reconnection: false,
-    forceNew: true
-  })
-  openSockets.add(socket)
-  await waitUntilConnected(socket)
-  if (room) socket.emit('join_room', room)
-  return socket
-}
 
 export const nextEvent = (socket, event, timeoutMs = 2000) => new Promise((resolve, reject) => {
   const onEvent = (...payload) => {

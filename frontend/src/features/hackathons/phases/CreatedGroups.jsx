@@ -10,6 +10,7 @@ import { HackathonContext } from "../components/HackathonContext";
 import GroupSeedResources from "../components/GroupSeedResources";
 import ConfirmDeliveryModal from "./components/ConfirmDeliveryModal";
 import DeliverButton from "./components/DeliverButton";
+import Loading from "../../../components/messages/Loading";
 
 export default function CreatedGroups() {
   const { hackathon, participation, setParticipation, socket } =
@@ -24,7 +25,10 @@ export default function CreatedGroups() {
 
   const { fetcher } = useFetcher(error, setError);
 
-  const groupRoom = `${participation?.hackathonId}/group/${participation?.conceptualMap.id}`;
+  const [joinedMapId, setJoinedMapId] = useState(null);
+  const mapId = participation?.conceptualMap?.id;
+  const hasJoinedGroupMap = !!mapId && joinedMapId === mapId;
+
   useEffect(() => {
     const shouldNotConnect =
       !socket ||
@@ -35,8 +39,10 @@ export default function CreatedGroups() {
 
     if (shouldNotConnect || shouldNotJoinGroup) return;
 
-    socket.emit("join_room", groupRoom);
-  }, [participation, socket, isPhaseActive]);
+    socket.emit("join_hackathon_rooms", participation.hackathonId, () =>
+      setJoinedMapId(mapId),
+    );
+  }, [mapId, socket, isPhaseActive]);
 
   if (!isPhaseActive) {
     return <h2>This phase is not active</h2>;
@@ -143,7 +149,11 @@ export default function CreatedGroups() {
         />
         <div style={{ flex: 1 }}>
           <DiagramContext value={{ nodes, edges, setNodes, setEdges }}>
-            <Diagram socket={socket} room={groupRoom} />
+            {hasJoinedGroupMap ? (
+              <Diagram key={joinedMapId} socket={socket} />
+            ) : (
+              <Loading />
+            )}
           </DiagramContext>
           <DeliverButton
             isVisible={!participation?.isGroupVoice}

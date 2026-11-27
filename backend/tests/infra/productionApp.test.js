@@ -35,6 +35,12 @@ describe('productionApp', () => {
     expect((await api.get('/editions')).status).toBe(200)
   })
 
+  it('opens real-time connections to the instance with socketAs(user)', async () => {
+    const socket = await app.socketAs(designer(1))
+
+    expect(socket.connected).toBe(true)
+  })
+
   it('leaves the environment of the tests and the testing app untouched', async () => {
     expect(process.env).toEqual(environmentBefore)
     expect((await asGuest().get('/editions')).status).toBe(200)

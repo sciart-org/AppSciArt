@@ -1,4 +1,4 @@
-import { createHmac, generateKeyPairSync, sign } from 'crypto'
+import { createHmac, generateKeyPairSync, randomUUID, sign } from 'crypto'
 
 const ONE_HOUR_IN_SECONDS = 3600
 const tokensByEmail = new Map()
@@ -71,3 +71,10 @@ export const forgedTokens = {
 }
 
 export const legacyTokenOf = (user) => signedWith(process.env.JWT_SECRET, claimsOf(user))
+
+export const shortLivedTokenOf = (user, seconds) =>
+  signedWith(process.env.JWT_SECRET, { ...claimsOf(user), exp: nowInSeconds() + seconds })
+
+const userWithoutProfile = () => ({ authId: randomUUID(), email: `no-profile-${randomUUID()}@example.com` })
+
+export const tokenOfUserWithoutProfile = () => signedWith(process.env.JWT_SECRET, claimsOf(userWithoutProfile()))

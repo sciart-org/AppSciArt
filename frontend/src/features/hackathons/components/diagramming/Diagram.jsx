@@ -35,7 +35,7 @@ function findFirstMissingNode(list) {
 
 const nodeTypes = { text: TextNode, annotation: AnnotationNode };
 
-export default function Diagram({ socket, room, editionMode = true, style }) {
+export default function Diagram({ socket, editionMode = true, style }) {
   const [initialsLoaded, setInitialsLoaded] = useState(false);
   const { nodes, edges, setNodes, setEdges } = useContext(DiagramContext);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -53,19 +53,27 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
   useEffect(() => {
     if (!socket) return;
 
-    socket.on("initial_state", handleInitialState);
-
-    socket.on("new_nodes", (nodes) => {
+    const handleNewNodes = (nodes) => {
       skipEmit.current = true;
       setNodes(nodes);
-    });
+    };
 
-    socket.on("new_edges", (edges) => {
+    const handleNewEdges = (edges) => {
       skipEmit.current = true;
       setEdges(edges);
-    });
+    };
 
-    socket.emit("get_initial_state", room);
+    socket.on("initial_state", handleInitialState);
+    socket.on("new_nodes", handleNewNodes);
+    socket.on("new_edges", handleNewEdges);
+
+    socket.emit("get_initial_state");
+
+    return () => {
+      socket.off("initial_state", handleInitialState);
+      socket.off("new_nodes", handleNewNodes);
+      socket.off("new_edges", handleNewEdges);
+    };
   }, [socket]);
 
   useEffect(() => {
@@ -74,7 +82,7 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
       skipEmit.current = false;
       return;
     }
-    socket.emit("update_edges", { room, edges });
+    socket.emit("update_edges", edges);
   }, [edges]);
 
   useEffect(() => {
@@ -83,7 +91,7 @@ export default function Diagram({ socket, room, editionMode = true, style }) {
       skipEmit.current = false;
       return;
     }
-    socket.emit("update_nodes", { room, nodes });
+    socket.emit("update_nodes", nodes);
   }, [nodes]);
 
   const onNodesChange = useCallback(

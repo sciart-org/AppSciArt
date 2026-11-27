@@ -53,3 +53,7 @@ export const fruitChainOf = (fruit) => firstRow(
    WHERE fr.id = $1
    LIMIT 1`,
   [fruit.id])
+
+export const hasProfile = async (authId) => await countOf(
+  'SELECT count(*)::int AS count FROM profiles.user_profiles WHERE "authId" = $1',
+  [authId]) === 1
