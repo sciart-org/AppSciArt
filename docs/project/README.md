@@ -7,12 +7,12 @@ root `CLAUDE.md`.
 Security work is tracked privately and only described here in generic terms until the fixes are released.
 
 ## Now
-- **Milestone:** Hackathon in production (D-052, D-056, D-078, `roadmap.md`): the flow CLOSED / PREPARING → FINISHED ready
+- **Milestone:** Hackathon in production (D-052, D-056, D-078, D-079, `roadmap.md`): the flow CLOSED / PREPARING → FINISHED ready
   in production
 - **Done:** Hackathon MVP on pre-production (D-048–D-051); CI with a test baseline and branch protection (D-055)
 - **Now:** the security fixes for the flow
-- **Next:** the staff seeder (#279), the checklist (#275) and the first deploy; the journey test (#218) after it
-  (D-078)
+- **Next:** the checklist (#275) and the first deploy, with staff accounts made by hand (D-079); the journey test
+  (#218) and the seeder (#279) after it (D-078)
 - **Paused:** Phase 1a after UC-006 / UC-007; next there: FRQ-001 authentication
 
 ## Phases
