@@ -31,7 +31,7 @@ const roleInHackathon = async (userId, hackathonId) => {
   return null
 }
 
-const isManagementRole = (role) => role === ROLES.STAFF || role === ROLES.EVALUATOR
+export const isManagementRole = (role) => role === ROLES.STAFF || role === ROLES.EVALUATOR
 
 const groupIdOfParticipant = async (userId, hackathonId) => {
   const participation = await ParticipationsRepository.getMinimalParticipationOfUserInHackathon(userId, { hackathonId })
