@@ -31,18 +31,26 @@ const roleInHackathon = async (userId, hackathonId) => {
   return null
 }
 
-const canManage = (role) => role === ROLES.STAFF || role === ROLES.EVALUATOR
+const isManagementRole = (role) => role === ROLES.STAFF || role === ROLES.EVALUATOR
 
-const groupOfParticipant = async (userId, hackathonId) => {
+const groupIdOfParticipant = async (userId, hackathonId) => {
   const participation = await ParticipationsRepository.getMinimalParticipationOfUserInHackathon(userId, { hackathonId })
   return participation?.groupId ?? null
 }
 
-const roomsFor = async (userId, hackathonId, role) => {
-  if (canManage(role)) return [participantsRoomOf(hackathonId), managementRoomOf(hackathonId)]
-  const groupId = await groupOfParticipant(userId, hackathonId)
-  const groupRooms = groupId ? [groupRoomOf(hackathonId, groupId)] : []
-  return [participantsRoomOf(hackathonId), ...groupRooms]
+const groupMapOf = (hackathonId, groupId) => ({ groupId, room: groupRoomOf(hackathonId, groupId) })
+
+const participantGroupMapOf = async (userId, hackathonId, role) => {
+  if (role !== ROLES.PARTICIPANT) return null
+  const groupId = await groupIdOfParticipant(userId, hackathonId)
+  return groupId ? groupMapOf(hackathonId, groupId) : null
+}
+
+const roomsToJoin = (hackathonId, role, groupMap) => {
+  const participantsRoom = participantsRoomOf(hackathonId)
+  if (isManagementRole(role)) return [participantsRoom, managementRoomOf(hackathonId)]
+  if (!groupMap) return [participantsRoom]
+  return [participantsRoom, groupMap.room]
 }
 
 const leaveRooms = (socket, rooms) => {
@@ -50,8 +58,8 @@ const leaveRooms = (socket, rooms) => {
 }
 
 const leaveHackathon = (socket) => {
-  leaveRooms(socket, socket.data.hackathon?.rooms ?? [])
-  stopWatching(socket)
+  leaveRooms(socket, socket.data.hackathon?.joinedRooms ?? [])
+  stopWatchingGroup(socket)
   socket.data.hackathon = null
 }
 
@@ -61,26 +69,27 @@ const joinHackathon = async (socket, hackathonId) => {
   const userId = userProfileIdOf(socket)
   const role = await roleInHackathon(userId, hackathonId)
   errorThrower(!role, 'You cannot enter this hackathon', 403)
-  const rooms = await roomsFor(userId, hackathonId, role)
+  const groupMap = await participantGroupMapOf(userId, hackathonId, role)
+  const joinedRooms = roomsToJoin(hackathonId, role, groupMap)
   leaveHackathon(socket)
-  socket.join(rooms)
-  socket.data.hackathon = { id: hackathonId, role, rooms }
+  socket.join(joinedRooms)
+  socket.data.hackathon = { id: hackathonId, role, joinedRooms, groupMap }
 }
 
-const stopWatching = (socket) => {
-  if (socket.data.watchedGroupRoom) socket.leave(socket.data.watchedGroupRoom)
-  socket.data.watchedGroupRoom = null
+const stopWatchingGroup = (socket) => {
+  if (socket.data.watchedGroupMap) socket.leave(socket.data.watchedGroupMap.room)
+  socket.data.watchedGroupMap = null
 }
 
 const watchGroup = async (socket, groupId) => {
   const hackathon = socket.data.hackathon
-  errorThrower(!canManage(hackathon?.role), 'Only staff and evaluators can watch a group', 403)
+  errorThrower(!isManagementRole(hackathon?.role), 'Only staff and evaluators can watch a group', 403)
   checkIsId(groupId, 'group')
-  const group = await GroupsAndTeamsRepository.getConceptualMapOfHackathon(groupId, hackathon.id)
-  errorThrower(!group, 'Group not found in this hackathon', 404)
-  stopWatching(socket)
-  socket.data.watchedGroupRoom = groupRoomOf(hackathon.id, groupId)
-  socket.join(socket.data.watchedGroupRoom)
+  const groupMap = await GroupsAndTeamsRepository.getConceptualMapOfHackathon(groupId, hackathon.id)
+  errorThrower(!groupMap, 'Group not found in this hackathon', 404)
+  stopWatchingGroup(socket)
+  socket.data.watchedGroupMap = groupMapOf(hackathon.id, groupId)
+  socket.join(socket.data.watchedGroupMap.room)
 }
 
 export const joinedHackathonIdOf = (socket) => {
@@ -89,11 +98,26 @@ export const joinedHackathonIdOf = (socket) => {
   return hackathonId
 }
 
-export const onConnectHackathonRooms = (socket, onLeaveGroup) => {
+export const currentGroupMapOf = (socket) => {
+  const hackathonId = joinedHackathonIdOf(socket)
+  const { role, groupMap } = socket.data.hackathon
+  if (role === ROLES.PARTICIPANT) {
+    errorThrower(!groupMap, 'You are not in a group yet', 403)
+    return { hackathonId, ...groupMap }
+  }
+  errorThrower(!socket.data.watchedGroupMap, 'Choose a group to watch first', 403)
+  return { hackathonId, ...socket.data.watchedGroupMap }
+}
+
+export const checkCanEditGroupMap = (socket) => {
+  errorThrower(socket.data.hackathon.role === ROLES.EVALUATOR, 'Evaluators can only watch the map', 403)
+}
+
+export const onConnectHackathonRooms = (socket, onStopWatchingGroup) => {
   onEvent(socket, 'join_hackathon_rooms', (hackathonId) => joinHackathon(socket, hackathonId))
   onEvent(socket, 'watch_group', (groupId) => watchGroup(socket, groupId))
   onEvent(socket, 'stop_watching_group', () => {
-    stopWatching(socket)
-    onLeaveGroup()
+    stopWatchingGroup(socket)
+    onStopWatchingGroup()
   })
 }

@@ -1,59 +1,80 @@
 import { onEvent } from './socketEvents.js'
+import { checkCanEditGroupMap, currentGroupMapOf } from './hackathonRooms.js'
 import * as GroupsAndTeamsRepository from '../repositories/groupsAndTeamsRepository.js'
+import { errorThrower } from '../services/errorThrower.js'
 
-const rooms = {}
+const openGroupMaps = new Map()
 let io = null
 
-const loadInitialRoom = async (room) => {
-  if (room.includes('group') && !rooms[room]) {
-    rooms[room] = await getMapOfGroup(room)
-  }
+const startingMap = () => ({
+  nodes: [
+    { id: 'n0', position: { x: 0, y: 0 }, data: { label: 'ASTER+S' }, type: 'text' }
+  ],
+  edges: []
+})
+
+const storedMapOf = async (groupId) => {
+  const conceptualMap = await GroupsAndTeamsRepository.getMinimalConceptualMap(groupId)
+  return conceptualMap?.map ?? startingMap()
 }
 
-const getMapOfGroup = async (group) => {
-  const conceptualMapId = group.split('/group/')[1]
-  const conceptualMap = await GroupsAndTeamsRepository.getMinimalConceptualMap(conceptualMapId)
-  if (!conceptualMap || !conceptualMap.map) {
-    return {
-      nodes: [
-        { id: 'n0', position: { x: 0, y: 0 }, data: { label: 'ASTER+S' }, type: 'text' }
-      ],
-      edges: []
-    }
+const openGroupMapOf = ({ hackathonId, groupId, room }) => {
+  if (!openGroupMaps.has(room)) {
+    const loaded = storedMapOf(groupId)
+    loaded.catch(() => openGroupMaps.delete(room))
+    openGroupMaps.set(room, { hackathonId, groupId, loaded })
   }
-  return conceptualMap.map
+  return openGroupMaps.get(room).loaded
 }
 
-const storeEmptyRooms = () => {
-  const inMemoryGroups = Object.keys(rooms)
-  const activeGroups = [...io.sockets.adapter.rooms].filter(([key]) => key.includes('group')).map(([key, value]) => key)
-  const groupsToStore = inMemoryGroups.filter(room => !activeGroups.includes(room))
+const hasSocketsIn = (room) => io.sockets.adapter.rooms.has(room)
 
-  for (const group of groupsToStore) {
-    storeMapOfGroup(group).then(() => {
-      delete rooms[group]
-    })
+const storeMap = async (room) => {
+  const { groupId, loaded } = openGroupMaps.get(room)
+  const conceptualMap = await GroupsAndTeamsRepository.getConceptualMap(groupId)
+  if (!conceptualMap) return
+  conceptualMap.map = await loaded
+  await conceptualMap.save()
+}
+
+const storeAndCloseMap = async (room) => {
+  await storeMap(room)
+  if (!hasSocketsIn(room)) openGroupMaps.delete(room)
+}
+
+export const storeUnusedGroupMaps = () => {
+  for (const room of openGroupMaps.keys()) {
+    if (hasSocketsIn(room)) continue
+    storeAndCloseMap(room).catch((error) => console.error(`The conceptual map of ${room} could not be stored:`, error))
   }
 }
 
 export const storeAndDeleteAllGroupsOfHackathon = async (hackathonId) => {
-  const inMemoryGroups = Object.keys(rooms)
-  await Promise.all(
-    inMemoryGroups
-      .filter(group => group.split('/group/')[0] === hackathonId)
-      .map(async group => {
-        await storeMapOfGroup(group)
-        delete rooms[group]
-      })
-  )
+  const roomsOfHackathon = [...openGroupMaps]
+    .filter(([, openGroupMap]) => openGroupMap.hackathonId === hackathonId)
+    .map(([room]) => room)
+  await Promise.all(roomsOfHackathon.map(async (room) => {
+    await storeMap(room)
+    openGroupMaps.delete(room)
+  }))
 }
 
-const storeMapOfGroup = async (group) => {
-  const conceptualMapId = group.split('/group/')[1]
-  const conceptualMap = await GroupsAndTeamsRepository.getConceptualMap(conceptualMapId)
-  if (!conceptualMap) return
-  conceptualMap.map = rooms[group]
-  await conceptualMap.save()
+const isItem = (value) =>
+  value !== null && typeof value === 'object' && !Array.isArray(value) &&
+  typeof value.id === 'string' && value.id.length > 0
+
+const checkIsItemList = (value, name) =>
+  errorThrower(!Array.isArray(value) || !value.every(isItem), `The ${name} must be a list of items with a text id`, 400)
+
+const onMapPartUpdate = (socket, event, part, broadcastEvent) => {
+  onEvent(socket, event, async (items) => {
+    const groupMap = currentGroupMapOf(socket)
+    checkCanEditGroupMap(socket)
+    checkIsItemList(items, part)
+    const openGroupMap = await openGroupMapOf(groupMap)
+    openGroupMap[part] = items
+    socket.to(groupMap.room).emit(broadcastEvent, items)
+  })
 }
 
 export function initializeDiagramming (socketIoInstance) {
@@ -61,24 +82,11 @@ export function initializeDiagramming (socketIoInstance) {
 }
 
 export function onConnectDiagramming (socket) {
-  onEvent(socket, 'get_initial_state', async (room) => {
-    await loadInitialRoom(room)
-    socket.emit('initial_state', rooms[room])
+  onEvent(socket, 'get_initial_state', async () => {
+    const groupMap = currentGroupMapOf(socket)
+    socket.emit('initial_state', await openGroupMapOf(groupMap))
   })
 
-  onEvent(socket, 'update_nodes', ({ room, nodes }) => {
-    if (!room) return
-    rooms[room].nodes = nodes
-    socket.to(room).emit('new_nodes', nodes)
-  })
-
-  onEvent(socket, 'update_edges', ({ room, edges }) => {
-    if (!room) return
-    rooms[room].edges = edges
-    socket.to(room).emit('new_edges', edges)
-  })
-}
-
-export function onDisconnectDiagramming () {
-  storeEmptyRooms()
+  onMapPartUpdate(socket, 'update_nodes', 'nodes', 'new_nodes')
+  onMapPartUpdate(socket, 'update_edges', 'edges', 'new_edges')
 }
