@@ -47,5 +47,10 @@
     "UC-063 · get_team_presenting_state from a socket that joined no hackathon gets an error message",
     "UC-063 · set_presenting_team from a socket that joined no hackathon does not crash the server",
     "UC-063 · get_team_presenting_state from a socket that joined no hackathon does not crash the server"
+  ],
+  "B10": [
+    "UC-063 · a presenting team change to a number that matches no team gets an error message",
+    "UC-063 · a presenting team change to a number that matches no team reaches nobody",
+    "UC-063 · IRQ-006 · after a presenting team change to a number that matches no team, the presenting team is unchanged"
   ]
 }

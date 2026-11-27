@@ -22,6 +22,8 @@ const FIRST_TEAM = 1
 
 const SECOND_TEAM = 2
 
+const NO_SUCH_TEAM = 99
+
 const REFUSAL = { errorMessage: 'string' }
 
 const RECEIVED = 'received'
@@ -296,6 +298,36 @@ describe('UC-063 · bad presentation requests', () => {
     await sendMalformed(socket)
 
     expect(await serverCrashes()).toEqual([])
+  })
+
+  it('UC-063 · a presenting team change to a number that matches no team gets an error message', async () => {
+    const hackathon = await aPresentationHackathon()
+    const socket = await connectAs(facilitator(1), { hackathon })
+
+    const outcome = await errorMessageTypeOn(socket, (s) => emit(s, 'set_presenting_team', NO_SUCH_TEAM))
+
+    expect(outcome).toEqual(REFUSAL)
+  })
+
+  it('UC-063 · a presenting team change to a number that matches no team reaches nobody', async () => {
+    const hackathon = await aPresentationHackathon()
+    const participantSocket = await connectAs(participantInNoTeam(), { hackathon })
+    const staffMember = await connectAs(facilitator(2), { hackathon })
+    const sender = await connectAs(facilitator(1), { hackathon })
+
+    const outcome = await presentingTeamMissedBy([participantSocket, staffMember], sender, NO_SUCH_TEAM)
+
+    expect(outcome).toEqual({ newPresentingTeam: [NOT_RECEIVED, NOT_RECEIVED] })
+  })
+
+  it('UC-063 · IRQ-006 · after a presenting team change to a number that matches no team, the presenting team is unchanged', async () => {
+    const hackathon = await aPresentationHackathon()
+    const socket = await facilitatorPresenting(hackathon, SECOND_TEAM)
+    await emit(socket, 'set_presenting_team', NO_SUCH_TEAM)
+
+    const outcome = await presentingTeamOf(hackathon)
+
+    expect(outcome).toEqual({ presentingTeam: SECOND_TEAM })
   })
 
   it.each(EVENTS_NEEDING_A_HACKATHON)('UC-063 · %s from a socket that joined no hackathon gets an error message', async (_event, send) => {
