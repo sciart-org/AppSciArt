@@ -1,31 +1,55 @@
+import * as FlowersRepository from '../repositories/flowersRepository.js'
+import { errorThrower } from '../services/errorThrower.js'
+import { INTERNAL_BACKEND_ROLE, ROLES } from '../services/Roles.js'
 import { joinedHackathonIdOf, participantsRoomOf } from './hackathonRooms.js'
 import { onEvent } from './socketEvents.js'
 
-const presentingTeams = {}
+const FIRST_TEAM_NUMBER = 1
 
-const initTeams = (hackathonId) => {
-  if (!presentingTeams[hackathonId]) {
-    presentingTeams[hackathonId] = { current: 1, previous: [] }
+const teamPresentations = new Map()
+
+const teamPresentationOf = (hackathonId) => {
+  if (!teamPresentations.has(hackathonId)) {
+    teamPresentations.set(hackathonId, { presentingTeamNumber: FIRST_TEAM_NUMBER })
   }
+  return teamPresentations.get(hackathonId)
 }
 
-const getPresentingState = (hackathonId) => {
+const roleOf = (socket) => socket.data.hackathon.role
+
+const checkIsStaff = (socket) =>
+  errorThrower(roleOf(socket) !== ROLES.STAFF, 'Only staff can manage team presentations', 403)
+
+const isTeamNumber = (value) => Number.isInteger(value) && value >= FIRST_TEAM_NUMBER
+
+const teamCountOf = async (hackathonId) => {
+  const teams = await FlowersRepository.getFlowersOfHackathon(hackathonId, { role: INTERNAL_BACKEND_ROLE })
+  return teams.length
+}
+
+const checkIsTeamOf = async (hackathonId, teamNumber) => {
+  errorThrower(!isTeamNumber(teamNumber), 'A valid team number is required', 400)
+  const teamCount = await teamCountOf(hackathonId)
+  errorThrower(teamNumber > teamCount, 'Team not found in this hackathon', 404)
+}
+
+const presentingStateOf = (hackathonId) => {
   return {
-    presentingTeam: presentingTeams[hackathonId].current
+    presentingTeam: teamPresentationOf(hackathonId).presentingTeamNumber
   }
 }
 
 export function onConnectTeamPresentations (socket) {
   onEvent(socket, 'get_team_presenting_state', () => {
     const hackathonId = joinedHackathonIdOf(socket)
-    initTeams(hackathonId)
-    socket.emit('team_presenting_state', getPresentingState(hackathonId))
+    socket.emit('team_presenting_state', presentingStateOf(hackathonId))
   })
 
-  onEvent(socket, 'set_presenting_team', (teamNumber) => {
+  onEvent(socket, 'set_presenting_team', async (teamNumber) => {
     const hackathonId = joinedHackathonIdOf(socket)
-    presentingTeams[hackathonId].previous.push(presentingTeams[hackathonId].current)
-    presentingTeams[hackathonId].current = teamNumber
+    checkIsStaff(socket)
+    await checkIsTeamOf(hackathonId, teamNumber)
+    teamPresentationOf(hackathonId).presentingTeamNumber = teamNumber
     socket.to(participantsRoomOf(hackathonId)).emit('new_presenting_team', teamNumber)
   })
 }
